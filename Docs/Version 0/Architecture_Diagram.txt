@@ -1,0 +1,21 @@
+@startuml
+
+skin rose
+
+title Architecture Diagram
+
+package "Service" {
+    component [Graphic User\nInterface]
+}
+
+package "Domain"{
+
+}
+
+
+
+Service -down-> Domain
+
+
+
+@enduml
