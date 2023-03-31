@@ -1,0 +1,11 @@
+package discounts {
+    
+    abstract class DiscountPolicy
+    note top of DiscountPolicy
+    has subclasses
+    end note
+
+}
+
+DiscountPolicy "0:n" -- "1:n" Product
+DiscountPolicy "0..n" -- "1" Shop

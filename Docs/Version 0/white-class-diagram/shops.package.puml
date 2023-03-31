@@ -1,0 +1,15 @@
+package shops {
+    entity "\t\t\t\tShop\t\t\t\t" as Shop
+    entity Product
+    
+    note top of Product
+    can have purchase policy
+    end note
+
+    entity ManagerPermissions
+}
+
+
+User "1" ---- "0:n" Shop: owns >
+User "0:n" --d-- "0:n" Shop: manages >
+(User, Shop) ..l.. ManagerPermissions

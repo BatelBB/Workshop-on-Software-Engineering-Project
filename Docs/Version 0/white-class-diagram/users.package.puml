@@ -1,0 +1,10 @@
+
+package users {
+    entity User {
+	  isSystemAdmin: bool
+	}
+	
+	note top of User
+	can modify own's security policy
+	end note
+}
