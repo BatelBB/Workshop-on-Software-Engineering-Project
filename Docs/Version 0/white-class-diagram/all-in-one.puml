@@ -1,0 +1,88 @@
+@startuml
+
+title White class diagram
+
+skin rose
+skinparam linetype poly
+
+/'!pragma ratio 0.5
+allow_mixing
+'/
+
+
+package users {
+    entity User {
+	  isSystemAdmin: bool
+	}
+	
+	note top of User
+	can modify own's security policy
+	end note
+}
+
+package shops {
+    entity "\t\t\t\tShop\t\t\t\t" as Shop
+    entity Product
+    
+    note bottom of  Product
+    can have purchase policy
+    end note
+
+    entity ManagerPermissions
+}
+
+
+User "1" ---- "0:n" Shop: owns >
+User "0:n" --d-- "0:n" Shop: manages >
+(User, Shop) ..l.. ManagerPermissions
+
+package discounts {
+    
+    abstract class Discount
+   
+    entity OpenDiscount
+    entity ConditionalDiscount
+    entity ClosedDiscount
+    
+    OpenDiscount --u--|> Discount
+    ConditionalDiscount --u--|> Discount
+    ClosedDiscount --u--|> Discount
+
+}
+
+Discount "0:n" -- "1:n" Product
+Discount "0..n" -- "1" Shop
+
+package purchases {
+    entity ProductInPurchase {
+        quantity: int
+    }
+
+    Purchase "\n0:n" -- "0:n" Product
+    (Purchase, Product) .. ProductInPurchase
+    User "1" -- "0:n" Purchase
+}
+
+package baskets {
+    entity Basket    
+    entity ProductInBasket {
+        quantity: int
+    }
+}
+
+Basket "0:n" -- "0:n" Product
+(Basket, Product) .. ProductInBasket
+Basket "0:n" -- "1" Shop
+
+User "1" -- "0:n" Basket
+
+
+/'
+package notifications
+package dm
+package reviews
+package reports
+'/
+
+
+@enduml
