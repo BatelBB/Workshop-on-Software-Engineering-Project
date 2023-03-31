@@ -1,0 +1,48 @@
+@startuml
+
+skin rose
+title White class diagram
+
+allow_mixing
+entity User {
+    isSystemAdmin: bool
+}
+package notifications
+package dm
+package reviews
+package reports
+
+
+class ProductInPurchase {
+  quantity: int
+}
+
+class ProductInBasket {
+  quantity: int
+}
+
+abstract class DiscountPolicy
+note top of DiscountPolicy
+has subclasses
+end note
+
+
+User "1" ---- "0:n" Shop: owns >
+User "0:n" --d-- "0:n" Shop: manages >
+(User, Shop) ..l.. ManagerPermissions
+Shop "1" -- "0:n" Product
+User "1" -- "0:n" Basket
+Basket "0:n" -- "0:n" Product
+(Basket, Product) .. ProductInBasket
+Basket "0:n" ---- "1" Shop
+Purchase "0:n" -- "0:n" Product
+(Purchase, Product) .. ProductInPurchase
+User "1" -- "0:n" Purchase
+DiscountPolicy "0:n" -- "1:n" Product
+DiscountPolicy "0..n" -- "1" Shop
+
+note top of Product
+can have purchase policy
+end note
+
+@enduml
