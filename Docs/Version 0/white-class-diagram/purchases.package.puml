@@ -1,9 +1,0 @@
-package purchases {
-    entity ProductInPurchase {
-        quantity: int
-    }
-
-    Purchase "\n0:n" -- "0:n" Product
-    (Purchase, Product) .. ProductInPurchase
-    User "1" -- "0:n" Purchase
-}
