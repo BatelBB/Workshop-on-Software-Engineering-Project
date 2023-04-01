@@ -1,0 +1,42 @@
+@startuml
+
+skin rose
+
+title Architecture Diagram
+
+package "Communication" {
+}
+
+package "Service" {
+    component [service]
+}
+
+package "Domain"{
+  component [Users]
+  component [Notifications]
+  component [DMS]
+  component [Baskets]
+  component [Reports]
+  component [Users]
+  component [Reviews]
+  component [Purchases]
+  component [Shops]
+  component [Discounts]
+}
+
+package "DataAccessLayer"{
+
+}
+
+package "Storage"{
+
+}
+
+Service -down-> Domain
+Communication -down-> Service
+Domain -down-> DataAccessLayer
+DataAccessLayer -down-> Storage
+
+
+
+@enduml
