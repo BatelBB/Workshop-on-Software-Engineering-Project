@@ -1,0 +1,132 @@
+@startuml
+
+title White class diagram
+
+skin rose
+skinparam linetype ortho
+
+skinparam nodesep 100
+skinparam ranksep 100
+
+
+
+package users {
+    entity "\n\n\t\tUser\t\t\n\n" as User {
+	  isSystemAdmin: bool
+	}
+	
+	note top of User
+	can modify own's security policy
+	end note
+}
+
+package shops {
+    entity "\t\t\t\tShop\t\t\t\t" as Shop
+    entity Product
+    
+    note bottom of  Product
+    can have purchase policy
+    end note
+
+    entity ManagerPermissions
+}
+
+
+User "1" ---- "0:n" Shop: owns >
+User "0:n" ---d--- "0:n" Shop: manages >
+(User, Shop) ...l... ManagerPermissions
+
+package discounts {
+    
+    abstract class Discount
+   
+    entity OpenDiscount
+    entity ConditionalDiscount
+    entity ClosedDiscount
+    
+    OpenDiscount ---u---|> Discount
+    ConditionalDiscount ---u---|> Discount
+    ClosedDiscount ---u---|> Discount
+
+}
+
+Discount "0:n" ---- "1:n" Product
+Discount "0..n" ---- "1" Shop
+
+package purchases {
+    entity ProductInPurchase {
+        quantity: int
+    }
+
+    Purchase "\n0:n" ---- "0:n" Product
+    (Purchase, Product) .... ProductInPurchase
+    User "1" ---- "0:n" Purchase
+}
+
+package baskets {
+    entity Basket    
+    entity ProductInBasket {
+        quantity: int
+    }
+}
+
+Basket "0:n" ---- "0:n" Product
+(Basket, Product) .. ProductInBasket
+Basket "0:n" ---- "1" Shop
+
+User "1" ---- "0:n" Basket
+
+
+package reviews {
+	entity Review
+	entity ShopReview
+	entity ProductReview
+	
+	ShopReview --u--|> Review
+	ProductReview --u--|> Review
+}
+
+ShopReview "0:n" ---- "1" Shop
+ShopReview "0:n" ---- "1" User: reviewer
+ProductReview "0:n" ---- "1" Product
+ProductReview "0:n" ---- "1" User: reviewer
+
+
+package reports {
+	entity Report
+	entity ShopReport
+	entity ProductReport
+	
+	ShopReport --u--|> Report
+	ProductReport --u--|> Report
+}
+
+ShopReport "0:n" ---- "1" Shop
+ShopReport "0:n" ---- "1" User: reporter
+ProductReport "0:n" ---- "1" Product
+ProductReport "0:n" ---- "1" User: reporter
+
+
+package dms {
+	entity "\n\tDM\t\n" as DM
+	
+	DM "0:n" -r- "1" User: sender >
+	DM "0:n" -l- "1" User: recipient >
+}
+
+package notificiations {
+	entity Notification
+	
+	Notification "0:n" ---- "1" User
+	
+	entity DMNotification
+	DMNotification -u-|> Notification
+	
+	DMNotification "1" -- "1" DM
+}
+
+users -l[hidden]- notifications
+users -d[hidden]- shops
+users -r[hidden]- baskets
+
+@enduml
