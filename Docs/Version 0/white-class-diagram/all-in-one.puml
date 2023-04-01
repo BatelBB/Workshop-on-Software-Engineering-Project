@@ -3,15 +3,15 @@
 title White class diagram
 
 skin rose
-skinparam linetype poly
+skinparam linetype ortho
 
-/'!pragma ratio 0.5
-allow_mixing
-'/
+skinparam nodesep 100
+skinparam ranksep 100
+
 
 
 package users {
-    entity User {
+    entity "\n\n\t\tUser\t\t\n\n" as User {
 	  isSystemAdmin: bool
 	}
 	
@@ -108,10 +108,10 @@ ProductReport "0:n" -- "1" User: reporter
 
 
 package dms {
-	entity DM
+	entity "\n\tDM\t\n" as DM
 	
-	DM "0:n" -- "1" User: sender >
-	DM "0:n" -- "1" User: recipient >
+	DM "0:n" -r- "1" User: sender >
+	DM "0:n" -l- "1" User: recipient >
 }
 
 @enduml
