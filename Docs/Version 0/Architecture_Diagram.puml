@@ -14,14 +14,8 @@ package "Service" {
 package "Domain"{
   component [Users]
   component [Notifications]
-  component [DMS]
-  component [Baskets]
-  component [Reports]
-  component [Users]
-  component [Reviews]
-  component [Purchases]
   component [Shops]
-  component [Discounts]
+  component [Market]
 }
 
 package "DataAccessLayer"{
@@ -32,11 +26,24 @@ package "Storage"{
 
 }
 
+cloud "External API" as API{
+  component [Payment Service]
+  component [Delivery Service]
+} 
+
+
 Service -down-> Domain
 Communication -down-> Service
 Domain -down-> DataAccessLayer
 DataAccessLayer -down-> Storage
 
+Users --o Market
+
+Market --o Shops
+Market --o Notifications
+
+
+Domain -down-> API
 
 
 @enduml
