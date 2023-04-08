@@ -45,22 +45,6 @@ class IRegisteredUser(ABC):
     username: str
     password: object  # TODO
 
-
-class UserSession(ABC):
-    _registered_user: Optional[IRegisteredUser]
-
-    def login(self, username, password):
-        ...
-
-    def register(self):
-        ...
-
-    def logout(self):
-        ...
-
-    def purchase_cart(self):
-        ...
-
     def create_store(self):
         ...
 
@@ -86,6 +70,26 @@ class UserSession(ABC):
 
     def get_purchase_history_for_shop(self, shop_id):
         ...
+
+
+class UserSession(ABC):
+    """
+    is a buyer who may or may not be registered & logged in.
+    """
+    _registered_user: Optional[IRegisteredUser]
+
+    def login(self, username, password):
+        ...
+
+    def register(self):
+        ...
+
+    def logout(self):
+        ...
+
+    def purchase_cart(self):
+        ...
+
 
 
 class IMarket(ABC):
