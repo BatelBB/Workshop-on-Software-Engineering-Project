@@ -4,24 +4,23 @@ from typing import Generic, TypeVar, List, Optional, Any
 from domain.resource_manager import IResourceManager
 
 
-class IExternalDeliveryService(ABC):
+class IExternalDeliveryService(ABC):  # Hagai
     ...
 
 
-class IProduct(ABC):
+class IProduct(ABC):  # Batel
     id: int
     name: str
     price: float
 
 
-
-class IExternalPaymentService(ABC):
+class IExternalPaymentService(ABC):  # Hagai
     @abstractmethod
     def pay(self, buyer, seller, amount) -> bool:
         ...
 
 
-class IShop(ABC):
+class IShop(ABC):  # Nir
     def payment(self):
         ...
 
@@ -41,9 +40,10 @@ class IShop(ABC):
         ...
 
 
-class IRegisteredUser(ABC):
+class IRegisteredUser(ABC):  # Hagai
     username: str
     password: object  # TODO
+    buyer: 'Buyer'
 
     def create_store(self):
         ...
@@ -72,7 +72,7 @@ class IRegisteredUser(ABC):
         ...
 
 
-class UserSession(ABC):
+class IBuyer(ABC):  # Yuval
     """
     is a buyer who may or may not be registered & logged in.
     """
@@ -91,12 +91,11 @@ class UserSession(ABC):
         ...
 
 
-
-class IMarket(ABC):
+class IMarket(ABC):  # everyone
     delivery_services: IResourceManager[IExternalDeliveryService]
     payment_services: IResourceManager[IExternalPaymentService]
     registered_users: IResourceManager[IRegisteredUser]
-    _sessions: List[UserSession]
+    _sessions: List[IBuyer]
 
     def startup(self):
         ...
@@ -110,10 +109,10 @@ class IMarket(ABC):
     def create_delivery(self):
         ...
 
-    def start_session(self) -> UserSession:
+    def start_session(self) -> IBuyer:
         ...
 
-    def end_session(self, session: UserSession):
+    def end_session(self, session: IBuyer):
         ...
 
     def search_shop(self, shop_id) -> IShop:
@@ -127,4 +126,3 @@ class IMarket(ABC):
 
     def search_product(self):
         ...
-
