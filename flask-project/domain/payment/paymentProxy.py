@@ -4,20 +4,19 @@ from paymentInterfaces import IExternalPaymentService
 class paymentProxy(IExternalPaymentService):
     real: IExternalPaymentService
 
-    def __init__(self, amount: int, buyer: int, seller: int):
+    def __init__(self):
         real = None
-        super().__init__(amount, buyer, seller)
 
-    def payWIthCreditcard(self, cardNumber, cvv) -> bool:
+    def payWIthCreditcard(self, cardNumber, cvv, amount) -> bool:
         if self.real is not None:
-            return self.real.payWIthCreditcard(cardNumber, cvv)
+            return self.real.payWIthCreditcard(cardNumber, cvv, amount)
 
         super().success = True
         return True
 
-    def payWIthPaypal(self, username, password) -> bool:
+    def payWIthPaypal(self, username, password, amount) -> bool:
         if self.real is not None:
-            return self.real.payWIthPaypal(username, password)
+            return self.real.payWIthPaypal(username, password, amount)
 
         super().success = True
         return True
