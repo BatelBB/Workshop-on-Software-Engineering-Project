@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import Generic, TypeVar, List, Optional, Any
 
+
 from domain.resource_manager import IResourceManager
 
 
