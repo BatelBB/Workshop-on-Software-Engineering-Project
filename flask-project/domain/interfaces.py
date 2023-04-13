@@ -12,6 +12,13 @@ class IProduct(ABC):  # Batel
     id: int
     name: str
     price: float
+    category: str
+
+    def getPrice(self, id):
+        ...
+
+    def getCategory(self, id):
+        ...
 
 
 class IExternalPaymentService(ABC):  # Hagai
