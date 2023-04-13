@@ -5,7 +5,8 @@ class paymentProxy(IExternalPaymentService):
     real: IExternalPaymentService
 
     def __init__(self):
-        real = None
+        # real = None
+        print("made a payment proxy")
 
     def payWIthCreditcard(self, cardNumber, cvv, amount) -> bool:
         if self.real is not None:
@@ -20,4 +21,3 @@ class paymentProxy(IExternalPaymentService):
 
         super().success = True
         return True
-
