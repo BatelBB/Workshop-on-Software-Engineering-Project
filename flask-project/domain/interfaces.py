@@ -15,10 +15,10 @@ class IProduct(ABC):  # Batel
     category: str
 
     def getPrice(self, id):
-        ...
+        return self.getPrice(id)
 
     def getCategory(self, id):
-        ...
+        return self.getCategory(id)
 
 
 class IExternalPaymentService(ABC):  # Hagai
