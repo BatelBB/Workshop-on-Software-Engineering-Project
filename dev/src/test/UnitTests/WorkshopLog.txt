@@ -1,0 +1,4 @@
+17/04/2023 00:49:16 INFO:	 Session: 4648517485269509719 has been initialized
+17/04/2023 00:49:16 INFO:	 Visitor.leave: Visitor(Guest) left session 4648517485269509719!
+17/04/2023 00:49:16 WARNING:	 Market is closed!
+17/04/2023 00:49:16 WARNING:	 Logger thread exits!
