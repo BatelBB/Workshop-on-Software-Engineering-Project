@@ -1,6 +1,8 @@
 from dev.src.main.Service.IService import IService
 from dev.src.main.User.Cart import Cart
 from dev.src.main.Utils.Response import Response
+from dev.src.main.Store.Product import Product
+from dev.src.main.User.Role.Visitor import Visitor
 
 
 class User:
@@ -8,7 +10,6 @@ class User:
         self.mediator = mediator
         self.username = username
         self.encrypted_password = encrypted_password
-        from dev.src.main.User.Role.Visitor import Visitor
         self.role = Visitor(self)
         self.founded_stores: list[str] = list()
         # we map store_name to all appointees (username) which were appointed by self (might be StoreOwner or StoreManager)
@@ -41,8 +42,6 @@ class User:
 
     def open_store(self, store_name: str) -> Response[bool]:
         return self.role.open_store(store_name)
-
-    from dev.src.main.Store.Product import Product
 
     def add_product(self, store_name: str, product: Product, quantity: int) -> Response[bool]:
         return self.role.add_product(store_name, product, quantity)

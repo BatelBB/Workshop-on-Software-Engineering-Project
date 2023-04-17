@@ -19,13 +19,13 @@ class StoreManager(Member):
         return report_error(calling_method, f'{self} has no permission to {get_store_permission_description(permission)}'
                                             f' on Store \'{store_name}.')
     def is_allowed_add_product(self, store_name: str) -> Response[bool]:
-        return Response(True) if self.is_appointed_of(store_name).is_succeed() and StorePermissions.Add in self.permissions \
+        return Response(True) if self.is_appointed_of(store_name).success and StorePermissions.Add in self.permissions \
             else self.report_no_permission(self.is_allowed_add_product.__qualname__, StorePermissions.Add, store_name)
 
     def is_allowed_update_product(self, store_name: str) -> Response[bool]:
-        return Response(True) if self.is_appointed_of(store_name).is_succeed() and StorePermissions.Update in self.permissions \
+        return Response(True) if self.is_appointed_of(store_name).success and StorePermissions.Update in self.permissions \
             else self.report_no_permission(self.is_allowed_update_product.__qualname__, StorePermissions.Add, store_name)
 
     def is_allowed_remove_product(self, store_name: str) -> Response[bool]:
-        return Response(True) if self.is_appointed_of(store_name).is_succeed() and StorePermissions.Remove in self.permissions \
+        return Response(True) if self.is_appointed_of(store_name).success and StorePermissions.Remove in self.permissions \
             else self.report_no_permission(self.is_allowed_remove_product.__qualname__, StorePermissions.Add, store_name)

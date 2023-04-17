@@ -7,8 +7,6 @@ from parameterized import parameterized
 from dev.src.main.Utils.Response import Response
 
 
-# TODO: replace parameterized arguemnts with JSON file for test
-
 class VisitorTestCase(unittest.TestCase):
 
     def setUp(self) -> None:

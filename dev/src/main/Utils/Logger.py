@@ -7,7 +7,6 @@ from typing import TypeVar
 from dev.src.main.Utils.IConcurrentSingelton import IConcurrentSingleton
 from dev.src.main.Utils.Response import Response
 
-
 def threaded(fn):
     def wrapper(*args, **kwargs):
         thread = threading.Thread(target=fn, args=args, kwargs=kwargs)
@@ -77,7 +76,7 @@ class Logger(metaclass=IConcurrentSingleton):
             self.write()
 
     @threaded
-    def log(self) -> None:
+    def log(self):
         while self.run:
             while self.queue.empty() and self.run:
                 with self.condition_variable:

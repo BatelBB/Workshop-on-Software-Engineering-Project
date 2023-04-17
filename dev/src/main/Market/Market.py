@@ -52,7 +52,7 @@ class Market(IService):
 
     def verify_store_contains_product(self, calling_method_name: str, store_name: str, product_name: str) -> Response[Store] | Response[bool]:
         response = self.verify_registered_store(calling_method_name, store_name)
-        if response.is_succeed():
+        if response.success:
             store = response.result
             if store.contains_product(product_name):
                 return Response(store)
@@ -99,7 +99,7 @@ class Market(IService):
         if registered_store_with_same_name is None:
             actor = self.get_active_user(session_identifier)
             response = actor.open_store(store_name)
-            if not response.is_succeed():
+            if not response.success:
                 self.stores.delete(store_name)
             return response
         return report_error(self.open_store.__qualname__, f'Store name \'{store_name}\' is occupied.')
@@ -113,7 +113,7 @@ class Market(IService):
 
     def get_store(self, session_identifier: int, store_name: str) -> Response[bool]:
         response = self.verify_registered_store(self.get_store.__qualname__, store_name)
-        if response.is_succeed():
+        if response.success:
             actor = self.get_active_user(session_identifier)
             preface: str = f'Displaying store {response.result.name} to {actor}\n'
             return report_info(self.get_store.__qualname__, preface + response.result.__str__())
@@ -126,37 +126,37 @@ class Market(IService):
         actor = self.get_active_user(session_identifier)
         product = Product(product_name, category, price, keywords)
         response = actor.add_product(store_name, product, quantity)
-        if response.is_succeed():
+        if response.success:
             response = self.verify_registered_store(self.add_product.__qualname__, store_name)
             store = response.result
-            return store.add(product, quantity) if response.is_succeed() else response
+            return store.add(product, quantity) if response.success else response
         else:
             return response
 
     def update_product_quantity(self, session_identifier: int, store_name: str, product_name: str, quantity: int) -> Response[bool]:
         actor = self.get_active_user(session_identifier)
         response = actor.update_product_quantity(store_name, product_name, quantity)
-        if response.is_succeed():
+        if response.success:
             response = self.verify_registered_store(self.update_product_quantity.__qualname__, store_name)
             store = response.result
-            return store.update(product_name, quantity) if response.is_succeed() else response
+            return store.update(product_name, quantity) if response.success else response
         else:
             return response
 
     def remove_product(self, session_identifier: int, store_name: str, product_name: str) -> Response[bool]:
         actor = self.get_active_user(session_identifier)
         response = actor.remove_product(store_name, product_name)
-        if response.is_succeed():
+        if response.success:
             response = self.verify_registered_store(self.remove_product.__qualname__, store_name)
             store = response.result
-            return store.remove(product_name) if response.is_succeed() else response
+            return store.remove(product_name) if response.success else response
         else:
             return response
 
     def add_to_cart(self, session_identifier: int, store_name: str, product_name: str, quantity: int) -> Response[bool]:
         actor = self.get_active_user(session_identifier)
         response = self.verify_store_contains_product(self.add_to_cart.__qualname__, store_name, product_name)
-        if response.is_succeed():
+        if response.success:
             store = response.result
             product_price = store.get_product_price(product_name)
             return actor.add_to_cart(store_name, product_name, product_price, quantity)
@@ -166,12 +166,12 @@ class Market(IService):
     def remove_product_from_cart(self, session_identifier: int, store_name: str, product_name: str) -> Response[bool]:
         actor = self.get_active_user(session_identifier)
         response = self.verify_store_contains_product(self.remove_product_from_cart.__qualname__, store_name, product_name)
-        return actor.remove_product_from_cart(store_name, product_name) if response.is_succeed() else response
+        return actor.remove_product_from_cart(store_name, product_name) if response.success else response
 
     def update_cart_product_quantity(self, session_identifier: int, store_name: str, product_name: str, quantity: int) -> Response[bool]:
         actor = self.get_active_user(session_identifier)
         response = self.verify_store_contains_product(self.update_cart_product_quantity.__qualname__, store_name, product_name)
-        return actor.update_cart_product_quantity(store_name, product_name, quantity) if response.is_succeed() else response
+        return actor.update_cart_product_quantity(store_name, product_name, quantity) if response.success else response
 
     def show_cart(self, session_identifier: int) -> Response[bool]:
         actor = self.get_active_user(session_identifier)

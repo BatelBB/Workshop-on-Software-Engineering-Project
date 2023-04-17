@@ -33,12 +33,12 @@ class Basket:
                 new_quantity = 0
             else:
                 item_in_basket.quantity = new_quantity
-        except:
+        except Exception:
             self.items.append(item)
         return new_quantity
 
     def remove_item(self, item: Item) -> None:
         try:
-            self.remove_item(item)
-        except:
+            self.remove_item(item)  # FIXME is that function calling itself?
+        except Exception:
             pass

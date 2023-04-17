@@ -7,8 +7,7 @@ from dev.src.main.Utils.Response import Response
 
 
 class Visitor(IRole, ABC):
-    from dev.src.main.User.User import User
-    def __init__(self, context: User):
+    def __init__(self, context):
         super().__init__(context)
 
     def __str__(self):

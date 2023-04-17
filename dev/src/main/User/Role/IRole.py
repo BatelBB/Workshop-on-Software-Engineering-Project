@@ -1,12 +1,11 @@
 from abc import ABC, abstractmethod
 
 from dev.src.main.Store.Product import Product
-from dev.src.main.User.User import User
 from dev.src.main.Utils.Response import Response
 
 
 class IRole(ABC):
-    def __init__(self, context: User):
+    def __init__(self, context):
         self.context = context
 
     @abstractmethod

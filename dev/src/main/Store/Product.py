@@ -1,9 +1,14 @@
+from typing import Optional
+
+
 class Product:
-    def __init__(self, name: str, category: str = "whatever", price: float = 0.0, keywords: list[str] = []):
+    def __init__(self, name: str, category: str = "whatever", price: float = 0.0, keywords: Optional[list[str]] = None):
         self.rate = None
         self.name = name
         self.category = category
         self.price = price
+        if keywords is None:
+            keywords = []
         self.keywords = keywords
         self.keywords.append(name)
 
