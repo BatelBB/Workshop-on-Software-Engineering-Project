@@ -127,3 +127,12 @@ class IMarket(ABC):  # everyone
 
     def search_product(self):
         ...
+
+
+
+    def add_to_cart(self, b: IBuyer, sid: int, pid: int):
+        b.addtocart(...)
+
+    def buy_cart(self, b: IBuyer):
+        ...
+
