@@ -4,7 +4,7 @@ from abc import ABC, abstractmethod
 
 class IExternalProvisionService(ABC):
     @abstractmethod
-    def getDelivery(self, productID: int, amount: int, address: string, ) -> bool:
+    def getDelivery(self, productID: int, amount: int) -> bool:
         ...
 
 
