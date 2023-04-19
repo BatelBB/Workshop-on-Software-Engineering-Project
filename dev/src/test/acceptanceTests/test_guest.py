@@ -21,8 +21,8 @@ class test_guest(unittest.TestCase):
         res = self.app.register(self.session_id, "u", "p")
         self.assertFalse(res, "registered after exit_market")
 
-    # def test_adding_to_cart(self):
-    #     stores = self.app.get_all_stores()
+    def test_adding_to_cart(self):
+        stores = self.app.get_all_stores()
 
     # def test_losing_cart(self):
     #     ...

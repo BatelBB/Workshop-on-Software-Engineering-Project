@@ -1,7 +1,9 @@
 import string
 from PaymentServices import IPaymentService, PayWithCard, PayWithPayPal
 
+
 class PaymentFactory:
+
     def getPaymentService(self, type: string) -> IPaymentService:
         if type == "card":
             return PayWithCard.__init__()

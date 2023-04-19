@@ -27,7 +27,7 @@ class real(Bridge):
         return r.result
 
     def exit_market(self, session_id: int) -> bool:
-        return False
+        return self.market.exit_market(session_id).result
 
 
 
