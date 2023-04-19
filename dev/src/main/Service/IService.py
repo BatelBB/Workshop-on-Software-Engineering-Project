@@ -23,6 +23,7 @@ class IService(ABC):
     @abstractmethod
     def register(self, session_identifier: int, username: str, encrypted_password: str) -> Response[bool]:
         ...
+
     @abstractmethod
     def is_registered(self, username: str) -> bool:
         ...
@@ -57,7 +58,8 @@ class IService(ABC):
         ...
 
     @abstractmethod
-    def update_product_quantity(self, session_identifier: int, store_name: str, product_name: str, quantity: int) -> Response[bool]:
+    def update_product_quantity(self, session_identifier: int, store_name: str, product_name: str, quantity: int) -> \
+    Response[bool]:
         ...
 
     @abstractmethod
@@ -73,11 +75,16 @@ class IService(ABC):
         ...
 
     @abstractmethod
-    def update_cart_product_quantity(self, session_identifier: int, store_name: str, product_name: str, quantity: int) -> Response[bool]:
+    def update_cart_product_quantity(self, session_identifier: int, store_name: str, product_name: str,
+                                     quantity: int) -> Response[bool]:
         ...
 
     @abstractmethod
     def show_cart(self, session_identifier: int) -> Response[bool]:
+        ...
+
+    @abstractmethod
+    def purchase_shopping_cart(self, session_identifier: int, payment_method: str, ) -> Response[bool]:
         ...
     # @abstractmethod
     # def update_product_of(self, store_name: str, product: Product, quantity: int) -> Response[bool]:

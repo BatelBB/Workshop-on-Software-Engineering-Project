@@ -1,6 +1,8 @@
 import random
 import sys
+from typing import Any
 
+from dev.src.main.ExternalServices.Payment.ExternalPaymentServices import IExternalPaymentService
 from dev.src.main.Store.Product import Product
 from dev.src.main.Service.IService import IService
 from dev.src.main.Store.Store import Store
@@ -45,19 +47,21 @@ class Market(IService):
         Logger().post('Market is closed!', Logger.Severity.WARNING)
         Logger().shutdown()
 
-    def verify_registered_store(self,  calling_method_name: str, store_name: str) -> Response[Store] | Response[bool]:
+    def verify_registered_store(self, calling_method_name: str, store_name: str) -> Response[Store] | Response[bool]:
         store: Store = self.stores.get(store_name)
         return Response(store) if store is not None \
             else report_error(calling_method_name, f'Store \'{store_name}\' is not registered to the market.')
 
-    def verify_store_contains_product(self, calling_method_name: str, store_name: str, product_name: str) -> Response[Store] | Response[bool]:
+    def verify_store_contains_product(self, calling_method_name: str, store_name: str, product_name: str) -> \
+            Response[Store] | Response[bool]:
         response = self.verify_registered_store(calling_method_name, store_name)
         if response.success:
             store = response.result
             if store.contains_product(product_name):
                 return Response(store)
             else:
-                return report_error(calling_method_name, f'Store \'{store_name}\' does not contains Product \'{product_name}\'')
+                return report_error(calling_method_name,
+                                    f'Store \'{store_name}\' does not contains Product \'{product_name}\'')
         else:
             return response
 
@@ -133,7 +137,8 @@ class Market(IService):
         else:
             return response
 
-    def update_product_quantity(self, session_identifier: int, store_name: str, product_name: str, quantity: int) -> Response[bool]:
+    def update_product_quantity(self, session_identifier: int, store_name: str, product_name: str, quantity: int) -> \
+            Response[bool]:
         actor = self.get_active_user(session_identifier)
         response = actor.update_product_quantity(store_name, product_name, quantity)
         if response.success:
@@ -165,12 +170,15 @@ class Market(IService):
 
     def remove_product_from_cart(self, session_identifier: int, store_name: str, product_name: str) -> Response[bool]:
         actor = self.get_active_user(session_identifier)
-        response = self.verify_store_contains_product(self.remove_product_from_cart.__qualname__, store_name, product_name)
+        response = self.verify_store_contains_product(self.remove_product_from_cart.__qualname__, store_name,
+                                                      product_name)
         return actor.remove_product_from_cart(store_name, product_name) if response.success else response
 
-    def update_cart_product_quantity(self, session_identifier: int, store_name: str, product_name: str, quantity: int) -> Response[bool]:
+    def update_cart_product_quantity(self, session_identifier: int, store_name: str, product_name: str,
+                                     quantity: int) -> Response[bool]:
         actor = self.get_active_user(session_identifier)
-        response = self.verify_store_contains_product(self.update_cart_product_quantity.__qualname__, store_name, product_name)
+        response = self.verify_store_contains_product(self.update_cart_product_quantity.__qualname__, store_name,
+                                                      product_name)
         return actor.update_cart_product_quantity(store_name, product_name, quantity) if response.success else response
 
     def show_cart(self, session_identifier: int) -> Response[bool]:
@@ -180,3 +188,66 @@ class Market(IService):
     def exit_market(self, session_identifier: int) -> Response[bool]:
         self.sessions.delete(session_identifier)
         return report_info("exit", "no error")
+
+    def verify_store_contains_amount_of_product(self, calling_method_name: str, store_name: str, product_name: str,
+                                                product_quantity: int) -> Response[Store] | Response[bool]:
+        response = self.verify_registered_store(calling_method_name, store_name)
+        if response.success:
+            store = response.result
+            products = store.get_products_by_name(product_name)
+            if len(products) >= product_quantity:
+                return Response(store)
+            else:
+                return report_error(calling_method_name,
+                                    f'Store \'{store_name}\' does not contains Product \'{product_name}\' with the amount'
+                                    f'{product_quantity}')
+        else:
+            return response
+
+    def verify_reserve_amount(self, baskets: dict[str, Any]) -> Response[Store] | Response[bool]:
+        for store_name, basket in baskets.items():
+            for item in basket.items:
+                response = self.verify_store_contains_amount_of_product(self.purchase_shopping_cart.__qualname__,
+                                                                        store_name, item.get_name(),
+                                                                        item.get_quantity())
+                if not response.success:
+                    return report_error(self.purchase_shopping_cart.__qualname__,
+                                        f'{store_name} doesn\'t contain {item}')
+                else:
+                    store = response.result
+                    reserved = store.reserve_products(basket)
+                    if not reserved:
+                        return report_error(self.purchase_shopping_cart.__qualname__,
+                                            f'{store_name} can\'t reserve {basket.__str__()}')
+
+    def calculate_cart_price(self, baskets: dict[str, Any]) -> Response[float]:
+        sum = 0
+        for store_name, basket in baskets.items():
+            for item in basket.items:
+                sum += item.get_price()
+        return Response(sum)
+
+    def purchase_shopping_cart(self, session_identifier: int, payment_method: str) -> Response[bool]:
+        actor = self.get_active_user(session_identifier)
+        response = actor.verify_cart_not_empty()
+        if response.success:
+            baskets = actor.get_baskets()
+            response = self.verify_reserve_amount(baskets)
+            if response.success:
+                # calculate cart price
+                price = self.calculate_cart_price(baskets)
+                # send payment
+                store = response.result
+                response = store.pay_for_cart(price, payment_method)
+                if response.success:
+                    # update store products
+
+                else:
+                    return response
+
+            else:
+                return response
+        else:
+            return response
+        # TODO 2nd version - verify purchaser is conformed with store policy
+        # TODO 2nd version - apply discount policy

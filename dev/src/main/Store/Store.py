@@ -1,5 +1,6 @@
 import threading
 
+from dev.src.main.ExternalServices.Payment.PaymentFactory import PaymentFactory
 from dev.src.main.Store.Product import Product
 from dev.src.main.User.Basket import Basket
 from dev.src.main.Utils.Logger import report_info, report_error
@@ -30,6 +31,7 @@ class Store:
         self.name = name
         self.products: list[Product] = list()
         self.products_quantities: dict[str, ProductQuantity] = dict()
+        self.payment_factory: PaymentFactory = PaymentFactory()
 
     def __str__(self):
         output: str = f'Store: {self.name}\nProducts:\n'
@@ -121,3 +123,5 @@ class Store:
     #
     # def get_products_by_rate(self, min_rate: float) -> list[Product]:
     #     return self.get_products(lambda p: min_rate <= p.rate or p.is_unrated())
+    def pay_for_cart(self, price: float, payment_method: PaymentFactory) -> Response[bool]:
+                ...

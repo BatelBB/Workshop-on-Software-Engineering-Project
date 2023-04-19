@@ -58,11 +58,13 @@ class Visitor(IRole, ABC):
 
     def add_to_cart(self, store_name: str, product_name: str, price: float, quantity: int) -> Response[bool]:
         self.context.cart.add_item(store_name, product_name, price, quantity)
-        return report_info(self.add_to_cart.__qualname__, f'{quantity} units of Product \'{product_name}\' is added to {self}\' cart')
+        return report_info(self.add_to_cart.__qualname__,
+                           f'{quantity} units of Product \'{product_name}\' is added to {self}\' cart')
 
     def remove_product_from_cart(self, store_name: str, product_name: str) -> Response[bool]:
         self.context.cart.remove_item(store_name, product_name)
-        return report_info(self.remove_product_from_cart.__qualname__, f'Product \'{product_name}\' is removed from {self}\'s cart')
+        return report_info(self.remove_product_from_cart.__qualname__,
+                           f'Product \'{product_name}\' is removed from {self}\'s cart')
 
     def update_cart_product_quantity(self, store_name: str, product_name: str, quantity: int) -> Response[bool]:
         new_quantity = self.context.cart.update_item_quantity(store_name, product_name, quantity)
@@ -71,3 +73,13 @@ class Visitor(IRole, ABC):
 
     def show_cart(self) -> Response[bool]:
         return report_info(self.show_cart.__qualname__, self.context.cart.__str__())
+
+    def verify_cart_not_empty(self) -> Response[bool]:
+        is_empty = self.context.cart.is_empty()
+        if is_empty:
+            return report_error(self.verify_cart_not_empty.__qualname__, f'{self} cart\'s is empty!')
+        else:
+            return report_info(self.verify_cart_not_empty.__qualname__, f'{self} cart\'s is not empty.')
+
+    def get_baskets(self) -> dict:
+        return self.context.cart.baskets
