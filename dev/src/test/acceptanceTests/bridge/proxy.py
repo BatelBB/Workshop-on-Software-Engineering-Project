@@ -17,7 +17,7 @@ class proxy(Bridge):
 
     def exit_market(self, session_id: int) -> bool:
         if self.real is not None:
-            return self.real.exit_market()
+            return self.real.exit_market(session_id)
         return True
 
     def register(self, session_id: int, username: string, password: string) -> bool:

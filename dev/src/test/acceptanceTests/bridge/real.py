@@ -24,7 +24,7 @@ class real(Bridge):
 
     def register(self, session_id: int, username: string, password: string) -> bool:
         r = self.market.register(session_id, username, password)
-        return r.success
+        return r.result
 
     def exit_market(self, session_id: int) -> bool:
         return False
@@ -33,7 +33,7 @@ class real(Bridge):
 
     def login(self, session_id: int, username: string, password: string) -> bool:
         res = self.market.login(session_id, username, password)
-        return res.success
+        return res.result
 
 
 
