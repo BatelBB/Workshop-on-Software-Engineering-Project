@@ -5,10 +5,11 @@ from dev.src.main.Market.Market import Market
 from dev.src.main.Service.IService import IService
 from dev.src.main.Utils.Session import Session
 from typing import Tuple
+from dev.src.main.Utils.Response import Response
 
 class real(Bridge):
     market: Market
-    user_sessions: list[Tuple[int, Session]]
+    user_sessions: list[int]
     user_counter: int
 
     def __init__(self):
@@ -18,21 +19,21 @@ class real(Bridge):
 
     def enter_market(self) -> int:
         s = self.market.enter()
-        self.user_sessions.append((self.user_counter, s))
-        self.user_counter += 1
-        return self.user_counter - 1
+        self.user_sessions.append(s.identifier)
+        return s.identifier
+
+    def register(self, session_id: int, username: string, password: string) -> bool:
+        r = self.market.register(session_id, username, password)
+        return r.success
+
+    def exit_market(self, session_id: int) -> bool:
+        return False
 
 
 
-
-    def exit_market(self) -> bool:
-        return True
-
-    def register(self, username: string, password: string) -> bool:
-        return True
-
-    def login(self, username: string, password: string) -> bool:
-        return True
+    def login(self, session_id: int, username: string, password: string) -> bool:
+        res = self.market.login(session_id, username, password)
+        return res.success
 
 
 

@@ -15,19 +15,19 @@ class proxy(Bridge):
             return self.real.enter_market()
         return 1
 
-    def exit_market(self) -> bool:
+    def exit_market(self, session_id: int) -> bool:
         if self.real is not None:
             return self.real.exit_market()
         return True
 
-    def register(self, username: string, password: string) -> bool:
+    def register(self, session_id: int, username: string, password: string) -> bool:
         if self.real is not None:
-            return self.real.register(username, password)
+            return self.real.register(session_id, username, password)
         return True
 
-    def login(self, username: string, password: string) -> bool:
+    def login(self, session_id: int, username: string, password: string) -> bool:
         if self.real is not None:
-            return self.real.login(username, password)
+            return self.real.login(session_id, username, password)
         return True
 
 

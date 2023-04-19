@@ -9,15 +9,15 @@ class Bridge(ABC):
 
     #guest
     @abstractmethod
-    def exit_market(self) -> bool:
+    def exit_market(self, session_id: int) -> bool:
         ...
 
     @abstractmethod
-    def register(self, username: string, password: string) -> bool:
+    def register(self, session_id: int, username: string, password: string) -> bool:
         ...
 
     @abstractmethod
-    def login(self, username: string, password: string) -> bool:
+    def login(self, session_id: int, username: string, password: string) -> bool:
         ...
 
     #guest buying operations
