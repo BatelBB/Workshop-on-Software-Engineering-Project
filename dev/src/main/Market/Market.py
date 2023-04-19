@@ -176,3 +176,7 @@ class Market(IService):
     def show_cart(self, session_identifier: int) -> Response[bool]:
         actor = self.get_active_user(session_identifier)
         return actor.show_cart()
+
+    def exit_market(self, session_identifier: int) -> Response[bool]:
+        self.sessions.delete(session_identifier)
+        return report_info("exit", "no error")
