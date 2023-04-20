@@ -64,7 +64,7 @@ class Bridge(ABC):
 
 
     @abstractmethod
-    def add_to_cart(self, store_id: int, product_id: int) -> bool:
+    def add_to_cart(self, session_id: int, store_name: string, product_name: string, quantity: int) -> bool:
         ...
 
     @abstractmethod
@@ -77,12 +77,13 @@ class Bridge(ABC):
         ...
 
     @abstractmethod
-    def open_store(self) -> int:
+    def open_store(self, session_id: int, store_name: string) -> bool:
         ...
 
     #storeOwner operations
     @abstractmethod
-    def add_product(self, store_id: int, product_id: int, amount:  int) -> int:
+    def add_product(self, session_identifier: int, store_name: str, product_name: str, category: str,
+                    price: float, quantity: int, keywords: list[str]) -> bool:
         ...
 
     @abstractmethod
@@ -119,6 +120,8 @@ class Bridge(ABC):
     def get_store_purchase_history(self, store_id) -> list:
         ...
 
-
+    @abstractmethod
+    def show_cart(self, session_id: int) -> list:
+        ...
 
 

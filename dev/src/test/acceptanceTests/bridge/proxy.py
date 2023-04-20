@@ -70,7 +70,7 @@ class proxy(Bridge):
 
 
 
-    def add_to_cart(self, store_id: int, product_id: int) -> bool:
+    def add_to_cart(self, session_id: int, store_name: string, product_name: string, quantity: int) -> bool:
         return True
 
     def buy_cart(self) -> bool:
@@ -80,12 +80,13 @@ class proxy(Bridge):
     def logout(self) -> bool:
         return True
 
-    def open_store(self) -> int:
-        return 1
+    def open_store(self, session_id: int, store_name: string) -> bool:
+        return True
 
     #storeOwner operations
-    def add_product(self, store_id: int, product_id: int, amount:  int) -> int:
-        return 1
+    def add_product(self, session_identifier: int, store_name: str, product_name: str, category: str,
+                    price: float, quantity: int, keywords: list[str]) -> bool:
+        return True
 
     def remove_product(self, store_id: int, product_id: int, amount:  int) -> bool:
         return True
@@ -111,4 +112,7 @@ class proxy(Bridge):
         return []
 
     def get_store_purchase_history(self, store_id) -> list:
+        return []
+
+    def show_cart(self, session_id: int) -> list:
         return []

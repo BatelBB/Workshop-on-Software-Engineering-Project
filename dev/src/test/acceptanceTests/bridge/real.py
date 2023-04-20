@@ -7,6 +7,7 @@ from dev.src.main.Utils.Session import Session
 from typing import Tuple
 from dev.src.main.Utils.Response import Response
 
+
 class real(Bridge):
     market: Market
     user_sessions: list[int]
@@ -29,19 +30,14 @@ class real(Bridge):
     def exit_market(self, session_id: int) -> bool:
         return self.market.exit_market(session_id).result
 
-
-
     def login(self, session_id: int, username: string, password: string) -> bool:
         res = self.market.login(session_id, username, password)
         return res.result
 
+    def open_store(self, session_id: int, store_name: string) -> bool:
+        return True
 
-
-
-
-
-
-    #guest buying operations
+    # guest buying operations
     def get_all_stores(self) -> list:
         return []
 
@@ -56,7 +52,6 @@ class real(Bridge):
 
     def get_products_by_keyword(self, name: string) -> list:
         return []
-
 
     ##quesion??????????????????????????????????????????????????
     def filter_products_by_price_range(self, low: int, high: int) -> list:
@@ -73,26 +68,22 @@ class real(Bridge):
 
     ##quesion??????????????????????????????????????????????????
 
-
-
-    def add_to_cart(self, store_id: int, product_id: int) -> bool:
+    def add_to_cart(self, session_id: int, store_name: string, product_name: string, quantity: int) -> bool:
         return True
 
     def buy_cart(self) -> bool:
         return True
 
-    #registered user operations
+    # registered user operations
     def logout(self) -> bool:
         return True
 
-    def open_store(self) -> int:
-        return 1
+    # storeOwner operations
+    def add_product(self, session_identifier: int, store_name: str, product_name: str, category: str,
+                    price: float, quantity: int, keywords: list[str]) -> bool:
+        return True
 
-    #storeOwner operations
-    def add_product(self, store_id: int, product_id: int, amount:  int) -> int:
-        return 1
-
-    def remove_product(self, store_id: int, product_id: int, amount:  int) -> bool:
+    def remove_product(self, store_id: int, product_id: int, amount: int) -> bool:
         return True
 
     def change_product_name(self, store_id: int, product_id: int, new_name: string) -> bool:
@@ -107,7 +98,7 @@ class real(Bridge):
     def appoint_manager(self, store_id: int, new_owner: string) -> bool:
         return True
 
-    #TODO: 4.7: permissions of store manager
+    # TODO: 4.7: permissions of store manager
 
     def close_store(self, store_id: int) -> bool:
         return True
@@ -116,4 +107,7 @@ class real(Bridge):
         return []
 
     def get_store_purchase_history(self, store_id) -> list:
+        return []
+
+    def show_cart(self, session_id: int) -> list:
         return []

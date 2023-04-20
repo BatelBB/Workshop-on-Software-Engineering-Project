@@ -21,11 +21,49 @@ class test_guest(unittest.TestCase):
         res = self.app.register(self.session_id, "u", "p")
         self.assertFalse(res, "registered after exit_market")
 
-    def test_adding_to_cart(self):
-        stores = self.app.get_all_stores()
 
-    # def test_losing_cart(self):
-    #     ...
+    def setup_2_stores_with_products(self):
+        self.session_id = self.app.enter_market()
+        res1 = self.app.register(self.session_id, "user1", "password1")
+        res2 = self.app.login(self.session_id, "user1", "password1")
+        res3 = self.app.open_store(self.session_id, "store1")
+        res4 = self.app.add_product(self.session_id, "store1", "product1_1", "cat1", 12, 15, ["car1", "p1"])
+        res4 = self.app.add_product(self.session_id, "store1", "product1_2", "cat2", 16, 9, ["cat2", "p2"])
+
+
+        s2 = self.app.enter_market()
+        res1 = self.app.register(self.session_id, "user2", "password2")
+        res2 = self.app.login(self.session_id, "user2", "password2")
+        res3 = self.app.open_store(s2, "store2")
+        res4 = self.app.add_product(self.session_id, "store2", "product2_1", "cat1", 24, 18, ["car1", "p1"])
+        res4 = self.app.add_product(self.session_id, "store2", "product2_2", "cat2", 6, 5, ["cat2", "p2"])
+
+
+
+    def test_adding_to_cart(self):
+        self.setup_2_stores_with_products()
+
+        cur_s = self.app.enter_market()
+        stores = self.app.get_all_stores()
+        store1 = stores[0]
+        store2 = stores[1]
+
+        res = self.app.add_to_cart(cur_s, "store1", "product1", 3)
+        self.assertTrue(res, "add to cart failed")
+        cart = self.app.show_cart(cur_s)
+        self.assertTrue(("product1", 3) in cart, "product1 not in cart")
+
+        res2 = self.app.add_to_cart(cur_s, "store2", "product2", 5)
+        self.assertTrue(res, "add to cart failed")
+        cart = self.app.show_cart(cur_s)
+        self.assertTrue(("product1", 3) in cart and ("product2", 5) in cart, "product2 not in cart")
+
+
+
+
+
+    def test_losing_cart(self):
+        ...
 
 
 
