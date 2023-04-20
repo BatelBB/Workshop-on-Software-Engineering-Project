@@ -110,6 +110,16 @@ class Session:
         else:
             return self.report_session_closed()
 
+    def add_payment_details_credit(self, card_number: str, cvv: int, exp_date: str):
+        if self.is_open:
+            return self.service.add_payment_details_credit(self.identifier, card_number, cvv, exp_date)
+        else:
+            return self.report_session_closed()
+    def add_payment_details_paypal(self, username: str, password: str):
+        if self.is_open:
+            return self.service.add_payment_details_paypal(self.identifier, username, password)
+        else:
+            return self.report_session_closed()
     def purchase_shopping_cart(self, payment_method: str) -> Response[bool]:
         if self.is_open:
             return self.service.purchase_shopping_cart(self.identifier, payment_method)

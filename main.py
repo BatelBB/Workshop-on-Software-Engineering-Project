@@ -19,6 +19,8 @@ if __name__ == '__main__':
     sesssion.add_to_cart("Amazon", "Razer Blackwidow V3", 123)
     sesssion.add_to_cart("Amazon", "Razer Blackwidow V3", 123)
     r = sesssion.show_cart()
+    r = sesssion.add_payment_details_paypal("Name", "Password")
+    r = sesssion.purchase_shopping_cart("paypal")
     r = sesssion.logout()
 
     market.shutdown()

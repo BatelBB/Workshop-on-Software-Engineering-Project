@@ -1,6 +1,7 @@
 import threading
 
 from dev.src.main.ExternalServices.Payment.PaymentFactory import PaymentFactory
+from dev.src.main.ExternalServices.Payment.PaymentServices import IPaymentService
 from dev.src.main.Store.Product import Product
 from dev.src.main.User.Basket import Basket
 from dev.src.main.Utils.Logger import report_info, report_error
@@ -32,6 +33,7 @@ class Store:
         self.products: list[Product] = list()
         self.products_quantities: dict[str, ProductQuantity] = dict()
         self.payment_factory: PaymentFactory = PaymentFactory()
+        self.payment_service: IPaymentService = IPaymentService()
 
     def __str__(self):
         output: str = f'Store: {self.name}\nProducts:\n'
@@ -51,6 +53,9 @@ class Store:
     def contains_product(self, product_name: str) -> bool:
         p = Product(product_name)
         return p in self.products
+
+    def get_name(self):
+        return self.name
 
     def add(self, product: Product, quantity: int) -> Response[bool]:
         if not self.contains(product):
@@ -123,5 +128,13 @@ class Store:
     #
     # def get_products_by_rate(self, min_rate: float) -> list[Product]:
     #     return self.get_products(lambda p: min_rate <= p.rate or p.is_unrated())
-    def pay_for_cart(self, price: float, payment_method: PaymentFactory) -> Response[bool]:
-                ...
+    def pay_for_cart(self, price: float, payment_method: str) -> Response[bool]:
+        payment = self.payment_factory.getPaymentService(payment_method)
+        if payment.pay():
+            return report_info(self.pay_for_cart.__qualname__, "Payment successful!")
+
+    def add_payment_details_paypal(self, username: str, password: str) -> None:
+        self.payment_service.set_information(username, password)
+
+    def add_payment_details_credit(self,  card_number: str, cvv: int, exp_date: str) -> None:
+        self.payment_service.set_information(card_number, cvv, exp_date)

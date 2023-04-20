@@ -220,13 +220,37 @@ class Market(IService):
                         return report_error(self.purchase_shopping_cart.__qualname__,
                                             f'{store_name} can\'t reserve {basket.__str__()}')
 
-    def calculate_cart_price(self, baskets: dict[str, Any]) -> Response[float]:
+    def calculate_cart_price(self, baskets: dict[str, any]) -> Response[float]:
         sum = 0
         for store_name, basket in baskets.items():
             for item in basket.items:
                 sum += item.get_price()
         return Response(sum)
 
+    def add_payment_details_paypal(self, session_identifier: int, username: str, password: str) -> None:
+        actor = self.get_active_user(session_identifier)
+        baskets = actor.get_baskets()
+        for store_name, _ in baskets.items():
+            store: Store = Store(store_name)
+            store.add_payment_details_paypal(username, password)
+
+    def add_payment_details_credit(self,session_identifier: int,  card_number: str, cvv: int, exp_date: str) -> None:
+        actor = self.get_active_user(session_identifier)
+        baskets = actor.get_baskets()
+        for store_name, _ in baskets.items():
+            store: Store = Store(store_name)
+            store.add_payment_details_credit(card_number, cvv, exp_date)
+
+    def update_product_quantity_after_payment(self, session_identifier: int, baskets: dict[str, any]) -> Response[bool]:
+        actor = self.get_active_user(session_identifier)
+        for store_name, items in baskets.items():
+            for item in items:
+                response = actor.update_product_quantity(store_name, item.get_name, item.get_quantity)
+                if response.success:
+                    store: Store = Store(store_name)
+                    return store.update(item.get_name, item.get_quantity) if response.success else response
+                else:
+                    return response
     def purchase_shopping_cart(self, session_identifier: int, payment_method: str) -> Response[bool]:
         actor = self.get_active_user(session_identifier)
         response = actor.verify_cart_not_empty()
@@ -241,7 +265,7 @@ class Market(IService):
                 response = store.pay_for_cart(price, payment_method)
                 if response.success:
                     # update store products
-
+                    self.update_product_quantity_after_payment(session_identifier, baskets)
                 else:
                     return response
 
