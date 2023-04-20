@@ -130,7 +130,7 @@ class Store:
     #     return self.get_products(lambda p: min_rate <= p.rate or p.is_unrated())
     def pay_for_cart(self, price: float, payment_method: str) -> Response[bool]:
         payment = self.payment_factory.getPaymentService(payment_method)
-        if payment.pay():
+        if payment.pay(price):
             return report_info(self.pay_for_cart.__qualname__, "Payment successful!")
 
     def add_payment_details_paypal(self, username: str, password: str) -> None:
