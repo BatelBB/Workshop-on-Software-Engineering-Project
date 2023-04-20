@@ -1,6 +1,6 @@
 import string
 from abc import ABC, abstractmethod
-from ExternalPaymentServices import IExternalPaymentService, ExternalPaymentServciceProxy
+from dev.src.main.ExternalServices.Payment.ExternalPaymentServices import IExternalPaymentService, ExternalPaymentServciceProxy
 
 
 class IPaymentService(ABC):

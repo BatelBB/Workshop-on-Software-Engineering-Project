@@ -1,5 +1,5 @@
 import string
-from PaymentServices import IPaymentService, PayWithCard, PayWithPayPal
+from dev.src.main.ExternalServices.Payment.PaymentServices import IPaymentService, PayWithCard, PayWithPayPal
 
 class PaymentFactory:
     @staticmethod
