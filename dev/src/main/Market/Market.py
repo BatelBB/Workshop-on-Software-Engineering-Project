@@ -262,7 +262,7 @@ class Market(IService):
                 price = self.calculate_cart_price(baskets)
                 # send payment
                 store = response.result
-                response = store.pay_for_cart(price, payment_method)
+                response = store.pay_for_cart(price.result, payment_method)
                 if response.success:
                     # update store products
                     self.update_product_quantity_after_payment(session_identifier, baskets)
