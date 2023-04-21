@@ -110,12 +110,11 @@ class Market(IService):
             return response
         return report_error(self.open_store.__qualname__, f'Store name \'{store_name}\' is occupied.')
 
-    def get_all_stores(self, session_identifier: int) -> Response[bool]:
+    def get_all_stores(self, session_identifier: int) -> Response[str]:
         stores: str = self.stores.to_string_keys()
         there_are_stores: bool = len(stores) > 0
-        preface: str = f'Displaying stores to {self.get_active_user(session_identifier)}: '
         no_stores_msg: str = 'Currently, there are no stores at the market.'
-        return report(preface + stores if there_are_stores else preface + no_stores_msg, there_are_stores)
+        return report(f"displaying stores: {stores}", stores)
 
     def get_store(self, session_identifier: int, store_name: str) -> Response[bool]:
         response = self.verify_registered_store(self.get_store.__qualname__, store_name)
@@ -183,7 +182,7 @@ class Market(IService):
                                                       product_name)
         return actor.update_cart_product_quantity(store_name, product_name, quantity) if response.success else response
 
-    def show_cart(self, session_identifier: int) -> Response[bool]:
+    def show_cart(self, session_identifier: int) -> Response[str]:
         actor = self.get_active_user(session_identifier)
         return actor.show_cart()
 

@@ -35,35 +35,39 @@ class real(Bridge):
         return res.result
 
     def open_store(self, session_id: int, store_name: string) -> bool:
-        return True
+        return self.market.open_store(session_id, store_name).success
 
     # guest buying operations
-    def get_all_stores(self) -> list:
+    def get_all_stores(self, session_id) -> list:
+        res = self.market.get_all_stores(session_id)
+        if res.success:
+            return res.result.split(", ")
+        else:
+            return []
+
+    def get_store_products(self, session_id: int, store_id: int) -> list:
         return []
 
-    def get_store_products(self, store_id: int) -> list:
+    def get_products_by_name(self, session_id: int, name: string) -> list:
         return []
 
-    def get_products_by_name(self, name: string) -> list:
+    def get_products_by_category(self, session_id: int, name: string) -> list:
         return []
 
-    def get_products_by_category(self, name: string) -> list:
-        return []
-
-    def get_products_by_keyword(self, name: string) -> list:
+    def get_products_by_keyword(self, session_id: int, name: string) -> list:
         return []
 
     ##quesion??????????????????????????????????????????????????
-    def filter_products_by_price_range(self, low: int, high: int) -> list:
+    def filter_products_by_price_range(self, session_id: int, low: int, high: int) -> list:
         return []
 
-    def filter_products_by_rating(self, low: int, high: int):
+    def filter_products_by_rating(self, session_id: int, low: int, high: int):
         return []
 
-    def filter_products_by_category(self, category: string):
+    def filter_products_by_category(self, session_id: int, category: string):
         return []
 
-    def filter_products_by_store_rating(self, low: int, high: int):
+    def filter_products_by_store_rating(self, session_id: int, low: int, high: int):
         return []
 
     ##quesion??????????????????????????????????????????????????
@@ -71,11 +75,11 @@ class real(Bridge):
     def add_to_cart(self, session_id: int, store_name: string, product_name: string, quantity: int) -> bool:
         return True
 
-    def buy_cart(self) -> bool:
+    def buy_cart(self, session_id: int,) -> bool:
         return True
 
     # registered user operations
-    def logout(self) -> bool:
+    def logout(self, session_id: int,) -> bool:
         return True
 
     # storeOwner operations
@@ -83,30 +87,30 @@ class real(Bridge):
                     price: float, quantity: int, keywords: list[str]) -> bool:
         return True
 
-    def remove_product(self, store_id: int, product_id: int, amount: int) -> bool:
+    def remove_product(self, session_id: int, store_id: int, product_id: int, amount: int) -> bool:
         return True
 
-    def change_product_name(self, store_id: int, product_id: int, new_name: string) -> bool:
+    def change_product_name(self, session_id: int, store_id: int, product_id: int, new_name: string) -> bool:
         return True
 
-    def change_product_price(self, store_id: int, product_id: int, new_price: int) -> bool:
+    def change_product_price(self, session_id: int, store_id: int, product_id: int, new_price: int) -> bool:
         return True
 
-    def appoint_owner(self, store_id: int, new_owner: string) -> bool:
+    def appoint_owner(self, session_id: int, store_id: int, new_owner: string) -> bool:
         return True
 
-    def appoint_manager(self, store_id: int, new_owner: string) -> bool:
+    def appoint_manager(self, session_id: int, store_id: int, new_owner: string) -> bool:
         return True
 
     # TODO: 4.7: permissions of store manager
 
-    def close_store(self, store_id: int) -> bool:
+    def close_store(self, session_id: int, store_id: int) -> bool:
         return True
 
-    def get_store_personal(self, store_id) -> list:
+    def get_store_personal(self, session_id: int, store_id) -> list:
         return []
 
-    def get_store_purchase_history(self, store_id) -> list:
+    def get_store_purchase_history(self, session_id: int, store_id) -> list:
         return []
 
     def show_cart(self, session_id: int) -> list:

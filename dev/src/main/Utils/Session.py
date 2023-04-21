@@ -52,7 +52,7 @@ class Session:
         else:
             return self.report_session_closed()
 
-    def get_all_stores(self) -> Response[bool]:
+    def get_all_stores(self) -> Response[bool] | Response[str]:
         if self.is_open:
             return self.service.get_all_stores(self.identifier)
         else:
@@ -104,7 +104,7 @@ class Session:
         else:
             return self.report_session_closed()
 
-    def show_cart(self) -> Response[bool]:
+    def show_cart(self) -> Response[bool] | Response[str]:
         if self.is_open:
             return self.service.show_cart(self.identifier)
         else:
