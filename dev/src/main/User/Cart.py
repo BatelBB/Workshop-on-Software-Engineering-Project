@@ -36,3 +36,6 @@ class Cart:
 
     def get_baskets(self) -> dict:
         return self.baskets
+
+    def empty_basket(self, store_name: str):
+        self.baskets.pop(store_name)

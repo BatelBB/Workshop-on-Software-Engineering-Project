@@ -84,17 +84,10 @@ class IService(ABC):
         ...
 
     @abstractmethod
-    def purchase_shopping_cart(self, session_identifier: int, payment_method: str, ) -> Response[bool]:
+    def purchase_shopping_cart(self, session_identifier: int, payment_method: str, payment_details: list) -> Response[bool]:
         ...
 
-    @abstractmethod
 
-    def add_payment_details_paypal(self, session_identifier: int, username: str, password: str) -> Response[bool]:
-        ...
-
-    @abstractmethod
-    def add_payment_details_credit(self, session_identifier: int, card_number: str, cvv: int, exp_date: str) -> Response[bool]:
-        ...
     # @abstractmethod
     # def update_product_of(self, store_name: str, product: Product, quantity: int) -> Response[bool]:
     #     ...

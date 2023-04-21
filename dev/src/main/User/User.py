@@ -69,3 +69,6 @@ class User:
 
     def get_baskets(self) -> dict:
         return self.role.get_baskets()
+
+    def empty_basket(self, store_name: str):
+        self.role.empty_basket(store_name)

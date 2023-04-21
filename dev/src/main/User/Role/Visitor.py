@@ -83,3 +83,6 @@ class Visitor(IRole, ABC):
 
     def get_baskets(self) -> dict:
         return self.context.cart.baskets
+
+    def empty_basket(self, store_name: str):
+        self.context.cart.empty_basket(store_name)

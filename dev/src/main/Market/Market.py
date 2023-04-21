@@ -2,10 +2,11 @@ import random
 import sys
 from typing import Any
 
-from dev.src.main.ExternalServices.Payment.ExternalPaymentServices import IExternalPaymentService
+from dev.src.main.ExternalServices.Payment.PaymentFactory import PaymentFactory
 from dev.src.main.Store.Product import Product
 from dev.src.main.Service.IService import IService
 from dev.src.main.Store.Store import Store
+from dev.src.main.User.Basket import Basket
 from dev.src.main.User.User import User
 from dev.src.main.Utils.ConcurrentDictionary import ConcurrentDictionary
 from dev.src.main.Utils.Logger import report, Logger, report_error, report_info
@@ -21,6 +22,7 @@ class Market(IService):
         self.sessions: ConcurrentDictionary[int, User] = ConcurrentDictionary()
         self.users: ConcurrentDictionary[str, User] = ConcurrentDictionary()
         self.stores: ConcurrentDictionary[str, Store] = ConcurrentDictionary()
+        self.payment_factory: PaymentFactory = PaymentFactory()
 
     def generate_session_identifier(self):
         min: int = 1
@@ -189,89 +191,49 @@ class Market(IService):
         self.sessions.delete(session_identifier)
         return report_info("exit", "no error")
 
-    def verify_store_contains_amount_of_product(self, calling_method_name: str, store_name: str, product_name: str,
-                                                product_quantity: int) -> Response[Store] | Response[bool]:
-        response = self.verify_registered_store(calling_method_name, store_name)
-        if response.success:
-            store = response.result
-            products = store.get_products_by_name(product_name)
-            if len(products) >= product_quantity:
-                return Response(store)
+    def update_user_cart_after_purchase(self, user: User, store_names: list) -> Response[bool]:
+        for store_name in store_names:
+            user.empty_basket(store_name)
+
+    # def update_store_product_quantity_after_purchase(self, store: Store, p_name: str, quantity: int):
+
+    def pay(self, price: int, payment_type: str, payment_details: list[str]):
+        if price > 0:
+            payment_strategy = self.payment_factory.getPaymentService(payment_type)
+            info_res = payment_strategy.set_information(payment_details)
+            if info_res.success:
+                payment_res = payment_strategy.pay(price)
+                if not payment_res:
+                    return report_error("purchase_shopping_cart", f"payment failed")
             else:
-                return report_error(calling_method_name,
-                                    f'Store \'{store_name}\' does not contains Product \'{product_name}\' with the amount'
-                                    f'{product_quantity}')
-        else:
-            return response
+                return info_res
 
-    def verify_reserve_amount(self, baskets: dict[str, Any]) -> Response[Store] | Response[bool]:
-        for store_name, basket in baskets.items():
-            for item in basket.items:
-                response = self.verify_store_contains_amount_of_product(self.purchase_shopping_cart.__qualname__,
-                                                                        store_name, item.get_name(),
-                                                                        item.get_quantity())
-                if not response.success:
-                    return report_error(self.purchase_shopping_cart.__qualname__,
-                                        f'{store_name} doesn\'t contain {item}')
-                else:
-                    store = response.result
-                    reserved = store.reserve_products(basket)
-                    if not reserved:
-                        return report_error(self.purchase_shopping_cart.__qualname__,
-                                            f'{store_name} can\'t reserve {basket.__str__()}')
-
-    def calculate_cart_price(self, baskets: dict[str, any]) -> Response[float]:
-        sum = 0
-        for store_name, basket in baskets.items():
-            for item in basket.items:
-                sum += item.get_price()
-        return Response(sum)
-
-    def add_payment_details_paypal(self, session_identifier: int, username: str, password: str) -> None:
-        actor = self.get_active_user(session_identifier)
-        baskets = actor.get_baskets()
-        for store_name, _ in baskets.items():
-            store: Store = Store(store_name)
-            store.add_payment_details_paypal(username, password)
-
-    def add_payment_details_credit(self,session_identifier: int,  card_number: str, cvv: int, exp_date: str) -> None:
-        actor = self.get_active_user(session_identifier)
-        baskets = actor.get_baskets()
-        for store_name, _ in baskets.items():
-            store: Store = Store(store_name)
-            store.add_payment_details_credit(card_number, cvv, exp_date)
-
-    def update_product_quantity_after_payment(self, session_identifier: int, baskets: dict[str, any]) -> Response[bool]:
-        actor = self.get_active_user(session_identifier)
-        for store_name, items in baskets.items():
-            for item in items:
-                response = actor.update_product_quantity(store_name, item.get_name, item.get_quantity)
-                if response.success:
-                    store: Store = Store(store_name)
-                    return store.update(item.get_name, item.get_quantity) if response.success else response
-                else:
-                    return response
-    def purchase_shopping_cart(self, session_identifier: int, payment_method: str) -> Response[bool]:
+    def purchase_shopping_cart(self, session_identifier: int, payment_method: str, payment_details: list[str]) -> \
+    Response[bool]:
         actor = self.get_active_user(session_identifier)
         response = actor.verify_cart_not_empty()
         if response.success:
             baskets = actor.get_baskets()
-            response = self.verify_reserve_amount(baskets)
-            if response.success:
-                # calculate cart price
-                price = self.calculate_cart_price(baskets)
-                # send payment
-                store = response.result
-                response = store.pay_for_cart(price, payment_method)
-                if response.success:
-                    # update store products
-                    self.update_product_quantity_after_payment(session_identifier, baskets)
-                else:
-                    return response
+            cart_price = 0
+            successful_store_purchases = []
 
-            else:
-                return response
+            for store_name, basket in baskets.items():
+                response2 = self.verify_registered_store("purchase_shopping_cart", store_name)
+                if response2.success:
+                    store = response2.result
+                    res = store.reserve_products(basket)
+                    if res:
+                        successful_store_purchases.append(store_name)
+                        cart_price += store.calculate_basket_price(basket)
+
+
+                else:
+                    return response2
+
+            self.pay(cart_price, payment_method, payment_details)
+            self.update_user_cart_after_purchase(actor, successful_store_purchases)
         else:
             return response
+
         # TODO 2nd version - verify purchaser is conformed with store policy
         # TODO 2nd version - apply discount policy

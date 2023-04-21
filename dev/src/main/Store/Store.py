@@ -1,7 +1,5 @@
 import threading
 
-from dev.src.main.ExternalServices.Payment.PaymentFactory import PaymentFactory
-from dev.src.main.ExternalServices.Payment.PaymentServices import IPaymentService
 from dev.src.main.Store.Product import Product
 from dev.src.main.User.Basket import Basket
 from dev.src.main.Utils.Logger import report_info, report_error
@@ -11,11 +9,11 @@ from dev.src.main.Utils.Response import Response
 class ProductQuantity:
     def __init__(self, quantity: int):
         self.quantity = quantity
-        self.lock = threading.RLock
+        self.lock = threading.RLock()
 
     def reserve(self, desired_quantity: int) -> bool:
         with self.lock:
-            if self.quantity > desired_quantity:
+            if self.quantity >= desired_quantity:
                 self.quantity -= desired_quantity
                 return True
             else:
@@ -32,8 +30,6 @@ class Store:
         self.name = name
         self.products: list[Product] = list()
         self.products_quantities: dict[str, ProductQuantity] = dict()
-        self.payment_factory: PaymentFactory = PaymentFactory()
-        self.payment_service: IPaymentService = IPaymentService()
 
     def __str__(self):
         output: str = f'Store: {self.name}\nProducts:\n'
@@ -123,18 +119,20 @@ class Store:
     def get_products_by_keywords(self, keywords: list[str]) -> list[Product]:
         return self.get_products(lambda p: len((set(p.keywords) & set(keywords))) > 0)
 
+    def calculate_basket_price(self, basket: Basket) -> float:
+        price = 0
+        # only call from right after reserve
+        for item in basket.items:
+            price += self.get_product_price(item.product_name)
+        return price
+
     # def filter_products_in_price_range(self, products: list[Product] ,min: float, max: float) -> list[Product]:
     #     return self.get_products(lambda p: min <= p.price <= max)
     #
     # def get_products_by_rate(self, min_rate: float) -> list[Product]:
     #     return self.get_products(lambda p: min_rate <= p.rate or p.is_unrated())
-    def pay_for_cart(self, price: float, payment_method: str) -> Response[bool]:
-        payment = self.payment_factory.getPaymentService(payment_method)
-        if payment.pay(price):
-            return report_info(self.pay_for_cart.__qualname__, "Payment successful!")
+    # def pay_for_cart(self, price: float, payment_method: str) -> Response[bool]:
+    #     payment = self.payment_factory.getPaymentService(payment_method)
+    #     if payment.pay(price):
+    #         return report_info(self.pay_for_cart.__qualname__, "Payment successful!")
 
-    def add_payment_details_paypal(self, username: str, password: str) -> None:
-        self.payment_service.set_information(username, password)
-
-    def add_payment_details_credit(self,  card_number: str, cvv: int, exp_date: str) -> None:
-        self.payment_service.set_information(card_number, cvv, exp_date)
