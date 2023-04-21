@@ -31,6 +31,11 @@ if __name__ == '__main__':
     r = sesssion.purchase_shopping_cart("card", ["4580", "322", "20/20"])
     r = sesssion.show_cart()  # supposed to be empty
     r = sesssion.get_store("Amazon")
+
+    r = sesssion.get_all_stores()
+
+
+
     r = sesssion.logout()
 
     market.shutdown()

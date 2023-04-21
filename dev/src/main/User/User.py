@@ -61,7 +61,7 @@ class User:
     def update_cart_product_quantity(self, store_name: str, product_name: str, quantity: int) -> Response[bool]:
         return self.role.update_cart_product_quantity(store_name, product_name, quantity)
 
-    def show_cart(self) -> Response[bool]:
+    def show_cart(self) -> Response[str]:
         return self.role.show_cart()
 
     def verify_cart_not_empty(self) -> Response[bool]:
