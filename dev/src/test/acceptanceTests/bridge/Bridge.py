@@ -67,6 +67,11 @@ class Bridge(ABC):
     def add_to_cart(self, session_id: int, store_name: string, product_name: string, quantity: int) -> bool:
         ...
 
+    #TODO
+    @abstractmethod
+    def remove_from_cart(self, session_id: int, store_name: string, product_name: string, quantity: int) -> bool:
+        ...
+
     @abstractmethod
     def buy_cart_with_card(self, session_id: int, card_num: str, cvv: str, exp_date: str) -> bool:
         ...
@@ -92,6 +97,11 @@ class Bridge(ABC):
 
     @abstractmethod
     def remove_product(self, session_id: int, store_name: str, product_name: str) -> bool:
+        ...
+
+    # TODO
+    @abstractmethod
+    def remove_product_quantity(self, session_id: int, store_name: str, product_name: str, quantity: int) -> bool:
         ...
 
     @abstractmethod

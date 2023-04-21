@@ -7,6 +7,14 @@ from dev.src.test.acceptanceTests.bridge.real import real
 class proxy(Bridge):
     real: Bridge
 
+    # TODO
+    def remove_product_quantity(self, session_id: int, store_name: str, product_name: str, quantity: int) -> bool:
+        pass
+
+    # TODO
+    def remove_from_cart(self, session_id: int, store_name: string, product_name: string, quantity: int) -> bool:
+        pass
+
     def __init__(self):
         self.real = real()
 

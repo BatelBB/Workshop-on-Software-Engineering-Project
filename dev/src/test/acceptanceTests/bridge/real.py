@@ -9,6 +9,14 @@ from dev.src.main.Utils.Response import Response
 
 
 class real(Bridge):
+    # TODO
+    def remove_product_quantity(self, session_id: int, store_name: str, product_name: str, quantity: int) -> bool:
+        pass
+
+    #TODO
+    def remove_from_cart(self, session_id: int, store_name: string, product_name: string, quantity: int) -> bool:
+        pass
+
     market: Market
     user_sessions: list[int]
     user_counter: int
@@ -94,28 +102,38 @@ class real(Bridge):
     def remove_product(self, session_id: int, store_name: str, product_name: str) -> bool:
         return self.market.remove_product(session_id, store_name, product_name).success
 
+    #TODO:
     def change_product_name(self, session_id: int, store_id: int, product_id: int, new_name: string) -> bool:
         return True
 
+    # TODO:
     def change_product_price(self, session_id: int, store_name: str, product_name: str, new_price: int) -> bool:
         return True
 
+    # TODO:
     def appoint_owner(self, session_id: int, store_name: str, new_owner: string) -> bool:
         return True
 
+    # TODO:
     def appoint_manager(self, session_id: int, store_name: str, new_owner: string) -> bool:
         return True
 
     # TODO: 4.7: permissions of store manager
 
+    # TODO:
     def close_store(self, session_id: int, store_name: str) -> bool:
         return True
 
+    # TODO:
     def get_store_personal(self, session_name: str, store_id) -> list:
         return []
 
+    # TODO:
     def get_store_purchase_history(self, session_id: int, store_name: str) -> list:
         return []
 
     def show_cart(self, session_id: int) -> list:
+        res = self.market.show_cart(session_id)
+        if res.success:
+            return res.result.split(", ")
         return []
