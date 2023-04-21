@@ -63,3 +63,12 @@ class User:
 
     def show_cart(self) -> Response[bool]:
         return self.role.show_cart()
+
+    def verify_cart_not_empty(self) -> Response[bool]:
+        return self.role.verify_cart_not_empty()
+
+    def get_baskets(self) -> dict:
+        return self.role.get_baskets()
+
+    def empty_basket(self, store_name: str):
+        self.role.empty_basket(store_name)

@@ -9,11 +9,11 @@ from dev.src.main.Utils.Response import Response
 class ProductQuantity:
     def __init__(self, quantity: int):
         self.quantity = quantity
-        self.lock = threading.RLock
+        self.lock = threading.RLock()
 
     def reserve(self, desired_quantity: int) -> bool:
         with self.lock:
-            if self.quantity > desired_quantity:
+            if self.quantity >= desired_quantity:
                 self.quantity -= desired_quantity
                 return True
             else:
@@ -49,6 +49,9 @@ class Store:
     def contains_product(self, product_name: str) -> bool:
         p = Product(product_name)
         return p in self.products
+
+    def get_name(self):
+        return self.name
 
     def add(self, product: Product, quantity: int) -> Response[bool]:
         if not self.contains(product):
@@ -116,8 +119,20 @@ class Store:
     def get_products_by_keywords(self, keywords: list[str]) -> list[Product]:
         return self.get_products(lambda p: len((set(p.keywords) & set(keywords))) > 0)
 
+    def calculate_basket_price(self, basket: Basket) -> float:
+        price = 0
+        # only call from right after reserve
+        for item in basket.items:
+            price += self.get_product_price(item.product_name)
+        return price
+
     # def filter_products_in_price_range(self, products: list[Product] ,min: float, max: float) -> list[Product]:
     #     return self.get_products(lambda p: min <= p.price <= max)
     #
     # def get_products_by_rate(self, min_rate: float) -> list[Product]:
     #     return self.get_products(lambda p: min_rate <= p.rate or p.is_unrated())
+    # def pay_for_cart(self, price: float, payment_method: str) -> Response[bool]:
+    #     payment = self.payment_factory.getPaymentService(payment_method)
+    #     if payment.pay(price):
+    #         return report_info(self.pay_for_cart.__qualname__, "Payment successful!")
+

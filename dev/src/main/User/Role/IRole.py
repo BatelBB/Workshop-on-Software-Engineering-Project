@@ -71,3 +71,11 @@ class IRole(ABC):
     @abstractmethod
     def show_cart(self) -> Response[bool]:
         ...
+
+    @abstractmethod
+    def verify_cart_not_empty(self) -> Response[bool]:
+        ...
+
+    @abstractmethod
+    def empty_basket(self, store_name: str):
+        ...

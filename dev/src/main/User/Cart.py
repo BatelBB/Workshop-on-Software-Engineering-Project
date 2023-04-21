@@ -30,3 +30,12 @@ class Cart:
         basket = self.get_or_create_basket(store_name)
         item = Item(product_name, quantity)
         basket.add_item(item)
+
+    def is_empty(self) -> bool:
+        return len(self.baskets.items()) == 0
+
+    def get_baskets(self) -> dict:
+        return self.baskets
+
+    def empty_basket(self, store_name: str):
+        self.baskets.pop(store_name)
