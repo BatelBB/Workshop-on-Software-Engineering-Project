@@ -20,14 +20,14 @@ class TestRegisteredUser(unittest.TestCase):
         self.app.open_store(self.session_id, "store1")
         self.app.add_product(self.session_id, "store1", "product1_1", "cat1", 12, 15, ["car1", "p1"])
         self.app.add_product(self.session_id, "store1", "product1_2", "cat2", 16, 9, ["cat2", "p2"])
-        self.app.logout()
+        self.app.logout(self.session_id)
 
         self.app.register(self.session_id, "user2", "password2")
         self.app.login(self.session_id, "user2", "password2")
         self.app.open_store(self.session_id, "store2")
         self.app.add_product(self.session_id, "store2", "product2_2", "cat2", 6, 5, ["cat2", "p2"])
         self.app.add_product(self.session_id, "store2", "product2_1", "cat1", 24, 18, ["car1", "p1"])
-        self.app.logout()
+        self.app.logout(self.session_id)
         self.app.exit_market(self.session_id)
 
     def add_items_to_cart(self):
@@ -39,7 +39,7 @@ class TestRegisteredUser(unittest.TestCase):
         self.app.add_to_cart(self.session_id, "store2", "product2", 5)
     def test_logout(self):
         self.add_items_to_cart()
-        self.app.logout()
+        self.app.logout(self.session_id)
         self.app.exit_market(self.session_id)
 
         # happy
@@ -48,12 +48,12 @@ class TestRegisteredUser(unittest.TestCase):
         cart = self.app.show_cart(self.session_id)
         self.assertTrue(("product1", 3) in cart, "product1 not in cart")
         self.assertTrue(("product2", 5) in cart, "product2 not in cart")
-        self.app.logout()
+        self.app.logout(self.session_id)
         self.app.exit_market(self.session_id)
 
         # sad
         self.enter_market()
-        res = self.app.logout()
+        res = self.app.logout(self.session_id)
         self.assertFalse(res)
 
         self.app.register(self.session_id, "user4", "password4")
@@ -62,14 +62,14 @@ class TestRegisteredUser(unittest.TestCase):
         self.assertTrue(len(cart) == 0, "product1 not in cart")
 
         # bad
-        self.app.logout()
+        self.app.logout(self.session_id)
         self.app.exit_market(self.session_id)
-        res2 = self.app.logout()
+        res2 = self.app.logout(self.session_id)
         self.assertFalse(res2)
 
     def test_open_store(self):
         # happy
-        stores = self.app.get_all_stores()
+        stores = self.app.get_all_stores(self.session_id)
 
         self.assertTrue("store1" in stores, "store1 not found")
         self.assertTrue("store2" in stores, "store2 not found")
@@ -80,14 +80,14 @@ class TestRegisteredUser(unittest.TestCase):
         self.enter_market()
         res2 = self.app.open_store(self.session_id, "store4")
         self.assertFalse(res2)
-        stores = self.app.get_all_stores()
+        stores = self.app.get_all_stores(self.session_id)
         self.assertTrue("store4" not in stores, "store4 is found")
 
         # bad
-        self.app.logout()
+        self.app.logout(self.session_id)
         self.app.exit_market(self.session_id)
         res2 = self.app.open_store(self.session_id, "store5")
         self.assertFalse(res2)
-        stores = self.app.get_all_stores()
+        stores = self.app.get_all_stores(self.session_id)
         self.assertTrue("store5" not in stores, "store5 is found")
 
