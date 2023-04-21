@@ -12,6 +12,15 @@ class Item:
     def __eq__(self, other):
         return self.product_name == other.product_name
 
+    def get_quantity(self):
+        return self.quantity
+
+    def get_name(self):
+        return self.product_name
+
+    def get_price(self) -> float:
+        return self.price
+
 
 class Basket:
     def __init__(self):

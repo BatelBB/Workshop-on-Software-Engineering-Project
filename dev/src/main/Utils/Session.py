@@ -74,7 +74,7 @@ class Session:
         else:
             return self.report_session_closed()
 
-    def update_product_quantity(self, store_name: str, product_name: str, quantity: int) ->Response[bool]:
+    def update_product_quantity(self, store_name: str, product_name: str, quantity: int) -> Response[bool]:
         if self.is_open:
             return self.service.update_product_quantity(self.identifier, store_name, product_name, quantity)
         else:
@@ -107,5 +107,11 @@ class Session:
     def show_cart(self) -> Response[bool]:
         if self.is_open:
             return self.service.show_cart(self.identifier)
+        else:
+            return self.report_session_closed()
+
+    def purchase_shopping_cart(self, payment_method: str, payment_details: list) -> Response[bool]:
+        if self.is_open:
+            return self.service.purchase_shopping_cart(self.identifier, payment_method, payment_details)
         else:
             return self.report_session_closed()
