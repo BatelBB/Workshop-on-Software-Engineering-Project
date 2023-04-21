@@ -1,34 +1,34 @@
-21/04/2023 21:33:53 INFO:	 Session: 313009095830726832 has been initialized
-21/04/2023 21:33:53 INFO:	 Visitor.register: Nir is registered!
-21/04/2023 21:33:53 INFO:	 Visitor.login: Nir is logged in.
-21/04/2023 21:33:53 ERROR:	 Member.login: Member Nir is already logged in.
-21/04/2023 21:33:53 INFO:	 Member.open_store: Member Nir opens Store 'Amazon' successfully
-21/04/2023 21:33:53 INFO:	 Store.add: Product 'Razer Blackwidow V3', Category: 'Keyboards', Price: 799.123, Rate: Not rated yet, is added to Store 'Amazon' successfully!.
-21/04/2023 21:33:53 INFO:	 Market.get_store: Displaying store Amazon to StoreOwner Nir
+21/04/2023 21:35:59 INFO:	 Session: 6182741266074885091 has been initialized
+21/04/2023 21:35:59 INFO:	 Visitor.register: Nir is registered!
+21/04/2023 21:35:59 INFO:	 Visitor.login: Nir is logged in.
+21/04/2023 21:35:59 ERROR:	 Member.login: Member Nir is already logged in.
+21/04/2023 21:35:59 INFO:	 Member.open_store: Member Nir opens Store 'Amazon' successfully
+21/04/2023 21:35:59 INFO:	 Store.add: Product 'Razer Blackwidow V3', Category: 'Keyboards', Price: 799.123, Rate: Not rated yet, is added to Store 'Amazon' successfully!.
+21/04/2023 21:35:59 INFO:	 Market.get_store: Displaying store Amazon to StoreOwner Nir
 Store: Amazon
 Products:
 0).	Razer Blackwidow V3. Available quantity: 10.
 
-21/04/2023 21:33:53 INFO:	 Visitor.show_cart
-21/04/2023 21:33:53 INFO:	 Visitor.add_to_cart: 2 units of Product 'Razer Blackwidow V3' is added to StoreOwner Nir' cart
-21/04/2023 21:33:53 INFO:	 Visitor.show_cart
-21/04/2023 21:33:53 INFO:	 Visitor.verify_cart_not_empty: StoreOwner Nir cart's is not empty.
-21/04/2023 21:33:53 INFO:	 Visitor.show_cart
-21/04/2023 21:33:53 INFO:	 Market.get_store: Displaying store Amazon to StoreOwner Nir
+21/04/2023 21:35:59 INFO:	 Visitor.show_cart
+21/04/2023 21:35:59 INFO:	 Visitor.add_to_cart: 2 units of Product 'Razer Blackwidow V3' is added to StoreOwner Nir' cart
+21/04/2023 21:35:59 INFO:	 Visitor.show_cart
+21/04/2023 21:35:59 INFO:	 Visitor.verify_cart_not_empty: StoreOwner Nir cart's is not empty.
+21/04/2023 21:35:59 INFO:	 Visitor.show_cart
+21/04/2023 21:35:59 INFO:	 Market.get_store: Displaying store Amazon to StoreOwner Nir
 Store: Amazon
 Products:
 0).	Razer Blackwidow V3. Available quantity: 8.
 
-21/04/2023 21:33:53 INFO:	 Visitor.add_to_cart: 5 units of Product 'Razer Blackwidow V3' is added to StoreOwner Nir' cart
-21/04/2023 21:33:53 INFO:	 Visitor.show_cart
-21/04/2023 21:33:53 INFO:	 Visitor.verify_cart_not_empty: StoreOwner Nir cart's is not empty.
-21/04/2023 21:33:53 INFO:	 Visitor.show_cart
-21/04/2023 21:33:53 INFO:	 Market.get_store: Displaying store Amazon to StoreOwner Nir
+21/04/2023 21:35:59 INFO:	 Visitor.add_to_cart: 5 units of Product 'Razer Blackwidow V3' is added to StoreOwner Nir' cart
+21/04/2023 21:35:59 INFO:	 Visitor.show_cart
+21/04/2023 21:35:59 INFO:	 Visitor.verify_cart_not_empty: StoreOwner Nir cart's is not empty.
+21/04/2023 21:35:59 INFO:	 Visitor.show_cart
+21/04/2023 21:35:59 INFO:	 Market.get_store: Displaying store Amazon to StoreOwner Nir
 Store: Amazon
 Products:
 0).	Razer Blackwidow V3. Available quantity: 3.
 
-21/04/2023 21:33:53 INFO:	 displaying stores: Amazon
-21/04/2023 21:33:53 INFO:	 Member.logout: StoreOwner Nir is logged out
-21/04/2023 21:33:53 WARNING:	 Market is closed!
-21/04/2023 21:33:53 WARNING:	 Logger thread exits!
+21/04/2023 21:35:59 INFO:	 displaying stores: Amazon
+21/04/2023 21:35:59 INFO:	 Member.logout: StoreOwner Nir is logged out
+21/04/2023 21:35:59 WARNING:	 Market is closed!
+21/04/2023 21:35:59 WARNING:	 Logger thread exits!
