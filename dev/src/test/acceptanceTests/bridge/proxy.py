@@ -91,7 +91,14 @@ class proxy(Bridge):
     def add_to_cart(self, session_id: int, store_name: string, product_name: string, quantity: int) -> bool:
         return True
 
-    def buy_cart(self, session_id: int) -> bool:
+    def buy_cart_with_card(self, session_id: int, card_num: str, cvv: str, exp_date: str) -> bool:
+        if self.real is not None:
+            return self.real.buy_cart_with_card(session_id, card_num, cvv, exp_date)
+        return True
+
+    def buy_cart_with_paypal(self, session_id: int, username: str, password: str) -> bool:
+        if self.real is not None:
+            return self.real.buy_cart_with_paypal(session_id, username, password)
         return True
 
     #registered user operations
@@ -106,30 +113,30 @@ class proxy(Bridge):
                     price: float, quantity: int, keywords: list[str]) -> bool:
         return True
 
-    def remove_product(self, session_id: int, store_id: int, product_id: int, amount:  int) -> bool:
+    def remove_product(self, session_id: int, store_name: str, product_name: str) -> bool:
         return True
 
-    def change_product_name(self, session_id: int, store_id: int, product_id: int, new_name: string) -> bool:
+    def change_product_name(self, session_id: int, store_name: str, product_name: str, new_name: string) -> bool:
         return True
 
-    def change_product_price(self, session_id: int, store_id: int, product_id: int, new_price: int) -> bool:
+    def change_product_price(self, session_id: int, store_name: str, product_name: str, new_price: int) -> bool:
         return True
 
-    def appoint_owner(self, session_id: int, store_id: int, new_owner: string) -> bool:
+    def appoint_owner(self, session_id: int, store_name: str, new_owner: string) -> bool:
         return True
 
-    def appoint_manager(self, session_id: int, store_id: int, new_owner: string) -> bool:
+    def appoint_manager(self, session_id: int, store_name: str, new_owner: string) -> bool:
         return True
 
     #TODO: 4.7: permissions of store manager
 
-    def close_store(self, session_id: int, store_id: int) -> bool:
+    def close_store(self, session_id: int, store_name: str) -> bool:
         return True
 
-    def get_store_personal(self, session_id: int, store_id) -> list:
+    def get_store_personal(self, session_id: int, store_name: str) -> list:
         return []
 
-    def get_store_purchase_history(self, session_id: int, store_id) -> list:
+    def get_store_purchase_history(self, session_id: int, store_name: str) -> list:
         return []
 
     def show_cart(self, session_id: int) -> list:

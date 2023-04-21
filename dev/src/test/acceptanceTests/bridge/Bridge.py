@@ -68,7 +68,11 @@ class Bridge(ABC):
         ...
 
     @abstractmethod
-    def buy_cart(self, session_id: int,) -> bool:
+    def buy_cart_with_card(self, session_id: int, card_num: str, cvv: str, exp_date: str) -> bool:
+        ...
+
+    @abstractmethod
+    def buy_cart_with_paypal(self, session_id: int, username: str, password: str) -> bool:
         ...
 
     #registered user operations
@@ -87,23 +91,23 @@ class Bridge(ABC):
         ...
 
     @abstractmethod
-    def remove_product(self, session_id: int, store_id: int, product_id: int, amount:  int) -> bool:
+    def remove_product(self, session_id: int, store_name: str, product_name: str) -> bool:
         ...
 
     @abstractmethod
-    def change_product_name(self, session_id: int, store_id: int, product_id: int, new_name: string) -> bool:
+    def change_product_name(self, session_id: int, store_name: str, product_name: str, new_name: string) -> bool:
         ...
 
     @abstractmethod
-    def change_product_price(self, session_id: int, store_id: int, product_id: int, new_price: int) -> bool:
+    def change_product_price(self, session_id: int, store_name: str, product_name: str, new_price: int) -> bool:
         ...
 
     @abstractmethod
-    def appoint_owner(self, session_id: int, store_id: int, new_owner: string) -> bool:
+    def appoint_owner(self, session_id: int, store_name: str, new_owner: string) -> bool:
         ...
 
     @abstractmethod
-    def appoint_manager(self, session_id: int, store_id: int, new_owner: string) -> bool:
+    def appoint_manager(self, session_id: int, store_name: str, new_owner: string) -> bool:
         ...
 
     #TODO: 4.7: permissions of store manager
@@ -123,5 +127,7 @@ class Bridge(ABC):
     @abstractmethod
     def show_cart(self, session_id: int) -> list:
         ...
+
+
 
 

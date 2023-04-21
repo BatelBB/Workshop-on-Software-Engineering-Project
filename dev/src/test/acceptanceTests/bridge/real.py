@@ -73,44 +73,48 @@ class real(Bridge):
     ##quesion??????????????????????????????????????????????????
 
     def add_to_cart(self, session_id: int, store_name: string, product_name: string, quantity: int) -> bool:
-        return True
+        return self.market.add_to_cart(session_id, store_name, product_name, quantity).success
 
-    def buy_cart(self, session_id: int,) -> bool:
-        return True
+    def buy_cart_with_card(self, session_id: int, card_num: str, cvv: str, exp_date: str) -> bool:
+        return self.market.purchase_shopping_cart(session_id, "card", [card_num, cvv, exp_date]).success
+
+    def buy_cart_with_paypal(self, session_id: int, username: str, password: str) -> bool:
+        return self.market.purchase_shopping_cart(session_id, "card", [username, password]).success
 
     # registered user operations
     def logout(self, session_id: int,) -> bool:
-        return True
+        return self.market.logout(session_id).success
 
     # storeOwner operations
     def add_product(self, session_identifier: int, store_name: str, product_name: str, category: str,
                     price: float, quantity: int, keywords: list[str]) -> bool:
-        return True
+        return self.market.add_product(session_identifier, store_name, product_name
+                                , category, price, quantity, keywords).success
 
-    def remove_product(self, session_id: int, store_id: int, product_id: int, amount: int) -> bool:
-        return True
+    def remove_product(self, session_id: int, store_name: str, product_name: str) -> bool:
+        return self.market.remove_product(session_id, store_name, product_name).success
 
     def change_product_name(self, session_id: int, store_id: int, product_id: int, new_name: string) -> bool:
         return True
 
-    def change_product_price(self, session_id: int, store_id: int, product_id: int, new_price: int) -> bool:
+    def change_product_price(self, session_id: int, store_name: str, product_name: str, new_price: int) -> bool:
         return True
 
-    def appoint_owner(self, session_id: int, store_id: int, new_owner: string) -> bool:
+    def appoint_owner(self, session_id: int, store_name: str, new_owner: string) -> bool:
         return True
 
-    def appoint_manager(self, session_id: int, store_id: int, new_owner: string) -> bool:
+    def appoint_manager(self, session_id: int, store_name: str, new_owner: string) -> bool:
         return True
 
     # TODO: 4.7: permissions of store manager
 
-    def close_store(self, session_id: int, store_id: int) -> bool:
+    def close_store(self, session_id: int, store_name: str) -> bool:
         return True
 
-    def get_store_personal(self, session_id: int, store_id) -> list:
+    def get_store_personal(self, session_name: str, store_id) -> list:
         return []
 
-    def get_store_purchase_history(self, session_id: int, store_id) -> list:
+    def get_store_purchase_history(self, session_id: int, store_name: str) -> list:
         return []
 
     def show_cart(self, session_id: int) -> list:
