@@ -101,3 +101,11 @@ class User:
     def is_allowed_to_shutdown_market(self) -> Response[bool]:
         return self.role.is_allowed_to_shutdown_market()
 
+    def set_stock_permissions(self, store_name: str, give_or_take: bool) -> Response[bool]:
+        return self.role.set_stock_permissions(store_name, give_or_take)
+
+    def set_personal_permissions(self, store_name: str, give_or_take: bool) -> Response[bool]:
+        return self.role.set_personal_permissions(store_name, give_or_take)
+
+    def is_allowed_to_change_permissions(self, store_name: str) -> Response[bool]:
+        return self.role.is_allowed_to_change_permissions(store_name)

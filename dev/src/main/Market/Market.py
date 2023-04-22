@@ -24,6 +24,7 @@ class Market(IService):
         password = "admin"
         admin = User(self, name, password)
         admin.role = SystemAdmin(admin)
+        self.users.insert(name, admin)
 
     def __init__(self):
         self.sessions: ConcurrentDictionary[int, User] = ConcurrentDictionary()
@@ -31,7 +32,6 @@ class Market(IService):
         self.stores: ConcurrentDictionary[str, Store] = ConcurrentDictionary()
         self.payment_factory: PaymentFactory = PaymentFactory()
         self.init_admin()
-
 
     def generate_session_identifier(self):
         min: int = 1
@@ -62,7 +62,7 @@ class Market(IService):
             Logger().shutdown()
             return response
         else:
-            return report_error(self.shutdown.__qualname__, f'{self} is not authorized to shutdown market!')
+            return response
 
     def verify_registered_store(self, calling_method_name: str, store_name: str) -> Response[Store] | Response[bool]:
         store: Store = self.stores.get(store_name)
@@ -227,8 +227,9 @@ class Market(IService):
     def add_to_purchase_history(self, baskets: dict[str, Any]) -> None:
         for store_name, basket in baskets.items():
             self.stores.get(store_name).add_to_purchase_history(basket)
+
     def purchase_shopping_cart(self, session_identifier: int, payment_method: str, payment_details: list[str]) -> \
-    Response[bool]:
+            Response[bool]:
         actor = self.get_active_user(session_identifier)
         response = actor.verify_cart_not_empty()
         if response.success:
@@ -259,7 +260,7 @@ class Market(IService):
         # TODO 2nd version - apply discount policy
 
     def change_product_name(self, session_id: int, store_name: str, product_old_name: str, product_new_name: str) -> \
-        Response[bool]:
+            Response[bool]:
         actor = self.get_active_user(session_id)
         response = actor.change_product_name(store_name, product_old_name)
         if response.success:
@@ -332,8 +333,6 @@ class Market(IService):
         else:
             return Response(f'{store_name} isn\'t a verified store')
 
-
-
     def get_registered_user(self, name: str) -> Response[User] | Response[bool]:
         if self.users.get(name) is not None:
             return Response(self.users.get(name))
@@ -364,5 +363,33 @@ class Market(IService):
         if not response.success:
             return response
 
-        r_final = user.make_me_owner(store_name)
+        r_final = user.make_me_manager(store_name)
         return r_final
+
+    def set_stock_permissions(self, session_id: int, receiving_user_name: str, store_name: str, give_or_take: bool) -> \
+            Response[bool]:
+        actor = self.get_active_user(session_id)
+        res = actor.is_allowed_to_change_permissions(store_name)
+        if not res.success:
+            return res
+
+        receiving_user = self.get_registered_user(receiving_user_name)
+        if not receiving_user.success:
+            return receiving_user
+        receiving_user = receiving_user.result
+
+        return receiving_user.set_stock_permissions(store_name, give_or_take)
+
+    def set_personal_permissions(self, session_id: int, receiving_user_name: str, store_name: str,
+                                 give_or_take: bool) -> Response[bool]:
+        actor = self.get_active_user(session_id)
+        res = actor.is_allowed_to_change_permissions(store_name)
+        if not res.success:
+            return res
+
+        receiving_user = self.get_registered_user(receiving_user_name)
+        if not receiving_user.success:
+            return receiving_user
+        receiving_user = receiving_user.result
+
+        return receiving_user.set_personal_permissions(store_name, give_or_take)

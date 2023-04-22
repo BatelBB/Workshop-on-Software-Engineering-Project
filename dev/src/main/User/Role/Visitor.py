@@ -104,13 +104,26 @@ class Visitor(IRole, ABC):
         pass
 
     def change_product_name(self, store_name: str, product_name: str) -> Response[bool]:
-        return report_error(self.change_product_name.__qualname__, f'{self} is not allowed to update a product\'s name!')
+        return report_error(self.change_product_name.__qualname__,
+                            f'{self} is not allowed to update a product\'s name!')
 
     def change_product_price(self, store_name: str, product_price: float) -> Response[bool]:
-        return report_error(self.change_product_price.__qualname__,f'{self} is not allowed to update a product\'s price!')
+        return report_error(self.change_product_price.__qualname__,
+                            f'{self} is not allowed to update a product\'s price!')
 
     def is_allowed_to_get_store_purchase_history(self) -> Response[bool]:
-        return report_error(self.is_allowed_to_get_store_purchase_history.__qualname__, f'{self} is not allowed to view store purchases!')
+        return report_error(self.is_allowed_to_get_store_purchase_history.__qualname__,
+                            f'{self} is not allowed to view store purchases!')
 
     def is_allowed_to_shutdown_market(self) -> Response[bool]:
-        return report_error(self.is_allowed_to_shutdown_market.__qualname__, f'{self} is not allowed to shut down market!')
+        return report_error(self.is_allowed_to_shutdown_market.__qualname__,
+                            f'{self} is not allowed to shut down market!')
+
+    def set_stock_permissions(self, store_name: str, give_or_take: bool) -> Response[bool]:
+        return report_error(self.set_stock_permissions.__qualname__, f'{self} permissions are not changeable!')
+
+    def set_personal_permissions(self, store_name: str, give_or_take: bool) -> Response[bool]:
+        return report_error(self.set_personal_permissions.__qualname__, f'{self} permissions are not changeable!')
+
+    def is_allowed_to_change_permissions(self, store_name: str) -> Response[bool]:
+        return report_error(self.is_allowed_to_change_permissions.__qualname__, f'{self} permissions are not changeable!')

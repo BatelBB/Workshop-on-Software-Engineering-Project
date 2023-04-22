@@ -5,8 +5,10 @@ from dev.src.main.Utils.Response import Response
 
 
 class IRole(ABC):
+
     def __init__(self, context):
         self.context = context
+        self.next: IRole
 
     @abstractmethod
     def leave(self, session_identifier: int) -> Response[bool]:
@@ -99,15 +101,32 @@ class IRole(ABC):
     @abstractmethod
     def make_me_manager(self, store_name: str) -> Response[bool]:
         ...
+
+    @abstractmethod
     def change_product_name(self, store_name: str, product_name: str) -> Response[bool]:
         ...
 
+    @abstractmethod
     def change_product_price(self, store_name: str, product_price: str) -> Response[bool]:
         ...
 
+    @abstractmethod
     def is_allowed_to_get_store_purchase_history(self) -> Response[bool]:
         ...
 
+    @abstractmethod
     def is_allowed_to_shutdown_market(self) -> Response[bool]:
+        ...
+
+    @abstractmethod
+    def set_stock_permissions(self, store_name: str, give_or_take: bool) -> Response[bool]:
+        ...
+
+    @abstractmethod
+    def set_personal_permissions(self, store_name: str, give_or_take: bool) -> Response[bool]:
+        ...
+
+    @abstractmethod
+    def is_allowed_to_change_permissions(self, store_name: str) -> Response[bool]:
         ...
 
