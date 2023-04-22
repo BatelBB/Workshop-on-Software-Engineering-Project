@@ -8,7 +8,7 @@ class Cart:
     def __str__(self):
         output = "Cart:\n"
         for store_name, basket in self.baskets.items():
-            output += f'\tStore \'{store_name}\'\n\t{basket}'
+            output += f'#####################\n\tStore \'{store_name}\'\n\t{basket}\n#####################'
         return output
 
     def get_or_create_basket(self, store_name: str) -> Basket:
