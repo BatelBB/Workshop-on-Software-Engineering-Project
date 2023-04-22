@@ -45,9 +45,15 @@ class Market(IService):
     def close_session(self, session_identifier: int) -> None:
         self.sessions.delete(session_identifier)
 
-    def shutdown(self) -> None:
-        Logger().post('Market is closed!', Logger.Severity.WARNING)
-        Logger().shutdown()
+    def shutdown(self, session_identifier: int) -> Response[bool]:
+        actor = self.get_active_user(session_identifier)
+        response = actor.is_allowed_to_shutdown_market()
+        if response.success:
+            Logger().post('Market is closed!', Logger.Severity.WARNING)
+            Logger().shutdown()
+            return response
+        else:
+            return report_error(self.shutdown.__qualname__, f'{self} is not authorized to shutdown market!')
 
     def verify_registered_store(self, calling_method_name: str, store_name: str) -> Response[Store] | Response[bool]:
         store: Store = self.stores.get(store_name)
@@ -190,7 +196,7 @@ class Market(IService):
         self.sessions.delete(session_identifier)
         return report_info("exit", "no error")
 
-    def update_user_cart_after_purchase(self, user: User, store_names: list) -> Response[bool]:
+    def update_user_cart_after_purchase(self, user: User, store_names: list) -> None:
         for store_name in store_names:
             user.empty_basket(store_name)
 
