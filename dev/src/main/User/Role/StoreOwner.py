@@ -46,4 +46,13 @@ class StoreOwner(Member):
             return Response(True)
         return Response(False)
 
+    def is_allowed_to_view_store_personal(self, store_name: str) -> Response[bool]:
+        if store_name in self.context.owned_stores:
+            return Response(True)
+        return Response(False)
+
+    def is_allowed_to_get_store_purchase_history(self, store_name: str) -> Response[bool]:
+        if store_name in self.context.owned_stores:
+            return Response(True)
+        return Response(False)
 

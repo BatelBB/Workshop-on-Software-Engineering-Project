@@ -135,6 +135,9 @@ class IService(ABC):
     def set_personal_permissions(self, session_id: int, receiving_user_name: str, store_name: str,
                                  give_or_take: bool) -> Response[bool]:
         ...
+    @abstractmethod
+    def get_store_personal(self, session_id: int, store_name: str) -> Response[str]:
+        ...
     # @abstractmethod
     # def update_product_of(self, store_name: str, product: Product, quantity: int) -> Response[bool]:
     #     ...

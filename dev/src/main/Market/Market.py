@@ -122,6 +122,9 @@ class Market(IService):
             response = actor.open_store(store_name)
             if not response.success:
                 self.stores.delete(store_name)
+            else:
+                store.add_personal(actor.username)
+
             return response
         return report_error(self.open_store.__qualname__, f'Store name \'{store_name}\' is occupied.')
 
@@ -281,7 +284,10 @@ class Market(IService):
         else:
             return response
 
-    def get_store_purchase_history(self, session_id: int, store_name: str) -> Response[bool]:
+    def get_store_purchase_history(self, session_id: int, store_name: str = "") -> Response[bool]:
+        actor = self.get_active_user(session_id)
+        actor.is_allowed_to_get_store_purchase_history(store_name)
+
         store = self.stores.get(store_name)
         return report_info(self.get_store_purchase_history.__qualname__, store.get_purchase_history())
 
@@ -350,6 +356,8 @@ class Market(IService):
             return response
 
         r_final = user.make_me_owner(store_name)
+        if r_final.success:
+            self.stores.get(store_name).add_personal(new_owner_name)
         return r_final
 
     def appoint_manager(self, session_id: int, new_manager_name: str, store_name: str) -> Response[bool]:
@@ -364,6 +372,8 @@ class Market(IService):
             return response
 
         r_final = user.make_me_manager(store_name)
+        if r_final or r_final.success:
+            self.stores.get(store_name).add_personal(new_manager_name)
         return r_final
 
     def set_stock_permissions(self, session_id: int, receiving_user_name: str, store_name: str, give_or_take: bool) -> \
@@ -393,3 +403,12 @@ class Market(IService):
         receiving_user = receiving_user.result
 
         return receiving_user.set_personal_permissions(store_name, give_or_take)
+
+    def get_store_personal(self, session_id: int, store_name: str) -> Response[str]:
+        actor = self.get_active_user(session_id)
+        res = actor.is_allowed_to_view_store_personal(store_name)
+        if not res.success:
+            return res
+        store = self.stores.get(store_name)
+        res = store.get_personal()
+        return res

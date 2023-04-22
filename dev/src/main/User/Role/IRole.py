@@ -111,7 +111,7 @@ class IRole(ABC):
         ...
 
     @abstractmethod
-    def is_allowed_to_get_store_purchase_history(self) -> Response[bool]:
+    def is_allowed_to_get_store_purchase_history(self, store_name: str) -> Response[bool]:
         ...
 
     @abstractmethod
@@ -130,3 +130,6 @@ class IRole(ABC):
     def is_allowed_to_change_permissions(self, store_name: str) -> Response[bool]:
         ...
 
+    @abstractmethod
+    def is_allowed_to_view_store_personal(self, store_name: str) -> Response[bool]:
+        ...

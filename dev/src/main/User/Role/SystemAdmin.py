@@ -11,7 +11,7 @@ class SystemAdmin(Member):
     def __str__(self):
         return f'SystemAdmin {self.context.username}'
 
-    def is_allowed_to_get_store_purchase_history(self) -> Response[bool]:
+    def is_allowed_to_get_store_purchase_history(self, store_name: str) -> Response[bool]:
         return Response(True)
 
     def is_allowed_to_shutdown_market(self) -> Response[bool]:

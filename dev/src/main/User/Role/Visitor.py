@@ -111,7 +111,7 @@ class Visitor(IRole, ABC):
         return report_error(self.change_product_price.__qualname__,
                             f'{self} is not allowed to update a product\'s price!')
 
-    def is_allowed_to_get_store_purchase_history(self) -> Response[bool]:
+    def is_allowed_to_get_store_purchase_history(self, store_name: str) -> Response[bool]:
         return report_error(self.is_allowed_to_get_store_purchase_history.__qualname__,
                             f'{self} is not allowed to view store purchases!')
 
@@ -127,3 +127,6 @@ class Visitor(IRole, ABC):
 
     def is_allowed_to_change_permissions(self, store_name: str) -> Response[bool]:
         return report_error(self.is_allowed_to_change_permissions.__qualname__, f'{self} permissions are not changeable!')
+
+    def is_allowed_to_view_store_personal(self, store_name: str) -> Response[bool]:
+        return report_error(self.is_allowed_to_view_store_personal.__qualname__, f'{self} no permissions for get store personal!')

@@ -77,3 +77,15 @@ class StoreManager(Member):
             self.permissions.remove(StorePermissions.RetrieveStaffDetails)
             self.permissions.remove(StorePermissions.RetrievePurchaseHistory)
             return report_info("set_stock_permissions", f'user {self} removed personal permissions at {store_name}\n')
+
+    def is_allowed_to_view_store_personal(self, store_name: str) -> Response[bool]:
+        return Response(True) if self.is_appointed_of(
+            store_name).success and StorePermissions.RetrieveStaffDetails in self.permissions \
+            else self.report_no_permission(self.is_allowed_to_view_store_personal.__qualname__, StorePermissions.RetrieveStaffDetails,
+                                           store_name)
+
+    def is_allowed_to_get_store_purchase_history(self, store_name: str) -> Response[bool]:
+        return Response(True) if self.is_appointed_of(
+            store_name).success and StorePermissions.RetrievePurchaseHistory in self.permissions \
+            else self.report_no_permission(self.is_allowed_to_get_store_purchase_history.__qualname__, StorePermissions.RetrievePurchaseHistory,
+                                           store_name)

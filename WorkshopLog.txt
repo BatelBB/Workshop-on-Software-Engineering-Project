@@ -1,42 +1,40 @@
-22/04/2023 18:09:35 INFO:	 Session: 7113809389472020640 has been initialized
-22/04/2023 18:09:35 INFO:	 Visitor.register: Nir is registered!
-22/04/2023 18:09:35 INFO:	 Visitor.login: Nir is logged in.
-22/04/2023 18:09:35 ERROR:	 Member.login: Member Nir is already logged in.
-22/04/2023 18:09:35 INFO:	 Member.open_store: Member Nir opens Store 'Amazon' successfully
-22/04/2023 18:09:35 INFO:	 order_product: store: Amazon got delivery of 10 Razer Blackwidow V3
-22/04/2023 18:09:35 INFO:	 Store.add: Product 'Razer Blackwidow V3', Category: 'Keyboards', Price: 799.123, Rate: Not rated yet, is added to Store 'Amazon' successfully!.
-22/04/2023 18:09:35 INFO:	 Market.get_store: Displaying store Amazon to StoreOwner Nir
+22/04/2023 18:49:40 INFO:	 Session: 1947091854625597048 has been initialized
+22/04/2023 18:49:40 INFO:	 Visitor.register: Nir is registered!
+22/04/2023 18:49:40 INFO:	 Visitor.login: Nir is logged in.
+22/04/2023 18:49:40 ERROR:	 Member.login: Member Nir is already logged in.
+22/04/2023 18:49:40 INFO:	 Member.open_store: Member Nir opens Store 'Amazon' successfully
+22/04/2023 18:49:40 INFO:	 order_product: store: Amazon got delivery of 10 Razer Blackwidow V3
+22/04/2023 18:49:40 INFO:	 Store.add: Product 'Razer Blackwidow V3', Category: 'Keyboards', Price: 799.123, Rate: Not rated yet, is added to Store 'Amazon' successfully!.
+22/04/2023 18:49:40 INFO:	 Market.get_store: Displaying store Amazon to StoreOwner Nir
 #####################
 Store: Amazon
 Products:
 0).	Razer Blackwidow V3. Available quantity: 10.
 #####################
-22/04/2023 18:09:35 INFO:	 order_product: store: Amazon got delivery of 23 Razer Blackwidow V3
-22/04/2023 18:09:35 INFO:	 Store.update: Store 'Amazon': Product 'Razer Blackwidow V3' quantity added 23.
-22/04/2023 18:09:35 INFO:	 Visitor.add_to_cart: 10 units of Product 'Razer Blackwidow V3' is added to StoreOwner Nir' cart
-22/04/2023 18:09:35 INFO:	 Market.get_store: Displaying store Amazon to StoreOwner Nir
+22/04/2023 18:49:40 INFO:	 order_product: store: Amazon got delivery of 23 Razer Blackwidow V3
+22/04/2023 18:49:40 INFO:	 Store.update: Store 'Amazon': Product 'Razer Blackwidow V3' quantity added 23.
+22/04/2023 18:49:40 INFO:	 Visitor.add_to_cart: 10 units of Product 'Razer Blackwidow V3' is added to StoreOwner Nir' cart
+22/04/2023 18:49:40 INFO:	 Market.get_store: Displaying store Amazon to StoreOwner Nir
 #####################
 Store: Amazon
 Products:
 0).	Razer Blackwidow V3. Available quantity: 33.
 #####################
-22/04/2023 18:09:35 INFO:	 Visitor.verify_cart_not_empty: StoreOwner Nir cart's is not empty.
-22/04/2023 18:09:35 INFO:	 Market.get_store: Displaying store Amazon to StoreOwner Nir
+22/04/2023 18:49:40 INFO:	 Visitor.verify_cart_not_empty: StoreOwner Nir cart's is not empty.
+22/04/2023 18:49:40 INFO:	 Market.get_store_purchase_history: Purchase history:
+Basket: {Item: Product: 'Razer Blackwidow V3', Quantity: 10, Price: 799.123, Discount-Price: 799.123}
+
+22/04/2023 18:49:40 INFO:	 Market.get_store: Displaying store Amazon to StoreOwner Nir
 #####################
 Store: Amazon
 Products:
 0).	Razer Blackwidow V3. Available quantity: 23.
 #####################
-22/04/2023 18:09:35 INFO:	 Session: 7458698296235755202 has been initialized
-22/04/2023 18:09:35 INFO:	 Visitor.register: sus is registered!
-22/04/2023 18:09:35 INFO:	 Visitor.login: sus is logged in.
-22/04/2023 18:09:35 INFO:	 set_stock_permissions: user StoreManager sus got personal permissions at Amazon
-
-22/04/2023 18:09:35 INFO:	 Market.get_store_purchase_history: Purchase history:
-Basket: {Item: Product: 'Razer Blackwidow V3', Quantity: 10, Price: 799.123, Discount-Price: 799.123}
-
-22/04/2023 18:09:35 ERROR:	 Visitor.is_allowed_to_shutdown_market: StoreManager sus is not allowed to shut down market!
-22/04/2023 18:09:35 INFO:	 Session: 3158402711804003306 has been initialized
-22/04/2023 18:09:35 INFO:	 SystemAdmin.login: admin is logged in.
-22/04/2023 18:09:35 WARNING:	 Market is closed!
-22/04/2023 18:09:35 WARNING:	 Logger thread exits!
+22/04/2023 18:49:40 INFO:	 Session: 818460841271144049 has been initialized
+22/04/2023 18:49:40 INFO:	 Visitor.register: sus is registered!
+22/04/2023 18:49:40 INFO:	 Visitor.login: sus is logged in.
+22/04/2023 18:49:40 INFO:	 get_personal: ['Nir', 'sus']
+22/04/2023 18:49:40 INFO:	 Session: 518015082606118909 has been initialized
+22/04/2023 18:49:40 INFO:	 SystemAdmin.login: admin is logged in.
+22/04/2023 18:49:40 WARNING:	 Market is closed!
+22/04/2023 18:49:40 WARNING:	 Logger thread exits!
