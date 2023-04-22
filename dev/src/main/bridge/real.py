@@ -1,10 +1,9 @@
-import string
-
 from dev.src.main.bridge.Bridge import Bridge
 from dev.src.main.Market.Market import Market
+import string
 
 
-class real(Bridge):
+class Real(Bridge):
     # TODO
     def remove_product_quantity(self, session_id: int, store_name: str, product_name: str, quantity: int) -> bool:
         pass

@@ -6,7 +6,7 @@ class TestGuest(unittest.TestCase):
     session_id: int
     app: proxy
 
-    def setUp(self) -> None:
+    def set_up(self) -> None:
         self.app = proxy()
 
     def enter_market(self):
@@ -70,16 +70,51 @@ class TestGuest(unittest.TestCase):
         res = self.app.add_to_cart(self.session_id, "store1", "product1_2", 2)
         self.assertFalse(res, "add to cart not failed")
 
+    def test_removing_from_cart(self):
+        # happy
+        self.enter_market()
+        self.app.add_to_cart(self.session_id, "store1", "product1_1", 2)
+        self.app.remove_from_cart(self.session_id, "store1", "product1_1")
+        res = self.app.show_cart(self.session_id)
+        self.assertTrue(("product1_1", 2) not in res, "product1_1 didn't removed")
+
+        # sad
+        self.app.remove_from_cart(self.session_id, "store1", "product1_2")
+        res2 = self.app.show_cart(self.session_id)
+        self.assertTrue(len(res) == len(res2), "product removed")
+
+    def test_product_info(self):
+        # happy
+        products = self.app.get_store_products(self.session_id, "store1")
+        self.assertTrue("product1_1" in product, "product1_1 did not receive")
+        self.assertTrue("product1_2" in product, "product1_2 did not receive")
+        self.assertTrue("product2_1" in product, "product2_1 did not receive")
+        self.assertTrue("product2_2" in product, "product2_2 did not receive")
+        products = self.app.get_products_by_name(self.session_id, "product1_1")
+        self.assertTrue("product1_1" in product, "product1_1 did not receive")
+        products = self.app.get_products_by_category(self.session_id, "cat1")
+        self.assertTrue("product1_1" in product, "product1_1 did not receive")
+        products = self.app.get_products_by_keyword(self.session_id, "car1")
+        self.assertTrue("product1_1" in product, "product1_1 did not receive")
+        products = self.app.filter_products_by_price_range(self.session_id, 10, 16)
+        self.assertTrue("product1_1" in product, "product1_1 did not receive")
+        # products = self.app.filter_products_by_rating(self.session_id, 0, 100)
+        # self.assertTrue("product1_1" in product, "product1_1 did not receive")
+        # products = self.app.filter_products_by_store_rating(self.session_id, 0, 100)
+        # self.assertTrue("product1_1" in product, "product1_1 did not receive")
+
+
     def test_product_purchase(self):
         # happy
         self.test_enter_market()
         self.app.register(self.session_id, "buyer1", "123")
         self.app.login(self.session_id, "buyer1", "123")
-        res = self.app.add_to_cart(self.session_id, "store1", "product1_2", 3)
+        self.app.add_to_cart(self.session_id, "store1", "product1_2", 3)
         res = self.app.buy_cart_with_card(self.session_id, "1234123412341234", "123", "01/01/2025")
         self.assertTrue(res, "payment failed")
         cart = self.app.show_cart(self.session_id)
         self.assertTrue(len(cart) == 0, "cart not empty")
+        #todo delivery service check
 
         # sad - bad credit card
         self.app.exit_market(self.session_id)
