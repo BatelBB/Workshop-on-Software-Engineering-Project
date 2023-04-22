@@ -43,6 +43,9 @@ class User:
     def open_store(self, store_name: str) -> Response[bool]:
         return self.role.open_store(store_name)
 
+    def close_store(self, store_name: str) -> Response[bool]:
+        return self.role.close_store(store_name)
+
     def add_product(self, store_name: str, product: Product, quantity: int) -> Response[bool]:
         return self.role.add_product(store_name, product, quantity)
 
@@ -72,3 +75,9 @@ class User:
 
     def empty_basket(self, store_name: str):
         self.role.empty_basket(store_name)
+
+    def change_product_name(self, store_name: str, product_name: str) -> Response[bool]:
+        return self.role.change_product_name(store_name, product_name)
+
+    def change_product_price(self, store_name: str, product_price: float) -> Response[bool]:
+        return self.role.change_product_price(store_name, product_price)

@@ -34,6 +34,11 @@ class Member(Visitor, ABC):
         self.context.role = StoreOwner(self.context, store_name)
         return report_info(self.open_store.__qualname__, f'{self} opens Store \'{store_name}\' successfully')
 
+    def close_store(self, store_name: str) -> Response[bool]:
+        self.context.appointees.pop(store_name)
+        self.context.founded_stores.remove(store_name)
+        return report_info(self.close_store.__qualname__, f'{self} closes Store \'{store_name}\' successfully')
+
     def is_appointed_of(self, store_name: str) -> Response[bool]:
         return Response(True) if store_name in (self.context.appointees or self.context.founded_stores)\
             else report_error(self.is_appointed_of.__qualname__, f'{self} is not authorized appointed of Store \'{store_name}\'!')
@@ -55,3 +60,9 @@ class Member(Visitor, ABC):
 
     def remove_product(self, store_name: str, product_name: str) -> Response[bool]:
         return self.is_allowed_remove_product(store_name)
+
+    def change_product_name(self, store_name: str, product_name: str) -> Response[bool]:
+        return self.is_allowed_update_product(store_name)
+
+    def change_product_price(self, store_name: str, product_price: float) -> Response[bool]:
+        return self.is_allowed_update_product(store_name)

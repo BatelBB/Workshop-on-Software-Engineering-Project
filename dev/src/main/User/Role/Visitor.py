@@ -36,6 +36,9 @@ class Visitor(IRole, ABC):
     def open_store(self, store_name: str) -> Response[bool]:
         return report_error(self.open_store.__qualname__, f'{self} attempted to open a store.')
 
+    def close_store(self, store_name: str) -> Response[bool]:
+        return report_error(self.close.__qualname__, f'{self} attempted to close a store.')
+
     from dev.src.main.Store.Product import Product
 
     def is_allowed_add_product(self, store_name: str) -> Response[bool]:
@@ -86,3 +89,9 @@ class Visitor(IRole, ABC):
 
     def empty_basket(self, store_name: str):
         self.context.cart.empty_basket(store_name)
+
+    def change_product_name(self, store_name: str, product_name: str) -> Response[bool]:
+        return report_error(self.change_product_name.__qualname__, f'{self} is not allowed to update a product\'s name!')
+
+    def change_product_price(self, store_name: str, product_price: float) -> Response[bool]:
+        return report_error(self.change_product_price.__qualname__,f'{self} is not allowed to update a product\'s price!')

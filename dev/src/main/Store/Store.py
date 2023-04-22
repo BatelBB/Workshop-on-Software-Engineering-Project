@@ -30,6 +30,7 @@ class Store:
         self.name = name
         self.products: list[Product] = list()
         self.products_quantities: dict[str, ProductQuantity] = dict()
+        self.purchase_history : list[str] = list()
 
     def __str__(self):
         output: str = f'#####################\nStore: {self.name}\nProducts:\n'
@@ -117,6 +118,9 @@ class Store:
     def get_products_by_category(self, category: str) -> list[Product]:
         return self.get_products(lambda p: category == p.category)
 
+    def get_products_by_price(self, price: float) -> list[Product]:
+        return self.get_products(lambda p: price == p.price)
+
     def get_products_by_keywords(self, keywords: list[str]) -> list[Product]:
         return self.get_products(lambda p: len((set(p.keywords) & set(keywords))) > 0)
 
@@ -126,6 +130,30 @@ class Store:
         for item in basket.items:
             price += self.get_product_price(item.product_name)
         return price
+
+    def change_product_name(self, product_old_name: str, product_new_name:str) -> Response[bool]:
+        products = self.get_products_by_name(product_old_name)
+        for product in products:
+            product.set_name(product_new_name)
+            self.products_quantities[product_new_name] = self.products_quantities.pop(product_old_name)
+        return report_info(self.change_product_name.__qualname__, f'Changed {product_old_name} to {product_new_name} '
+                                                                  f'successfully!')
+
+    def change_product_price(self, product_old_price: float, product_new_price:float) -> Response[bool]:
+        products = self.get_products_by_price(product_old_price)
+        for product in products:
+            product.set_price(product_new_price)
+        return report_info(self.change_product_price.__qualname__, f'Changed {product_old_price} to {product_new_price} '
+                                                                  f'successfully!')
+
+    def add_to_purchase_history(self, baskets: Basket):
+        self.purchase_history.append(baskets.__str__())
+
+    def get_purchase_history(self) -> str:
+        output = "Purchase history:\n"
+        for item in self.purchase_history:
+            output += f'{item}\n'
+        return output
 
     # def filter_products_in_price_range(self, products: list[Product] ,min: float, max: float) -> list[Product]:
     #     return self.get_products(lambda p: min <= p.price <= max)

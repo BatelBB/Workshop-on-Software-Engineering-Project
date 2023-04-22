@@ -33,6 +33,10 @@ class IRole(ABC):
         ...
 
     @abstractmethod
+    def close_store(self, store_name: str) -> Response[bool]:
+        ...
+
+    @abstractmethod
     def is_allowed_add_product(self, store_name: str) -> Response[bool]:
         ...
 
@@ -79,3 +83,10 @@ class IRole(ABC):
     @abstractmethod
     def empty_basket(self, store_name: str):
         ...
+
+    def change_product_name(self, store_name: str, product_name: str) -> Response[bool]:
+        ...
+
+    def change_product_price(self, store_name: str, product_price: str) -> Response[bool]:
+        ...
+
