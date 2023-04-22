@@ -56,3 +56,7 @@ class StoreOwner(Member):
             return Response(True)
         return Response(False)
 
+    def is_allowed_to_fire_employee(self, store_name:str) -> Response[bool]:
+        if store_name in self.context.owned_stores:
+            return Response(True)
+        return Response(False)

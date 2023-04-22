@@ -339,6 +339,8 @@ class Market(IService):
         else:
             return Response(f'{store_name} isn\'t a verified store')
 
+
+
     def get_registered_user(self, name: str) -> Response[User] | Response[bool]:
         if self.users.get(name) is not None:
             return Response(self.users.get(name))
@@ -371,9 +373,7 @@ class Market(IService):
         if not response.success:
             return response
 
-        r_final = user.make_me_manager(store_name)
-        if r_final or r_final.success:
-            self.stores.get(store_name).add_personal(new_manager_name)
+        r_final = user.make_me_owner(store_name)
         return r_final
 
     def set_stock_permissions(self, session_id: int, receiving_user_name: str, store_name: str, give_or_take: bool) -> \
@@ -412,3 +412,17 @@ class Market(IService):
         store = self.stores.get(store_name)
         res = store.get_personal()
         return res
+    def fire_employee(self, session_id: int, store_name: str, employee_name: str) -> Response[bool]:
+        actor = self.get_active_user(session_id)
+        response = actor.is_allowed_to_fire_employee(store_name)
+        if not response.success:
+            return response
+        else:
+            user_res = self.get_registered_user(employee_name)
+            if not user_res.success:
+                return user_res
+            user = user_res.result
+            actor.appointees.get(store_name).remove(employee_name)
+            for person in user.appointed_by_me:
+                actor.appointees.get(store_name).remove(person)
+            return response
