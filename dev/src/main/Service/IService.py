@@ -108,12 +108,13 @@ class IService(ABC):
         ...
 
     @abstractmethod
-    def appoint_manager(self, session_id: int, new_manager_name: str) -> Response[bool]:
+    def appoint_manager(self, session_id: int, store_name: str, new_manager_name: str) -> Response[bool]:
         ...
 
     @abstractmethod
-    def appoint_owner(self, session_id: int, new_owner_name: str) -> Response[bool]:
+    def appoint_owner(self, session_id: int, new_owner_name: str, store_name: str) -> Response[bool]:
         ...
+
 
 
     # @abstractmethod

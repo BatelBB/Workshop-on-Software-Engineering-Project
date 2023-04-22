@@ -79,3 +79,19 @@ class IRole(ABC):
     @abstractmethod
     def empty_basket(self, store_name: str):
         ...
+
+    @abstractmethod
+    def is_allowed_to_appoint_owner(self, store_name: str, new_name: str) -> Response[bool]:
+        ...
+
+    @abstractmethod
+    def is_allowed_to_appoint_manager(self, store_name: str, new_name: str) -> Response[bool]:
+        ...
+
+    @abstractmethod
+    def make_me_owner(self, store_name: str) -> Response[bool]:
+        ...
+
+    @abstractmethod
+    def make_me_manager(self, store_name: str) -> Response[bool]:
+        ...

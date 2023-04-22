@@ -15,6 +15,7 @@ class User:
         # we map store_name to all appointees (username) which were appointed by self (might be StoreOwner or StoreManager)
         self.appointees: dict[str, list[str]] = dict()
         self.cart = Cart()
+        self.owned_stores: list[str] = list()
 
     def __str__(self):
         return self.role.__str__()
@@ -72,3 +73,15 @@ class User:
 
     def empty_basket(self, store_name: str):
         self.role.empty_basket(store_name)
+
+    def is_allowed_to_appoint_owner(self, store_name: str, new_name: str) -> Response[bool]:
+        return self.role.is_allowed_to_appoint_owner(store_name, new_name)
+
+    def is_allowed_to_appoint_manager(self, store_name: str, new_name: str) -> Response[bool]:
+        return self.role.is_allowed_to_appoint_manager(store_name, new_name)
+
+    def make_me_owner(self, store_name: str) -> Response[bool]:
+        return self.role.make_me_owner(store_name)
+
+    def make_me_manager(self, store_name: str) -> Response[bool]:
+        return self.role.make_me_manager(store_name)

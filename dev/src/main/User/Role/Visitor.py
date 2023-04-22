@@ -86,3 +86,16 @@ class Visitor(IRole, ABC):
 
     def empty_basket(self, store_name: str):
         self.context.cart.empty_basket(store_name)
+
+    def is_allowed_to_appoint_owner(self, store_name: str, new_name: str) -> Response[bool]:
+        return report_error(self.is_allowed_to_appoint_owner.__qualname__, f'{self} is not allowed to appoint owner!')
+
+    def is_allowed_to_appoint_manager(self, store_name: str, new_name: str) -> Response[bool]:
+        return report_error(self.is_allowed_to_appoint_manager.__qualname__,
+                            f'{self} is not allowed to appoint manager!')
+
+    def make_me_owner(self, store_name: str) -> Response[bool]:
+        return report_error(self.make_me_owner.__qualname__, f'{self} is not registered!')
+
+    def make_me_manager(self, store_name: str) -> Response[bool]:
+        pass

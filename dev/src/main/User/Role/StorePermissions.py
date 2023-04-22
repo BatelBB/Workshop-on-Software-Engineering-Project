@@ -3,15 +3,16 @@ from enum import Enum
 
 class StorePermissions(Enum):
     RetrievePurchaseHistory = 'Retrieve store purchase history'
-    InteractWithCustomer = 'Get and answer customer questions'
+    # InteractWithCustomer = 'Get and answer customer questions'
     Add = 'Add Product',
     Update = 'Update product quantity'
     Remove = 'Remove product'
-    ChangeDiscountPolicy = 'Change discount policy'
-    ChangePurchasePolicy = 'Change purchase policy'
+    # ChangeDiscountPolicy = 'Change discount policy'
+    # ChangePurchasePolicy = 'Change purchase policy'
     AppointManager = 'Appoint another manager'
+    AppointOwner = 'Appoint another owner'
     CancelManagerAppointment = 'Cancel appointment of another manager'
-    CloseStore = 'Close store'
+    # CloseStore = 'Close store'
     RetrieveStaffDetails = 'Retrieve store staff details'
 
 

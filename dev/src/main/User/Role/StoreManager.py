@@ -9,8 +9,9 @@ class StoreManager(Member):
     def __init__(self, context: User, store_name: str):
         super().__init__(context)
         self.context.appointees.update({store_name: []})
-        self.permissions: set[StorePermissions] = {StorePermissions.RetrievePurchaseHistory,
-                                                   StorePermissions.InteractWithCustomer}
+        self.permissions: set[StorePermissions] = {StorePermissions.Add,
+                                                   StorePermissions.Update,
+                                                   StorePermissions.Remove}
 
     def __str__(self):
         return f'StoreManager {self.context.username}'
@@ -28,4 +29,12 @@ class StoreManager(Member):
 
     def is_allowed_remove_product(self, store_name: str) -> Response[bool]:
         return Response(True) if self.is_appointed_of(store_name).success and StorePermissions.Remove in self.permissions \
+            else self.report_no_permission(self.is_allowed_remove_product.__qualname__, StorePermissions.Add, store_name)
+
+    def is_allowed_appoint_owner(self, store_name: str) -> Response[bool]:
+        return Response(True) if self.is_appointed_of(store_name).success and StorePermissions.AppointOwner in self.permissions \
+            else self.report_no_permission(self.is_allowed_remove_product.__qualname__, StorePermissions.Add, store_name)
+
+    def is_allowed_appoint_manager(self, store_name: str) -> Response[bool]:
+        return Response(True) if self.is_appointed_of(store_name).success and StorePermissions.AppointManager in self.permissions \
             else self.report_no_permission(self.is_allowed_remove_product.__qualname__, StorePermissions.Add, store_name)

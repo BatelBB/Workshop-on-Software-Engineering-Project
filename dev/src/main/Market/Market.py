@@ -17,6 +17,25 @@ from dev.src.main.Utils.Session import Session
 # TODO: might be implemented as a Reactor: a singleton with a thread pool responsible for executing tasks
 class Market(IService):
 
+    def close_store(self, session_id: int, store_name: str) -> Response[bool]:
+        pass
+
+    def get_store_products(self, session_id: int, store_name: str) -> Response[str]:
+        pass
+
+    def change_product_name(self, session_id: int, store_name: str, product_old_name: str, product_new_name: str) -> \
+    Response[bool]:
+        pass
+
+    def change_product_price(self, session_id: int, store_name: str, product_old_price: float,
+                             product_new_price: float) -> Response[bool]:
+        pass
+
+    def get_store_purchase_history(self, session_id: int, store_name: str) -> Response[str]:
+        pass
+
+
+
     # TODO: should be initialized with IPaymentService, IProvisionService
     def __init__(self):
         self.sessions: ConcurrentDictionary[int, User] = ConcurrentDictionary()
@@ -234,3 +253,36 @@ class Market(IService):
         # TODO 2nd version - verify purchaser is conformed with store policy
         # TODO 2nd version - apply discount policy
 
+
+    def get_registered_user(self, name: str) -> Response[User] | Response[bool]:
+        if self.users.get(name) is not None:
+            return Response(self.users.get(name))
+        return Response(False)
+
+    def appoint_owner(self, session_id: int, new_owner_name: str, store_name: str) -> Response[bool]:
+        user_res = self.get_registered_user(new_owner_name)
+        if not user_res.success:
+            return user_res
+        user = user_res.result
+
+        actor = self.get_active_user(session_id)
+        response = actor.is_allowed_to_appoint_owner(store_name, new_owner_name)
+        if not response.success:
+            return response
+
+        r_final = user.make_me_owner(store_name)
+        return r_final
+
+    def appoint_manager(self, session_id: int, new_manager_name: str, store_name: str) -> Response[bool]:
+        user_res = self.get_registered_user(new_manager_name)
+        if not user_res.success:
+            return user_res
+        user = user_res.result
+
+        actor = self.get_active_user(session_id)
+        response = actor.is_allowed_to_appoint_manager(store_name, new_manager_name)
+        if not response.success:
+            return response
+
+        r_final = user.make_me_owner(store_name)
+        return r_final
