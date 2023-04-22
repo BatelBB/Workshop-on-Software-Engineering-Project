@@ -51,9 +51,9 @@ class proxy(Bridge):
         else:
             return []
 
-    def get_store_products(self, session_id: int, store_name: str) -> list:
+    def get_store_products(self, session_id: int, store_id: int) -> list:
         if self.real is not None:
-            return self.real.get_store_products(session_id, store_name)
+            return self.real.get_store_products(session_id)
         else:
             return []
 
