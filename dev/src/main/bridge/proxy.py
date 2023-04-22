@@ -1,7 +1,7 @@
 import string
 
 from dev.src.main.bridge.Bridge import Bridge
-from dev.src.main.bridge.real import real
+from dev.src.main.bridge.real import Real
 
 
 class proxy(Bridge):

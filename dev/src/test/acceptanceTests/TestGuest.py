@@ -74,12 +74,12 @@ class TestGuest(unittest.TestCase):
         # happy
         self.enter_market()
         self.app.add_to_cart(self.session_id, "store1", "product1_1", 2)
-        self.app.remove_from_cart(self.session_id, "store1", "product1_1")
+        self.app.remove_from_cart(self.session_id, "store1", "product1_1", 2)
         res = self.app.show_cart(self.session_id)
         self.assertTrue(("product1_1", 2) not in res, "product1_1 didn't removed")
 
         # sad
-        self.app.remove_from_cart(self.session_id, "store1", "product1_2")
+        self.app.remove_from_cart(self.session_id, "store1", "product1_2", 5)
         res2 = self.app.show_cart(self.session_id)
         self.assertTrue(len(res) == len(res2), "product removed")
 

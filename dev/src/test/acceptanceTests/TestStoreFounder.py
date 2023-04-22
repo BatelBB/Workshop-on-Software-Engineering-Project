@@ -42,13 +42,54 @@ class TestStoreOwner(unittest.TestCase):
         products = self.app.get_store_products(self.session_id, "bakery")
         self.assertTrue("cake4" not in products, "cake4 found")
 
+    def test_change_product(self):
+        # happy
+        self.app.login(self.session_id, "u1", "pass1")
+        self.app.change_product_name(self.session_id, "bakery", "pita", "new_pita")
+        products = self.app.get_store_products(self.session_id, "bakery")
+        self.assertTrue("new_pita" in products, "new_pita not found")
+        self.assertTrue("pita" not in products, "pita found")
+
+        self.app.change_product_price(self.session_id, "bakery", "new_pita", 20)
+        products = self.app.get_store_products(self.session_id, "bakery")
+        self.assertTrue(("new_pita", 20) in products, "new_pita price didn't change")
+        self.assertTrue(("new_pita", 10) not in products, "new_pita old price exist")
+
+        # sad
+        self.app.logout(self.session_id)
+        self.app.register(self.session_id, "u11", "pass1")
+        self.app.login(self.session_id, "u11", "pass1")
+        res = self.app.change_product_name(self.session_id, "bakery", "new_pita", "old_pita")
+        self.assertFalse(res, "name changed by a random user")
+        products = self.app.get_store_products(self.session_id, "bakery")
+        self.assertTrue("new_pita" in products, "new_pita not found")
+        self.assertTrue("old_pita" not in products, "old_pita found")
+
+        self.app.logout(self.session_id)
+        self.app.login(self.session_id, "u1", "pass1")
+        res = self.app.change_product_price(self.session_id, "bakery", "new_pita", -5)
+        self.assertFalse(res, "price changed to negative successfully")
+        products = self.app.get_store_products(self.session_id, "bakery")
+        self.assertTrue(("new_pita", 20) in products, "new_pita price change")
+        self.assertTrue(("new_pita", -5) not in products, "new_pita price changed")
+
+        # bad
+        self.app.logout(self.session_id)
+        self.app.exit_market(self.session_id)
+        res = self.app.change_product_price(self.session_id, "bakery", "new_pita", 10)
+        self.assertFalse(res, "price changed")
+        self.enter_market()
+        products = self.app.get_store_products(self.session_id, "bakery")
+        self.assertTrue(("new_pita", 20) in products, "new_pita price change")
+        self.assertTrue(("new_pita", 10) not in products, "new_pita price changed")
+
     def test_remove_product_from_store(self):
         # happy
         self.enter_market()
         self.app.login(self.session_id, "u1", "pass1")
-        self.app.remove_product(self.session_id, "bakery", "pita")
+        self.app.remove_product(self.session_id, "bakery", "new_pita")
         products = self.app.get_store_products(self.session_id, "bakery")
-        self.assertTrue("pita" not in products, "pita found")
+        self.assertTrue("new_pita" not in products, "new_pita found")
 
         # sad
         self.app.remove_product(self.session_id, "bakery", "borekas123")
@@ -91,9 +132,9 @@ class TestStoreOwner(unittest.TestCase):
 
     def add_owner(self):
         # happy
-        self.app.register(self.session_id, "u2", "pass1")
+        self.app.register(self.session_id, "u3", "pass1")
         self.app.login(self.session_id, "u1", "pass1")
-        res = self.app.appoint_owner(self.session_id, "bakery", "u2")
+        res = self.app.appoint_owner(self.session_id, "bakery", "u3")
         self.assertTrue(res, "manager appointment failed")
         res2 = self.app.get_store_personal(self.session_id, "bakery")
         self.assertTrue("u1" in res2, "u1 not in personal list")
@@ -105,11 +146,11 @@ class TestStoreOwner(unittest.TestCase):
         self.assertFalse("u6" in res2, "u6 in personal list")
 
         self.app.logout(self.session_id)
-        self.app.register(self.session_id, "u3", "pass1")
-        self.app.login(self.session_id, "u2", "pass1")
-        self.app.appoint_owner(self.session_id, "bakery", "u3")
-        self.app.logout(self.session_id)
+        self.app.register(self.session_id, "u4", "pass1")
         self.app.login(self.session_id, "u3", "pass1")
+        self.app.appoint_owner(self.session_id, "bakery", "u4")
+        self.app.logout(self.session_id)
+        self.app.login(self.session_id, "u4", "pass1")
         res = self.app.appoint_owner(self.session_id, "bakery", "u3")
         self.assertFalse(res, "a circular appointment not failed")
         # res2 = self.app.get_store_personal(self.session_id, "bakery")
@@ -117,17 +158,17 @@ class TestStoreOwner(unittest.TestCase):
 
         # bad
         self.app.logout(self.session_id)
-        self.app.register(self.session_id, "u4", "pass1")
-        res = self.app.appoint_owner(self.session_id, "bakery", "u4")
+        self.app.register(self.session_id, "u5", "pass1")
+        res = self.app.appoint_owner(self.session_id, "bakery", "u5")
         self.assertFalse(res, "owner appointment not failed")
         self.app.login(self.session_id, "u1", "pass1")
         res2 = self.app.get_store_personal(self.session_id, "bakery")
-        self.assertTrue("u4" not in res2, "u4 in personal list")
+        self.assertTrue("u5" not in res2, "u5 in personal list")
 
     def close_store(self):
         # sad
         self.app.logout(self.session_id)
-        self.app.login(self.session_id, "u2", "pass1")
+        self.app.login(self.session_id, "u3", "pass1")
         res = self.app.close_store(self.session_id, "bakery")
         self.assertFalse(res, "not the founder closed the store")
 
@@ -148,11 +189,20 @@ class TestStoreOwner(unittest.TestCase):
         self.app.login(self.session_id, "buyer1", "123")
         self.app.add_to_cart(self.session_id, "bakery", "borekas", 3)
         self.app.buy_cart_with_card(self.session_id, "1234123412341234", "123", "01/01/2025")
+
         self.app.logout(self.session_id)
         self.app.login(self.session_id, "u1", "pass1")
+        personal = self.app.get_store_personal(self.session_id, "bakery")
         res = self.app.close_store(self.session_id, "bakery")
         self.assertTrue(res, "the founder couldn't close the store")
         res = self.app.get_store_purchase_history(self.session_id, "bakery")
         self.assertTrue(res, "founder can't watch its store history")
         res = self.app.get_store_personal(self.session_id, "bakery")
         self.assertTrue(len(res) != 0, "founder can't watch its store appointments")
+
+        self.app.logout(self.session_id)
+        self.app.login(self.session_id, "u3", "pass1")
+        res = self.app.get_store_purchase_history(self.session_id, "bakery")
+        self.assertTrue(res, "owner can't watch its store history")
+        res = self.app.get_store_personal(self.session_id, "bakery")
+        self.assertTrue(res == personal, "owner can't watch its store appointments")
