@@ -1,22 +1,20 @@
 import string
 
 from dev.src.main.bridge.Bridge import Bridge
-from dev.src.main.bridge.real import Real
+from dev.src.main.bridge.real import real
 
 
 class proxy(Bridge):
     real: Bridge
 
-    # TODO
-    def remove_product_quantity(self, session_id: int, store_name: str, product_name: str, quantity: int) -> bool:
-        pass
-
-    # TODO
-    def remove_from_cart(self, session_id: int, store_name: string, product_name: string, quantity: int) -> bool:
-        pass
-
     def __init__(self):
         self.real = real()
+
+    def remove_product_quantity(self, session_id: int, store_name: str, product_name: str, quantity: int) -> bool:
+        return real.remove_product_quantity(session_id, store_name, product_name, quantity)
+
+    def remove_from_cart(self, session_id: int, store_name: string, product_name: string, quantity: int) -> bool:
+        return real.remove_product_quantity(session_id, store_name, product_name, quantity)
 
     def enter_market(self) -> int:
         if self.real is not None:
@@ -39,11 +37,6 @@ class proxy(Bridge):
         return True
 
 
-
-
-
-
-
     #guest buying operations
     def get_all_stores(self, session_id: int) -> list:
         if self.real is not None:
@@ -51,9 +44,9 @@ class proxy(Bridge):
         else:
             return []
 
-    def get_store_products(self, session_id: int, store_id: int) -> list:
+    def get_store_products(self, session_id: int, store_id: str) -> list:
         if self.real is not None:
-            return self.real.get_store_products(session_id)
+            return self.real.get_store_products(session_id, store_id)
         else:
             return []
 

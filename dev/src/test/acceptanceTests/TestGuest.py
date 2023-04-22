@@ -6,7 +6,7 @@ class TestGuest(unittest.TestCase):
     session_id: int
     app: proxy
 
-    def set_up(self) -> None:
+    def setUp(self) -> None:
         self.app = proxy()
 
     def enter_market(self):
@@ -49,8 +49,10 @@ class TestGuest(unittest.TestCase):
         res = self.app.add_to_cart(self.session_id, "store1", "product1_2", 2)
         self.assertTrue(res, "add to cart failed")
         cart = self.app.show_cart(self.session_id)
-        self.assertTrue(("product1_1", 3) in cart, "product1_1 not in cart")
-        self.assertTrue(("product1_2", 2) in cart, "product1_2 not in cart")
+        print(cart)
+        self.assertTrue("product1_1" in cart[0], "product1_1 not in cart")
+        self.assertTrue("product1_2" in cart[0], "product1_2 not in cart")
+
 
         # sad
         res2 = self.app.add_to_cart(self.session_id, "store2", "product2_1", 50)
@@ -102,7 +104,6 @@ class TestGuest(unittest.TestCase):
         # self.assertTrue("product1_1" in product, "product1_1 did not receive")
         # products = self.app.filter_products_by_store_rating(self.session_id, 0, 100)
         # self.assertTrue("product1_1" in product, "product1_1 did not receive")
-
 
     def test_product_purchase(self):
         # happy

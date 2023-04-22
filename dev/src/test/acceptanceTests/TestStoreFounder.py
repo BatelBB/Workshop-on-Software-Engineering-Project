@@ -5,8 +5,6 @@ import unittest
 class TestStoreOwner(unittest.TestCase):
     session_id: int
     app: proxy
-    store_id: int
-    product_ids: list[int]
 
     def setUp(self) -> None:
         self.app = proxy()
@@ -107,7 +105,7 @@ class TestStoreOwner(unittest.TestCase):
         products = self.app.get_store_products(self.session_id, "bakery")
         self.assertTrue("borekas" not in products, "borekas found")
 
-    def add_manager(self):
+    def test_add_manager(self):
         # happy
         self.app.register(self.session_id, "u2", "pass1")
         self.app.login(self.session_id, "u1", "pass1")
@@ -130,7 +128,7 @@ class TestStoreOwner(unittest.TestCase):
         res2 = self.app.get_store_personal(self.session_id, "bakery")
         self.assertTrue("u1" in res2, "u1 not in personal list")
 
-    def add_owner(self):
+    def test_add_owner(self):
         # happy
         self.app.register(self.session_id, "u3", "pass1")
         self.app.login(self.session_id, "u1", "pass1")
@@ -165,7 +163,7 @@ class TestStoreOwner(unittest.TestCase):
         res2 = self.app.get_store_personal(self.session_id, "bakery")
         self.assertTrue("u5" not in res2, "u5 in personal list")
 
-    def close_store(self):
+    def test_close_store(self):
         # sad
         self.app.logout(self.session_id)
         self.app.login(self.session_id, "u3", "pass1")

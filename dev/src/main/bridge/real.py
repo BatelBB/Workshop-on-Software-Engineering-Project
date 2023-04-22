@@ -3,7 +3,7 @@ from dev.src.main.Market.Market import Market
 import string
 
 
-class Real(Bridge):
+class real(Bridge):
     # TODO
     def remove_product_quantity(self, session_id: int, store_name: str, product_name: str, quantity: int) -> bool:
         pass
