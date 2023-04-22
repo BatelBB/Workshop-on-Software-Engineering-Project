@@ -94,3 +94,10 @@ class User:
 
     def change_product_price(self, store_name: str, product_price: float) -> Response[bool]:
         return self.role.change_product_price(store_name, product_price)
+
+    def is_allowed_to_get_store_purchase_history(self) -> Response[bool]:
+        return self.role.is_allowed_to_get_store_purchase_history()
+
+    def is_allowed_to_shutdown_market(self) -> Response[bool]:
+        return self.role.is_allowed_to_shutdown_market()
+

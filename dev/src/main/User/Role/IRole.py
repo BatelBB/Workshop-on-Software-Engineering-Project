@@ -105,3 +105,9 @@ class IRole(ABC):
     def change_product_price(self, store_name: str, product_price: str) -> Response[bool]:
         ...
 
+    def is_allowed_to_get_store_purchase_history(self) -> Response[bool]:
+        ...
+
+    def is_allowed_to_shutdown_market(self) -> Response[bool]:
+        ...
+
