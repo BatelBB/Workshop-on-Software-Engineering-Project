@@ -17,25 +17,6 @@ from dev.src.main.Utils.Session import Session
 # TODO: might be implemented as a Reactor: a singleton with a thread pool responsible for executing tasks
 class Market(IService):
 
-    def close_store(self, session_id: int, store_name: str) -> Response[bool]:
-        pass
-
-    def get_store_products(self, session_id: int, store_name: str) -> Response[str]:
-        pass
-
-    def change_product_name(self, session_id: int, store_name: str, product_old_name: str, product_new_name: str) -> \
-    Response[bool]:
-        pass
-
-    def change_product_price(self, session_id: int, store_name: str, product_old_price: float,
-                             product_new_price: float) -> Response[bool]:
-        pass
-
-    def get_store_purchase_history(self, session_id: int, store_name: str) -> Response[str]:
-        pass
-
-
-
     # TODO: should be initialized with IPaymentService, IProvisionService
     def __init__(self):
         self.sessions: ConcurrentDictionary[int, User] = ConcurrentDictionary()
@@ -223,9 +204,14 @@ class Market(IService):
                 payment_res = payment_strategy.pay(price)
                 if not payment_res:
                     return report_error("purchase_shopping_cart", f"payment failed")
+                else:
+                    return info_res
             else:
                 return info_res
 
+    def add_to_purchase_history(self, baskets: dict[str, Any]) -> None:
+        for store_name, basket in baskets.items():
+            self.stores.get(store_name).add_to_purchase_history(basket)
     def purchase_shopping_cart(self, session_identifier: int, payment_method: str, payment_details: list[str]) -> \
     Response[bool]:
         actor = self.get_active_user(session_identifier)
@@ -245,13 +231,92 @@ class Market(IService):
                         cart_price += store.calculate_basket_price(basket)
                 else:
                     return response2
-            self.pay(cart_price, payment_method, payment_details)
-            self.update_user_cart_after_purchase(actor, successful_store_purchases)
+            response3 = self.pay(cart_price, payment_method, payment_details)
+            if response3.success:
+                self.add_to_purchase_history(baskets)
+                self.update_user_cart_after_purchase(actor, successful_store_purchases)
+            else:
+                return response3
         else:
             return response
 
         # TODO 2nd version - verify purchaser is conformed with store policy
         # TODO 2nd version - apply discount policy
+
+    def change_product_name(self, session_id: int, store_name: str, product_old_name: str, product_new_name: str) -> \
+        Response[bool]:
+        actor = self.get_active_user(session_id)
+        response = actor.change_product_name(store_name, product_old_name)
+        if response.success:
+            response = self.verify_registered_store(self.remove_product.__qualname__, store_name)
+            store = response.result
+            return store.change_product_name(product_old_name, product_new_name) if response.success else response
+        else:
+            return response
+
+    def change_product_price(self, session_id: int, store_name: str, product_old_price: float,
+                             product_new_price: float) -> Response[bool]:
+        actor = self.get_active_user(session_id)
+        response = actor.change_product_price(store_name, product_old_price)
+        if response.success:
+            response = self.verify_registered_store(self.remove_product.__qualname__, store_name)
+            store = response.result
+            return store.change_product_price(product_old_price, product_new_price) if response.success else response
+        else:
+            return response
+
+    def get_store_purchase_history(self, session_id: int, store_name: str) -> Response[bool]:
+        store = self.stores.get(store_name)
+        return report_info(self.get_store_purchase_history.__qualname__, store.get_purchase_history())
+
+    def close_store(self, session_id: int, store_name: str) -> Response[bool]:
+        actor = self.get_active_user(session_id)
+        response = self.verify_registered_store(self.close_store.__qualname__, store_name)
+        if response.success:
+            response = actor.close_store(store_name)
+            if response.success:
+                self.stores.delete(store_name)
+            else:
+                return response
+        else:
+            return response
+
+    def get_product_by_category(self, session_id: int, store_name: str, category: str) -> Response[str]:
+        output = ""
+        response = self.verify_registered_store(self.get_product_by_category.__qualname__, store_name)
+        if response.success:
+            store = response.result
+            product_list = store.get_products_by_category(category)
+            for product in product_list:
+                output += product.__str__()
+            return Response(output)
+        else:
+            return Response(f'{store_name} isn\'t a verified store')
+
+    def get_product_by_name(self, session_id: int, store_name: str, name: str) -> Response[str]:
+        output = ""
+        response = self.verify_registered_store(self.get_product_by_name.__qualname__, store_name)
+        if response.success:
+            store = response.result
+            product_list = store.get_products_by_name(name)
+            for product in product_list:
+                output += product.__str__()
+            return Response(output)
+        else:
+            return Response(f'{store_name} isn\'t a verified store')
+
+    def get_product_by_keywords(self, session_id: int, store_name: str, keywords: list[str]) -> Response[str]:
+        output = ""
+        response = self.verify_registered_store(self.get_product_by_name.__qualname__, store_name)
+        if response.success:
+            store = response.result
+            product_list = store.get_products_by_keywords(keywords)
+            for product in product_list:
+                output += product.__str__()
+            return Response(output)
+        else:
+            return Response(f'{store_name} isn\'t a verified store')
+
 
 
     def get_registered_user(self, name: str) -> Response[User] | Response[bool]:

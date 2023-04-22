@@ -52,6 +52,12 @@ class Session:
         else:
             return self.report_session_closed()
 
+    def close_store(self, store_name: str) -> Response[bool]:
+        if self.is_open:
+            return self.service.close_store(self.identifier, store_name)
+        else:
+            return self.report_session_closed()
+
     def get_all_stores(self) -> Response[bool] | Response[str]:
         if self.is_open:
             return self.service.get_all_stores(self.identifier)
@@ -113,5 +119,23 @@ class Session:
     def purchase_shopping_cart(self, payment_method: str, payment_details: list) -> Response[bool]:
         if self.is_open:
             return self.service.purchase_shopping_cart(self.identifier, payment_method, payment_details)
+        else:
+            return self.report_session_closed()
+
+    def change_product_name(self, store_name: str, product_old_name: str, product_new_name: str):
+        if self.is_open:
+            return self.service.change_product_name(self.identifier,store_name, product_old_name, product_new_name)
+        else:
+            return self.report_session_closed()
+
+    def change_product_price(self, store_name: str, product_old_price: float, product_new_price: float):
+        if self.is_open:
+            return self.service.change_product_price(self.identifier,store_name, product_old_price, product_new_price)
+        else:
+            return self.report_session_closed()
+
+    def get_purchase_history(self, store_name:str):
+        if self.is_open:
+            return self.service.get_store_purchase_history(self.identifier, store_name)
         else:
             return self.report_session_closed()

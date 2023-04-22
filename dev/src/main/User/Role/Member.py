@@ -1,6 +1,7 @@
 from abc import ABC
 
 from dev.src.main.Store.Product import Product
+from dev.src.main.Store.Store import Store
 from dev.src.main.User.Role.Visitor import Visitor
 from dev.src.main.Utils.Logger import report, report_error, report_info
 from dev.src.main.Utils.Response import Response
@@ -32,6 +33,11 @@ class Member(Visitor, ABC):
         from dev.src.main.User.Role.StoreOwner import StoreOwner
         self.context.role = StoreOwner(self.context, store_name, True)
         return report_info(self.open_store.__qualname__, f'{self} opens Store \'{store_name}\' successfully')
+
+    def close_store(self, store_name: str) -> Response[bool]:
+        self.context.appointees.pop(store_name)
+        self.context.founded_stores.remove(store_name)
+        return report_info(self.close_store.__qualname__, f'{self} closes Store \'{store_name}\' successfully')
 
     def is_appointed_of(self, store_name: str) -> Response[bool]:
         return Response(True) if store_name in (self.context.appointees or self.context.founded_stores) \
@@ -65,3 +71,10 @@ class Member(Visitor, ABC):
         from dev.src.main.User.Role.StoreManager import StoreManager
         self.context.role = StoreManager(self.context, store_name)
         return True
+
+
+    def change_product_name(self, store_name: str, product_name: str) -> Response[bool]:
+        return self.is_allowed_update_product(store_name)
+
+    def change_product_price(self, store_name: str, product_price: float) -> Response[bool]:
+        return self.is_allowed_update_product(store_name)

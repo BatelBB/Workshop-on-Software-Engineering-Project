@@ -24,3 +24,9 @@ class Product:
 
     def is_unrated(self):
         return self.rate is None
+
+    def set_name(self, name: str):
+        self.name = name
+
+    def set_price(self, price: float):
+        self.price = price
