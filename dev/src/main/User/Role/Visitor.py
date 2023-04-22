@@ -37,7 +37,7 @@ class Visitor(IRole, ABC):
         return report_error(self.open_store.__qualname__, f'{self} attempted to open a store.')
 
     def close_store(self, store_name: str) -> Response[bool]:
-        return report_error(self.close.__qualname__, f'{self} attempted to close a store.')
+        return report_error(self.close_store.__qualname__, f'{self} attempted to close a store.')
 
     from dev.src.main.Store.Product import Product
 
@@ -108,3 +108,9 @@ class Visitor(IRole, ABC):
 
     def change_product_price(self, store_name: str, product_price: float) -> Response[bool]:
         return report_error(self.change_product_price.__qualname__,f'{self} is not allowed to update a product\'s price!')
+
+    def is_allowed_to_get_store_purchase_history(self) -> Response[bool]:
+        return report_error(self.is_allowed_to_get_store_purchase_history.__qualname__, f'{self} is not allowed to view store purchases!')
+
+    def is_allowed_to_shutdown_market(self) -> Response[bool]:
+        return report_error(self.is_allowed_to_shutdown_market.__qualname__, f'{self} is not allowed to shut down market!')
