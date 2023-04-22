@@ -7,6 +7,7 @@ from dev.src.main.Store.Product import Product
 from dev.src.main.Service.IService import IService
 from dev.src.main.Store.Store import Store
 from dev.src.main.User.Basket import Basket
+from dev.src.main.User.Role.SystemAdmin import SystemAdmin
 from dev.src.main.User.User import User
 from dev.src.main.Utils.ConcurrentDictionary import ConcurrentDictionary
 from dev.src.main.Utils.Logger import report, Logger, report_error, report_info
@@ -18,11 +19,19 @@ from dev.src.main.Utils.Session import Session
 class Market(IService):
 
     # TODO: should be initialized with IPaymentService, IProvisionService
+    def init_admin(self):
+        name = "admin"
+        password = "admin"
+        admin = User(self, name, password)
+        admin.role = SystemAdmin(admin)
+
     def __init__(self):
         self.sessions: ConcurrentDictionary[int, User] = ConcurrentDictionary()
         self.users: ConcurrentDictionary[str, User] = ConcurrentDictionary()
         self.stores: ConcurrentDictionary[str, Store] = ConcurrentDictionary()
         self.payment_factory: PaymentFactory = PaymentFactory()
+        self.init_admin()
+
 
     def generate_session_identifier(self):
         min: int = 1
