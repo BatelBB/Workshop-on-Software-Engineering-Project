@@ -351,3 +351,18 @@ class Market(IService):
 
         r_final = user.make_me_owner(store_name)
         return r_final
+
+    def fire_employee(self, session_id: int, store_name: str, employee_name: str) -> Response[bool]:
+        actor = self.get_active_user(session_id)
+        response = actor.is_allowed_to_fire_employee(store_name)
+        if not response.success:
+            return response
+        else:
+            user_res = self.get_registered_user(employee_name)
+            if not user_res.success:
+                return user_res
+            user = user_res.result
+            actor.appointees.get(store_name).remove(employee_name)
+            for person in user.appointed_by_me:
+                actor.appointees.get(store_name).remove(person)
+            return response

@@ -108,3 +108,6 @@ class Visitor(IRole, ABC):
 
     def change_product_price(self, store_name: str, product_price: float) -> Response[bool]:
         return report_error(self.change_product_price.__qualname__,f'{self} is not allowed to update a product\'s price!')
+
+    def is_allowed_to_fire_employee(self, store_name: str) -> Response[bool]:
+        return report_error(self.is_allowed_to_fire_employee.__qualname__, f'{self} is not allowed to fire an employee!')

@@ -16,6 +16,7 @@ class User:
         self.appointees: dict[str, list[str]] = dict()
         self.cart = Cart()
         self.owned_stores: list[str] = list()
+        self.appointed_by_me: list[str] = list()
 
     def __str__(self):
         return self.role.__str__()
@@ -94,3 +95,6 @@ class User:
 
     def change_product_price(self, store_name: str, product_price: float) -> Response[bool]:
         return self.role.change_product_price(store_name, product_price)
+
+    def is_allowed_to_fire_employee(self, store_name: str) -> Response[bool]:
+        return self.role.is_allowed_to_fire_employee(store_name)

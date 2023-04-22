@@ -32,6 +32,7 @@ class StoreOwner(Member):
     def is_allowed_to_appoint_owner(self, store_name: str, new_name: str) -> Response[bool]:
         if store_name in self.context.owned_stores:
             self.context.appointees[store_name].append(new_name)
+            self.context.appointed_by_me.append(new_name)
             return Response(True)
         return Response(False)
 
@@ -41,5 +42,7 @@ class StoreOwner(Member):
             return Response(True)
         return Response(False)
 
-
-
+    def is_allowed_to_fire_employee(self, store_name:str) -> Response[bool]:
+        if store_name in self.context.owned_stores:
+            return Response(True)
+        return Response(False)

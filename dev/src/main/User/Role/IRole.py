@@ -99,9 +99,15 @@ class IRole(ABC):
     @abstractmethod
     def make_me_manager(self, store_name: str) -> Response[bool]:
         ...
+    @abstractmethod
     def change_product_name(self, store_name: str, product_name: str) -> Response[bool]:
         ...
 
+    @abstractmethod
     def change_product_price(self, store_name: str, product_price: str) -> Response[bool]:
+        ...
+
+    @abstractmethod
+    def is_allowed_to_fire_employee(self, store_name:str) -> Response[bool]:
         ...
 
