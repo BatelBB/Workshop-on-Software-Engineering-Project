@@ -32,9 +32,10 @@ class Store:
         self.products_quantities: dict[str, ProductQuantity] = dict()
 
     def __str__(self):
-        output: str = f'Store: {self.name}\nProducts:\n'
+        output: str = f'#####################\nStore: {self.name}\nProducts:\n'
         for i, product in enumerate(self.products):
             output += f'{i}).\t{product.name}. Available quantity: {self.products_quantities[product.name].quantity}.\n'
+        output += '#####################'
         return output
 
     def __eq__(self, other):

@@ -225,11 +225,8 @@ class Market(IService):
                     if res:
                         successful_store_purchases.append(store_name)
                         cart_price += store.calculate_basket_price(basket)
-
-
                 else:
                     return response2
-
             self.pay(cart_price, payment_method, payment_details)
             self.update_user_cart_after_purchase(actor, successful_store_purchases)
         else:
