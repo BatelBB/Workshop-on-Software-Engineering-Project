@@ -1,4 +1,4 @@
-from dev.src.test.acceptanceTests.bridge.proxy import proxy
+from dev.src.main.bridge.proxy import proxy
 
 import unittest
 
@@ -37,6 +37,7 @@ class TestRegisteredUser(unittest.TestCase):
         self.app.login(self.session_id, "user3", "password3")
         self.app.add_to_cart(self.session_id, "store1", "product1", 3)
         self.app.add_to_cart(self.session_id, "store2", "product2", 5)
+
     def test_logout(self):
         self.add_items_to_cart()
         self.app.logout(self.session_id)
@@ -69,6 +70,7 @@ class TestRegisteredUser(unittest.TestCase):
 
     def test_open_store(self):
         # happy
+        self.enter_market()
         stores = self.app.get_all_stores(self.session_id)
 
         self.assertTrue("store1" in stores, "store1 not found")
