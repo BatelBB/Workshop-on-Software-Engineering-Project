@@ -97,6 +97,8 @@ class proxy(Bridge):
 
 
     def add_to_cart(self, session_id: int, store_name: string, product_name: string, quantity: int) -> bool:
+        if self.real is not None:
+            return self.real.add_to_cart(session_id, store_name, product_name, quantity)
         return True
 
     def buy_cart_with_card(self, session_id: int, card_num: str, cvv: str, exp_date: str) -> bool:
@@ -111,17 +113,25 @@ class proxy(Bridge):
 
     #registered user operations
     def logout(self, session_id: int,) -> bool:
+        if self.real is not None:
+            return self.real.logout(session_id)
         return True
 
     def open_store(self, session_id: int, store_name: string) -> bool:
+        if self.real is not None:
+            return self.real.open_store(session_id, store_name)
         return True
 
     #storeOwner operations
     def add_product(self, session_identifier: int, store_name: str, product_name: str, category: str,
                     price: float, quantity: int, keywords: list[str]) -> bool:
+        if self.real is not None:
+            return self.real.add_product(session_identifier, store_name, product_name, category, price, quantity, keywords)
         return True
 
     def remove_product(self, session_id: int, store_name: str, product_name: str) -> bool:
+        if self.real is not None:
+            return self.real.remove_product(session_id, store_name, product_name)
         return True
 
     def change_product_name(self, session_id: int, store_name: str, product_name: str, new_name: string) -> bool:
@@ -148,4 +158,6 @@ class proxy(Bridge):
         return []
 
     def show_cart(self, session_id: int) -> list:
+        if self.real is not None:
+            return self.real.show_cart(session_id)
         return []
