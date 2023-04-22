@@ -233,3 +233,4 @@ class Market(IService):
 
         # TODO 2nd version - verify purchaser is conformed with store policy
         # TODO 2nd version - apply discount policy
+

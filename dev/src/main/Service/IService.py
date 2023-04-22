@@ -87,6 +87,34 @@ class IService(ABC):
     def purchase_shopping_cart(self, session_identifier: int, payment_method: str, payment_details: list) -> Response[bool]:
         ...
 
+    @abstractmethod
+    def close_store(self, session_id: int, store_name: str) -> Response[bool]:
+        ...
+
+    @abstractmethod
+    def get_store_products(self, session_id: int, store_name: str) -> Response[str]:
+        ...
+
+    @abstractmethod
+    def change_product_name(self, session_id: int, store_name: str, product_old_name: str, product_new_name: str) -> Response[bool]:
+        ...
+
+    @abstractmethod
+    def change_product_price(self, session_id: int, store_name: str, product_old_price: float, product_new_price: float) -> Response[bool]:
+        ...
+
+    @abstractmethod
+    def get_store_purchase_history(self, session_id: int, store_name: str) -> Response[str]:
+        ...
+
+    @abstractmethod
+    def appoint_manager(self, session_id: int, new_manager_name: str) -> Response[bool]:
+        ...
+
+    @abstractmethod
+    def appoint_owner(self, session_id: int, new_owner_name: str) -> Response[bool]:
+        ...
+
 
     # @abstractmethod
     # def update_product_of(self, store_name: str, product: Product, quantity: int) -> Response[bool]:
