@@ -130,3 +130,5 @@ class Visitor(IRole, ABC):
 
     def is_allowed_to_view_store_personal(self, store_name: str) -> Response[bool]:
         return report_error(self.is_allowed_to_view_store_personal.__qualname__, f'{self} no permissions for get store personal!')
+    def is_allowed_to_fire_employee(self, store_name: str) -> Response[bool]:
+        return report_error(self.is_allowed_to_fire_employee.__qualname__, f'{self} is not allowed to fire an employee!')
