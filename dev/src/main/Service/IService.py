@@ -92,10 +92,6 @@ class IService(ABC):
         ...
 
     @abstractmethod
-    def get_store_products(self, session_id: int, store_name: str) -> Response[str]:
-        ...
-
-    @abstractmethod
     def change_product_name(self, session_id: int, store_name: str, product_old_name: str, product_new_name: str) -> Response[bool]:
         ...
 
@@ -109,11 +105,13 @@ class IService(ABC):
 
     @abstractmethod
     def appoint_manager(self, session_id: int, store_name: str, new_manager_name: str) -> Response[bool]:
+        ...
     def get_product_by_category(self, session_id: int, store_name: str, category: str) -> Response[str]:
         ...
 
     @abstractmethod
     def appoint_owner(self, session_id: int, new_owner_name: str, store_name: str) -> Response[bool]:
+        ...
     def get_product_by_name(self, session_id: int, store_name: str, name: str) -> Response[str]:
         ...
 

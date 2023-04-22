@@ -1,49 +1,49 @@
-22/04/2023 14:08:36 INFO:	 Session: 3238562964913657491 has been initialized
-22/04/2023 14:08:36 INFO:	 Visitor.register: Nir is registered!
-22/04/2023 14:08:36 INFO:	 Visitor.login: Nir is logged in.
-22/04/2023 14:08:36 ERROR:	 Member.login: Member Nir is already logged in.
-22/04/2023 14:08:36 INFO:	 Member.open_store: Member Nir opens Store 'Amazon' successfully
-22/04/2023 14:08:36 INFO:	 Store.add: Product 'Razer Blackwidow V3', Category: 'Keyboards', Price: 799.123, Rate: Not rated yet, is added to Store 'Amazon' successfully!.
-22/04/2023 14:08:36 INFO:	 Market.get_store: Displaying store Amazon to StoreOwner Nir
+22/04/2023 14:18:20 INFO:	 Session: 5632717378602716569 has been initialized
+22/04/2023 14:18:20 INFO:	 Visitor.register: Nir is registered!
+22/04/2023 14:18:20 INFO:	 Visitor.login: Nir is logged in.
+22/04/2023 14:18:20 ERROR:	 Member.login: Member Nir is already logged in.
+22/04/2023 14:18:20 INFO:	 Member.open_store: Member Nir opens Store 'Amazon' successfully
+22/04/2023 14:18:20 INFO:	 Store.add: Product 'Razer Blackwidow V3', Category: 'Keyboards', Price: 799.123, Rate: Not rated yet, is added to Store 'Amazon' successfully!.
+22/04/2023 14:18:20 INFO:	 Market.get_store: Displaying store Amazon to StoreOwner Nir
 #####################
 Store: Amazon
 Products:
 0).	Razer Blackwidow V3. Available quantity: 10.
 #####################
-22/04/2023 14:08:36 INFO:	 Market.get_store: Displaying store Amazon to StoreOwner Nir
+22/04/2023 14:18:20 INFO:	 Market.get_store: Displaying store Amazon to StoreOwner Nir
 #####################
 Store: Amazon
 Products:
 0).	Razer Blackwidow V3. Available quantity: 10.
 #####################
-22/04/2023 14:08:36 INFO:	 Visitor.show_cart
-22/04/2023 14:08:36 INFO:	 Visitor.add_to_cart: 2 units of Product 'Razer Blackwidow V3' is added to StoreOwner Nir' cart
-22/04/2023 14:08:36 INFO:	 Visitor.show_cart
-22/04/2023 14:08:36 INFO:	 Visitor.verify_cart_not_empty: StoreOwner Nir cart's is not empty.
-22/04/2023 14:08:36 INFO:	 Visitor.show_cart
-22/04/2023 14:08:36 INFO:	 Market.get_store: Displaying store Amazon to StoreOwner Nir
+22/04/2023 14:18:20 INFO:	 Visitor.show_cart
+22/04/2023 14:18:20 INFO:	 Visitor.add_to_cart: 2 units of Product 'Razer Blackwidow V3' is added to StoreOwner Nir' cart
+22/04/2023 14:18:20 INFO:	 Visitor.show_cart
+22/04/2023 14:18:20 INFO:	 Visitor.verify_cart_not_empty: StoreOwner Nir cart's is not empty.
+22/04/2023 14:18:20 INFO:	 Visitor.show_cart
+22/04/2023 14:18:20 INFO:	 Market.get_store: Displaying store Amazon to StoreOwner Nir
 #####################
 Store: Amazon
 Products:
 0).	Razer Blackwidow V3. Available quantity: 8.
 #####################
-22/04/2023 14:08:36 INFO:	 Visitor.add_to_cart: 5 units of Product 'Razer Blackwidow V3' is added to StoreOwner Nir' cart
-22/04/2023 14:08:36 INFO:	 Visitor.show_cart
-22/04/2023 14:08:36 INFO:	 Visitor.verify_cart_not_empty: StoreOwner Nir cart's is not empty.
-22/04/2023 14:08:36 INFO:	 Visitor.show_cart
-22/04/2023 14:08:36 INFO:	 Market.get_store_purchase_history: Purchase history:
+22/04/2023 14:18:20 INFO:	 Visitor.add_to_cart: 5 units of Product 'Razer Blackwidow V3' is added to StoreOwner Nir' cart
+22/04/2023 14:18:20 INFO:	 Visitor.show_cart
+22/04/2023 14:18:20 INFO:	 Visitor.verify_cart_not_empty: StoreOwner Nir cart's is not empty.
+22/04/2023 14:18:20 INFO:	 Visitor.show_cart
+22/04/2023 14:18:20 INFO:	 Market.get_store_purchase_history: Purchase history:
 Basket: {Item: Product: 'Razer Blackwidow V3', Quantity: 2, Price: 799.123, Discount-Price: 799.123}
 Basket: {Item: Product: 'Razer Blackwidow V3', Quantity: 5, Price: 799.123, Discount-Price: 799.123}
 
-22/04/2023 14:08:36 INFO:	 Market.get_store: Displaying store Amazon to StoreOwner Nir
+22/04/2023 14:18:20 INFO:	 Market.get_store: Displaying store Amazon to StoreOwner Nir
 #####################
 Store: Amazon
 Products:
 0).	Razer Blackwidow V3. Available quantity: 3.
 #####################
-22/04/2023 14:08:36 INFO:	 Member.close_store: StoreOwner Nir closes Store 'Amazon' successfully
-22/04/2023 14:08:36 ERROR:	 Market.get_store: Store 'Amazon' is not registered to the market.
-22/04/2023 14:08:36 INFO:	 displaying stores: 
-22/04/2023 14:08:36 INFO:	 Member.logout: StoreOwner Nir is logged out
-22/04/2023 14:08:36 WARNING:	 Market is closed!
-22/04/2023 14:08:36 WARNING:	 Logger thread exits!
+22/04/2023 14:18:20 INFO:	 Member.close_store: StoreOwner Nir closes Store 'Amazon' successfully
+22/04/2023 14:18:20 ERROR:	 Market.get_store: Store 'Amazon' is not registered to the market.
+22/04/2023 14:18:20 INFO:	 displaying stores: 
+22/04/2023 14:18:20 INFO:	 Member.logout: StoreOwner Nir is logged out
+22/04/2023 14:18:20 WARNING:	 Market is closed!
+22/04/2023 14:18:20 WARNING:	 Logger thread exits!
