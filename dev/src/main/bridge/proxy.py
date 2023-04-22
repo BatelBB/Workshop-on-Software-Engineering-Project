@@ -1,8 +1,7 @@
-import string
-
+from dev.src.main.Utils.Response import Response
 from dev.src.main.bridge.Bridge import Bridge
 from dev.src.main.bridge.real import real
-
+import string
 
 class proxy(Bridge):
     real: Bridge
@@ -10,10 +9,12 @@ class proxy(Bridge):
     def __init__(self):
         self.real = real()
 
-    def remove_product_quantity(self, session_id: int, store_name: str, product_name: str, quantity: int) -> bool:
+    def remove_product_quantity(self, session_id: int, store_name: str,
+                                product_name: str, quantity: int) -> Response[bool]:
         return real.remove_product_quantity(session_id, store_name, product_name, quantity)
 
-    def remove_from_cart(self, session_id: int, store_name: string, product_name: string, quantity: int) -> bool:
+    def remove_from_cart(self, session_id: int, store_name: string,
+                         product_name: string, quantity: int) -> Response[bool]:
         return real.remove_product_quantity(session_id, store_name, product_name, quantity)
 
     def enter_market(self) -> int:

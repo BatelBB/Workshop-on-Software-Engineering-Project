@@ -58,18 +58,16 @@ class real(Bridge):
         return self.market.get_product_by_keywords(session_id, name)
 
     def filter_products_by_price_range(self, session_id: int, low: int, high: int) -> Response[list]:
-        return []
+        return self.market.filter_products_by_price_range(session_id, low, high)
 
     def filter_products_by_rating(self, session_id: int, low: int, high: int) -> Response[list]:
-        return []
+        return self.market.filter_products_by_rating(session_id, low, high)
 
     def filter_products_by_category(self, session_id: int, category: string) -> Response[list]:
-        return []
+        return self.market.filter_products_by_category(session_id, category)
 
     def filter_products_by_store_rating(self, session_id: int, low: int, high: int) -> Response[list]:
-        return []
-
-    ##quesion??????????????????????????????????????????????????
+        return self.market.filter_products_by_category(session_id, low, high)
 
     def add_to_cart(self, session_id: int, store_name: string, product_name: string, quantity: int) -> Response[bool]:
         return self.market.add_to_cart(session_id, store_name, product_name, quantity).success
@@ -87,41 +85,43 @@ class real(Bridge):
     # storeOwner operations
     def add_product(self, session_identifier: int, store_name: str, product_name: str, category: str,
                     price: float, quantity: int, keywords: list[str]) -> Response[bool]:
-        return self.market.add_product(session_identifier, store_name, product_name
-                                , category, price, quantity, keywords).success
+        return self.market.add_product(session_identifier, store_name, product_name,
+                                       category, price, quantity, keywords).success
 
     def remove_product(self, session_id: int, store_name: str, product_name: str) -> Response[bool]:
-        return self.market.remove_product(session_id, store_name, product_name).success
+        return self.market.remove_product(session_id, store_name, product_name)
 
     #TODO:
-    def change_product_name(self, session_id: int, store_id: int, product_id: int, new_name: string) -> Response[bool]:
-        return True
+    def change_product_name(self, session_id: int, store_name: str,
+                            product_name: str, new_name: string) -> Response[bool]:
+        return self.market.change_product_name(session_id, store_name, product_name, new_name)
 
     # TODO:
-    def change_product_price(self, session_id: int, store_name: str, product_name: str, new_price: int) -> Response[bool]:
-        return True
+    def change_product_price(self, session_id: int, store_name: str,
+                             product_name: str, new_price: int) -> Response[bool]:
+        return self.market.change_product_price(session_id, store_name, product_name, new_price)
 
     # TODO:
     def appoint_owner(self, session_id: int, store_name: str, new_owner: string) -> Response[bool]:
-        return True
+        return self.market.appoint_owner(session_id, store_name, new_owner)
 
     # TODO:
-    def appoint_manager(self, session_id: int, store_name: str, new_owner: string) -> Response[bool]:
-        return True
+    def appoint_manager(self, session_id: int, store_name: str, new_manager: string) -> Response[bool]:
+        return self.market.appoint_owner(session_id, store_name, new_manager)
 
     # TODO: 4.7: permissions of store manager
 
     # TODO:
     def close_store(self, session_id: int, store_name: str) -> Response[bool]:
-        return True
+        return self.market.close_store(session_id, store_name)
 
     # TODO:
-    def get_store_personal(self, session_name: str, store_name: str) -> Response[list]:
-        return []
+    def get_store_personal(self, session_id: int, store_name: str) -> Response[list]:
+        return self.market.get_store_personal(session_id, store_name)
 
     # TODO:
     def get_store_purchase_history(self, session_id: int, store_name: str) -> Response[list]:
-        return []
+        return self.market.get_store_purchase_history(session_id, store_name)
 
     def show_cart(self, session_id: int) -> Response[list]:
         return self.market.show_cart(session_id)
