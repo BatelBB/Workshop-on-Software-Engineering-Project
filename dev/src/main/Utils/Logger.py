@@ -2,7 +2,7 @@ import queue
 import threading
 from datetime import datetime
 from enum import Enum
-from typing import TypeVar
+from typing import TypeVar, Any
 
 from dev.src.main.Utils.IConcurrentSingelton import IConcurrentSingleton
 from dev.src.main.Utils.Response import Response
@@ -96,17 +96,17 @@ def report(msg: str, result: Result, severity: Logger.Severity = Logger.Severity
     return Response(result, msg)
 
 
-def report_error(calling_method_name: str, error_description: str) -> Response[bool]:
+def report_error(calling_method_name: str, error_description: str) -> Response[Any]:
     return report(f'{calling_method_name}: {error_description}', False, Logger.Severity.ERROR)
 
 
-def report_warning(calling_method_name: str, error_description: str) -> Response[bool]:
+def report_warning(calling_method_name: str, error_description: str) -> Response[Any]:
     return report(f'{calling_method_name}: {error_description}', False, Logger.Severity.WARNING)
 
 
-def report_info(calling_method_name: str, error_description: str) -> Response[bool]:
+def report_info(calling_method_name: str, error_description: str) -> Response[Any]:
     return report(f'{calling_method_name}: {error_description}', True, Logger.Severity.INFO)
 
 
-def report_debug(calling_method_name: str, error_description: str) -> Response[bool]:
+def report_debug(calling_method_name: str, error_description: str) -> Response[Any]:
     return report(f'{calling_method_name}: {error_description}', False, Logger.Severity.DEBUG)
