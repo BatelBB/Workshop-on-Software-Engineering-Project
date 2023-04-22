@@ -1,10 +1,12 @@
 import string
 from abc import ABC, abstractmethod
-from IProvisionService import IExternalProvisionService, provisionProxy
+
+from dev.src.main.ExternalServices.Provision.IProvisionService import IExternalProvisionService, provisionProxy
+
 
 class IProvisionService(ABC):
     @abstractmethod
-    def getDelivery(self, roductID: int, amount: int, address: string, postal_code: string) -> bool:
+    def getDelivery(self, roductID: int, amount: int) -> bool:
         ...
 
 
@@ -14,7 +16,9 @@ class provisionService(IProvisionService):
     proxy: IExternalProvisionService
 
     def __init__(self):
-        self.proxy = provisionProxy.__init__()
+        self.proxy = provisionProxy()
+        self.address = "need to add"
+        self.postal_code = "need to add"
 
-    def getDelivery(self, productID: int, amount: int, address: string, postal_code: string) -> bool:
-        return self.proxy.getDelivery(productID, amount, address, postal_code)
+    def getDelivery(self, productID: int, amount: int) -> bool:
+        return self.proxy.getDelivery(productID, amount, self.address, self.postal_code)

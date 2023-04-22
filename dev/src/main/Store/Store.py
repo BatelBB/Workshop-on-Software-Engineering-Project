@@ -1,5 +1,7 @@
 import threading
 
+from dev.src.main.ExternalServices.Provision.IProvisionService import provisionProxy
+from dev.src.main.ExternalServices.Provision.ProvisionServiceAdapter import IProvisionService, provisionService
 from dev.src.main.Store.Product import Product
 from dev.src.main.User.Basket import Basket
 from dev.src.main.Utils.Logger import report_info, report_error
@@ -31,6 +33,8 @@ class Store:
         self.products: list[Product] = list()
         self.products_quantities: dict[str, ProductQuantity] = dict()
         self.purchase_history : list[str] = list()
+        self.provisionService: IProvisionService = provisionService()
+        self.personal: list[str] = []
 
     def __str__(self):
         output: str = f'#####################\nStore: {self.name}\nProducts:\n'
@@ -55,9 +59,19 @@ class Store:
     def get_name(self):
         return self.name
 
+    def order_product(self, product_name: str, quantity: int) -> Response[bool]:
+        if self.provisionService.getDelivery(product_name, quantity):
+            return report_info("order_product", f'store: {self.name} got delivery of {quantity} {product_name}')
+        return report_error("order_product", f'store: {self.name} delivery of {quantity} {product_name} failed!!')
+
     def add(self, product: Product, quantity: int) -> Response[bool]:
         if not self.contains(product):
             self.products.append(product)
+
+            delivery_response = self.order_product(product.name, quantity)
+            if not delivery_response.success:
+                return delivery_response
+
             self.products_quantities.update({product.name: ProductQuantity(quantity)})
             return report_info(self.add.__qualname__, f'{product}, is added to Store \'{self.name}\' successfully!.')
         else:
@@ -67,9 +81,14 @@ class Store:
     def update(self, product_name: str, quantity: int) -> Response[bool]:
         p = Product(product_name)
         if self.contains(p):
+            if quantity > 0:
+                delivery_response = self.order_product(product_name, quantity)
+                if not delivery_response.success:
+                    return delivery_response
+
             self.products_quantities[product_name].refill(quantity)
             return report_info(self.update.__qualname__, f'Store \'{self.name}\': Product \'{product_name}\' quantity '
-                                                         f'is set to {self.product_quantity[product_name]}.')
+                                                         f'added {quantity}.')
         else:
             return report_error(self.update.__qualname__,
                                 f'Store \'{self.name}\' does not contains Product \'{product_name}\'')
@@ -154,6 +173,16 @@ class Store:
         for item in self.purchase_history:
             output += f'{item}\n'
         return output
+
+    def add_personal(self, name: str):
+        self.personal.append(name)
+
+    def remove_personal(self, name: str):
+        self.personal.remove(name)
+
+    def get_personal(self) -> Response[str]:
+        report_info("get_personal", self.personal.__str__())
+        return Response(self.personal.__str__())
 
     # def filter_products_in_price_range(self, products: list[Product] ,min: float, max: float) -> list[Product]:
     #     return self.get_products(lambda p: min <= p.price <= max)

@@ -17,7 +17,7 @@ class IService(ABC):
         ...
 
     @abstractmethod
-    def shutdown(self) -> None:
+    def shutdown(self, session_identifier: int) -> Response[bool]:
         ...
 
     @abstractmethod
@@ -59,7 +59,7 @@ class IService(ABC):
 
     @abstractmethod
     def update_product_quantity(self, session_identifier: int, store_name: str, product_name: str, quantity: int) -> \
-    Response[bool]:
+            Response[bool]:
         ...
 
     @abstractmethod
@@ -84,7 +84,8 @@ class IService(ABC):
         ...
 
     @abstractmethod
-    def purchase_shopping_cart(self, session_identifier: int, payment_method: str, payment_details: list) -> Response[bool]:
+    def purchase_shopping_cart(self, session_identifier: int, payment_method: str, payment_details: list) -> Response[
+        bool]:
         ...
 
     @abstractmethod
@@ -92,11 +93,13 @@ class IService(ABC):
         ...
 
     @abstractmethod
-    def change_product_name(self, session_id: int, store_name: str, product_old_name: str, product_new_name: str) -> Response[bool]:
+    def change_product_name(self, session_id: int, store_name: str, product_old_name: str, product_new_name: str) -> \
+            Response[bool]:
         ...
 
     @abstractmethod
-    def change_product_price(self, session_id: int, store_name: str, product_old_price: float, product_new_price: float) -> Response[bool]:
+    def change_product_price(self, session_id: int, store_name: str, product_old_price: float,
+                             product_new_price: float) -> Response[bool]:
         ...
 
     @abstractmethod
@@ -104,19 +107,36 @@ class IService(ABC):
         ...
 
     @abstractmethod
-    def appoint_manager(self, session_id: int, store_name: str, new_manager_name: str) -> Response[bool]:
+    def appoint_manager(self, session_id: int, new_manager_name: str, store_name: str) -> Response[bool]:
         ...
+
+    @abstractmethod
     def get_product_by_category(self, session_id: int, store_name: str, category: str) -> Response[str]:
         ...
 
     @abstractmethod
     def appoint_owner(self, session_id: int, new_owner_name: str, store_name: str) -> Response[bool]:
         ...
+
+    @abstractmethod
     def get_product_by_name(self, session_id: int, store_name: str, name: str) -> Response[str]:
         ...
 
     @abstractmethod
     def get_product_by_keywords(self, session_id: int, store_name: str, keywords: list[str]) -> Response[str]:
+        ...
+
+    @abstractmethod
+    def set_stock_permissions(self, session_id: int, receiving_user_name: str, store_name: str, give_or_take: bool) -> \
+            Response[bool]:
+        ...
+
+    @abstractmethod
+    def set_personal_permissions(self, session_id: int, receiving_user_name: str, store_name: str,
+                                 give_or_take: bool) -> Response[bool]:
+        ...
+    @abstractmethod
+    def get_store_personal(self, session_id: int, store_name: str) -> Response[str]:
         ...
     # @abstractmethod
     # def update_product_of(self, store_name: str, product: Product, quantity: int) -> Response[bool]:

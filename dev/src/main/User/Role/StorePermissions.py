@@ -10,8 +10,8 @@ class StorePermissions(Enum):
     # ChangeDiscountPolicy = 'Change discount policy'
     # ChangePurchasePolicy = 'Change purchase policy'
     AppointManager = 'Appoint another manager'
-    AppointOwner = 'Appoint another owner'
-    CancelManagerAppointment = 'Cancel appointment of another manager'
+    # AppointOwner = 'Appoint another owner'
+    # CancelManagerAppointment = 'Cancel appointment of another manager'
     # CloseStore = 'Close store'
     RetrieveStaffDetails = 'Retrieve store staff details'
 
