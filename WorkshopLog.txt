@@ -1,21 +1,21 @@
-22/04/2023 12:33:01 INFO:	 Session: 2548882537518078908 has been initialized
-22/04/2023 12:33:01 INFO:	 Visitor.register: Nir is registered!
-22/04/2023 12:33:01 INFO:	 Visitor.login: Nir is logged in.
-22/04/2023 12:33:01 ERROR:	 Member.login: Member Nir is already logged in.
-22/04/2023 12:33:01 INFO:	 Member.open_store: Member Nir opens Store 'Amazon' successfully
-22/04/2023 12:33:01 INFO:	 Store.add: Product 'Razer Blackwidow V3', Category: 'Keyboards', Price: 799.123, Rate: Not rated yet, is added to Store 'Amazon' successfully!.
-22/04/2023 12:33:01 INFO:	 Session: 5257547717482040664 has been initialized
-22/04/2023 12:33:01 INFO:	 Visitor.register: sus is registered!
-22/04/2023 12:33:01 INFO:	 Visitor.login: sus is logged in.
-22/04/2023 12:33:01 INFO:	 Store.add: Product 'click', Category: 'snackes', Price: 5, Rate: Not rated yet, is added to Store 'Amazon' successfully!.
-22/04/2023 12:33:01 INFO:	 Market.get_store: Displaying store Amazon to StoreOwner Nir
+22/04/2023 13:23:35 INFO:	 Session: 6502792925431405564 has been initialized
+22/04/2023 13:23:35 INFO:	 Visitor.register: Nir is registered!
+22/04/2023 13:23:35 INFO:	 Visitor.login: Nir is logged in.
+22/04/2023 13:23:35 ERROR:	 Member.login: Member Nir is already logged in.
+22/04/2023 13:23:35 INFO:	 Member.open_store: Member Nir opens Store 'Amazon' successfully
+22/04/2023 13:23:35 INFO:	 Store.add: Product 'Razer Blackwidow V3', Category: 'Keyboards', Price: 799.123, Rate: Not rated yet, is added to Store 'Amazon' successfully!.
+22/04/2023 13:23:35 INFO:	 Session: 3933555908913503421 has been initialized
+22/04/2023 13:23:35 INFO:	 Visitor.register: sus is registered!
+22/04/2023 13:23:35 INFO:	 Visitor.login: sus is logged in.
+22/04/2023 13:23:35 INFO:	 Store.add: Product 'click', Category: 'snackes', Price: 5, Rate: Not rated yet, is added to Store 'Amazon' successfully!.
+22/04/2023 13:23:35 INFO:	 Market.get_store: Displaying store Amazon to StoreOwner Nir
 #####################
 Store: Amazon
 Products:
 0).	Razer Blackwidow V3. Available quantity: 10.
 1).	click. Available quantity: 45.
 #####################
-22/04/2023 12:33:01 INFO:	 Visitor.show_cart
-22/04/2023 12:33:01 INFO:	 Member.logout: StoreOwner Nir is logged out
-22/04/2023 12:33:01 WARNING:	 Market is closed!
-22/04/2023 12:33:01 WARNING:	 Logger thread exits!
+22/04/2023 13:23:35 INFO:	 Visitor.show_cart
+22/04/2023 13:23:35 INFO:	 Member.logout: StoreOwner Nir is logged out
+22/04/2023 13:23:35 WARNING:	 Market is closed!
+22/04/2023 13:23:35 WARNING:	 Logger thread exits!
