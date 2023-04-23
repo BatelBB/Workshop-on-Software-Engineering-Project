@@ -112,7 +112,10 @@ class Market(IService):
 
     def logout(self, session_identifier: int) -> Response[bool]:
         actor = self.get_active_user(session_identifier)
-        return actor.logout()
+        response = actor.logout()
+        if response.success:
+            self.sessions.update(session_identifier, User(self))
+        return response
 
     def open_store(self, session_identifier: int, store_name: str) -> Response[bool]:
         store: Store = Store(store_name)

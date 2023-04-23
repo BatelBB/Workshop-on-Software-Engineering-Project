@@ -1,23 +1,20 @@
-23/04/2023 10:55:16 INFO:	 Session: 1616163542815235291 has been initialized
-23/04/2023 10:55:16 INFO:	 Visitor.register: Nir is registered!
-23/04/2023 10:55:16 INFO:	 Visitor.login: Nir is logged in.
-23/04/2023 10:55:16 ERROR:	 Member.login: Member Nir is already logged in.
-23/04/2023 10:55:16 INFO:	 Member.open_store: Member Nir opens Store 'Amazon' successfully
-23/04/2023 10:55:16 INFO:	 order_product: store: Amazon got delivery of 10 Razer Blackwidow V3
-23/04/2023 10:55:16 INFO:	 Store.add: Product 'Razer Blackwidow V3', Category: 'Keyboards', Price: 799.123, Rate: Not rated yet, is added to Store 'Amazon' successfully!.
-23/04/2023 10:55:16 INFO:	 Visitor.add_to_cart: 10 units of Product 'Razer Blackwidow V3' is added to StoreOwner Nir' cart
-23/04/2023 10:55:16 INFO:	 self.show_cart.__qualname__ : Cart:
+23/04/2023 11:10:17 INFO:	 Session: 4780394158762398002 has been initialized
+23/04/2023 11:10:17 INFO:	 Visitor.register: Nir is registered!
+23/04/2023 11:10:17 INFO:	 Visitor.login: Nir is logged in.
+23/04/2023 11:10:17 ERROR:	 Member.login: Member Nir is already logged in.
+23/04/2023 11:10:17 INFO:	 Member.open_store: Member Nir opens Store 'Amazon' successfully
+23/04/2023 11:10:17 INFO:	 order_product: store: Amazon got delivery of 10 Razer Blackwidow V3
+23/04/2023 11:10:17 INFO:	 Store.add: Product 'Razer Blackwidow V3', Category: 'Keyboards', Price: 799.123, Rate: Not rated yet, is added to Store 'Amazon' successfully!.
+23/04/2023 11:10:17 INFO:	 Visitor.add_to_cart: 10 units of Product 'Razer Blackwidow V3' is added to StoreOwner Nir' cart
+23/04/2023 11:10:17 INFO:	 self.show_cart.__qualname__ : Cart:
 #####################
 	Store 'Amazon'
 	Basket: {Item: Product: 'Razer Blackwidow V3', Quantity: 10, Price: 799.123, Discount-Price: 799.123}
 #####################
-23/04/2023 10:55:16 INFO:	 Member.logout: StoreOwner Nir is logged out
-23/04/2023 10:55:16 INFO:	 self.show_cart.__qualname__ : Cart:
-#####################
-	Store 'Amazon'
-	Basket: {Item: Product: 'Razer Blackwidow V3', Quantity: 10, Price: 799.123, Discount-Price: 799.123}
-#####################
-23/04/2023 10:55:16 INFO:	 Session: 2060721329864202292 has been initialized
-23/04/2023 10:55:16 INFO:	 SystemAdmin.login: admin is logged in.
-23/04/2023 10:55:16 WARNING:	 Market is closed!
-23/04/2023 10:55:16 WARNING:	 Logger thread exits!
+23/04/2023 11:10:17 INFO:	 Member.logout: StoreOwner Nir is logged out
+23/04/2023 11:10:17 INFO:	 self.show_cart.__qualname__ : Cart:
+
+23/04/2023 11:10:17 INFO:	 Session: 8700230759314319617 has been initialized
+23/04/2023 11:10:17 INFO:	 SystemAdmin.login: admin is logged in.
+23/04/2023 11:10:17 WARNING:	 Market is closed!
+23/04/2023 11:10:17 WARNING:	 Logger thread exits!

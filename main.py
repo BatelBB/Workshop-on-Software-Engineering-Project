@@ -28,6 +28,9 @@ if __name__ == '__main__':
 
 
     # s2 = market.enter()
+    # s2.add_to_cart("Amazon", "Razer Blackwidow V3", 3)
+    # market.show_cart(s2.identifier)
+
     # r2 = s2.register("sus", "rezah")
     # r2 = s2.login("sus", "rezah")
     #
