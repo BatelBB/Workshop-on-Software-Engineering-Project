@@ -74,7 +74,7 @@ class IRole(ABC):
         ...
 
     @abstractmethod
-    def show_cart(self) -> Response[bool]:
+    def show_cart(self) -> Response[dict]:
         ...
 
     @abstractmethod

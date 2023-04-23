@@ -74,8 +74,8 @@ class Visitor(IRole, ABC):
         return report_info(self.update_cart_product_quantity.__qualname__,
                            f'Product \'{product_name}\', of {self} cart is set to {new_quantity}.')
 
-    def show_cart(self) -> Response[str]:
-        return report(f'self.show_cart.__qualname__ : {self.context.cart.__str__()}', self.context.cart.__str__())
+    def show_cart(self) -> Response[dict]:
+        return report(f'self.show_cart.__qualname__ : {self.context.cart.__dic__()}', self.context.cart.__dic__())
 
     def verify_cart_not_empty(self) -> Response[bool]:
         is_empty = self.context.cart.is_empty()

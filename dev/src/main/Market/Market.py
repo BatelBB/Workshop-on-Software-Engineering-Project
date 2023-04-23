@@ -203,7 +203,7 @@ class Market(IService):
                                                       product_name)
         return actor.update_cart_product_quantity(store_name, product_name, quantity) if response.success else response
 
-    def show_cart(self, session_identifier: int) -> Response[str]:
+    def show_cart(self, session_identifier: int) -> Response[dict]:
         actor = self.get_active_user(session_identifier)
         return actor.show_cart()
 
