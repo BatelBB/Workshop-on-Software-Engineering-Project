@@ -46,7 +46,9 @@ class Store:
     def __dic__(self):
         dict = {}
         for p in self.products:
-            dict[p.name] = p.__dic__()
+            p_d = p.__dic__()
+            p_d["Quantity"] = self.products_quantities.get(p.name).quantity
+            dict[p.name] = p_d
         return dict
 
     def __eq__(self, other):
