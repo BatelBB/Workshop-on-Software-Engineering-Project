@@ -31,9 +31,10 @@ class real(Bridge):
     def open_store(self, session_id: int, store_name: string) -> Response[bool]:
         return self.market.open_store(session_id, store_name)
 
+    # todo change name signature
     def remove_product_quantity(self, session_id: int, store_name: str,
                                 product_name: str, quantity: int) -> Response[bool]:
-        return self.market.remove_product_quantity(session_id, store_name, product_name, quantity)
+        return self.market.update_product_quantity(session_id, store_name, product_name, quantity)
 
     # guest buying operations
     def remove_from_cart(self, session_id: int, store_name: string,

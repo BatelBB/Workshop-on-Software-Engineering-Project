@@ -4,7 +4,6 @@ from dev.src.main.bridge.real import real
 import string
 
 class proxy(Bridge):
-    real: Bridge
 
     def __init__(self):
         self.real = real()
@@ -37,11 +36,11 @@ class proxy(Bridge):
 
     def remove_product_quantity(self, session_id: int, store_name: str,
                                 product_name: str, quantity: int) -> Response[bool]:
-        return real.remove_product_quantity(session_id, store_name, product_name, quantity)
+        return self.real.remove_product_quantity(session_id, store_name, product_name, quantity)
 
     def remove_from_cart(self, session_id: int, store_name: str,
                          product_name: str) -> Response[bool]:
-        return real.remove_product_quantity(session_id, store_name, product_name)
+        return self.real.remove_from_cart(session_id, store_name, product_name)
 
     def get_store_products(self, session_id: int, store_name: str) -> Response[dict]:
         if self.real is not None:

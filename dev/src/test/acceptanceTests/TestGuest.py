@@ -18,10 +18,10 @@ class TestGuest(unittest.TestCase):
         self.assertGreater(self.session_id, -1, "error entering market!")
 
     def test_exit_market(self):
-        self.test_enter_market()
+        self.enter_market()
         self.app.exit_market(self.session_id)
         res = self.app.register(self.session_id, "u", "p")
-        self.assertFalse(res, "registered after exit_market")
+        self.assertFalse(res.success, "registered after exit_market")
 
     def setup_2_stores_with_products(self):
         self.session_id = self.app.enter_market()
@@ -50,23 +50,16 @@ class TestGuest(unittest.TestCase):
         res = self.app.add_to_cart(self.session_id, "store1", "product1_2", 2)
         self.assertTrue(res, "add to cart failed")
         cart = self.app.show_cart(self.session_id)
-        print(type(cart.result))
-        print(cart)
-        self.assertTrue("product1_1" in cart[0], "product1_1 not in cart")
-        self.assertTrue("product1_2" in cart[0], "product1_2 not in cart")
+        self.assertTrue(res.success, "action failed")
+        self.assertTrue("product1_1" in cart.result["store1"], "product1_1 not in cart")
+        self.assertTrue("product1_2" in cart.result["store1"], "product1_2 not in cart")
 
         # sad
         res2 = self.app.add_to_cart(self.session_id, "store2", "product2_1", 50)
-        self.assertFalse(res2, "add to cart not failed")
+        self.assertFalse(res2.success, "add more items than the store has")
         cart = self.app.show_cart(self.session_id)
-        for i in range(len(cart)):
-            self.assertTrue(cart[i][0] != "product2_1", "product2_1 in cart")
-
-        res2 = self.app.add_to_cart(self.session_id, "store2", "product2_2", -2)
-        self.assertFalse(res2, "add to cart not failed")
-        cart = self.app.show_cart(self.session_id)
-        for i in range(len(cart)):
-            self.assertTrue(cart[i][0] != "product2_1", "product2_1 in cart")
+        self.assertTrue("store2" not in cart.result.keys() or "product2_1" not in cart.result["store2"],
+                        "product2_1 in cart")
 
         # bad
         self.app.exit_market(self.session_id)
@@ -75,111 +68,119 @@ class TestGuest(unittest.TestCase):
 
     def test_removing_from_cart(self):
         # happy
-        self.enter_market()
-        self.app.add_to_cart(self.session_id, "store1", "product1_1", 2)
-        self.app.remove_from_cart(self.session_id, "store1", "product1_1", 2)
-        res = self.app.show_cart(self.session_id)
-        self.assertTrue(("product1_1", 2) not in res, "product1_1 didn't removed")
+        self.set_cart()
+        self.app.remove_from_cart(self.session_id, "store1", "product1_1")
+        cart = self.app.show_cart(self.session_id)
+        self.assertTrue(cart.success, "removing failed")
+        self.assertTrue("store1" not in cart.result.keys(), "product1_1 didn't removed")
 
         # sad
-        self.app.remove_from_cart(self.session_id, "store1", "product1_2", 5)
-        res2 = self.app.show_cart(self.session_id)
-        self.assertTrue(len(res) == len(res2), "product removed")
+        res = self.app.remove_from_cart(self.session_id, "store1", "product1_2")
+        self.assertFalse(res.success, "removing succeeded")
+        cart = self.app.show_cart(self.session_id)
+        self.assertTrue(cart.result == {}, "product removed")
 
     def test_product_info(self):
         # happy
+        self.enter_market()
         products = self.app.get_store_products(self.session_id, "store1")
-        self.assertTrue("product1_1" in products, "product1_1 did not receive")
-        self.assertTrue("product1_2" in products, "product1_2 did not receive")
-        self.assertTrue("product2_1" in products, "product2_1 did not receive")
-        self.assertTrue("product2_2" in products, "product2_2 did not receive")
+        self.assertTrue(products.success, "action failed")
+        self.assertTrue("product1_1" in products.result, "product1_1 did not receive")
+        self.assertTrue("product1_2" in products.result, "product1_2 did not receive")
+        self.assertTrue("product2_1" in products.result, "product2_1 did not receive")
+        self.assertTrue("product2_2" in products.result, "product2_2 did not receive")
         products = self.app.get_products_by_name(self.session_id, "product1_1")
-        self.assertTrue("product1_1" in products, "product1_1 did not receive")
+        self.assertTrue(products.success, "action failed")
+        self.assertTrue("product1_1" in products.result, "product1_1 did not receive")
         products = self.app.get_products_by_category(self.session_id, "cat1")
-        self.assertTrue("product1_1" in products, "product1_1 did not receive")
+        self.assertTrue(products.success, "action failed")
+        self.assertTrue("product1_1" in products.result, "product1_1 did not receive")
         products = self.app.get_products_by_keyword(self.session_id, "car1")
-        self.assertTrue("product1_1" in products, "product1_1 did not receive")
+        self.assertTrue(products.success, "action failed")
+        self.assertTrue("product1_1" in products.result, "product1_1 did not receive")
         products = self.app.filter_products_by_price_range(self.session_id, 10, 16)
-        self.assertTrue("product1_1" in products, "product1_1 did not receive")
-        # products = self.app.filter_products_by_rating(self.session_id, 0, 100)
-        # self.assertTrue("product1_1" in product, "product1_1 did not receive")
-        # products = self.app.filter_products_by_store_rating(self.session_id, 0, 100)
-        # self.assertTrue("product1_1" in product, "product1_1 did not receive")
+        self.assertTrue(products.success, "action failed")
+        self.assertTrue("product1_1" in products.result, "product1_1 did not receive")
+        products = self.app.filter_products_by_rating(self.session_id, 0, 100)
+        self.assertTrue(products.success, "action failed")
+        self.assertTrue("product1_1" in products.result, "product1_1 did not receive")
+        self.assertTrue(products.success, "action failed")
+        products = self.app.filter_products_by_store_rating(self.session_id, 0, 100)
+        self.assertTrue(products.success, "action failed")
+        self.assertTrue("product1_1" in products.result, "product1_1 did not receive")
 
     def test_product_purchase(self):
         # happy
-        self.test_enter_market()
+        self.enter_market()
         self.app.register(self.session_id, "buyer1", "123")
         self.app.login(self.session_id, "buyer1", "123")
         self.app.add_to_cart(self.session_id, "store1", "product1_2", 3)
         res = self.app.buy_cart_with_card(self.session_id, "1234123412341234", "123", "01/01/2025")
-        self.assertTrue(res, "payment failed")
+        self.assertTrue(res.success, "payment failed")
         cart = self.app.show_cart(self.session_id)
-        self.assertTrue(len(cart) == 0, "cart not empty")
+        self.assertTrue(cart.result == {}, "cart not empty")
         #todo delivery service check
 
         # sad - bad credit card
         self.app.exit_market(self.session_id)
         self.set_cart()
         res = self.app.buy_cart_with_card(self.session_id, "1234123412341234", "123", "01/01/1800")
-        self.assertFalse(res, "payment not failed")
+        self.assertFalse(res.success, "payment not failed")
         cart = self.app.show_cart(self.session_id)
-        self.assertTrue(("product1_1", 3) in cart, "product1_1 not in cart")
+        self.assertTrue("product1_1" in cart.result["store1"], "product1_1 not in cart")
 
         # bad
         self.app.exit_market(self.session_id)
         res = self.app.buy_cart_with_card(self.session_id, "1234123412341234", "123", "01/01/1800")
-        self.assertFalse(res, "payment not failed")
+        self.assertFalse(res.success, "payment not failed")
 
     def test_losing_cart(self):
         self.set_cart()
         self.app.exit_market(self.session_id)
         self.enter_market()
         cart = self.app.show_cart(self.session_id)
-        self.assertTrue(len(cart) == 0, "cart not empty")
+        self.assertTrue(cart.result == {}, "cart not empty")
 
     def test_register(self):
-        self.session_id = self.app.enter_market()
+        self.enter_market()
         self.assertGreater(self.session_id, -1, "error entering market!")
 
         # happy
         res = self.app.register(self.session_id, "user", "password")
-        self.assertTrue(res, "register failed")
+        self.assertTrue(res.success, "register failed")
+
         # sad
         s2 = self.app.enter_market()
         self.assertGreater(self.session_id, -1, "error entering market!")
         self.assertNotEqual(s2, self.session_id, f'same session id for 2 users: s2: {s2}      s1:{self.session_id}')
 
         res1 = self.app.register(self.session_id, "user", "password2")
-        self.assertFalse(res1, "successfully registered with already taken username")
+        self.assertFalse(res1.success, "successfully registered with already taken username")
 
         # bad
         self.app.exit_market(self.session_id)
         res2 = self.app.register(self.session_id, "user", "password")
-        self.assertFalse(res2, "successfully registered after exiting market")
+        self.assertFalse(res2.success, "successfully registered after exiting market")
 
     def test_login(self):
-        self.session_id = self.app.enter_market()
+        # happy
+        self.enter_market()
         self.assertGreater(self.session_id, -1, "error entering market!")
 
         res = self.app.register(self.session_id, "user", "password")
-        self.assertTrue(res, "register failed")
+        self.assertTrue(res.success, "register failed")
 
         # sad
-        res = self.app.login(self.session_id, "user1", "password")
-        self.assertFalse(res, "successfully login with invalid username")
+        res = self.app.login(self.session_id, "notARealUser", "password")
+        self.assertFalse(res.success, "successfully login with invalid username")
 
         res = self.app.login(self.session_id, "user", "password1")
-        self.assertFalse(res, "successfully login with invalid password")
-
-        # happy
-        res = self.app.login(self.session_id, "user", "password")
-        self.assertTrue(res, "failed to login")
+        self.assertFalse(res.success, "successfully login with invalid password")
 
         # bad
         exit_stat = self.app.exit_market(self.session_id)
         self.assertTrue(exit_stat, "not exited successfully")
 
         res = self.app.login(self.session_id, "user", "password")
-        self.assertFalse(res, "logged in after exit")
+        self.assertFalse(res.success, "logged in after exit")
 

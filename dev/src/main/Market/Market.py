@@ -64,10 +64,9 @@ class Market(IService):
         else:
             return response
 
-    def verify_registered_store(self, calling_method_name: str, store_name: str) -> Response[Store] | Response[bool]:
+    def verify_registered_store(self, calling_method_name: str, store_name: str) -> Response[Store]:
         store: Store = self.stores.get(store_name)
-        return Response(store) if store is not None \
-            else report_error(calling_method_name, f'Store \'{store_name}\' is not registered to the market.')
+        return report("verify_registered_store", store)
 
     def verify_store_contains_product(self, calling_method_name: str, store_name: str, product_name: str) -> \
             Response[Store] | Response[bool]:
