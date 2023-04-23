@@ -142,7 +142,7 @@ class Market(IService):
         if response.success:
             actor = self.get_active_user(session_identifier)
             preface: str = f'Displaying store {response.result.name} to {actor}\n'
-            return report(self.get_store.__qualname__ + preface, response.result.__dic__())
+            return report(self.get_store.__qualname__ + preface + str(response.result.__dic__()), response.result.__dic__())
         else:
             return response
 

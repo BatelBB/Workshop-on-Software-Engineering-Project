@@ -49,7 +49,7 @@ class IService(ABC):
         ...
 
     @abstractmethod
-    def get_store(self, session_identifier: int, store_name: str) -> Response[bool]:
+    def get_store(self, session_identifier: int, store_name: str) -> Response[dict] | Response[bool]:
         ...
 
     @abstractmethod
@@ -84,8 +84,7 @@ class IService(ABC):
         ...
 
     @abstractmethod
-    def purchase_shopping_cart(self, session_identifier: int, payment_method: str, payment_details: list) -> Response[
-        bool]:
+    def purchase_shopping_cart(self, session_identifier: int, payment_method: str, payment_details: list) -> Response[bool]:
         ...
 
     @abstractmethod

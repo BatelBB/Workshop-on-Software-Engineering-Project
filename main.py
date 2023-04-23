@@ -30,6 +30,8 @@ if __name__ == '__main__':
     r2 = s2.register("sus", "rezah")
     r2 = s2.login("sus", "rezah")
 
+    r3 = s2.get_store("Amazon")
+
     # s2.close_store("Amazon")
     # s2.get_store("Amazon")
     #
