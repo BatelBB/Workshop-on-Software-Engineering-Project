@@ -18,21 +18,24 @@ if __name__ == '__main__':
 
     sesssion.add_to_cart("Amazon", "Razer Blackwidow V3", 10)
 
-    r = sesssion.show_cart()
-
-    sesssion.logout()
-
-    sesssion.show_cart()
-
-    print("nice")
 
 
-    # s2 = market.enter()
-    # s2.add_to_cart("Amazon", "Razer Blackwidow V3", 3)
-    # market.show_cart(s2.identifier)
 
-    # r2 = s2.register("sus", "rezah")
-    # r2 = s2.login("sus", "rezah")
+    s2 = market.enter()
+    s2.add_to_cart("Amazon", "Razer Blackwidow V3", 3)
+    market.show_cart(s2.identifier)
+
+
+
+    r2 = s2.register("sus", "rezah")
+    r2 = s2.login("sus", "rezah")
+
+    s2.close_store("Amazon")
+    s2.get_store("Amazon")
+
+    sesssion.close_store("Amazon")
+
+    s2.get_store("Amazon")
     #
     # s2.open_store("huimazon")
     # r = sesssion.add_product("huimazon", "keychron v2", "Keyboards", 250, 5)
