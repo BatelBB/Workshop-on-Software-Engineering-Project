@@ -303,43 +303,35 @@ class Market(IService):
         else:
             return response
 
-    def get_product_by_category(self, session_id: int, store_name: str, category: str) -> Response[str]:
+    def get_products_by_category(self, session_id: int, category: str) -> Response[str]:
         output = ""
-        response = self.verify_registered_store(self.get_product_by_category.__qualname__, store_name)
-        if response.success:
-            store = response.result
+        for store_name in self.stores.to_string_keys().split(', '):
+            store = self.stores.get(store_name)
             product_list = store.get_products_by_category(category)
             for product in product_list:
                 output += product.__str__()
-            return Response(output)
-        else:
-            return Response(f'{store_name} isn\'t a verified store')
+        report_info("get_products_by_category", f'products: {output}')
+        return Response(output)
 
-    def get_product_by_name(self, session_id: int, store_name: str, name: str) -> Response[str]:
+    def get_products_by_name(self, session_id: int, name: str) -> Response[str]:
         output = ""
-        response = self.verify_registered_store(self.get_product_by_name.__qualname__, store_name)
-        if response.success:
-            store = response.result
+        for store_name in self.stores.to_string_keys().split(', '):
+            store = self.stores.get(store_name)
             product_list = store.get_products_by_name(name)
             for product in product_list:
                 output += product.__str__()
-            return Response(output)
-        else:
-            return Response(f'{store_name} isn\'t a verified store')
+        report_info("get_products_by_name", f'products: {output}')
+        return Response(output)
 
-    def get_product_by_keywords(self, session_id: int, store_name: str, keywords: list[str]) -> Response[str]:
+    def get_products_by_keywords(self, session_id: int, keywords: list[str]) -> Response[str]:
         output = ""
-        response = self.verify_registered_store(self.get_product_by_name.__qualname__, store_name)
-        if response.success:
-            store = response.result
+        for store_name in self.stores.to_string_keys().split(', '):
+            store = self.stores.get(store_name)
             product_list = store.get_products_by_keywords(keywords)
             for product in product_list:
                 output += product.__str__()
-            return Response(output)
-        else:
-            return Response(f'{store_name} isn\'t a verified store')
-
-
+        report_info("get_products_by_keywords", f'products: {output}')
+        return Response(output)
 
     def get_registered_user(self, name: str) -> Response[User] | Response[bool]:
         if self.users.get(name) is not None:
@@ -412,6 +404,7 @@ class Market(IService):
         store = self.stores.get(store_name)
         res = store.get_personal()
         return res
+
     def fire_employee(self, session_id: int, store_name: str, employee_name: str) -> Response[bool]:
         actor = self.get_active_user(session_id)
         response = actor.is_allowed_to_fire_employee(store_name)

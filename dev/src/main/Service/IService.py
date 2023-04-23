@@ -111,7 +111,7 @@ class IService(ABC):
         ...
 
     @abstractmethod
-    def get_product_by_category(self, session_id: int, store_name: str, category: str) -> Response[str]:
+    def get_products_by_category(self, session_id: int, category: str) -> Response[str]:
         ...
 
     @abstractmethod
@@ -119,11 +119,11 @@ class IService(ABC):
         ...
 
     @abstractmethod
-    def get_product_by_name(self, session_id: int, store_name: str, name: str) -> Response[str]:
+    def get_products_by_name(self, session_id: int, name: str) -> Response[str]:
         ...
 
     @abstractmethod
-    def get_product_by_keywords(self, session_id: int, store_name: str, keywords: list[str]) -> Response[str]:
+    def get_products_by_keywords(self, session_id: int, keywords: list[str]) -> Response[str]:
         ...
 
     @abstractmethod
@@ -138,6 +138,7 @@ class IService(ABC):
     @abstractmethod
     def get_store_personal(self, session_id: int, store_name: str) -> Response[str]:
         ...
+
     # @abstractmethod
     # def update_product_of(self, store_name: str, product: Product, quantity: int) -> Response[bool]:
     #     ...
