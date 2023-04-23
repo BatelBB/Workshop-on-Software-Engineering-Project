@@ -1,30 +1,23 @@
-23/04/2023 12:14:30 INFO:	 Session: 5832746758663906860 has been initialized
-23/04/2023 12:14:30 INFO:	 Visitor.register: Nir is registered!
-23/04/2023 12:14:30 INFO:	 Visitor.login: Nir is logged in.
-23/04/2023 12:14:30 ERROR:	 Member.login: Member Nir is already logged in.
-23/04/2023 12:14:30 INFO:	 Member.open_store: Member Nir opens Store 'Amazon' successfully
-23/04/2023 12:14:30 INFO:	 order_product: store: Amazon got delivery of 10 Razer Blackwidow V3
-23/04/2023 12:14:30 INFO:	 Store.add: Product 'Razer Blackwidow V3', Category: 'Keyboards', Price: 799.123, Rate: Not rated yet, is added to Store 'Amazon' successfully!.
-23/04/2023 12:14:30 INFO:	 Visitor.add_to_cart: 10 units of Product 'Razer Blackwidow V3' is added to StoreOwner Nir' cart
-23/04/2023 12:14:30 INFO:	 Session: 620904311721575107 has been initialized
-23/04/2023 12:14:30 INFO:	 Visitor.add_to_cart: 3 units of Product 'Razer Blackwidow V3' is added to Visitor(Guest)' cart
-23/04/2023 12:14:30 INFO:	 self.show_cart.__qualname__ : Cart:
+23/04/2023 13:08:42 INFO:	 Session: 986936874247418361 has been initialized
+23/04/2023 13:08:42 INFO:	 Visitor.register: Nir is registered!
+23/04/2023 13:08:42 INFO:	 Visitor.login: Nir is logged in.
+23/04/2023 13:08:42 ERROR:	 Member.login: Member Nir is already logged in.
+23/04/2023 13:08:42 INFO:	 Member.open_store: Member Nir opens Store 'Amazon' successfully
+23/04/2023 13:08:42 INFO:	 order_product: store: Amazon got delivery of 10 Razer Blackwidow V3
+23/04/2023 13:08:42 INFO:	 Store.add: Product 'Razer Blackwidow V3', Category: 'Keyboards', Price: 799.123, Rate: Not rated yet, is added to Store 'Amazon' successfully!.
+23/04/2023 13:08:42 INFO:	 Visitor.add_to_cart: 10 units of Product 'Razer Blackwidow V3' is added to StoreOwner Nir' cart
+23/04/2023 13:08:42 INFO:	 Session: 1781347088655725638 has been initialized
+23/04/2023 13:08:42 INFO:	 Visitor.add_to_cart: 3 units of Product 'Razer Blackwidow V3' is added to Visitor(Guest)' cart
+23/04/2023 13:08:42 INFO:	 self.show_cart.__qualname__ : Cart:
 #####################
 	Store 'Amazon'
 	Basket: {Item: Product: 'Razer Blackwidow V3', Quantity: 3, Price: 799.123, Discount-Price: 799.123}
 #####################
-23/04/2023 12:14:30 INFO:	 Visitor.register: sus is registered!
-23/04/2023 12:14:30 INFO:	 Visitor.login: sus is logged in.
-23/04/2023 12:14:30 ERROR:	 Visitor.close_store: Member sus attempted to close a store.
-23/04/2023 12:14:30 INFO:	 Market.get_store: Displaying store Amazon to Member sus
-#####################
-Store: Amazon
-Products:
-0).	Razer Blackwidow V3. Available quantity: 10.
-#####################
-23/04/2023 12:14:30 INFO:	 StoreOwner.close_store: StoreOwner Nir closes Store 'Amazon' successfully
-23/04/2023 12:14:30 ERROR:	 Market.get_store: Store 'Amazon' is not registered to the market.
-23/04/2023 12:14:30 INFO:	 Session: 2772819980563418565 has been initialized
-23/04/2023 12:14:30 INFO:	 SystemAdmin.login: admin is logged in.
-23/04/2023 12:14:30 WARNING:	 Market is closed!
-23/04/2023 12:14:30 WARNING:	 Logger thread exits!
+23/04/2023 13:08:42 INFO:	 Visitor.register: sus is registered!
+23/04/2023 13:08:42 INFO:	 Visitor.login: sus is logged in.
+23/04/2023 13:08:42 INFO:	 Member.open_store: Member sus opens Store 'huimazon' successfully
+23/04/2023 13:08:42 INFO:	 get_products_by_category: products: {'Amazon': {'Razer Blackwidow V3': {'Price': 799.123, 'Category': 'Keyboards', 'Rate': None}}}
+23/04/2023 13:08:42 INFO:	 Session: 3863423303995504191 has been initialized
+23/04/2023 13:08:42 INFO:	 SystemAdmin.login: admin is logged in.
+23/04/2023 13:08:42 WARNING:	 Market is closed!
+23/04/2023 13:08:42 WARNING:	 Logger thread exits!

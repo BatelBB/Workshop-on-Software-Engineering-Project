@@ -131,11 +131,18 @@ class Store:
     def get_products(self, predicate) -> list[Product]:
         return list(filter(predicate, self.products))
 
+    def get_products_dict(self, predicate) -> dict:
+        l = list(filter(predicate, self.products))
+        dict = {}
+        for p in l:
+            dict[p.name] = p.__dic__()
+        return dict
+
     def get_products_by_name(self, name: str) -> list[Product]:
         return self.get_products(lambda p: name in p.keywords)
 
-    def get_products_by_category(self, category: str) -> list[Product]:
-        return self.get_products(lambda p: category == p.category)
+    def get_products_by_category(self, category: str) -> dict[Product]:
+        return self.get_products_dict(lambda p: category == p.category)
 
     def get_products_by_price(self, price: float) -> list[Product]:
         return self.get_products(lambda p: price == p.price)

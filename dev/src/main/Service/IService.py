@@ -111,7 +111,7 @@ class IService(ABC):
         ...
 
     @abstractmethod
-    def get_products_by_category(self, session_id: int, category: str) -> Response[str]:
+    def get_products_by_category(self, session_id: int, category: str) -> Response[dict]:
         ...
 
     @abstractmethod
@@ -119,11 +119,11 @@ class IService(ABC):
         ...
 
     @abstractmethod
-    def get_products_by_name(self, session_id: int, name: str) -> Response[str]:
+    def get_products_by_name(self, session_id: int, name: str) -> Response[dict]:
         ...
 
     @abstractmethod
-    def get_products_by_keywords(self, session_id: int, keywords: list[str]) -> Response[str]:
+    def get_products_by_keywords(self, session_id: int, keywords: list[str]) -> Response[dict]:
         ...
 
     @abstractmethod

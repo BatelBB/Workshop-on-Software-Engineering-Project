@@ -306,33 +306,36 @@ class Market(IService):
         else:
             return response
 
-    def get_products_by_category(self, session_id: int, category: str) -> Response[str]:
-        output = ""
+    def get_products_by_category(self, session_id: int, category: str) -> Response[dict]:
+        output = {}
         for store_name in self.stores.to_string_keys().split(', '):
             store = self.stores.get(store_name)
-            product_list = store.get_products_by_category(category)
-            for product in product_list:
-                output += product.__str__()
+            product_dict = store.get_products_by_category(category)
+            if product_dict:
+                output[store_name] = product_dict
+
         report_info("get_products_by_category", f'products: {output}')
         return Response(output)
 
-    def get_products_by_name(self, session_id: int, name: str) -> Response[str]:
-        output = ""
+    def get_products_by_name(self, session_id: int, name: str) -> Response[dict]:
+        output = {}
         for store_name in self.stores.to_string_keys().split(', '):
             store = self.stores.get(store_name)
-            product_list = store.get_products_by_name(name)
-            for product in product_list:
-                output += product.__str__()
+            product_dict = store.get_products_by_name(name)
+            if product_dict:
+                output[store_name] = product_dict
+
         report_info("get_products_by_name", f'products: {output}')
         return Response(output)
 
-    def get_products_by_keywords(self, session_id: int, keywords: list[str]) -> Response[str]:
-        output = ""
+    def get_products_by_keywords(self, session_id: int, keywords: list[str]) -> Response[dict]:
+        output = {}
         for store_name in self.stores.to_string_keys().split(', '):
             store = self.stores.get(store_name)
-            product_list = store.get_products_by_keywords(keywords)
-            for product in product_list:
-                output += product.__str__()
+            product_dict = store.get_products_by_keywords(keywords)
+            if product_dict:
+                output[store_name] = product_dict
+
         report_info("get_products_by_keywords", f'products: {output}')
         return Response(output)
 

@@ -30,17 +30,17 @@ if __name__ == '__main__':
     r2 = s2.register("sus", "rezah")
     r2 = s2.login("sus", "rezah")
 
-    s2.close_store("Amazon")
-    s2.get_store("Amazon")
-
-    sesssion.close_store("Amazon")
-
-    s2.get_store("Amazon")
+    # s2.close_store("Amazon")
+    # s2.get_store("Amazon")
     #
-    # s2.open_store("huimazon")
-    # r = sesssion.add_product("huimazon", "keychron v2", "Keyboards", 250, 5)
+    # sesssion.close_store("Amazon")
     #
-    # market.get_products_by_category(s2.identifier, "Keyboards")
+    # s2.get_store("Amazon")
+    #
+    s2.open_store("huimazon")
+    r = sesssion.add_product("huimazon", "keychron v2", "Keyboards", 250, 5)
+
+    market.get_products_by_category(s2.identifier, "Keyboards")
 
     # r = sesssion.get_store("Amazon")
     # r = sesssion.update_product_quantity("Amazon", "Razer Blackwidow V3", 23)
