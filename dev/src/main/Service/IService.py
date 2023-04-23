@@ -80,7 +80,7 @@ class IService(ABC):
         ...
 
     @abstractmethod
-    def show_cart(self, session_identifier: int) -> Response[bool]:
+    def show_cart(self, session_identifier: int) -> Response[dict] | Response[bool]:
         ...
 
     @abstractmethod

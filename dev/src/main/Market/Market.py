@@ -137,12 +137,12 @@ class Market(IService):
         no_stores_msg: str = 'Currently, there are no stores at the market.'
         return report(f"displaying stores: {stores}", stores)
 
-    def get_store(self, session_identifier: int, store_name: str) -> Response[bool]:
+    def get_store(self, session_identifier: int, store_name: str) -> Response[dict] | Response[bool]:
         response = self.verify_registered_store(self.get_store.__qualname__, store_name)
         if response.success:
             actor = self.get_active_user(session_identifier)
             preface: str = f'Displaying store {response.result.name} to {actor}\n'
-            return report_info(self.get_store.__qualname__, preface + response.result.__str__())
+            return report(self.get_store.__qualname__ + preface, response.result.__dic__())
         else:
             return response
 

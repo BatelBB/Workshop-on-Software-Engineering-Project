@@ -43,6 +43,12 @@ class Store:
         output += '#####################'
         return output
 
+    def __dic__(self):
+        dict = {}
+        for p in self.products:
+            dict[p.name] = p.__dic__()
+        return dict
+
     def __eq__(self, other):
         return self.name == other.name
 
@@ -138,14 +144,14 @@ class Store:
             dict[p.name] = p.__dic__()
         return dict
 
-    def get_products_by_name(self, name: str) -> list[Product]:
-        return self.get_products(lambda p: name in p.keywords)
+    def get_products_by_name(self, name: str) -> dict[Product]:
+        return self.get_products_dict(lambda p: name in p.keywords)
 
     def get_products_by_category(self, category: str) -> dict[Product]:
         return self.get_products_dict(lambda p: category == p.category)
 
-    def get_products_by_price(self, price: float) -> list[Product]:
-        return self.get_products(lambda p: price == p.price)
+    def get_products_by_price(self, price: float) -> dict[Product]:
+        return self.get_products_dict(lambda p: price == p.price)
 
     def get_products_by_keywords(self, keywords: list[str]) -> list[Product]:
         return self.get_products(lambda p: len((set(p.keywords) & set(keywords))) > 0)
