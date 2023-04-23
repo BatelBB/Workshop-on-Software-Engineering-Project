@@ -1,16 +1,16 @@
-23/04/2023 10:42:14 INFO:	 Session: 1221674451323460377 has been initialized
-23/04/2023 10:42:14 INFO:	 Visitor.register: Nir is registered!
-23/04/2023 10:42:14 INFO:	 Visitor.login: Nir is logged in.
-23/04/2023 10:42:14 ERROR:	 Member.login: Member Nir is already logged in.
-23/04/2023 10:42:14 INFO:	 Member.open_store: Member Nir opens Store 'Amazon' successfully
-23/04/2023 10:42:14 INFO:	 order_product: store: Amazon got delivery of 10 Razer Blackwidow V3
-23/04/2023 10:42:14 INFO:	 Store.add: Product 'Razer Blackwidow V3', Category: 'Keyboards', Price: 799.123, Rate: Not rated yet, is added to Store 'Amazon' successfully!.
-23/04/2023 10:42:14 INFO:	 Session: 7326906323076801747 has been initialized
-23/04/2023 10:42:14 INFO:	 Visitor.register: sus is registered!
-23/04/2023 10:42:14 INFO:	 Visitor.login: sus is logged in.
-23/04/2023 10:42:14 INFO:	 Member.open_store: Member sus opens Store 'huimazon' successfully
-23/04/2023 10:42:23 INFO:	 get_products_by_category: products: Product 'Razer Blackwidow V3', Category: 'Keyboards', Price: 799.123, Rate: Not rated yet
-23/04/2023 10:42:23 INFO:	 Session: 626155425358334794 has been initialized
-23/04/2023 10:42:23 INFO:	 SystemAdmin.login: admin is logged in.
-23/04/2023 10:42:23 WARNING:	 Market is closed!
-23/04/2023 10:42:23 WARNING:	 Logger thread exits!
+23/04/2023 10:45:29 INFO:	 Session: 2224363783680707521 has been initialized
+23/04/2023 10:45:29 INFO:	 Visitor.register: Nir is registered!
+23/04/2023 10:45:29 INFO:	 Visitor.login: Nir is logged in.
+23/04/2023 10:45:29 ERROR:	 Member.login: Member Nir is already logged in.
+23/04/2023 10:45:29 INFO:	 Member.open_store: Member Nir opens Store 'Amazon' successfully
+23/04/2023 10:45:29 INFO:	 order_product: store: Amazon got delivery of 10 Razer Blackwidow V3
+23/04/2023 10:45:29 INFO:	 Store.add: Product 'Razer Blackwidow V3', Category: 'Keyboards', Price: 799.123, Rate: Not rated yet, is added to Store 'Amazon' successfully!.
+23/04/2023 10:45:29 INFO:	 Session: 289531731979527599 has been initialized
+23/04/2023 10:45:29 INFO:	 Visitor.register: sus is registered!
+23/04/2023 10:45:29 INFO:	 Visitor.login: sus is logged in.
+23/04/2023 10:45:29 INFO:	 Member.open_store: Member sus opens Store 'huimazon' successfully
+23/04/2023 10:45:29 INFO:	 get_products_by_category: products: Product 'Razer Blackwidow V3', Category: 'Keyboards', Price: 799.123, Rate: Not rated yet
+23/04/2023 10:45:29 INFO:	 Session: 3713662491852632458 has been initialized
+23/04/2023 10:45:29 INFO:	 SystemAdmin.login: admin is logged in.
+23/04/2023 10:45:29 WARNING:	 Market is closed!
+23/04/2023 10:45:29 WARNING:	 Logger thread exits!
