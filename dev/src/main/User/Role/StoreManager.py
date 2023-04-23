@@ -57,11 +57,13 @@ class StoreManager(Member):
             self.permissions.add(StorePermissions.Add)
             self.permissions.add(StorePermissions.Remove)
             self.permissions.add(StorePermissions.Update)
+            self.permissions.add(StorePermissions.RetrievePurchaseHistory)
             return report_info("set_stock_permissions", f'user {self} got stock permissions at {store_name}\n')
         else:
             self.permissions.remove(StorePermissions.Add)
             self.permissions.remove(StorePermissions.Remove)
             self.permissions.remove(StorePermissions.Update)
+            self.permissions.remove(StorePermissions.RetrievePurchaseHistory)
             return report_info("set_stock_permissions", f'user {self} removed stock permissions at {store_name}\n')
 
     def set_personal_permissions(self, store_name: str, give_or_take: bool) -> Response[bool]:
@@ -70,12 +72,10 @@ class StoreManager(Member):
         if give_or_take:
             self.permissions.add(StorePermissions.AppointManager)
             self.permissions.add(StorePermissions.RetrieveStaffDetails)
-            self.permissions.add(StorePermissions.RetrievePurchaseHistory)
             return report_info("set_stock_permissions", f'user {self} got personal permissions at {store_name}\n')
         else:
             self.permissions.remove(StorePermissions.AppointManager)
             self.permissions.remove(StorePermissions.RetrieveStaffDetails)
-            self.permissions.remove(StorePermissions.RetrievePurchaseHistory)
             return report_info("set_stock_permissions", f'user {self} removed personal permissions at {store_name}\n')
 
     def is_allowed_to_view_store_personal(self, store_name: str) -> Response[bool]:

@@ -1,4 +1,5 @@
 from dev.src.main.User.Role.Member import Member
+from dev.src.main.Utils.Logger import report_info, report_error
 from dev.src.main.Utils.Response import Response
 
 
@@ -56,7 +57,15 @@ class StoreOwner(Member):
             return Response(True)
         return Response(False)
 
-    def is_allowed_to_fire_employee(self, store_name:str) -> Response[bool]:
+    def is_allowed_to_fire_employee(self, store_name: str) -> Response[bool]:
         if store_name in self.context.owned_stores:
             return Response(True)
         return Response(False)
+
+    def close_store(self, store_name: str) -> Response[bool]:
+        if store_name in self.context.owned_stores:
+            self.context.appointees.pop(store_name)
+            self.context.founded_stores.remove(store_name)
+            return report_info(self.close_store.__qualname__, f'{self} closes Store \'{store_name}\' successfully')
+        else:
+            return report_error(self.close_store.__qualname__, f'{self} not owner of \'{store_name}\'')

@@ -11,6 +11,12 @@ class Cart:
             output += f'#####################\n\tStore \'{store_name}\'\n\t{basket}\n#####################'
         return output
 
+    def __dic__(self):
+        output = {}
+        for store_name, basket in self.baskets.items():
+            output[store_name] = basket.__dic__()
+        return output
+
     def get_or_create_basket(self, store_name: str) -> Basket:
         if store_name not in self.baskets:
             self.baskets.update({store_name: Basket()})

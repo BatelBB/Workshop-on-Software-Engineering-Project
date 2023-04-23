@@ -49,7 +49,7 @@ class IService(ABC):
         ...
 
     @abstractmethod
-    def get_store(self, session_identifier: int, store_name: str) -> Response[bool]:
+    def get_store(self, session_identifier: int, store_name: str) -> Response[dict] | Response[bool]:
         ...
 
     @abstractmethod
@@ -80,12 +80,11 @@ class IService(ABC):
         ...
 
     @abstractmethod
-    def show_cart(self, session_identifier: int) -> Response[bool]:
+    def show_cart(self, session_identifier: int) -> Response[dict] | Response[bool]:
         ...
 
     @abstractmethod
-    def purchase_shopping_cart(self, session_identifier: int, payment_method: str, payment_details: list) -> Response[
-        bool]:
+    def purchase_shopping_cart(self, session_identifier: int, payment_method: str, payment_details: list) -> Response[bool]:
         ...
 
     @abstractmethod
@@ -111,7 +110,7 @@ class IService(ABC):
         ...
 
     @abstractmethod
-    def get_product_by_category(self, session_id: int, store_name: str, category: str) -> Response[str]:
+    def get_products_by_category(self, session_id: int, category: str) -> Response[dict]:
         ...
 
     @abstractmethod
@@ -119,11 +118,11 @@ class IService(ABC):
         ...
 
     @abstractmethod
-    def get_product_by_name(self, session_id: int, store_name: str, name: str) -> Response[str]:
+    def get_products_by_name(self, session_id: int, name: str) -> Response[dict]:
         ...
 
     @abstractmethod
-    def get_product_by_keywords(self, session_id: int, store_name: str, keywords: list[str]) -> Response[str]:
+    def get_products_by_keywords(self, session_id: int, keywords: list[str]) -> Response[dict]:
         ...
 
     @abstractmethod
@@ -138,6 +137,7 @@ class IService(ABC):
     @abstractmethod
     def get_store_personal(self, session_id: int, store_name: str) -> Response[str]:
         ...
+
     # @abstractmethod
     # def update_product_of(self, store_name: str, product: Product, quantity: int) -> Response[bool]:
     #     ...

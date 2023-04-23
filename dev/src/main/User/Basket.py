@@ -9,6 +9,9 @@ class Item:
         return f'Item: Product: \'{self.product_name}\', Quantity: {self.quantity}, Price: {self.price}, Discount' \
                f'-Price: {self.discount_price}'
 
+    def __dic__(self) -> dict:
+        return {"Quantity": self.quantity, "Price": self.price}
+
     def __eq__(self, other):
         return self.product_name == other.product_name
 
@@ -29,6 +32,12 @@ class Basket:
     def __str__(self):
         items_strings: list[str] = list(map(lambda i: i.__str__(), self.items))
         return "Basket: {" + ', '.join(items_strings) + '}'
+
+    def __dic__(self):
+        output = {}
+        for i in self.items:
+            output[i.product_name] = i.__dic__()
+        return output
 
     def add_item(self, item: Item) -> int:
         new_quantity = item.quantity
