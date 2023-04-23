@@ -16,18 +16,28 @@ if __name__ == '__main__':
 
     r = sesssion.add_product("Amazon", "Razer Blackwidow V3", "Keyboards", 799.123, 10)
 
-    s2 = market.enter()
-    r2 = s2.register("sus", "rezah")
-    r2 = s2.login("sus", "rezah")
+    sesssion.add_to_cart("Amazon", "Razer Blackwidow V3", 10)
 
-    s2.open_store("huimazon")
-    r = sesssion.add_product("huimazon", "keychron v2", "Keyboards", 250, 5)
+    r = sesssion.show_cart()
 
-    market.get_products_by_category(s2.identifier, "Keyboards")
+    sesssion.logout()
+
+    sesssion.show_cart()
+
+    print("nice")
+
+
+    # s2 = market.enter()
+    # r2 = s2.register("sus", "rezah")
+    # r2 = s2.login("sus", "rezah")
+    #
+    # s2.open_store("huimazon")
+    # r = sesssion.add_product("huimazon", "keychron v2", "Keyboards", 250, 5)
+    #
+    # market.get_products_by_category(s2.identifier, "Keyboards")
 
     # r = sesssion.get_store("Amazon")
     # r = sesssion.update_product_quantity("Amazon", "Razer Blackwidow V3", 23)
-    # sesssion.add_to_cart("Amazon", "Razer Blackwidow V3", 10)
     # market.get_store(sesssion.identifier, "Amazon")
     # market.purchase_shopping_cart(sesssion.identifier, "card", ["1234", "123", "1234"])
     # sesssion.get_purchase_history("Amazon")
