@@ -1,14 +1,14 @@
-23/04/2023 14:10:18 INFO:	 Session: 3447436862660854735 has been initialized
-23/04/2023 14:10:18 INFO:	 Visitor.register: Nir is registered!
-23/04/2023 14:10:18 INFO:	 Visitor.login: Nir is logged in.
-23/04/2023 14:10:18 ERROR:	 Member.login: Member Nir is already logged in.
-23/04/2023 14:10:18 INFO:	 Member.open_store: Member Nir opens Store 'Amazon' successfully
-23/04/2023 14:10:18 INFO:	 order_product: store: Amazon got delivery of 10 Razer Blackwidow V3
-23/04/2023 14:10:18 INFO:	 Store.add: Product 'Razer Blackwidow V3', Category: 'Keyboards', Price: 799.123, Rate: Not rated yet, is added to Store 'Amazon' successfully!.
-23/04/2023 14:10:18 INFO:	 Store.update: Store 'Amazon': Product 'Razer Blackwidow V3' quantity added -3.
-23/04/2023 14:10:18 INFO:	 Market.get_storeDisplaying store Amazon to StoreOwner Nir
+23/04/2023 14:11:06 INFO:	 Session: 2651505837685815461 has been initialized
+23/04/2023 14:11:06 INFO:	 Visitor.register: Nir is registered!
+23/04/2023 14:11:06 INFO:	 Visitor.login: Nir is logged in.
+23/04/2023 14:11:06 ERROR:	 Member.login: Member Nir is already logged in.
+23/04/2023 14:11:06 INFO:	 Member.open_store: Member Nir opens Store 'Amazon' successfully
+23/04/2023 14:11:06 INFO:	 order_product: store: Amazon got delivery of 10 Razer Blackwidow V3
+23/04/2023 14:11:06 INFO:	 Store.add: Product 'Razer Blackwidow V3', Category: 'Keyboards', Price: 799.123, Rate: Not rated yet, is added to Store 'Amazon' successfully!.
+23/04/2023 14:11:06 INFO:	 Store.update: Store 'Amazon': Product 'Razer Blackwidow V3' quantity added -3.
+23/04/2023 14:11:06 INFO:	 Market.get_storeDisplaying store Amazon to StoreOwner Nir
 {'Razer Blackwidow V3': {'Price': 799.123, 'Category': 'Keyboards', 'Rate': None, 'Quantity': 7}}
-23/04/2023 14:10:18 INFO:	 Session: 7809875045411900146 has been initialized
-23/04/2023 14:10:18 INFO:	 SystemAdmin.login: admin is logged in.
-23/04/2023 14:10:18 WARNING:	 Market is closed!
-23/04/2023 14:10:18 WARNING:	 Logger thread exits!
+23/04/2023 14:11:06 INFO:	 Session: 7364313795849805169 has been initialized
+23/04/2023 14:11:06 INFO:	 SystemAdmin.login: admin is logged in.
+23/04/2023 14:11:06 WARNING:	 Market is closed!
+23/04/2023 14:11:06 WARNING:	 Logger thread exits!
