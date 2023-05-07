@@ -139,3 +139,58 @@ class Session:
             return self.service.get_store_purchase_history(self.identifier, store_name)
         else:
             return self.report_session_closed()
+
+    def get_products_by_category(self, category: str):
+        if self.is_open:
+            return self.service.get_products_by_category(self.identifier, category)
+        else:
+            return self.report_session_closed()
+
+    def get_products_by_name(self, name: str):
+        if self.is_open:
+            return self.service.get_products_by_name(self.identifier, name)
+        else:
+            return self.report_session_closed()
+
+    def get_products_by_keywords(self, keywords: list[str]):
+        if self.is_open:
+            return self.service.get_products_by_keywords(self.identifier, keywords)
+        else:
+            return self.report_session_closed()
+
+    def appoint_owner(self, new_owner_name: str, store_name: str):
+        if self.is_open:
+            return self.service.appoint_owner(self.identifier, new_owner_name, store_name)
+        else:
+            return self.report_session_closed()
+
+    def appoint_manager(self, new_manager_name: str, store_name: str):
+        if self.is_open:
+            return self.service.appoint_manager(self.identifier, new_manager_name, store_name)
+        else:
+            return self.report_session_closed()
+
+    def set_stock_permissions(self, receiving_user_name: str, store_name: str, give_or_take: bool):
+        if self.is_open:
+            return self.service.set_stock_permissions(self.identifier, receiving_user_name, store_name, give_or_take)
+        else:
+            return self.report_session_closed()
+
+    def set_personal_permissions(self, receiving_user_name: str, store_name: str,
+                                 give_or_take: bool):
+        if self.is_open:
+            return self.service.set_personal_permissions(self.identifier, receiving_user_name, store_name, give_or_take)
+        else:
+            return self.report_session_closed()
+
+    def get_store_personal(self, store_name: str):
+        if self.is_open:
+            return self.service.get_store_personal(self.identifier, store_name)
+        else:
+            return self.report_session_closed()
+
+    def fire_employee(self, store_name: str, employee_name: str):
+        if self.is_open:
+            return self.service.fire_employee(self.identifier, store_name, employee_name)
+        else:
+            return self.report_session_closed()
