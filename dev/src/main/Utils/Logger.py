@@ -41,7 +41,7 @@ class Logger(metaclass=IConcurrentSingleton):
         with self.condition_variable:
             self.condition_variable.notify()
 
-    def post(self, msg: str, severity: Severity = Severity.INFO):
+    def post(self, msg: str, severity: Severity):
         self.queue.put((msg, severity))
         self.notify()
 
@@ -57,10 +57,10 @@ class Logger(metaclass=IConcurrentSingleton):
     def get_severity_color(self, severity: Severity) -> str:
         return self.Severity(severity).value
 
-    def create_message(self, msg: str, severity: Severity = Severity.INFO) -> str:
+    def create_message(self, msg: str, severity: Severity) -> str:
         return f'{getdate()} {self.get_severity_name(severity)}:\t {msg}'
 
-    def create_colored_message(self, msg: str, severity: Severity = Severity.INFO) -> str:
+    def create_colored_message(self, msg: str, severity: Severity) -> str:
         return f'{self.get_severity_color(severity)}{msg}{self.get_severity_color(severity.ENDLINE)}'
 
     def write(self):
@@ -108,5 +108,6 @@ def report_info(calling_method_name: str, error_description: str) -> Response[An
     return report(f'{calling_method_name}: {error_description}', True, Logger.Severity.INFO)
 
 
-def report_debug(calling_method_name: str, error_description: str) -> Response[Any]:
-    return report(f'{calling_method_name}: {error_description}', False, Logger.Severity.DEBUG)
+def report_debug(msg: str, result: Result, severity: Logger.Severity) -> Response[Any]:
+    Logger().post(msg, severity)
+    return Response(result, msg)
