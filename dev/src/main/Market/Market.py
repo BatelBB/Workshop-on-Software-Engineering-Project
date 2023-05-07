@@ -48,7 +48,7 @@ class Market(IService):
         session_identifier = self.generate_session_identifier()
         self.sessions.insert(session_identifier, User(self))
         session = Session(session_identifier, self)
-        Logger().post(f'{session} has been initialized')
+        Logger().post(f'{session} has been initialized', Logger.Severity.INFO)
         return session
 
     def close_session(self, session_identifier: int) -> None:
@@ -66,7 +66,7 @@ class Market(IService):
 
     def verify_registered_store(self, calling_method_name: str, store_name: str) -> Response[Store]:
         store: Store = self.stores.get(store_name)
-        return report("verify_registered_store", store)
+        return report(f'Entered verify register store function', store)
 
     def verify_store_contains_product(self, calling_method_name: str, store_name: str, product_name: str) -> \
             Response[Store] | Response[bool]:
