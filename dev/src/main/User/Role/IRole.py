@@ -135,3 +135,7 @@ class IRole(ABC):
     @abstractmethod
     def is_allowed_to_view_store_personal(self, store_name: str) -> Response[bool]:
         ...
+
+    @abstractmethod
+    def purchase_shopping_cart(self, payment_method: str, payment_details: list) -> Response[bool]:
+        ...
