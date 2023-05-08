@@ -116,3 +116,6 @@ class User:
 
     def is_allowed_to_fire_employee(self, store_name: str) -> Response[bool]:
         return self.role.is_allowed_to_fire_employee(store_name)
+
+    def purchase_shopping_cart(self, payment_method: str, payment_details: list) -> Response[bool]:
+        return self.role.purchase_shopping_cart(payment_method, payment_details)

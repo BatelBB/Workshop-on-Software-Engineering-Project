@@ -20,8 +20,8 @@ class Market(IService):
 
     # TODO: should be initialized with IPaymentService, IProvisionService
     def init_admin(self):
-        name = "admin"
-        password = "admin"
+        name = "kfir"
+        password = "kfir"
         admin = User(self, name, password)
         admin.role = SystemAdmin(admin)
         self.users.insert(name, admin)

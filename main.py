@@ -18,9 +18,9 @@ if __name__ == '__main__':
 
     # sesssion.add_to_cart("Amazon", "Razer Blackwidow V3", 10)
 
-    r3 = market.update_product_quantity(sesssion.identifier, "Amazon", "Razer Blackwidow V3", -3)
+    # r3 = market.update_product_quantity(sesssion.identifier, "Amazon", "Razer Blackwidow V3", -3)
 
-    sesssion.get_store("Amazon")
+    # sesssion.get_store("Amazon")
 
     # s2 = market.enter()
     # s2.add_to_cart("Amazon", "Razer Blackwidow V3", 3)
@@ -65,9 +65,9 @@ if __name__ == '__main__':
     #
     # r3 = market.shutdown(s2.identifier)
 
-    s3 = market.enter()
-    s3.login("admin", "admin")
-    r4 = market.shutdown(s3.identifier)
+    # s3 = market.enter()
+    # s3.login("admin", "admin")
+    # r4 = market.shutdown(s3.identifier)
 
 
        # r = sesssion.change_product_name("Amazon", "Razer Blackwidow V3", "Test name")
@@ -75,12 +75,12 @@ if __name__ == '__main__':
     # r = sesssion.get_store("Amazon")
     # # r = sesssion.show_cart() # supposed to be empty
     # # sesssion.add_to_cart("Amazon", "Razer Blackwidow V3", 2)
-    # # # sesssion.add_to_cart("Amazon", "Razer Blackwidow V3", 123)
-    # # r = sesssion.show_cart()
+    r = sesssion.add_to_cart("Amazon", "Razer Blackwidow V3", 9)
+    # r = sesssion.show_cart()
     # # # r = sesssion.add_payment_details_paypal("Name", "Password")
-    # # r = sesssion.purchase_shopping_cart("paypal", ["user", "password"])
-    # # r = sesssion.show_cart()  # supposed to be empty
-    # # r = sesssion.get_store("Amazon")
+    r = sesssion.purchase_shopping_cart("paypal", ["user", "password"])
+    r = sesssion.show_cart()  # supposed to be empty
+    r = sesssion.get_store("Amazon")
     # #
     # # sesssion.add_to_cart("Amazon", "Razer Blackwidow V3", 5)
     # # # sesssion.add_to_cart("Amazon", "Razer Blackwidow V3", 123)
@@ -98,4 +98,4 @@ if __name__ == '__main__':
     #
     # r = sesssion.logout()
     #
-    # market.shutdown()
+    market.shutdown()
