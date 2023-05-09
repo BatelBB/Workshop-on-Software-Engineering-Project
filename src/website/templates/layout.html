@@ -1,0 +1,23 @@
+{% extends "bootstrap/base.html" %}
+
+{% block styles %}
+
+<link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+
+{{ super() }}
+{% endblock %}
+
+{% block navbar %}
+{{nav.mynavbar.render()}}
+<br/>
+<div>
+    {% for message in get_flashed_messages() %} <!-- {{ message }}-->
+    <p>
+        {{message}}
+    </p>
+    {% else %}
+        <!-- there are no flash message -->
+    {%endfor%}
+</div>
+{% endblock %}
+
