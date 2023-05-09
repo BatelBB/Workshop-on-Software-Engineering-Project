@@ -1,5 +1,3 @@
-
-
 from domain.main.Market.Market import Market
 from domain.main.Service.IService import IService
 
