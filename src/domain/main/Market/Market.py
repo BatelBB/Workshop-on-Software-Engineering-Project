@@ -1,6 +1,6 @@
 import random
 import sys
-from typing import Any
+from typing import Any, List
 
 from domain.main.ExternalServices.Payment.PaymentFactory import PaymentFactory
 from domain.main.Store.Product import Product
@@ -132,10 +132,8 @@ class Market(IService):
             return response
         return report_error(self.open_store.__qualname__, f'Store name \'{store_name}\' is occupied.')
 
-    def get_all_stores(self, session_identifier: int) -> Response[str]:
-        stores: str = self.stores.to_string_keys()
-        there_are_stores: bool = len(stores) > 0
-        no_stores_msg: str = 'Currently, there are no stores at the market.'
+    def get_all_stores(self, session_identifier: int) -> Response[List[Store]]:
+        stores = list(self.stores.dictionary.values())
         return report(f"displaying stores: {stores}", stores)
 
     def get_store(self, session_identifier: int, store_name: str) -> Response[dict] | Response[bool]:
