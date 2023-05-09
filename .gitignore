@@ -78,7 +78,7 @@ target/
 celerybeat-schedule
 
 # dotenv
-.env
+env.bat
 
 # virtualenv
 venv/
@@ -183,3 +183,5 @@ fabric.properties
 
 # idea folder, uncomment if you don't need it
 # .idea
+**/__pycache__/
+**/__pycache__/**/*

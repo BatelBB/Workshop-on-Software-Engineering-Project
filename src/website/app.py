@@ -1,0 +1,34 @@
+import website.compatability_patch
+from flask import Flask, flash, url_for
+import wtforms as wtf
+from flask import Flask, render_template
+from flask_bootstrap import Bootstrap
+from website.blueprints.auth import bp as auth
+from website.core_features.auth import get_market
+from website.core_features.nav import nav
+from website.core_features.dicebear import dicebear_methods
+from website.core_features.seed import seed
+# from blueprints import auth
+
+app = Flask(__name__)
+Bootstrap(app)
+
+# Set the secret key to some random bytes. Keep this really secret!
+app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
+
+nav.init_app(app)
+
+app.jinja_env.globals.update(**dicebear_methods)
+
+@app.route("/")
+def home():
+    from random import shuffle
+    made_by = ['Batel', 'Hagai', 'Mendi', 'Nir', 'Yuval']
+    shuffle(made_by)
+    return render_template('home.html', made_by=made_by)
+
+
+app.register_blueprint(auth)
+
+if __name__ == '__main__':
+    app.run(debug=True)
