@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+{% block title %}Create store{% endblock %}
+
+{% block content %}
+
+<form method="post">
+    
+  {{ form.hidden_tag() }}
+    <table>
+        {% for field in (form.name, form.submit) %}
+            <tr>
+                <td>{{field.label}}&nbsp;</td>
+                <td>{{ field }}</td>
+                <td>
+                    {% for error in field.errors %}
+                        {{ error }}
+                    {% endfor %}
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+    Already have a user? <a href="{{ url_for('selling.create_store') }}">login</a>
+</form>
+
+{% endblock %}
