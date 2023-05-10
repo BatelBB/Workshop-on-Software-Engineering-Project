@@ -13,6 +13,7 @@ from domain.main.Utils.ConcurrentDictionary import ConcurrentDictionary
 from domain.main.Utils.Logger import report, Logger, report_error, report_info
 from domain.main.Utils.Response import Response
 from domain.main.Utils.Session import Session
+from domain.main.ExternalServices.Provision.ProvisionServiceAdapter import IProvisionService, provisionService
 
 
 # TODO: might be implemented as a Reactor: a singleton with a thread pool responsible for executing tasks
@@ -32,6 +33,8 @@ class Market(IService):
         self.stores: ConcurrentDictionary[str, Store] = ConcurrentDictionary()
         self.payment_factory: PaymentFactory = PaymentFactory()
         self.init_admin()
+        self.provision_service: IProvisionService = provisionService()
+        self.package_counter = 0
 
     def generate_session_identifier(self):
         min: int = 1
@@ -233,7 +236,7 @@ class Market(IService):
         for store_name, basket in baskets.items():
             self.stores.get(store_name).add_to_purchase_history(basket)
 
-    def purchase_shopping_cart(self, session_identifier: int, payment_method: str, payment_details: list[str]) -> \
+    def purchase_shopping_cart(self, session_identifier: int, payment_method: str, payment_details: list[str], address: str, postal_code: str) -> \
             Response[bool]:
         actor = self.get_active_user(session_identifier)
         response = actor.verify_cart_not_empty()
@@ -254,6 +257,9 @@ class Market(IService):
                     return response2
             response3 = self.pay(cart_price, payment_method, payment_details)
             if response3.success:
+                #order delivery
+                if not self.provision_service.getDelivery(actor.username, "remove", self.package_counter, address, postal_code):
+                    return report_error("purchase_shopping_cart", 'failed delivery')
                 self.add_to_purchase_history(baskets)
                 self.update_user_cart_after_purchase(actor, successful_store_purchases)
             else:
