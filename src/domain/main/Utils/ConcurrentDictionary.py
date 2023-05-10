@@ -50,3 +50,11 @@ class ConcurrentDictionary(Generic[Key, Value]):
     def update(self, key: Key, new_value: Value):
         with self.lock:
             self.dictionary[key] = new_value
+
+    def list_keys(self):
+        with self.lock:
+            return list(self.dictionary.keys())
+
+    def list_entries(self):
+        with self.lock:
+            return list(self.dictionary.items())
