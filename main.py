@@ -76,7 +76,7 @@ if __name__ == '__main__':
     r = sesssion.add_to_cart("Amazon", "Razer Blackwidow V3", 9)
     # r = sesssion.show_cart()
     # # # r = sesssion.add_payment_details_paypal("Name", "Password")
-    r = sesssion.purchase_shopping_cart("paypal", ["user", "password"])
+    r = sesssion.purchase_shopping_cart("paypal", ["user", "password"], "ashdod", "7433333")
     r = sesssion.show_cart()  # supposed to be empty
     r = sesssion.get_store("Amazon")
     # #
@@ -96,4 +96,4 @@ if __name__ == '__main__':
     #
     # r = sesssion.logout()
     #
-    market.shutdown()
+    # market.shutdown()

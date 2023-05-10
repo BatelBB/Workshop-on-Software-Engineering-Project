@@ -12,6 +12,7 @@ class ProductQuantity:
     def __init__(self, quantity: int):
         self.quantity = quantity
         self.lock = threading.RLock()
+        self.provisionService: IProvisionService = provisionService()
 
     def reserve(self, desired_quantity: int) -> bool:
         with self.lock:
@@ -67,18 +68,18 @@ class Store:
     def get_name(self):
         return self.name
 
-    def order_product(self, product_name: str, quantity: int) -> Response[bool]:
-        if self.provisionService.getDelivery(product_name, quantity):
-            return report_info("order_product", f'store: {self.name} got delivery of {quantity} {product_name}')
-        return report_error("order_product", f'store: {self.name} delivery of {quantity} {product_name} failed!!')
+    # def order_product(self, product_name: str, quantity: int) -> Response[bool]:
+    #     if self.provisionService.getDelivery(product_name, quantity):
+    #         return report_info("order_product", f'store: {self.name} got delivery of {quantity} {product_name}')
+    #     return report_error("order_product", f'store: {self.name} delivery of {quantity} {product_name} failed!!')
 
     def add(self, product: Product, quantity: int) -> Response[bool]:
         if not self.contains(product):
             self.products.append(product)
 
-            delivery_response = self.order_product(product.name, quantity)
-            if not delivery_response.success:
-                return delivery_response
+            # delivery_response = self.order_product(product.name, quantity)
+            # if not delivery_response.success:
+            #     return delivery_response
 
             self.products_quantities.update({product.name: ProductQuantity(quantity)})
             return report_info(self.add.__qualname__, f'{product}, is added to Store \'{self.name}\' successfully!.')
@@ -89,10 +90,10 @@ class Store:
     def update(self, product_name: str, quantity: int) -> Response[bool]:
         p = Product(product_name)
         if self.contains(p):
-            if quantity > 0:
-                delivery_response = self.order_product(product_name, quantity)
-                if not delivery_response.success:
-                    return delivery_response
+            # if quantity > 0:
+                # delivery_response = self.order_product(product_name, quantity)
+                # if not delivery_response.success:
+                #     return delivery_response
 
             self.products_quantities[product_name].refill(quantity)
             return report_info(self.update.__qualname__, f'Store \'{self.name}\': Product \'{product_name}\' quantity '

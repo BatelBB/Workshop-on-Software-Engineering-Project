@@ -84,7 +84,7 @@ class IService(ABC):
         ...
 
     @abstractmethod
-    def purchase_shopping_cart(self, session_identifier: int, payment_method: str, payment_details: list) -> Response[bool]:
+    def purchase_shopping_cart(self, session_identifier: int, payment_method: str, payment_details: list, address: str, postal_code: str) -> Response[bool]:
         ...
 
     @abstractmethod
