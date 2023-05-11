@@ -116,9 +116,9 @@ class Session:
         else:
             return self.report_session_closed()
 
-    def purchase_shopping_cart(self, payment_method: str, payment_details: list) -> Response[bool]:
+    def purchase_shopping_cart(self, payment_method: str, payment_details: list, address: str, postal_code: str) -> Response[bool]:
         if self.is_open:
-            return self.service.purchase_shopping_cart(self.identifier, payment_method, payment_details)
+            return self.service.purchase_shopping_cart(self.identifier, payment_method, payment_details, address, postal_code)
         else:
             return self.report_session_closed()
 
