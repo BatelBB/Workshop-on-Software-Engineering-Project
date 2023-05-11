@@ -143,6 +143,13 @@ class Session:
         else:
             return self.report_session_closed()
 
+    def start_lottery(self, store_name: str, product_name: str) -> \
+            Response:
+        if self.is_open:
+            return self.service.start_lottery(self.identifier, store_name, product_name)
+        else:
+            return self.report_session_closed()
+
     def purchase_with_non_immediate_policy(self, store_name: str, product_name: str,
                                            payment_method: str, payment_details: list[str], address: str,
                                            postal_code: str, how_much: float):

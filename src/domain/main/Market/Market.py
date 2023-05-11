@@ -6,6 +6,7 @@ from domain.main.ExternalServices.Payment.PaymentFactory import PaymentFactory
 from domain.main.Store.Product import Product
 from domain.main.Service.IService import IService
 from domain.main.Store.PurchasePolicy.AuctionPolicy import AuctionPolicy
+from domain.main.Store.PurchasePolicy.LotteryPolicy import LotteryPolicy
 from domain.main.Store.PurchasePolicy.PurchasePolicyFactory import PurchasePolicyFactory
 from domain.main.Store.Store import Store
 from domain.main.User.Basket import Basket
@@ -472,6 +473,23 @@ class Market(IService):
         policy = AuctionPolicy(initial_price, duration)
 
         return store.add_product_to_special_purchase_policy(product_name, policy)
+
+    def start_lottery(self, session_id: int, store_name: str, product_name: str) -> \
+        Response[bool] | Response[Store]:
+        actor = self.get_active_user(session_id)
+        res = actor.add_product(store_name)  # verifying permissions for stock managing
+        if not res.success:
+            return res
+
+        res = self.verify_registered_store("add_purchase_policy_for_product", store_name)
+        if not res.success:
+            return res
+        store = res.result
+
+        policy = LotteryPolicy(store.get_product_price(product_name))
+
+        return store.add_product_to_special_purchase_policy(product_name, policy)
+
 
     # assuming can only purchase 1
     def purchase_with_non_immediate_policy(self, session_identifier: int, store_name: str, product_name: str,
