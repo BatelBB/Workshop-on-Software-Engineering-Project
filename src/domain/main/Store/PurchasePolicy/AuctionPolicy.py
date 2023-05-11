@@ -15,6 +15,7 @@ class AuctionPolicy(IPurchasePolicy):
 
     def apply_policy(self, p_service: IPaymentService, d_service: IProvisionService, how_much: float) -> Response[bool]:
         if how_much > self.price:
+            self.price = how_much
             self.payment_service = p_service
             self.delivery_service = d_service
             return report("apply_policy->auction highest bidder has been switched", True)

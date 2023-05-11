@@ -150,6 +150,14 @@ class IService(ABC):
             Response:
         ...
 
+    @abstractmethod
+    def start_bid(self, session_id: int, store_name: str, product_name: str) -> Response:
+        ...
+
+    @abstractmethod
+    def approve_bid(self, session_id: int, store_name: str, product_name: str, is_approve: bool) -> Response:
+        ...
+
     # @abstractmethod
     # def update_product_of(self, store_name: str, product: Product, quantity: int) -> Response[bool]:
     #     ...

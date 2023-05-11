@@ -150,6 +150,13 @@ class Session:
         else:
             return self.report_session_closed()
 
+    def start_bid(self, store_name: str, product_name: str) -> \
+            Response:
+        if self.is_open:
+            return self.service.start_bid(self.identifier, store_name, product_name)
+        else:
+            return self.report_session_closed()
+
     def purchase_with_non_immediate_policy(self, store_name: str, product_name: str,
                                            payment_method: str, payment_details: list[str], address: str,
                                            postal_code: str, how_much: float):
@@ -157,5 +164,23 @@ class Session:
             return self.service.purchase_with_non_immediate_policy(self.identifier, store_name, product_name,
                                                                    payment_method, payment_details, address,
                                                                    postal_code, how_much)
+        else:
+            return self.report_session_closed()
+
+    def approve_bid(self, store_name: str, product_name: str, is_approve: bool):
+        if self.is_open:
+            return self.service.approve_bid(self.identifier, store_name, product_name, is_approve)
+        else:
+            return self.report_session_closed()
+
+    def appoint_manager(self, new_manager_name: str, store_name: str) -> Response[bool]:
+        if self.is_open:
+            return self.service.appoint_manager(self.identifier, new_manager_name, store_name)
+        else:
+            return self.report_session_closed()
+
+    def appoint_owner(self, new_owner_name: str, store_name: str) -> Response[bool]:
+        if self.is_open:
+            return self.service.appoint_owner(self.identifier, new_owner_name, store_name)
         else:
             return self.report_session_closed()
