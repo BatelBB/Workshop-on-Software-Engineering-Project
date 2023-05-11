@@ -235,7 +235,7 @@ class Market(IService):
         for store_name, basket in baskets.items():
             self.stores.get(store_name).add_to_purchase_history(basket)
 
-    def purchase_shopping_cart(self, session_identifier: int, payment_method: str, payment_details: list[str]) -> \
+    def purchase_shopping_cart(self, session_identifier: int, payment_method: str, payment_details: list[str], address: str, postal_code: str) -> \
             Response[bool]:
         actor = self.get_active_user(session_identifier)
         response = actor.verify_cart_not_empty()
