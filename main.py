@@ -65,29 +65,52 @@ if __name__ == '__main__':
     #                                             "beer sheva", "3777777", 2)
     # store.new_day()
 
+    # s1 = service.enter()
+    # res = s1.register("sus", "rezah")
+    # re = s1.login("sus", "rezah")
+    # res = s1.open_store("burekas gedera")
+    # res = s1.add_product("burekas gedera", "burekas pitriot", "burekasim", 5, 1, ["burekas", "maafe", "bake"])
+    # res = s1.start_bid("burekas gedera", "burekas pitriot")
+    # store = service.stores.get("burekas gedera")
+    # print(store.products_with_bid_purchase_policy)
+    #
+    # s2 = service.enter()
+    # res = s2.register("u2", "p2")
+    # res = s2.login("u2", "p2")
+    # res = s1.appoint_owner("u2", "burekas gedera")
+    #
+    # s3 = service.enter()
+    # res = s3.register("u3", "p3")
+    # res = s3.login("u3", "p3")
+    # res = s3.purchase_with_non_immediate_policy("burekas gedera", "burekas pitriot", "card",
+    #                                             ["4580", "12/2030", "333"],
+    #                                             "beer sheva", "3777777", 2)
+    #
+    # s1.approve_bid("burekas gedera", "burekas pitriot", True)
+    # s2.approve_bid("burekas gedera", "burekas pitriot", True)
+    #
+    # store.new_day()
+
+    #test new day:
+
     s1 = service.enter()
     res = s1.register("sus", "rezah")
     re = s1.login("sus", "rezah")
     res = s1.open_store("burekas gedera")
     res = s1.add_product("burekas gedera", "burekas pitriot", "burekasim", 5, 1, ["burekas", "maafe", "bake"])
-    res = s1.start_bid("burekas gedera", "burekas pitriot")
+    res = s1.start_auction("burekas gedera", "burekas pitriot", 2, 5)
     store = service.stores.get("burekas gedera")
-    print(store.products_with_bid_purchase_policy)
+    print(store.products_with_special_purchase_policy)
 
     s2 = service.enter()
     res = s2.register("u2", "p2")
     res = s2.login("u2", "p2")
-    res = s1.appoint_owner("u2", "burekas gedera")
-
-    s3 = service.enter()
-    res = s3.register("u3", "p3")
-    res = s3.login("u3", "p3")
-    res = s3.purchase_with_non_immediate_policy("burekas gedera", "burekas pitriot", "card",
+    res = s2.purchase_with_non_immediate_policy("burekas gedera", "burekas pitriot", "card",
                                                 ["4580", "12/2030", "333"],
-                                                "beer sheva", "3777777", 2)
-
-    s1.approve_bid("burekas gedera", "burekas pitriot", True)
-    s2.approve_bid("burekas gedera", "burekas pitriot", True)
-
+                                                "beer sheva", "3777777", 30)
     store.new_day()
+    store.new_day()
+    store.new_day()
+    store.new_day()
+
     # market.shutdown()
