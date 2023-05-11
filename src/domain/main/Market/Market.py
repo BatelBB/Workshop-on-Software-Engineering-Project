@@ -2,17 +2,17 @@ import random
 import sys
 from typing import Any, List
 
-from domain.main.ExternalServices.Payment.PaymentFactory import PaymentFactory
-from domain.main.Store.Product import Product
-from domain.main.Service.IService import IService
-from domain.main.Store.Store import Store
-from domain.main.User.Basket import Basket
-from domain.main.User.Role.SystemAdmin import SystemAdmin
-from domain.main.User.User import User
-from domain.main.Utils.ConcurrentDictionary import ConcurrentDictionary
-from domain.main.Utils.Logger import report, Logger, report_error, report_info
-from domain.main.Utils.Response import Response
-from domain.main.Utils.Session import Session
+from src.domain.main.ExternalServices.Payment.PaymentFactory import PaymentFactory
+from src.domain.main.Store.Product import Product
+from src.domain.main.Service.IService import IService
+from src.domain.main.Store.Store import Store
+from src.domain.main.User.Basket import Basket
+from src.domain.main.User.Role.SystemAdmin import SystemAdmin
+from src.domain.main.User.User import User
+from src.domain.main.Utils.ConcurrentDictionary import ConcurrentDictionary
+from src.domain.main.Utils.Logger import report, Logger, report_error, report_info
+from src.domain.main.Utils.Response import Response
+from src.domain.main.Utils.Session import Session
 
 
 # TODO: might be implemented as a Reactor: a singleton with a thread pool responsible for executing tasks

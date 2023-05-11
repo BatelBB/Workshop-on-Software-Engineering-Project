@@ -1,8 +1,8 @@
 from typing import Any
 
-from domain.main.Service import IService
-from domain.main.Utils.Logger import report, Logger
-from domain.main.Utils.Response import Response
+from src.domain.main.Service import IService
+from src.domain.main.Utils.Logger import report, Logger
+from src.domain.main.Utils.Response import Response
 
 
 # At most one member can be logged-in in a session.

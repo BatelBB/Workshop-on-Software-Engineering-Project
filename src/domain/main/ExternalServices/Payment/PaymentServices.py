@@ -1,9 +1,9 @@
 import string
 from abc import ABC, abstractmethod
-from domain.main.ExternalServices.Payment.ExternalPaymentServices import IExternalPaymentService, \
+from src.domain.main.ExternalServices.Payment.ExternalPaymentServices import IExternalPaymentService, \
     ExternalPaymentServciceProxy
-from domain.main.Utils.Logger import report_info, report_error
-from domain.main.Utils.Response import Response
+from src.domain.main.Utils.Logger import report_info, report_error
+from src.domain.main.Utils.Response import Response
 
 
 class IPaymentService(ABC):

@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
-from domain.main.Utils.Response import Response
-from domain.main.Utils.Session import Session
+from src.domain.main.Utils.Response import Response
+from src.domain.main.Utils.Session import Session
 
 
 class IService(ABC):

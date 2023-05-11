@@ -1,14 +1,14 @@
 from abc import ABC
 
-from domain.main.Store.Product import Product
-from domain.main.Store.Store import Store
-from domain.main.User.Role.Visitor import Visitor
-from domain.main.Utils.Logger import report, report_error, report_info
-from domain.main.Utils.Response import Response
+from src.domain.main.Store.Product import Product
+from src.domain.main.Store.Store import Store
+from src.domain.main.User.Role.Visitor import Visitor
+from src.domain.main.Utils.Logger import report, report_error, report_info
+from src.domain.main.Utils.Response import Response
 
 
 class Member(Visitor, ABC):
-    from domain.main.User.User import User
+    from src.domain.main.User.User import User
     def __init__(self, context: User):
         super().__init__(context)
 
@@ -30,7 +30,7 @@ class Member(Visitor, ABC):
         return True
 
     def open_store(self, store_name: str) -> Response[bool]:
-        from domain.main.User.Role.StoreOwner import StoreOwner
+        from src.domain.main.User.Role.StoreOwner import StoreOwner
         self.context.role = StoreOwner(self.context, store_name, True)
         return report_info(self.open_store.__qualname__, f'{self} opens Store \'{store_name}\' successfully')
 
@@ -58,12 +58,12 @@ class Member(Visitor, ABC):
         return self.is_allowed_remove_product(store_name)
 
     def make_me_owner(self, store_name: str) -> bool:
-        from domain.main.User.Role.StoreOwner import StoreOwner
+        from src.domain.main.User.Role.StoreOwner import StoreOwner
         self.context.role = StoreOwner(self.context, store_name, False)
         return True
 
     def make_me_manager(self, store_name: str) -> bool:
-        from domain.main.User.Role.StoreManager import StoreManager
+        from src.domain.main.User.Role.StoreManager import StoreManager
         self.context.role = StoreManager(self.context, store_name)
         return True
 

@@ -1,7 +1,7 @@
 import string
 from abc import ABC, abstractmethod
 
-from domain.main.ExternalServices.Provision.IProvisionService import IExternalProvisionService, provisionProxy
+from src.domain.main.ExternalServices.Provision.IProvisionService import IExternalProvisionService, provisionProxy
 
 
 class IProvisionService(ABC):

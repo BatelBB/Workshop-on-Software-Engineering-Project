@@ -1,8 +1,8 @@
-from domain.main.Service.IService import IService
-from domain.main.User.Cart import Cart
-from domain.main.Utils.Response import Response
-from domain.main.Store.Product import Product
-from domain.main.User.Role.Visitor import Visitor
+from src.domain.main.Service.IService import IService
+from src.domain.main.User.Cart import Cart
+from src.domain.main.Utils.Response import Response
+from src.domain.main.Store.Product import Product
+from src.domain.main.User.Role.Visitor import Visitor
 
 
 class User:
@@ -39,7 +39,7 @@ class User:
     def login(self, encrypted_password: str) -> Response[bool]:
         r = self.role.login(encrypted_password)
         if r:
-            from domain.main.User.Role.Member import Member
+            from src.domain.main.User.Role.Member import Member
             self.role = Member(self)
         return r
 

@@ -3,11 +3,11 @@ from typing import Optional
 from flask import session, g
 from flask.sessions import SessionMixin
 
-from domain.main.Market.Market import Market
-from domain.main.Service.IService import IService
-from domain.main.User.User import User
-from domain.main.Utils.ConcurrentDictionary import ConcurrentDictionary
-from domain.main.Utils.Session import Session
+from src.domain.main.Market.Market import Market
+from src.domain.main.Service.IService import IService
+from src.domain.main.User.User import User
+from src.domain.main.Utils.ConcurrentDictionary import ConcurrentDictionary
+from src.domain.main.Utils.Session import Session
 from website.core_features.market_access import get_market
 
 

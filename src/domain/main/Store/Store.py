@@ -1,11 +1,11 @@
 import threading
 
-from domain.main.ExternalServices.Provision.IProvisionService import provisionProxy
-from domain.main.ExternalServices.Provision.ProvisionServiceAdapter import IProvisionService, provisionService
-from domain.main.Store.Product import Product
-from domain.main.User.Basket import Basket
-from domain.main.Utils.Logger import report_info, report_error
-from domain.main.Utils.Response import Response
+from src.domain.main.ExternalServices.Provision.IProvisionService import provisionProxy
+from src.domain.main.ExternalServices.Provision.ProvisionServiceAdapter import IProvisionService, provisionService
+from src.domain.main.Store.Product import Product
+from src.domain.main.User.Basket import Basket
+from src.domain.main.Utils.Logger import report_info, report_error
+from src.domain.main.Utils.Response import Response
 
 
 class ProductQuantity:

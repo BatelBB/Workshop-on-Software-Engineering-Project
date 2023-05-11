@@ -1,6 +1,6 @@
 from website.core_features.seed import seed
 from flask import g
-from domain.main.Market.Market import Market
+from src.domain.main.Market.Market import Market
 
 
 def get_market() -> Market:

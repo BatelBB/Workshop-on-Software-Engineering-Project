@@ -1,7 +1,7 @@
 
 
-from domain.main.Market.Market import Market
-from domain.main.Service.IService import IService
+from src.domain.main.Market.Market import Market
+from src.domain.main.Service import IService
 
 
 # Basic interaction with Market

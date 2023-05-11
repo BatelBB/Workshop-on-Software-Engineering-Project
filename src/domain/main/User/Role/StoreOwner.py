@@ -1,10 +1,10 @@
-from domain.main.User.Role.Member import Member
-from domain.main.Utils.Logger import report_info, report_error
-from domain.main.Utils.Response import Response
+from src.domain.main.User.Role.Member import Member
+from src.domain.main.Utils.Logger import report_info, report_error
+from src.domain.main.Utils.Response import Response
 
 
 class StoreOwner(Member):
-    from domain.main.User.User import User
+    from src.domain.main.User.User import User
     def __init__(self, context: User, store_name: str, founder: bool):
         super().__init__(context)
         self.context.appointees.update({store_name: []})

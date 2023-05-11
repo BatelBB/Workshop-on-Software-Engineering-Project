@@ -1,4 +1,4 @@
-from domain.main.Market.Market import Market
+from src.domain.main.Market.Market import Market
 from random import randint, sample
 
 electronics = """

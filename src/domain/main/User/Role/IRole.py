@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
-from domain.main.Store.Product import Product
-from domain.main.Utils.Response import Response
+from src.domain.main.Store.Product import Product
+from src.domain.main.Utils.Response import Response
 
 
 class IRole(ABC):

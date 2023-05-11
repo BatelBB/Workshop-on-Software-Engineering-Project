@@ -1,7 +1,7 @@
-from domain.main.User.Role.Member import Member
-from domain.main.User.User import User
-from domain.main.Utils.Logger import report_error, report_info
-from domain.main.Utils.Response import Response
+from src.domain.main.User.Role.Member import Member
+from src.domain.main.User.User import User
+from src.domain.main.Utils.Logger import report_error, report_info
+from src.domain.main.Utils.Response import Response
 
 
 class SystemAdmin(Member):

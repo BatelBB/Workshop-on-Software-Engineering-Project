@@ -4,8 +4,8 @@ from datetime import datetime
 from enum import Enum
 from typing import TypeVar, Any
 
-from domain.main.Utils.IConcurrentSingelton import IConcurrentSingleton
-from domain.main.Utils.Response import Response
+from src.domain.main.Utils.IConcurrentSingelton import IConcurrentSingleton
+from src.domain.main.Utils.Response import Response
 
 def threaded(fn):
     def wrapper(*args, **kwargs):

@@ -1,5 +1,5 @@
 import string
-from domain.main.ExternalServices.Payment.PaymentServices import IPaymentService, PayWithCard, PayWithPayPal
+from src.domain.main.ExternalServices.Payment.PaymentServices import IPaymentService, PayWithCard, PayWithPayPal
 
 class PaymentFactory:
 

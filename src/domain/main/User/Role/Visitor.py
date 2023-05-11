@@ -1,9 +1,9 @@
 from abc import ABC
 
-from domain.main.Store.Store import Store
-from domain.main.User.Role.IRole import IRole
-from domain.main.Utils.Logger import report, report_error, report_info
-from domain.main.Utils.Response import Response
+from src.domain.main.Store.Store import Store
+from src.domain.main.User.Role.IRole import IRole
+from src.domain.main.Utils.Logger import report, report_error, report_info
+from src.domain.main.Utils.Response import Response
 
 
 class Visitor(IRole, ABC):
@@ -23,7 +23,7 @@ class Visitor(IRole, ABC):
     def login(self, encrypted_password: str):
         if encrypted_password != self.context.encrypted_password:
             return report_error(self.login.__qualname__, f'{self} enter an incorrect password.')
-        from domain.main.User.Role.Member import Member
+        from src.domain.main.User.Role.Member import Member
         self.context.role = Member(self.context)
         return report_info(self.login.__qualname__, f'{self.context.username} is logged in.')
 
@@ -39,7 +39,7 @@ class Visitor(IRole, ABC):
     def close_store(self, store_name: str) -> Response[bool]:
         return report_error(self.close_store.__qualname__, f'{self} attempted to close a store.')
 
-    from domain.main.Store.Product import Product
+    from src.domain.main.Store.Product import Product
 
     def is_allowed_add_product(self, store_name: str) -> Response[bool]:
         return report_error(self.is_allowed_add_product.__qualname__, f'{self} is not allowed to add a product!')

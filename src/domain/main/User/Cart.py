@@ -1,4 +1,4 @@
-from domain.main.User.Basket import Basket, Item
+from src.domain.main.User.Basket import Basket, Item
 
 
 class Cart:
