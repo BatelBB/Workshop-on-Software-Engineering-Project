@@ -34,6 +34,7 @@ class Market(IService):
         self.init_admin()
         self.provision_service: IProvisionService = provisionService()
         self.package_counter = 0
+        self.PurchasePolicyFactory: PurchasePolicyFactory = PurchasePolicyFactory()
 
     def generate_session_identifier(self):
         min: int = 1
@@ -62,6 +63,10 @@ class Market(IService):
         actor = self.get_active_user(session_identifier)
         response = actor.is_allowed_to_shutdown_market()
         if response.success:
+            # update days in stores for purchase policies:
+            for store in self.stores.to_string_keys().split(', '):
+                self.stores.get(store).new_day()
+
             Logger().post('Market is closed!', Logger.Severity.WARNING)
             Logger().shutdown()
             return response
@@ -130,6 +135,7 @@ class Market(IService):
                 self.stores.delete(store_name)
             else:
                 store.add_personal(actor.username)
+                store.add_stock_personal(actor.username)
 
             return response
         return report_error(self.open_store.__qualname__, f'Store name \'{store_name}\' is occupied.')
@@ -143,7 +149,8 @@ class Market(IService):
         if response.success:
             actor = self.get_active_user(session_identifier)
             preface: str = f'Displaying store {response.result.name} to {actor}\n'
-            return report(self.get_store.__qualname__ + preface + str(response.result.__dic__()), response.result.__dic__())
+            return report(self.get_store.__qualname__ + preface + str(response.result.__dic__()),
+                          response.result.__dic__())
         else:
             return response
 
@@ -152,7 +159,7 @@ class Market(IService):
 
         actor = self.get_active_user(session_identifier)
         product = Product(product_name, category, price, keywords)
-        response = actor.add_product(store_name, product, quantity)
+        response = actor.add_product(store_name)
         if response.success:
             response = self.verify_registered_store(self.add_product.__qualname__, store_name)
             store = response.result
@@ -235,7 +242,8 @@ class Market(IService):
         for store_name, basket in baskets.items():
             self.stores.get(store_name).add_to_purchase_history(basket)
 
-    def purchase_shopping_cart(self, session_identifier: int, payment_method: str, payment_details: list[str], address: str, postal_code: str) -> \
+    def purchase_shopping_cart(self, session_identifier: int, payment_method: str, payment_details: list[str],
+                               address: str, postal_code: str) -> \
             Response[bool]:
         actor = self.get_active_user(session_identifier)
         response = actor.verify_cart_not_empty()
@@ -254,15 +262,16 @@ class Market(IService):
                         cart_price += store.calculate_basket_price(basket)
                 else:
                     return response2
-            response3 = self.pay(cart_price, payment_method, payment_details)
-            if response3.success:
-                #order delivery
-                if not self.provision_service.getDelivery(actor.username, "remove", self.package_counter, address, postal_code):
+            payment_succeeded = self.pay(cart_price, payment_method, payment_details)
+            if payment_succeeded:
+                # order delivery
+                if not self.provision_service.getDelivery(actor.username, "remove", self.package_counter, address,
+                                                          postal_code):
                     return report_error("purchase_shopping_cart", 'failed delivery')
                 self.add_to_purchase_history(baskets)
                 self.update_user_cart_after_purchase(actor, successful_store_purchases)
             else:
-                return response3
+                return report_error("purchase_shopping_cart", "payment_succeeded = false")
         else:
             return response
 
@@ -360,8 +369,9 @@ class Market(IService):
             return response
 
         r_final = user.make_me_owner(store_name)
-        if r_final.success:
+        if r_final:
             self.stores.get(store_name).add_personal(new_owner_name)
+            self.stores.get(store_name).add_stock_personal(new_owner_name)
         return r_final
 
     def appoint_manager(self, session_id: int, new_manager_name: str, store_name: str) -> Response[bool]:
@@ -376,6 +386,9 @@ class Market(IService):
             return response
 
         r_final = user.make_me_owner(store_name)
+        if r_final.success:
+            self.stores.get(store_name).add_personal(new_manager_name)
+            self.stores.get(store_name).add_stock_personal(new_manager_name)
         return r_final
 
     def set_stock_permissions(self, session_id: int, receiving_user_name: str, store_name: str, give_or_take: bool) -> \
@@ -390,7 +403,14 @@ class Market(IService):
             return receiving_user
         receiving_user = receiving_user.result
 
-        return receiving_user.set_stock_permissions(store_name, give_or_take)
+        r_final = receiving_user.set_stock_permissions(store_name, give_or_take)
+        if r_final.success:
+            if give_or_take:
+                self.stores.get(store_name).add_stock_personal(receiving_user_name)
+            else:
+                self.stores.get(store_name).remove_stock_personal(receiving_user_name)
+
+        return r_final
 
     def set_personal_permissions(self, session_id: int, receiving_user_name: str, store_name: str,
                                  give_or_take: bool) -> Response[bool]:
@@ -429,3 +449,100 @@ class Market(IService):
             for person in user.appointed_by_me:
                 actor.appointees.get(store_name).remove(person)
             return response
+
+    # def add_purchase_policy_for_product(self, session_identifier: int, store_name: str, product_name: str,
+    #                                     purchase_policy_name: str, purchase_policy_args: list) -> Response[bool]:
+    #     actor = self.get_active_user(session_identifier)
+    #     res = actor.add_product(store_name)
+    #     if not res.success:
+    #         return res
+    #
+    #     res = self.verify_registered_store("add_purchase_policy_for_product", store_name)
+    #     if not res.success:
+    #         return res
+    #
+    #     store = res.result
+    #     policy = self.PurchasePolicyFactory.get_purchase_policy(purchase_policy_name, purchase_policy_args)
+    #
+    #     res = store.add_product_to_special_purchase_policy(product_name, policy)
+    #     return res
+
+    def start_auction(self, session_id: int, store_name: str, product_name: str, initial_price: float, duration: int) -> \
+            Response[bool] | Response[Store]:
+        actor = self.get_active_user(session_id)
+        res = actor.add_product(store_name)  # verifying permissions for stock managing
+        if not res.success:
+            return res
+
+        res = self.verify_registered_store("add_purchase_policy_for_product", store_name)
+        if not res.success:
+            return res
+        store = res.result
+        policy = AuctionPolicy(initial_price, duration)
+
+        return store.add_product_to_special_purchase_policy(product_name, policy)
+
+    def start_lottery(self, session_id: int, store_name: str, product_name: str) -> \
+            Response[bool] | Response[Store]:
+        actor = self.get_active_user(session_id)
+        res = actor.add_product(store_name)  # verifying permissions for stock managing
+        if not res.success:
+            return res
+
+        res = self.verify_registered_store("add_purchase_policy_for_product", store_name)
+        if not res.success:
+            return res
+        store = res.result
+
+        policy = LotteryPolicy(store.get_product_price(product_name))
+
+        return store.add_product_to_special_purchase_policy(product_name, policy)
+
+    def start_bid(self, session_id: int, store_name: str, product_name: str) -> \
+            Response[bool] | Response[Store]:
+        actor = self.get_active_user(session_id)
+        res = actor.add_product(store_name)  # verifying permissions for stock managing
+        if not res.success:
+            return res
+
+        res = self.verify_registered_store("add_purchase_policy_for_product", store_name)
+        if not res.success:
+            return res
+        store = res.result
+
+        policy = BidPolicy()
+
+        return store.add_product_to_bid_purchase_policy(product_name, policy)
+
+    def purchase_with_non_immediate_policy(self, session_identifier: int, store_name: str, product_name: str,
+                                           payment_method: str, payment_details: list[str], address: str,
+                                           postal_code: str, how_much: float):
+        actor = self.get_active_user(session_identifier)
+
+        payment_service = self.payment_factory.getPaymentService(payment_method)
+        payment_service.set_information(payment_details)
+
+        delivery_service = provisionService()
+        delivery_service.set_info(actor.username, store_name, 0, address, postal_code)
+
+        res = self.verify_registered_store("purchase_with_non_immediate_policy", store_name)
+        if not res.success:
+            return res
+
+        store = res.result
+        res = store.apply_purchase_policy(payment_service, product_name, delivery_service, how_much)
+
+        return res
+
+    def approve_bid(self, session_id: int, store_name: str, product_name: str, is_approve: bool) -> Response:
+        actor = self.get_active_user(session_id)
+        res = actor.add_product(store_name)  # verifying permissions for stock managing
+        if not res.success:
+            return res
+
+        res = self.verify_registered_store("add_purchase_policy_for_product", store_name)
+        if not res.success:
+            return res
+        store = res.result
+
+        return store.approve_bid(actor.username, product_name, is_approve)

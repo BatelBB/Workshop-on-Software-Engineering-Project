@@ -44,7 +44,7 @@ class Visitor(IRole, ABC):
     def is_allowed_add_product(self, store_name: str) -> Response[bool]:
         return report_error(self.is_allowed_add_product.__qualname__, f'{self} is not allowed to add a product!')
 
-    def add_product(self, store_name: str, product: Product, quantity: int) -> Response[bool]:
+    def add_product(self, store_name: str) -> Response[bool]:
         return self.is_allowed_add_product(store_name)
 
     def is_allowed_update_product(self, store_name: str) -> Response[bool]:

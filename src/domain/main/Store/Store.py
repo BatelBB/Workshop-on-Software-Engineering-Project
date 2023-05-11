@@ -1,11 +1,14 @@
 import threading
 
-from src.domain.main.ExternalServices.Provision.IProvisionService import provisionProxy
-from src.domain.main.ExternalServices.Provision.ProvisionServiceAdapter import IProvisionService, provisionService
-from src.domain.main.Store.Product import Product
-from src.domain.main.User.Basket import Basket
-from src.domain.main.Utils.Logger import report_info, report_error
-from src.domain.main.Utils.Response import Response
+from domain.main.ExternalServices.Payment.PaymentServices import IPaymentService
+from domain.main.ExternalServices.Provision.IProvisionService import provisionProxy
+from domain.main.ExternalServices.Provision.ProvisionServiceAdapter import IProvisionService, provisionService
+from domain.main.Store.Product import Product
+from domain.main.Store.PurchasePolicy.BidPolicy import BidPolicy
+from domain.main.User.Basket import Basket
+from domain.main.Utils.Logger import report_info, report_error, report
+from domain.main.Utils.Response import Response
+from domain.main.Store.PurchasePolicy.IPurchasePolicy import IPurchasePolicy
 
 
 class ProductQuantity:
@@ -29,6 +32,7 @@ class ProductQuantity:
 
 class Store:
     # TODO: should be initialized with IPurchasePolicy, IDiscountPolicy
+    # TODO: add stock personal list for bidding purchase policy
     def __init__(self, name: str):
         self.name = name
         self.products: list[Product] = list()
@@ -36,6 +40,10 @@ class Store:
         self.purchase_history : list[str] = list()
         self.provisionService: IProvisionService = provisionService()
         self.personal: list[str] = []
+        self.products_with_special_purchase_policy: dict[str:IPurchasePolicy] = {}
+        self.products_with_bid_purchase_policy: dict[str: BidPolicy] = {}
+        self.stock_personal: list[str] = []
+
 
     def __str__(self):
         output: str = f'#####################\nStore: {self.name}\nProducts:\n'
@@ -68,19 +76,9 @@ class Store:
     def get_name(self):
         return self.name
 
-    # def order_product(self, product_name: str, quantity: int) -> Response[bool]:
-    #     if self.provisionService.getDelivery(product_name, quantity):
-    #         return report_info("order_product", f'store: {self.name} got delivery of {quantity} {product_name}')
-    #     return report_error("order_product", f'store: {self.name} delivery of {quantity} {product_name} failed!!')
-
     def add(self, product: Product, quantity: int) -> Response[bool]:
         if not self.contains(product):
             self.products.append(product)
-
-            # delivery_response = self.order_product(product.name, quantity)
-            # if not delivery_response.success:
-            #     return delivery_response
-
             self.products_quantities.update({product.name: ProductQuantity(quantity)})
             return report_info(self.add.__qualname__, f'{product}, is added to Store \'{self.name}\' successfully!.')
         else:
@@ -90,11 +88,6 @@ class Store:
     def update(self, product_name: str, quantity: int) -> Response[bool]:
         p = Product(product_name)
         if self.contains(p):
-            # if quantity > 0:
-                # delivery_response = self.order_product(product_name, quantity)
-                # if not delivery_response.success:
-                #     return delivery_response
-
             self.products_quantities[product_name].refill(quantity)
             return report_info(self.update.__qualname__, f'Store \'{self.name}\': Product \'{product_name}\' quantity '
                                                          f'added {quantity}.')
@@ -200,13 +193,62 @@ class Store:
         report_info("get_personal", self.personal.__str__())
         return Response(self.personal.__str__())
 
-    # def filter_products_in_price_range(self, products: list[Product] ,min: float, max: float) -> list[Product]:
-    #     return self.get_products(lambda p: min <= p.price <= max)
-    #
-    # def get_products_by_rate(self, min_rate: float) -> list[Product]:
-    #     return self.get_products(lambda p: min_rate <= p.rate or p.is_unrated())
-    # def pay_for_cart(self, price: float, payment_method: str) -> Response[bool]:
-    #     payment = self.payment_factory.getPaymentService(payment_method)
-    #     if payment.pay(price):
-    #         return report_info(self.pay_for_cart.__qualname__, "Payment successful!")
+    def add_product_to_special_purchase_policy(self, product_name: str, p_policy: IPurchasePolicy) -> Response[bool]:
+        if not self.reserve(product_name, 1):
+            return report_error("add_product_to_special_purchase_policy", f'cannot reserve product {product_name} for special purchase policy')
 
+        if product_name in self.products_with_special_purchase_policy.keys():
+            return report_error("add_product_to_special_purchase_policy", "product can have only 1 special purchase policy")
+
+        self.products_with_special_purchase_policy[product_name] = p_policy
+        return report("add_product_to_special_purchase_policy", True)
+
+    def add_product_to_bid_purchase_policy(self, product_name: str, p_policy: IPurchasePolicy) -> Response[bool]:
+        if not self.reserve(product_name, 1):
+            return report_error("add_product_to_bid_purchase_policy", f'cannot reserve product {product_name} for special purchase policy')
+
+        if product_name in self.products_with_bid_purchase_policy.keys():
+            return report_error("add_product_to_bid_purchase_policy", "product can have only 1 special purchase policy")
+
+        self.products_with_bid_purchase_policy[product_name] = p_policy
+        self.set_to_approve_for_bid(product_name)
+        return report("add_product_to_bid_purchase_policy", True)
+
+    def apply_purchase_policy(self, payment_service: IPaymentService, product_name: str, delivery_service: IProvisionService, how_much: float) -> Response[bool]:
+        if product_name not in self.products_with_special_purchase_policy.keys() and product_name not in self.products_with_bid_purchase_policy.keys():
+            return report_error("apply_purchase_policy", "product only has immediate purchase policy")
+
+        policy: IPurchasePolicy
+        if product_name in self.products_with_special_purchase_policy.keys():
+            policy = self.products_with_special_purchase_policy[product_name]
+        elif product_name in self.products_with_bid_purchase_policy.keys():
+            policy = self.products_with_bid_purchase_policy[product_name]
+
+        return policy.apply_policy(payment_service, delivery_service, how_much)
+
+    def new_day(self):
+        for p in self.products_with_special_purchase_policy.keys():
+            self.products_with_special_purchase_policy[p].new_day()
+
+    def set_to_approve_for_bid(self, product_name: str):
+        self.products_with_bid_purchase_policy[product_name].set_approval_dict_in_bid_policy(self.stock_personal)
+
+    def add_stock_personal(self, person: str):
+        self.stock_personal.append(person)
+        for p in self.products_with_bid_purchase_policy:
+            self.products_with_bid_purchase_policy[p].add_to_approval_dict_in_bid_policy(person)
+
+    def remove_stock_personal(self, person: str):
+        self.stock_personal.remove(person)
+        for p in self.products_with_bid_purchase_policy:
+            self.products_with_bid_purchase_policy[p].remove_from_approval_dict_in_bid_policy(person)
+
+    def approve_bid(self, person: str, product_name: str, is_approve: bool):
+        if product_name not in self.products_with_bid_purchase_policy.keys():
+            return report_error("approve_bid", f"{product_name} not in bidding policy")
+
+        if not is_approve:
+            self.set_to_approve_for_bid(product_name)
+            return report(f"bid for product {product_name} disapproved", True)
+        else:
+            return self.products_with_bid_purchase_policy[product_name].approve(person)
