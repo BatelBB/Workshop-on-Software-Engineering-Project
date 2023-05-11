@@ -1,18 +1,19 @@
 import threading
 
+from domain.main.ExternalServices.Payment.PaymentServices import IPaymentService
 from domain.main.ExternalServices.Provision.IProvisionService import provisionProxy
 from domain.main.ExternalServices.Provision.ProvisionServiceAdapter import IProvisionService, provisionService
 from domain.main.Store.Product import Product
 from domain.main.User.Basket import Basket
-from domain.main.Utils.Logger import report_info, report_error
+from domain.main.Utils.Logger import report_info, report_error, report
 from domain.main.Utils.Response import Response
+from domain.main.Store.PurchasePolicy.IPurchasePolicy import IPurchasePolicy
 
 
 class ProductQuantity:
     def __init__(self, quantity: int):
         self.quantity = quantity
         self.lock = threading.RLock()
-        self.provisionService: IProvisionService = provisionService()
 
     def reserve(self, desired_quantity: int) -> bool:
         with self.lock:
@@ -36,6 +37,8 @@ class Store:
         self.purchase_history : list[str] = list()
         self.provisionService: IProvisionService = provisionService()
         self.personal: list[str] = []
+        self.products_with_special_purchase_policy: dict[str:IPurchasePolicy] = {}
+
 
     def __str__(self):
         output: str = f'#####################\nStore: {self.name}\nProducts:\n'
@@ -210,3 +213,23 @@ class Store:
     #     if payment.pay(price):
     #         return report_info(self.pay_for_cart.__qualname__, "Payment successful!")
 
+    def add_product_to_special_purchase_policy(self, product_name: str, p_policy: IPurchasePolicy) -> Response[bool]:
+        if not self.reserve(product_name, 1):
+            return report_error("add_product_to_special_purchase_policy", f'cannot reserve product {product_name} for special purchase policy')
+
+        if product_name in self.products_with_special_purchase_policy.keys():
+            return report_error("product can have only 1 special purchase policy")
+
+        self.products_with_special_purchase_policy[product_name] = p_policy
+        return report("add_product_to_special_purchase_policy", True)
+
+    def apply_purchase_policy(self, payment_service: IPaymentService, product_name: str, delivery_service: IProvisionService, how_much: float) -> Response[bool]:
+        if product_name not in self.products_with_special_purchase_policy.keys():
+            return report_error("apply_purchase_policy", "product only has immediate purchase policy")
+
+        policy = self.products_with_special_purchase_policy[product_name]
+        return policy.apply_policy(payment_service, delivery_service, how_much)
+
+    def new_day(self):
+        for p in self.products_with_special_purchase_policy.keys():
+            self.products_with_special_purchase_policy[p].new_day()

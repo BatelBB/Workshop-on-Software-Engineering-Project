@@ -55,8 +55,8 @@ class User:
     def close_store(self, store_name: str) -> Response[bool]:
         return self.role.close_store(store_name)
 
-    def add_product(self, store_name: str, product: Product, quantity: int) -> Response[bool]:
-        return self.role.add_product(store_name, product, quantity)
+    def add_product(self, store_name: str) -> Response[bool]:
+        return self.role.add_product(store_name)
 
     def update_product_quantity(self, store_name: str, product_name: str, quantity: int) -> Response[bool]:
         return self.role.update_product_quantity(store_name, product_name, quantity)

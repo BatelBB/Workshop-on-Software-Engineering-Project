@@ -138,6 +138,14 @@ class IService(ABC):
     def get_store_personal(self, session_id: int, store_name: str) -> Response[str]:
         ...
 
+    @abstractmethod
+    def purchase_with_non_immediate_policy(self, session_identifier: int, store_name: str, product_name: str, payment_method: str, payment_details: list[str], address: str, postal_code: str, how_much: float) -> Response[bool]:
+        ...
+
+    @abstractmethod
+    def start_auction(self, session_id: int, store_name: str, product_name: str, initial_price: float, duration: int) -> Response[bool]:
+        ...
+
     # @abstractmethod
     # def update_product_of(self, store_name: str, product: Product, quantity: int) -> Response[bool]:
     #     ...

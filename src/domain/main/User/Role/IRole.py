@@ -42,7 +42,7 @@ class IRole(ABC):
         ...
 
     @abstractmethod
-    def add_product(self, store_name: str, product: Product, quantity: int) -> Response[bool]:
+    def add_product(self, store_name: str) -> Response[bool]:
         ...
 
     @abstractmethod
