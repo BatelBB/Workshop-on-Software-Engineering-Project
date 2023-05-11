@@ -1,6 +1,5 @@
 from abc import ABC, abstractmethod
 
-import abstract as abstract
 
 from domain.main.ExternalServices.Payment.PaymentServices import IPaymentService
 from domain.main.ExternalServices.Provision.ProvisionServiceAdapter import IProvisionService
