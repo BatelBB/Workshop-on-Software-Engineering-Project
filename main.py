@@ -39,7 +39,7 @@ if __name__ == '__main__':
     res = s1.open_store("burekas gedera")
     res = s1.add_product("burekas gedera", "burekas pitriot", "burekasim", 5, 1, ["burekas", "maafe", "bake"])
     res = s1.start_lottery("burekas gedera", "burekas pitriot")
-    store = service.stores.get("burekas gedera")
+    store = service.store_controller.stores.get("burekas gedera")
     print(store.products_with_special_purchase_policy)
 
     s2 = service.enter()
