@@ -1,7 +1,7 @@
 import string
 from abc import ABC, abstractmethod
 from src.domain.main.ExternalServices.Payment.ExternalPaymentServices import IExternalPaymentService, \
-    ExternalPaymentServciceProxy
+    ExternalPaymentServiceProxy
 from src.domain.main.Utils.Logger import report_info, report_error
 from src.domain.main.Utils.Response import Response
 
@@ -10,7 +10,8 @@ class IPaymentService(ABC):
     external_payment_service: IExternalPaymentService
 
     def __init__(self):
-        self.external_payment_service = ExternalPaymentServciceProxy()
+        self.external_payment_service = ExternalPaymentServiceProxy()
+        self.amount_payed:float = 0
 
     @abstractmethod
     def set_information(self, payment_details: list) -> Response[bool]:
@@ -20,8 +21,13 @@ class IPaymentService(ABC):
     def pay(self, price: float) -> bool:
         ...
 
+    @abstractmethod
+    def refund(self, amount_to_refund: float):
+        ...
+
 
 class PayWithCard(IPaymentService):
+
     card_number: string
     cvv: int
     exp_date: string
@@ -44,7 +50,11 @@ class PayWithCard(IPaymentService):
             return Response(True, "success")
 
     def pay(self, price: float):
+        self.amount_payed = price
         return self.external_payment_service.payWIthCard(self.card_number, self.cvv, self.exp_date, price)
+
+    def refund(self, amount_to_refund: float):
+        return self.external_payment_service.refundToCard(self.card_number, self.cvv, self.exp_date, amount_to_refund)
 
 
 class PayWithPayPal(IPaymentService):
@@ -68,4 +78,8 @@ class PayWithPayPal(IPaymentService):
             return Response(True, "success")
 
     def pay(self, price: float):
+        self.amount_payed = price
         return self.external_payment_service.payWIthPayPal(self.username, self.password, price)
+
+    def refund(self, amount_to_refund: float):
+        return self.external_payment_service.refundToPaypal(self.username, self.password, amount_to_refund)
