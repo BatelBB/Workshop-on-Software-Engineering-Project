@@ -2,12 +2,11 @@ import random
 import sys
 from typing import Any, List
 
-from src.domain.main.Store.StoreController import StoreController
-from src.domain.main.User.UserController import UserController
-from src.domain.main.Store.PurchasePolicy.AuctionPolicy import AuctionPolicy
-from src.domain.main.Store.PurchasePolicy.BidPolicy import BidPolicy
-from src.domain.main.Store.PurchasePolicy.LotteryPolicy import LotteryPolicy
-from src.domain.main.Store.PurchasePolicy.PurchasePolicyFactory import PurchasePolicyFactory
+from domain.main.Store.PurchasePolicy.AuctionPolicy import AuctionPolicy
+from domain.main.Store.PurchasePolicy.BidPolicy import BidPolicy
+from domain.main.Store.PurchasePolicy.LotteryPolicy import LotteryPolicy
+from domain.main.Store.PurchasePolicy.PurchasePolicyFactory import PurchasePolicyFactory
+from domain.main.Store.PurchaseRules import PurchaseRulesFactory
 from src.domain.main.ExternalServices.Payment.PaymentFactory import PaymentFactory
 from src.domain.main.Store.Product import Product
 from src.domain.main.Service.IService import IService
@@ -20,6 +19,7 @@ from src.domain.main.Utils.Logger import report, Logger, report_error, report_in
 from src.domain.main.Utils.Response import Response
 from src.domain.main.Utils.Session import Session
 from src.domain.main.ExternalServices.Provision.ProvisionServiceAdapter import IProvisionService, provisionService
+from src.domain.main.Store.PurchaseRules.PurchaseRulesFactory import *
 
 # TODO: might be implemented as a Reactor: a singleton with a thread pool responsible for executing tasks
 class Market(IService):
@@ -37,6 +37,7 @@ class Market(IService):
         self.store_controller: StoreController = StoreController()
         self.payment_factory: PaymentFactory = PaymentFactory()
         self.init_admin()
+        self.provision_service: IProvisionService = provisionService()
         self.package_counter = 0
         self.PurchasePolicyFactory: PurchasePolicyFactory = PurchasePolicyFactory()
 
@@ -236,7 +237,7 @@ class Market(IService):
                     return report_error("purchase_shopping_cart", 'failed delivery')
                 self.add_to_purchase_history(baskets)
                 self.update_user_cart_after_purchase(actor, successful_store_purchases)
-                return payment_succeeded
+                return Response(True)
             else:
                 return report_error("purchase_shopping_cart", "payment_succeeded = false")
         else:
@@ -335,7 +336,7 @@ class Market(IService):
 
     # def add_purchase_policy_for_product(self, session_identifier: int, store_name: str, product_name: str,
     #                                     purchase_policy_name: str, purchase_policy_args: list) -> Response[bool]:
-    #     actor = self.user_controller.get_active_user(session_identifier)
+    #     actor = self.get_active_user(session_identifier)
     #     res = actor.add_product(store_name)
     #     if not res.success:
     #         return res
@@ -397,4 +398,40 @@ class Market(IService):
         if not res.success:
             return res
         store = res.result
+
         return store.approve_bid(actor.username, product_name, is_approve)
+
+    def add_purchase_simple_rule(self, session_id: int, store_name: str, product_name: str, gle: str,
+                                 amount: int) -> Response:
+        actor = self.get_active_user(session_id)
+        res = actor.add_product(store_name)  # verifying permissions for stock managing
+        if not res.success:
+            return res
+
+        res = self.verify_registered_store("add_purchase_policy_for_product", store_name)
+        if not res.success:
+            return res
+        store = res.result
+
+        rule = PurchaseRulesFactory.make_simple_rule(product_name, gle, amount)
+        return store.add_purchase_rule(rule)
+
+    def add_purchase_complex_rule(self, session_id: int, store_name: str, p1_name: str, gle1: str, amount1: int,
+                                  p2_name: str, gle2: str, amount2: int,
+                                  complex_rule_type: str) -> Response:
+        actor = self.get_active_user(session_id)
+        res = actor.add_product(store_name)  # verifying permissions for stock managing
+        if not res.success:
+            return res
+
+        res = self.verify_registered_store("add_purchase_policy_for_product", store_name)
+        if not res.success:
+            return res
+        store = res.result
+
+        res = PurchaseRulesFactory.make_complex_rule(p1_name, gle1, amount1, p2_name, gle2, amount2, complex_rule_type)
+        if res.success:
+            return store.add_purchase_rule(res.result)
+        return res
+
+

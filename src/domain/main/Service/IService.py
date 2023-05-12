@@ -84,7 +84,8 @@ class IService(ABC):
         ...
 
     @abstractmethod
-    def purchase_shopping_cart(self, session_identifier: int, payment_method: str, payment_details: list, address: str, postal_code: str) -> Response[bool]:
+    def purchase_shopping_cart(self, session_identifier: int, payment_method: str, payment_details: list, address: str,
+                               postal_code: str) -> Response[bool]:
         ...
 
     @abstractmethod
@@ -134,15 +135,19 @@ class IService(ABC):
     def set_personal_permissions(self, session_id: int, receiving_user_name: str, store_name: str,
                                  give_or_take: bool) -> Response[bool]:
         ...
+
     @abstractmethod
     def get_store_personal(self, session_id: int, store_name: str) -> Response[str]:
         ...
 
     @abstractmethod
-    def purchase_with_non_immediate_policy(self, session_identifier: int, store_name: str, product_name: str, payment_method: str, payment_details: list[str], address: str, postal_code: str, how_much: float) -> Response[bool]:
+    def purchase_with_non_immediate_policy(self, session_identifier: int, store_name: str, product_name: str,
+                                           payment_method: str, payment_details: list[str], address: str,
+                                           postal_code: str, how_much: float) -> Response[bool]:
         ...
 
-    def start_auction(self, session_id: int, store_name: str, product_name: str, initial_price: float, duration: int) -> Response[bool]:
+    def start_auction(self, session_id: int, store_name: str, product_name: str, initial_price: float, duration: int) -> \
+    Response[bool]:
         ...
 
     @abstractmethod
@@ -158,6 +163,15 @@ class IService(ABC):
     def approve_bid(self, session_id: int, store_name: str, product_name: str, is_approve: bool) -> Response:
         ...
 
+    @abstractmethod
+    def add_purchase_simple_rule(self, session_id: int, store_name: str, product_name: str, gle: str, amount: int) -> Response:
+        ...
+
+    @abstractmethod
+    def add_purchase_complex_rule(self, session_id: int, store_name: str, p1_name: str, gle1: str, amount1: int,
+                                  p2_name: str, gle2: str, amount2: int,
+                                  complex_rule_type: str) -> Response:
+        ...
     # @abstractmethod
     # def update_product_of(self, store_name: str, product: Product, quantity: int) -> Response[bool]:
     #     ...
