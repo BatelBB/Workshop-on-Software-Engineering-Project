@@ -117,7 +117,7 @@ class Session:
             return self.report_session_closed()
 
     def purchase_shopping_cart(self, payment_method: str, payment_details: list, address: str, postal_code: str) -> \
-    Response[bool]:
+            Response[bool]:
         if self.is_open:
             return self.service.purchase_shopping_cart(self.identifier, payment_method, payment_details, address,
                                                        postal_code)
@@ -182,5 +182,20 @@ class Session:
     def appoint_owner(self, new_owner_name: str, store_name: str) -> Response[bool]:
         if self.is_open:
             return self.service.appoint_owner(self.identifier, new_owner_name, store_name)
+        else:
+            return self.report_session_closed()
+
+    def add_purchase_simple_rule(self, store_name: str, product_name: str, gle: str, amount: int) -> Response:
+        if self.is_open:
+            return self.service.add_purchase_simple_rule(self.identifier, store_name, product_name, gle, amount)
+        else:
+            return self.report_session_closed()
+
+    def add_purchase_complex_rule(self, store_name: str, p1_name: str, gle1: str, amount1: int,
+                                  p2_name: str, gle2: str, amount2: int,
+                                  complex_rule_type: str) -> Response:
+        if self.is_open:
+            return self.service.add_purchase_complex_rule(self.identifier, store_name, p1_name, gle1, amount1,
+                                                          p2_name, gle2, amount2, complex_rule_type)
         else:
             return self.report_session_closed()

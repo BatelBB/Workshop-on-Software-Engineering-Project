@@ -1,10 +1,10 @@
-from domain.main.Store.PurchaseRules.Rule import Rule
+from domain.main.Store.PurchaseRules.IRule import IRule
 from domain.main.User.Basket import Basket
 from domain.main.Utils.Logger import report_error, report
 from domain.main.Utils.Response import Response
 
 
-class SimpleRule(Rule):
+class SimpleRule(IRule):
     product_name: str
     gle: str
     num: int

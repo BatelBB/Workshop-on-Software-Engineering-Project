@@ -5,7 +5,9 @@ from domain.main.ExternalServices.Provision.IProvisionService import provisionPr
 from domain.main.ExternalServices.Provision.ProvisionServiceAdapter import IProvisionService, provisionService
 from domain.main.Store.Product import Product
 from domain.main.Store.PurchasePolicy.BidPolicy import BidPolicy
+from domain.main.Store.PurchaseRules.IRule import IRule
 from domain.main.User.Basket import Basket
+from domain.main.Utils.ConcurrentDictionary import ConcurrentDictionary
 from domain.main.Utils.Logger import report_info, report_error, report
 from domain.main.Utils.Response import Response
 from domain.main.Store.PurchasePolicy.IPurchasePolicy import IPurchasePolicy
@@ -37,13 +39,15 @@ class Store:
         self.name = name
         self.products: list[Product] = list()
         self.products_quantities: dict[str, ProductQuantity] = dict()
-        self.purchase_history : list[str] = list()
+        self.purchase_history: list[str] = list()
         self.provisionService: IProvisionService = provisionService()
         self.personal: list[str] = []
         self.products_with_special_purchase_policy: dict[str:IPurchasePolicy] = {}
         self.products_with_bid_purchase_policy: dict[str: BidPolicy] = {}
         self.stock_personal: list[str] = []
-
+        self.purchase_rules: dict[int:IRule] = {}
+        self.purchase_rule_ids = 0
+        self.purchase_rule_lock = threading.RLock()
 
     def __str__(self):
         output: str = f'#####################\nStore: {self.name}\nProducts:\n'
@@ -117,7 +121,18 @@ class Store:
         for product_name, reserved_quantity in reserved.items():
             self.products_quantities[product_name].refill(reserved_quantity)
 
+    def enforce_purchase_rules(self, basket: Basket) -> Response[bool]:
+        for rule in self.purchase_rules:
+            res = self.purchase_rules[rule].enforce_rule(basket)
+            if not res.success:
+                return res
+        return report("all rules are kept: Kfir is happy!", True)
+
     def reserve_products(self, basket: Basket) -> bool:
+        res = self.enforce_purchase_rules(basket)
+        if not res.success:
+            return False
+
         reserved: dict[str, int] = dict()
         is_reservation_succeed = True
         for item in basket.items:
@@ -159,7 +174,7 @@ class Store:
             price += self.get_product_price(item.product_name)
         return price
 
-    def change_product_name(self, product_old_name: str, product_new_name:str) -> Response[bool]:
+    def change_product_name(self, product_old_name: str, product_new_name: str) -> Response[bool]:
         products = self.get_products_by_name(product_old_name)
         for product in products:
             product.set_name(product_new_name)
@@ -167,12 +182,13 @@ class Store:
         return report_info(self.change_product_name.__qualname__, f'Changed {product_old_name} to {product_new_name} '
                                                                   f'successfully!')
 
-    def change_product_price(self, product_old_price: float, product_new_price:float) -> Response[bool]:
+    def change_product_price(self, product_old_price: float, product_new_price: float) -> Response[bool]:
         products = self.get_products_by_price(product_old_price)
         for product in products:
             product.set_price(product_new_price)
-        return report_info(self.change_product_price.__qualname__, f'Changed {product_old_price} to {product_new_price} '
-                                                                  f'successfully!')
+        return report_info(self.change_product_price.__qualname__,
+                           f'Changed {product_old_price} to {product_new_price} '
+                           f'successfully!')
 
     def add_to_purchase_history(self, baskets: Basket):
         self.purchase_history.append(baskets.__str__())
@@ -195,17 +211,20 @@ class Store:
 
     def add_product_to_special_purchase_policy(self, product_name: str, p_policy: IPurchasePolicy) -> Response[bool]:
         if not self.reserve(product_name, 1):
-            return report_error("add_product_to_special_purchase_policy", f'cannot reserve product {product_name} for special purchase policy')
+            return report_error("add_product_to_special_purchase_policy",
+                                f'cannot reserve product {product_name} for special purchase policy')
 
         if product_name in self.products_with_special_purchase_policy.keys():
-            return report_error("add_product_to_special_purchase_policy", "product can have only 1 special purchase policy")
+            return report_error("add_product_to_special_purchase_policy",
+                                "product can have only 1 special purchase policy")
 
         self.products_with_special_purchase_policy[product_name] = p_policy
         return report("add_product_to_special_purchase_policy", True)
 
     def add_product_to_bid_purchase_policy(self, product_name: str, p_policy: IPurchasePolicy) -> Response[bool]:
         if not self.reserve(product_name, 1):
-            return report_error("add_product_to_bid_purchase_policy", f'cannot reserve product {product_name} for special purchase policy')
+            return report_error("add_product_to_bid_purchase_policy",
+                                f'cannot reserve product {product_name} for special purchase policy')
 
         if product_name in self.products_with_bid_purchase_policy.keys():
             return report_error("add_product_to_bid_purchase_policy", "product can have only 1 special purchase policy")
@@ -214,7 +233,8 @@ class Store:
         self.set_to_approve_for_bid(product_name)
         return report("add_product_to_bid_purchase_policy", True)
 
-    def apply_purchase_policy(self, payment_service: IPaymentService, product_name: str, delivery_service: IProvisionService, how_much: float) -> Response[bool]:
+    def apply_purchase_policy(self, payment_service: IPaymentService, product_name: str,
+                              delivery_service: IProvisionService, how_much: float) -> Response[bool]:
         if product_name not in self.products_with_special_purchase_policy.keys() and product_name not in self.products_with_bid_purchase_policy.keys():
             return report_error("apply_purchase_policy", "product only has immediate purchase policy")
 
@@ -252,3 +272,15 @@ class Store:
             return report(f"bid for product {product_name} disapproved", True)
         else:
             return self.products_with_bid_purchase_policy[product_name].approve(person)
+
+    def add_purchase_rule(self, rule: IRule) -> Response:
+        with self.purchase_rule_lock:
+            self.purchase_rules[self.purchase_rule_ids] = rule
+            self.purchase_rule_ids += 1
+            return report("add_purchase_rule -> success", True)
+
+    def get_purchase_rules(self):
+        return self.purchase_rules
+
+    def remove_purchase_rule(self, rule_id: int):
+        self.purchase_rules.pop(rule_id)

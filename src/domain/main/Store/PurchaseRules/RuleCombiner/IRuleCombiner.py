@@ -1,10 +1,10 @@
 from abc import ABC
 
-from domain.main.Store.PurchaseRules.Rule import Rule
+from domain.main.Store.PurchaseRules.IRule import IRule
 from domain.main.Store.PurchaseRules.SimpleRule import SimpleRule
 
 
-class IRuleCombiner(Rule, ABC):
+class IRuleCombiner(IRule, ABC):
     rule1: SimpleRule
     rule2: SimpleRule
 
