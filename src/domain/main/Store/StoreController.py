@@ -20,7 +20,7 @@ class StoreController:
         return report(f'Entered verify register store function', store)
 
     def verify_store_contains_product(self, calling_method_name: str, store_name: str, product_name: str) -> \
-            Response[Store] | Response[bool]:
+            Response[Store]:
         response = self.verify_registered_store(store_name)
         if response.success:
             store = response.result

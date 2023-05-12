@@ -160,7 +160,7 @@ class Market(IService):
             product_price = store.get_product_price(product_name)
             return actor.add_to_cart(store_name, product_name, product_price, quantity)
         else:
-            return response
+            return response.success
 
     def remove_product_from_cart(self, session_identifier: int, store_name: str, product_name: str) -> Response[bool]:
         actor = self.user_controller.get_active_user(session_identifier)
@@ -190,7 +190,10 @@ class Market(IService):
 
     def pay(self, price: int, payment_type: str, payment_details: list[str]):
         if price > 0:
-            payment_strategy = self.payment_factory.getPaymentService(payment_type)
+            try:
+                payment_strategy = self.payment_factory.getPaymentService(payment_type)
+            except:
+                return report_error(self.pay.__qualname__,"f'Error getting payment service")
             info_res = payment_strategy.set_information(payment_details)
             if info_res.success:
                 payment_res = payment_strategy.pay(price)
@@ -233,6 +236,7 @@ class Market(IService):
                     return report_error("purchase_shopping_cart", 'failed delivery')
                 self.add_to_purchase_history(baskets)
                 self.update_user_cart_after_purchase(actor, successful_store_purchases)
+                return payment_succeeded
             else:
                 return report_error("purchase_shopping_cart", "payment_succeeded = false")
         else:
@@ -321,7 +325,7 @@ class Market(IService):
         actor = self.user_controller.get_active_user(session_id)
         res = actor.is_allowed_to_view_store_personal(store_name)
         if not res.success:
-            return res
+            return res.result
         store = self.store_controller.stores.get(store_name)
         res = store.get_personal()
         return res
