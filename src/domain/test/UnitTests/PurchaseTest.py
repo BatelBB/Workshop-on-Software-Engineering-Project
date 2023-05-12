@@ -1,4 +1,5 @@
 import unittest
+from unittest.mock import patch
 
 from src.domain.main.Utils.Response import Response
 from src.domain.main.Service.IService import IService
@@ -81,3 +82,17 @@ class PurchaseTest(unittest.TestCase):
         response : Response[bool] = self.session.purchase_shopping_cart("card", ["123", "123", "12345"], "ben-gurion","1234")
         self.assertFalse(response.result)
 
+    def test_purchaseFlow_ShippingFails_refundIssued(self):
+        self.registerAndLoginDefault()
+        self.openStoreDefault()
+        self.addProductsDefault()
+        self.session.add_to_cart("IHerb", "Vitamin A", 2)
+
+        with patch('src.domain.main.ExternalServices.Provision.ProvisionServiceAdapter.provisionService.getDelivery', return_value=False), \
+                patch('src.domain.main.ExternalServices.Payment.PaymentServices.PayWithCard.refund', return_value=True) as mock_refund:
+            response: Response[bool] = self.session.purchase_shopping_cart("card", ["123", "123", "12345"], "ben-gurion", "1234")
+        # Make sure that the purchase failed
+        self.assertFalse(response.result)
+        # Make sure that the refund method was called
+        mock_refund.assert_called_once()
+        mock_refund.assert_called_once_with(19.9)

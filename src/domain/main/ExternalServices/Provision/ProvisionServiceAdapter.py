@@ -40,3 +40,4 @@ class provisionService(IProvisionService):
     def getDelivery(self) -> bool:
         report("ordered delivery ", True)
         return self.proxy.getDelivery(self.user_name, self.shop_name, self.packageID, self.address, self.postal_code)
+
