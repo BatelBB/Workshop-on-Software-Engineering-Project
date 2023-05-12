@@ -1,8 +1,8 @@
-from domain.main.Store.PurchaseRules.RuleCombiner.IRuleCombiner import IRuleCombiner
-from domain.main.Store.PurchaseRules.SimpleRule import SimpleRule
-from domain.main.User.Basket import Basket
-from domain.main.Utils.Logger import report, report_error
-from domain.main.Utils.Response import Response
+from src.domain.main.Store.PurchaseRules.RuleCombiner.IRuleCombiner import IRuleCombiner
+from src.domain.main.Store.PurchaseRules.SimpleRule import SimpleRule
+from src.domain.main.User.Basket import Basket
+from src.domain.main.Utils.Logger import report, report_error
+from src.domain.main.Utils.Response import Response
 
 
 class OrRule(IRuleCombiner):

@@ -1,10 +1,10 @@
-from domain.main.Store.PurchaseRules.IRule import IRule
-from domain.main.Store.PurchaseRules.RuleCombiner.AndRule import AndRule
-from domain.main.Store.PurchaseRules.RuleCombiner.ConditioningRule import ConditioningRule
-from domain.main.Store.PurchaseRules.RuleCombiner.OrRule import OrRule
-from domain.main.Store.PurchaseRules.SimpleRule import SimpleRule
-from domain.main.Utils.Logger import report_error, report
-from domain.main.Utils.Response import Response
+from src.domain.main.Store.PurchaseRules.IRule import IRule
+from src.domain.main.Store.PurchaseRules.RuleCombiner.AndRule import AndRule
+from src.domain.main.Store.PurchaseRules.RuleCombiner.ConditioningRule import ConditioningRule
+from src.domain.main.Store.PurchaseRules.RuleCombiner.OrRule import OrRule
+from src.domain.main.Store.PurchaseRules.SimpleRule import SimpleRule
+from src.domain.main.Utils.Logger import report_error, report
+from src.domain.main.Utils.Response import Response
 
 rule_types: dict = {"and": (lambda x, y: AndRule(x, y)),
                     "or": (lambda x, y: OrRule(x, y)),

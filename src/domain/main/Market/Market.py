@@ -2,11 +2,13 @@ import random
 import sys
 from typing import Any, List
 
-from domain.main.Store.PurchasePolicy.AuctionPolicy import AuctionPolicy
-from domain.main.Store.PurchasePolicy.BidPolicy import BidPolicy
-from domain.main.Store.PurchasePolicy.LotteryPolicy import LotteryPolicy
-from domain.main.Store.PurchasePolicy.PurchasePolicyFactory import PurchasePolicyFactory
-from domain.main.Store.PurchaseRules import PurchaseRulesFactory
+from src.domain.main.Store.PurchasePolicy.AuctionPolicy import AuctionPolicy
+from src.domain.main.Store.PurchasePolicy.BidPolicy import BidPolicy
+from src.domain.main.Store.PurchasePolicy.LotteryPolicy import LotteryPolicy
+from src.domain.main.Store.PurchasePolicy.PurchasePolicyFactory import PurchasePolicyFactory
+from src.domain.main.Store.PurchaseRules import PurchaseRulesFactory
+from src.domain.main.Store.StoreController import StoreController
+from src.domain.main.User.UserController import UserController
 from src.domain.main.ExternalServices.Payment.PaymentFactory import PaymentFactory
 from src.domain.main.Store.Product import Product
 from src.domain.main.Service.IService import IService
