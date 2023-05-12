@@ -203,7 +203,7 @@ class Market(IService):
                 if not payment_res:
                     return report_error("purchase_shopping_cart", f"payment failed")
                 else:
-                    return info_res
+                    return payment_strategy
             else:
                 return info_res
 
@@ -236,6 +236,7 @@ class Market(IService):
                 delivery_service = provisionService()
                 delivery_service.set_info(actor.username, 0, address, postal_code)
                 if not delivery_service.getDelivery():
+                    payment_succeeded.refund(cart_price)
                     return report_error("purchase_shopping_cart", 'failed delivery')
                 self.add_to_purchase_history(baskets)
                 self.update_user_cart_after_purchase(actor, successful_store_purchases)
@@ -245,7 +246,6 @@ class Market(IService):
         else:
             return response
 
-        # TODO 2nd version - verify purchaser is conformed with store policy
         # TODO 2nd version - apply discount policy
 
     def change_product_name(self, session_id: int, store_name: str, product_old_name: str, product_new_name: str) -> \

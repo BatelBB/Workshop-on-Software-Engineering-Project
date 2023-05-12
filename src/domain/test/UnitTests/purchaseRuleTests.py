@@ -2,10 +2,10 @@ import unittest
 
 from domain.main.Store.Product import Product
 from domain.main.Store.PurchaseRules.RuleCombiner.AndRule import AndRule
-from domain.main.Store.PurchaseRules.RuleCombiner.ConditioningRule import ConditioningRule
-from domain.main.Store.PurchaseRules.RuleCombiner.OrRule import OrRule
-from domain.main.Store.PurchaseRules.SimpleRule import SimpleRule
-from domain.main.User.Basket import Basket, Item
+from src.domain.main.Store.PurchaseRules.RuleCombiner.ConditioningRule import ConditioningRule
+from src.domain.main.Store.PurchaseRules.RuleCombiner.OrRule import OrRule
+from src.domain.main.Store.PurchaseRules.SimpleRule import SimpleRule
+from src.domain.main.User.Basket import Basket, Item
 from src.domain.main.Market.Market import Market
 from src.domain.main.Service.IService import IService
 
