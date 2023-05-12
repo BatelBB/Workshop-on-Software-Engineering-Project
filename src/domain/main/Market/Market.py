@@ -37,7 +37,6 @@ class Market(IService):
         self.store_controller: StoreController = StoreController()
         self.payment_factory: PaymentFactory = PaymentFactory()
         self.init_admin()
-        self.provision_service: IProvisionService = provisionService()
         self.package_counter = 0
         self.PurchasePolicyFactory: PurchasePolicyFactory = PurchasePolicyFactory()
 
@@ -228,7 +227,9 @@ class Market(IService):
             payment_succeeded = self.pay(cart_price, payment_method, payment_details)
             if payment_succeeded:
                 # order delivery
-                if not self.provision_service.getDelivery():
+                delivery_service = provisionService()
+                delivery_service.set_info(actor.username, 0, address, postal_code)
+                if not delivery_service.getDelivery():
                     return report_error("purchase_shopping_cart", 'failed delivery')
                 self.add_to_purchase_history(baskets)
                 self.update_user_cart_after_purchase(actor, successful_store_purchases)
@@ -379,7 +380,7 @@ class Market(IService):
         payment_service.set_information(payment_details)
 
         delivery_service = provisionService()
-        delivery_service.set_info(actor.username, store_name, 0, address, postal_code)
+        delivery_service.set_info(actor.username, 0, address, postal_code, store_name)
         return self.store_controller.apply_purchase_policy(store_name, product_name, how_much,
                                                            payment_service, delivery_service)
 

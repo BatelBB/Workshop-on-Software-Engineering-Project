@@ -27,7 +27,7 @@ class provisionService(IProvisionService):
     def __init__(self):
         self.proxy = provisionProxy()
 
-    def set_info(self, user_name: str, shop_name: str, packageID: int, address: str, postal_code: str) -> bool:
+    def set_info(self, user_name: str, packageID: int, address: str, postal_code: str, shop_name = "market") -> bool:
         self.user_name = user_name
         self.shop_name = shop_name
         self.packageID = packageID

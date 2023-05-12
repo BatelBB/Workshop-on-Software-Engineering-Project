@@ -33,36 +33,36 @@ if __name__ == '__main__':
     #
 
     # test lottery
-    s1 = service.enter()
-    res = s1.register("sus", "rezah")
-    re = s1.login("sus", "rezah")
-    res = s1.open_store("burekas gedera")
-    res = s1.add_product("burekas gedera", "burekas pitriot", "burekasim", 5, 1, ["burekas", "maafe", "bake"])
-    res = s1.start_lottery("burekas gedera", "burekas pitriot")
-    store = service.store_controller.stores.get("burekas gedera")
-    print(store.products_with_special_purchase_policy)
-
-    s2 = service.enter()
-    res = s2.register("u2", "p2")
-    res = s2.login("u2", "p2")
-    res = s2.purchase_with_non_immediate_policy("burekas gedera", "burekas pitriot", "card",
-                                                ["4580", "12/2030", "333"],
-                                                "beer sheva", "3777777", 1)
-
-    s3 = service.enter()
-    res = s3.register("u3", "p3")
-    res = s3.login("u3", "p3")
-    res = s3.purchase_with_non_immediate_policy("burekas gedera", "burekas pitriot", "card",
-                                                ["4580", "12/2030", "333"],
-                                                "beer sheva", "3777777", 2)
-
-    s4 = service.enter()
-    res = s4.register("u4", "p4")
-    res = s4.login("u4", "p4")
-    res = s4.purchase_with_non_immediate_policy("burekas gedera", "burekas pitriot", "card",
-                                                ["4580", "12/2030", "333"],
-                                                "beer sheva", "3777777", 2)
-    store.new_day()
+    # s1 = service.enter()
+    # res = s1.register("sus", "rezah")
+    # re = s1.login("sus", "rezah")
+    # res = s1.open_store("burekas gedera")
+    # res = s1.add_product("burekas gedera", "burekas pitriot", "burekasim", 5, 1, ["burekas", "maafe", "bake"])
+    # res = s1.start_lottery("burekas gedera", "burekas pitriot")
+    # store = service.store_controller.stores.get("burekas gedera")
+    # print(store.products_with_special_purchase_policy)
+    #
+    # s2 = service.enter()
+    # res = s2.register("u2", "p2")
+    # res = s2.login("u2", "p2")
+    # res = s2.purchase_with_non_immediate_policy("burekas gedera", "burekas pitriot", "card",
+    #                                             ["4580", "12/2030", "333"],
+    #                                             "beer sheva", "3777777", 1)
+    #
+    # s3 = service.enter()
+    # res = s3.register("u3", "p3")
+    # res = s3.login("u3", "p3")
+    # res = s3.purchase_with_non_immediate_policy("burekas gedera", "burekas pitriot", "card",
+    #                                             ["4580", "12/2030", "333"],
+    #                                             "beer sheva", "3777777", 2)
+    #
+    # s4 = service.enter()
+    # res = s4.register("u4", "p4")
+    # res = s4.login("u4", "p4")
+    # res = s4.purchase_with_non_immediate_policy("burekas gedera", "burekas pitriot", "card",
+    #                                             ["4580", "12/2030", "333"],
+    #                                             "beer sheva", "3777777", 2)
+    # store.new_day()
 
     # s1 = service.enter()
     # res = s1.register("sus", "rezah")
@@ -113,3 +113,14 @@ if __name__ == '__main__':
     # store.new_day()
 
     # market.shutdown()
+
+
+    # test
+    s1 = service.enter()
+    s1.register("u", "p")
+    s1.login("u", "p")
+    s1.open_store("s")
+    s1.add_product("s", "p", "sus", 12, 2)
+
+    s1.add_to_cart("s", "p", 1)
+    s1.purchase_shopping_cart("card", ["asd", "asd", "asd"], "sus", "asdasd")
