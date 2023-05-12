@@ -1,14 +1,14 @@
 import threading
 
-from domain.main.ExternalServices.Payment.PaymentServices import IPaymentService
-from domain.main.ExternalServices.Provision.IProvisionService import provisionProxy
-from domain.main.ExternalServices.Provision.ProvisionServiceAdapter import IProvisionService, provisionService
-from domain.main.Store.Product import Product
-from domain.main.Store.PurchasePolicy.BidPolicy import BidPolicy
-from domain.main.User.Basket import Basket
-from domain.main.Utils.Logger import report_info, report_error, report
-from domain.main.Utils.Response import Response
-from domain.main.Store.PurchasePolicy.IPurchasePolicy import IPurchasePolicy
+from src.domain.main.ExternalServices.Payment.PaymentServices import IPaymentService
+from src.domain.main.ExternalServices.Provision.IProvisionService import provisionProxy
+from src.domain.main.ExternalServices.Provision.ProvisionServiceAdapter import IProvisionService, provisionService
+from src.domain.main.Store.Product import Product
+from src.domain.main.Store.PurchasePolicy.BidPolicy import BidPolicy
+from src.domain.main.User.Basket import Basket
+from src.domain.main.Utils.Logger import report_info, report_error, report
+from src.domain.main.Utils.Response import Response
+from src.domain.main.Store.PurchasePolicy.IPurchasePolicy import IPurchasePolicy
 
 
 class ProductQuantity:

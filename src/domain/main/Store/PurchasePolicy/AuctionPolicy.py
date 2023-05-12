@@ -1,8 +1,8 @@
-from domain.main.ExternalServices.Payment.PaymentServices import IPaymentService
-from domain.main.ExternalServices.Provision.ProvisionServiceAdapter import IProvisionService
-from domain.main.Store.PurchasePolicy.IPurchasePolicy import IPurchasePolicy
-from domain.main.Utils.Logger import report, report_error
-from domain.main.Utils.Response import Response
+from src.domain.main.ExternalServices.Payment.PaymentServices import IPaymentService
+from src.domain.main.ExternalServices.Provision.ProvisionServiceAdapter import IProvisionService
+from src.domain.main.Store.PurchasePolicy.IPurchasePolicy import IPurchasePolicy
+from src.domain.main.Utils.Logger import report, report_error
+from src.domain.main.Utils.Response import Response
 
 
 class AuctionPolicy(IPurchasePolicy):

@@ -1,9 +1,9 @@
 from abc import ABC, abstractmethod
 
 
-from domain.main.ExternalServices.Payment.PaymentServices import IPaymentService
-from domain.main.ExternalServices.Provision.ProvisionServiceAdapter import IProvisionService
-from domain.main.Utils.Logger import report_error, report
+from src.domain.main.ExternalServices.Payment.PaymentServices import IPaymentService
+from src.domain.main.ExternalServices.Provision.ProvisionServiceAdapter import IProvisionService
+from src.domain.main.Utils.Logger import report_error, report
 
 
 

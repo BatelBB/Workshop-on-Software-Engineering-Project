@@ -1,9 +1,9 @@
 import unittest
 
-from domain.main.Market.Market import Market
-from domain.main.Service.IService import IService
-from domain.main.Store.PurchasePolicy.AuctionPolicy import AuctionPolicy
-from domain.main.Utils.Response import Response
+from src.domain.main.Market.Market import Market
+from src.domain.main.Service.IService import IService
+from src.domain.main.Store.PurchasePolicy.AuctionPolicy import AuctionPolicy
+from src.domain.main.Utils.Response import Response
 
 
 class test_purchase_policy:
