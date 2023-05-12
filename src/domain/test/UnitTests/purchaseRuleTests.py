@@ -158,3 +158,21 @@ class purchaseRuleTests(unittest.TestCase):
 
         res = s2.purchase_shopping_cart("card", ["asd", "asd", "Asd"], "ashdod", "74664")
         self.assertFalse(res.success, "fail")
+
+
+    def test_owner_adding_complex_rule_2(self):
+        service = Market()
+        s1 = service.enter()
+        s1.register("u1", "p1")
+        s1.login("u1", "p1")
+        s1.open_store("s")
+        s1.add_product("s", "p1", "sus", 12, 5)
+        s1.add_product("s", "p2", "sus", 4, 9)
+        s1.add_purchase_complex_rule("s", "p1", "=", 2, "p2", ">", 3, "cond")
+
+        s2 = service.enter()
+        s2.add_to_cart("s", "p1", 2)
+        s2.add_to_cart("s", "p2", 5)
+
+        res = s2.purchase_shopping_cart("card", ["asd", "asd", "Asd"], "ashdod", "74664")
+        self.assertTrue(res.success, "fail")

@@ -29,4 +29,7 @@ class SimpleRule(IRule):
                 else:
                     return report_error("enforce_rule", "justice is served!")
 
+        if self.gle == ">":         # incase the item is not in the cart
+            return report_error("enforce_rule", "justice is served!")
+
         return Response(True, "good")

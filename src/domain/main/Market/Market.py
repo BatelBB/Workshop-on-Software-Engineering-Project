@@ -271,11 +271,13 @@ class Market(IService):
             payment_succeeded = self.pay(cart_price, payment_method, payment_details)
             if payment_succeeded:
                 # order delivery
-                if not self.provision_service.getDelivery(actor.username, "remove", self.package_counter, address,
-                                                          postal_code):
+                delivery_service = provisionService()
+                delivery_service.set_info(actor.username, 0, address, postal_code)
+                if not delivery_service.getDelivery():
                     return report_error("purchase_shopping_cart", 'failed delivery')
                 self.add_to_purchase_history(baskets)
                 self.update_user_cart_after_purchase(actor, successful_store_purchases)
+                return Response(True)
             else:
                 return report_error("purchase_shopping_cart", "payment_succeeded = false")
         else:
@@ -529,7 +531,7 @@ class Market(IService):
         payment_service.set_information(payment_details)
 
         delivery_service = provisionService()
-        delivery_service.set_info(actor.username, store_name, 0, address, postal_code)
+        delivery_service.set_info(actor.username, 0, address, postal_code, store_name)
 
         res = self.verify_registered_store("purchase_with_non_immediate_policy", store_name)
         if not res.success:
