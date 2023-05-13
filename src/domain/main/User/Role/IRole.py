@@ -139,3 +139,6 @@ class IRole(ABC):
     @abstractmethod
     def purchase_shopping_cart(self, payment_method: str, payment_details: list) -> Response[bool]:
         ...
+
+    def is_allowed_to_view_entrance_history(self) -> Response[bool]:
+        ...

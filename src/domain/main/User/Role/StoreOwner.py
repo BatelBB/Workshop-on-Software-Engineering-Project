@@ -69,3 +69,6 @@ class StoreOwner(Member):
             return report_info(self.close_store.__qualname__, f'{self} closes Store \'{store_name}\' successfully')
         else:
             return report_error(self.close_store.__qualname__, f'{self} not owner of \'{store_name}\'')
+
+    def is_allowed_to_view_entrance_history(self):
+        return Response(False)

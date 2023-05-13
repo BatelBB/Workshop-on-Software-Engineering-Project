@@ -126,3 +126,6 @@ class User:
 
     def purchase_shopping_cart(self, payment_method: str, payment_details: list) -> Response[bool]:
         return self.role.purchase_shopping_cart(payment_method, payment_details)
+
+    def is_allowed_to_view_entrance_history(self) -> Response[bool]:
+        return self.role.is_allowed_to_view_entrance_history()

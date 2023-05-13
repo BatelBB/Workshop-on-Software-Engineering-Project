@@ -436,4 +436,11 @@ class Market(IService):
             return store.add_purchase_rule(res.result)
         return res
 
+    def get_entrance_history(self, session_id: int):
+        actor = self.user_controller.get_active_user(session_id)
+        response = actor.is_allowed_to_view_entrance_history()
+        if response.success:
+            return self.user_controller.get_entrance_history()
+        else:
+            return response
 
