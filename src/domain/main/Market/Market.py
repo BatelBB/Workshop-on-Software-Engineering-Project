@@ -440,7 +440,7 @@ class Market(IService):
         actor = self.user_controller.get_active_user(session_id)
         response = actor.is_allowed_to_view_entrance_history()
         if response.success:
-            return self.user_controller.get_entrance_history()
+            return self.user_controller.get_entrance_history().__str__()
         else:
             return response
 
