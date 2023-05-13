@@ -126,12 +126,20 @@ class Visitor(IRole, ABC):
         return report_error(self.set_personal_permissions.__qualname__, f'{self} permissions are not changeable!')
 
     def is_allowed_to_change_permissions(self, store_name: str) -> Response[bool]:
-        return report_error(self.is_allowed_to_change_permissions.__qualname__, f'{self} permissions are not changeable!')
+        return report_error(self.is_allowed_to_change_permissions.__qualname__,
+                            f'{self} permissions are not changeable!')
 
     def is_allowed_to_view_store_personal(self, store_name: str) -> Response[bool]:
-        return report_error(self.is_allowed_to_view_store_personal.__qualname__, f'{self} no permissions for get store personal!')
+        return report_error(self.is_allowed_to_view_store_personal.__qualname__,
+                            f'{self} no permissions for get store personal!')
+
     def is_allowed_to_fire_employee(self, store_name: str) -> Response[bool]:
-        return report_error(self.is_allowed_to_fire_employee.__qualname__, f'{self} is not allowed to fire an employee!')
+        return report_error(self.is_allowed_to_fire_employee.__qualname__,
+                            f'{self} is not allowed to fire an employee!')
 
     def purchase_shopping_cart(self, payment_method: str, payment_details: list) -> Response[bool]:
         return self.context.mediator.purchase_shopping_cart(self, payment_method, payment_details)
+
+    def is_allowed_to_view_entrance_history(self):
+        return report_error(self.is_allowed_to_view_entrance_history.__qualname__, f'{self} is not allowed to view '
+                                                                                   f'entrance history')

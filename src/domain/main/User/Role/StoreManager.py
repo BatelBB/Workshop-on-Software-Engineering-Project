@@ -89,3 +89,6 @@ class StoreManager(Member):
             store_name).success and StorePermissions.RetrievePurchaseHistory in self.permissions \
             else self.report_no_permission(self.is_allowed_to_get_store_purchase_history.__qualname__, StorePermissions.RetrievePurchaseHistory,
                                            store_name)
+
+    def is_allowed_to_view_entrance_history(self):
+        return self.report_no_permission(self.is_allowed_to_view_entrance_history.__qualname__, StorePermissions.ViewEntranceHistory, "All stores")

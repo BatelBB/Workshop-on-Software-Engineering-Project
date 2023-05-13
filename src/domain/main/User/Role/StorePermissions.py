@@ -14,6 +14,7 @@ class StorePermissions(Enum):
     # CancelManagerAppointment = 'Cancel appointment of another manager'
     # CloseStore = 'Close store'
     RetrieveStaffDetails = 'Retrieve store staff details'
+    ViewEntranceHistory = 'View Entrance History'
 
 
 def get_store_permission_name(permission: StorePermissions) -> str:

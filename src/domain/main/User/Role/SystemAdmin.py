@@ -21,3 +21,6 @@ class SystemAdmin(Member):
         if encrypted_password != self.context.encrypted_password:
             return report_error(self.login.__qualname__, f'{self} enter an incorrect password.')
         return report_info(self.login.__qualname__, f'{self.context.username} is logged in.')
+
+    def is_allowed_to_view_entrance_history(self):
+        return Response(True)

@@ -1,3 +1,5 @@
+
+from domain.main.User.User import User
 from src.domain.main.Utils.Logger import report_error
 from src.domain.main.Utils.ConcurrentDictionary import ConcurrentDictionary
 from src.domain.main.Utils.Response import Response
@@ -9,6 +11,8 @@ class UserController:
     def __init__(self):
         self.sessions: ConcurrentDictionary[int, User] = ConcurrentDictionary()
         self.users: ConcurrentDictionary[str, User] = ConcurrentDictionary()
+        self.entrance_history = []
+
     def get_active_user(self, session_identifier: int) -> User | None:
         s = self.sessions.get(session_identifier)
         return s
@@ -17,7 +21,7 @@ class UserController:
         leaving_user = self.sessions.delete(session_identifier)
         return leaving_user.leave(session_identifier)
 
-    def register(self, new_user: User, username: str ) -> Response[bool]:
+    def register(self, new_user: User, username: str) -> Response[bool]:
         registered_user_with_param_username = self.users.insert(username, new_user)
         if registered_user_with_param_username is None:
             return new_user.register()
@@ -30,9 +34,11 @@ class UserController:
             return report_error(self.login.__qualname__, f'Username: \'{username}\' is not registered)')
         else:
             response = registered_user.login(password)
+            self.entrance_history.append(self.get_registered_user(username).result)
             if response.success:
                 self.sessions.update(session_identifier, registered_user)
             return response
+
     def is_registered(self, username: str) -> bool:
         return self.users.get(username) is not None
 
@@ -43,7 +49,6 @@ class UserController:
         if self.users.get(name) is not None:
             return Response(self.users.get(name))
         return Response(False)
-
 
     def appoint_store_owner(self, session_id: int, new_owner_name: str, store_name: str):
         user_res = self.get_registered_user(new_owner_name)
@@ -105,3 +110,6 @@ class UserController:
             for person in user.appointed_by_me:
                 actor.appointees.get(store_name).remove(person)
             return response
+
+    def get_entrance_history(self) -> list[User]:
+        return self.entrance_history
