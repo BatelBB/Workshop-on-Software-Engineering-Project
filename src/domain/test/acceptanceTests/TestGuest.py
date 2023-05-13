@@ -1,4 +1,4 @@
-from dev.src.main.bridge.proxy import proxy
+from domain.main.bridge.proxy import proxy
 import unittest
 
 
@@ -47,6 +47,7 @@ class TestGuest(unittest.TestCase):
         self.app.add_to_cart(self.session_id, "store1", "product1_1", 3)
 
     # Use Case: Adding a Product to the Shopping Cart
+    # Use Case: Inspecting Shopping Cart
     def test_adding_to_cart(self):
         # happy
         self.setup_2_stores_with_products()
@@ -70,8 +71,8 @@ class TestGuest(unittest.TestCase):
         r = self.app.add_to_cart(self.session_id, "store1", "product1_2", 2)
         self.assertFalse(r.success or r.result, "error: adding to cart action after exiting market not failed")
 
-    # todo - should be "removing" and to add that use case
     # Use Case: Adding a Product to the Shopping Cart
+    # Use Case: Inspecting Shopping Cart
     def test_removing_from_cart(self):
         # happy
         self.set_cart()
@@ -92,7 +93,6 @@ class TestGuest(unittest.TestCase):
 
     # todo: add sad, bad tests, add more store and product tests
     # Use Case: Searching for a Product
-    # Use Case: Inspecting Shopping Cart
     def test_product_info(self):
         # happy
         self.enter_market()

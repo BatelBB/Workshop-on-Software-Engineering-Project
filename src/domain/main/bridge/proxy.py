@@ -1,6 +1,6 @@
-from dev.src.main.Utils.Response import Response
-from dev.src.main.bridge.Bridge import Bridge
-from dev.src.main.bridge.real import real
+from src.domain.main.Utils.Response import Response
+from domain.main.bridge.Bridge import Bridge
+from domain.main.bridge.real import real
 import string
 
 class proxy(Bridge):

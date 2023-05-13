@@ -1,125 +1,145 @@
-from dev.src.main.Utils.Response import Response
-from dev.src.main.bridge.Bridge import Bridge
-from dev.src.main.Market.Market import Market
+from abc import ABC, abstractmethod
+from src.domain.main.Utils.Response import Response
 import string
 
 
-class real(Bridge):
-    market: Market
-    user_sessions: list[int]
-    user_counter: int
-
-    def __init__(self):
-        self.user_sessions = []
-        self.market = Market()
-        self.user_counter = 0
-
+class Bridge(ABC):
     def enter_market(self) -> int:
-        s = self.market.enter()
-        self.user_sessions.append(s.identifier)
-        return s.identifier
+        ...
 
+    @abstractmethod
     def register(self, session_id: int, username: string, password: string) -> Response[bool]:
-        return self.market.register(session_id, username, password)
+        ...
 
+    @abstractmethod
     def exit_market(self, session_id: int) -> Response[bool]:
-        return self.market.exit_market(session_id)
+        ...
 
+    @abstractmethod
     def login(self, session_id: int, username: string, password: string) -> Response[bool]:
-        return self.market.login(session_id, username, password)
+        ...
 
+    @abstractmethod
     def open_store(self, session_id: int, store_name: string) -> Response[bool]:
-        return self.market.open_store(session_id, store_name)
+        ...
 
-    # todo change name signature
+    @abstractmethod
     def remove_product_quantity(self, session_id: int, store_name: str,
                                 product_name: str, quantity: int) -> Response[bool]:
-        return self.market.update_product_quantity(session_id, store_name, product_name, quantity)
+        ...
 
-    # guest buying operations
+    @abstractmethod
     def remove_from_cart(self, session_id: int, store_name: string,
                          product_name: string) -> Response[bool]:
-        return self.market.remove_product_from_cart(session_id, store_name, product_name)
+        ...
 
+    @abstractmethod
     def get_all_stores(self, session_id) -> Response[list]:
-        return self.market.get_all_stores(session_id)
+        ...
 
+    @abstractmethod
     def get_store_products(self, session_id: int, store_name: str) -> Response[dict]:
-        return self.market.get_store(session_id, store_name)
+        ...
 
+    @abstractmethod
     def get_products_by_name(self, session_id: int, name: string) -> Response[dict]:
-        return self.market.get_product_by_name(session_id, name)
+        ...
 
+    @abstractmethod
     def get_products_by_category(self, session_id: int, name: string) -> Response[dict]:
-        return self.market.get_product_by_category(session_id, name)
+        ...
 
+    @abstractmethod
     def get_products_by_keyword(self, session_id: int, name: string) -> Response[dict]:
-        return self.market.get_product_by_keywords(session_id, name)
+        ...
 
+    @abstractmethod
     def filter_products_by_price_range(self, session_id: int, low: int, high: int) -> Response[dict]:
-        return self.market.filter_products_by_price_range(session_id, low, high)
+        ...
 
+    @abstractmethod
     def filter_products_by_rating(self, session_id: int, low: int, high: int) -> Response[dict]:
-        return self.market.filter_products_by_rating(session_id, low, high)
+        ...
 
+    @abstractmethod
     def filter_products_by_category(self, session_id: int, category: string) -> Response[dict]:
-        return self.market.filter_products_by_category(session_id, category)
+        ...
 
+    @abstractmethod
     def filter_products_by_store_rating(self, session_id: int, low: int, high: int) -> Response[dict]:
-        return self.market.filter_products_by_category(session_id, low, high)
+        ...
 
+    @abstractmethod
     def add_to_cart(self, session_id: int, store_name: string, product_name: string, quantity: int) -> Response[bool]:
-        return self.market.add_to_cart(session_id, store_name, product_name, quantity)
+        ...
 
+    @abstractmethod
     def buy_cart_with_card(self, session_id: int, card_num: str, cvv: str, exp_date: str) -> Response[bool]:
-        return self.market.purchase_shopping_cart(session_id, "card", [card_num, cvv, exp_date])
+        ...
 
+    @abstractmethod
     def buy_cart_with_paypal(self, session_id: int, username: str, password: str) -> Response[bool]:
-        return self.market.purchase_shopping_cart(session_id, "paypal", [username, password])
+        ...
 
+    @abstractmethod
     # registered user operations
     def logout(self, session_id: int, ) -> Response[bool]:
-        return self.market.logout(session_id)
+        ...
 
+    @abstractmethod
     # storeOwner operations
     def add_product(self, session_identifier: int, store_name: str, product_name: str, category: str,
                     price: float, quantity: int, keywords: list[str]) -> Response[bool]:
-        return self.market.add_product(session_identifier, store_name, product_name,
-                                       category, price, quantity, keywords)
+        ...
 
+    @abstractmethod
     def remove_product(self, session_id: int, store_name: str, product_name: str) -> Response[bool]:
-        return self.market.remove_product(session_id, store_name, product_name)
+        ...
 
+    @abstractmethod
     def change_product_name(self, session_id: int, store_name: str,
                             product_name: str, new_name: string) -> Response[bool]:
-        return self.market.change_product_name(session_id, store_name, product_name, new_name)
+        ...
 
+    @abstractmethod
     def change_product_price(self, session_id: int, store_name: str,
                              product_name: str, new_price: float) -> Response[bool]:
-        return self.market.change_product_price(session_id, store_name, product_name, new_price)
+        ...
 
+    @abstractmethod
     def appoint_owner(self, session_id: int, store_name: str, new_owner: string) -> Response[bool]:
-        return self.market.appoint_owner(session_id, store_name, new_owner)
+        ...
 
+    @abstractmethod
     def appoint_manager(self, session_id: int, store_name: str, new_manager: string) -> Response[bool]:
-        return self.market.appoint_owner(session_id, store_name, new_manager)
+        ...
 
+    @abstractmethod
     def set_stock_permission(self, session_id: int, receiving_user_name: str,
                              store_name: str, give_or_take: bool) -> Response[bool]:
-        return self.market.set_stock_permissions(session_id, receiving_user_name, store_name, give_or_take)
+        ...
 
+    @abstractmethod
     def set_personal_permissions(self, session_id: int, receiving_user_name: str,
                                  store_name: str, give_or_take: bool) -> Response[bool]:
-        return self.market.set_personal_permissions(session_id, receiving_user_name, store_name, give_or_take)
+        ...
 
+    @abstractmethod
     def close_store(self, session_id: int, store_name: str) -> Response[bool]:
-        return self.market.close_store(session_id, store_name)
+        ...
 
+    @abstractmethod
     def get_store_personal(self, session_id: int, store_name: str) -> Response[dict]:
-        return self.market.get_store_personal(session_id, store_name)
+        ...
 
+    @abstractmethod
     def get_store_purchase_history(self, session_id: int, store_name: str) -> Response[dict]:
-        return self.market.get_store_purchase_history(session_id, store_name)
+        ...
 
+    @abstractmethod
     def show_cart(self, session_id: int) -> Response[dict]:
-        return self.market.show_cart(session_id)
+        ...
+
+
+
+
