@@ -1,101 +1,126 @@
 
 
-from dev.src.main.Market.Market import Market
-from dev.src.main.Service.IService import IService
+from src.domain.main.Market.Market import Market
+from src.domain.main.Service import IService
 
 
 # Basic interaction with Market
 if __name__ == '__main__':
 
-    market: IService = Market()
-    sesssion = market.enter()
-    r = sesssion.register("Nir", "marry had a little lambda")
-    r = sesssion.login("Nir", "marry had a little lambda")
-    r = sesssion.login("Nir", "marry had a little lambda")
-    r = sesssion.open_store("Amazon")
+    service = Market()
+    # sesssion = market.enter()
+    #
+    #test auction
+    # s1 = service.enter()
+    # res = s1.register("sus", "rezah")
+    # re = s1.login("sus", "rezah")
+    # res = s1.open_store("burekas gedera")
+    # res = s1.add_product("burekas gedera", "burekas pitriot", "burekasim", 5, 1, ["burekas", "maafe", "bake"])
+    # res = s1.start_auction("burekas gedera", "burekas pitriot", 2, 1)
+    # store = service.stores.get("burekas gedera")
+    # print(store.products_with_special_purchase_policy)
+    #
+    # s2 = service.enter()
+    # res = s2.register("u2", "p2")
+    # res = s2.login("u2", "p2")
+    # res = s2.purchase_with_non_immediate_policy("burekas gedera", "burekas pitriot", "card",
+    #                                             ["4580", "12/2030", "333"],
+    #                                             "beer sheva", "3777777", 30)
+    # res = s2.add_to_cart("burekas gedera", "burekas pitriot", 1)
+    # res = s2.purchase_shopping_cart("card", ["4580", "12/2030", "333"],
+    #                                             "beer sheva", "3777777")
+    # store.new_day()
+    #
 
-    r = sesssion.add_product("Amazon", "Razer Blackwidow V3", "Keyboards", 799.123, 10)
+    # test lottery
+    # s1 = service.enter()
+    # res = s1.register("sus", "rezah")
+    # re = s1.login("sus", "rezah")
+    # res = s1.open_store("burekas gedera")
+    # res = s1.add_product("burekas gedera", "burekas pitriot", "burekasim", 5, 1, ["burekas", "maafe", "bake"])
+    # res = s1.start_lottery("burekas gedera", "burekas pitriot")
+    # store = service.store_controller.stores.get("burekas gedera")
+    # print(store.products_with_special_purchase_policy)
+    #
+    # s2 = service.enter()
+    # res = s2.register("u2", "p2")
+    # res = s2.login("u2", "p2")
+    # res = s2.purchase_with_non_immediate_policy("burekas gedera", "burekas pitriot", "card",
+    #                                             ["4580", "12/2030", "333"],
+    #                                             "beer sheva", "3777777", 1)
+    #
+    # s3 = service.enter()
+    # res = s3.register("u3", "p3")
+    # res = s3.login("u3", "p3")
+    # res = s3.purchase_with_non_immediate_policy("burekas gedera", "burekas pitriot", "card",
+    #                                             ["4580", "12/2030", "333"],
+    #                                             "beer sheva", "3777777", 2)
+    #
+    # s4 = service.enter()
+    # res = s4.register("u4", "p4")
+    # res = s4.login("u4", "p4")
+    # res = s4.purchase_with_non_immediate_policy("burekas gedera", "burekas pitriot", "card",
+    #                                             ["4580", "12/2030", "333"],
+    #                                             "beer sheva", "3777777", 2)
+    # store.new_day()
 
-    # sesssion.add_to_cart("Amazon", "Razer Blackwidow V3", 10)
+    # s1 = service.enter()
+    # res = s1.register("sus", "rezah")
+    # re = s1.login("sus", "rezah")
+    # res = s1.open_store("burekas gedera")
+    # res = s1.add_product("burekas gedera", "burekas pitriot", "burekasim", 5, 1, ["burekas", "maafe", "bake"])
+    # res = s1.start_bid("burekas gedera", "burekas pitriot")
+    # store = service.stores.get("burekas gedera")
+    # print(store.products_with_bid_purchase_policy)
+    #
+    # s2 = service.enter()
+    # res = s2.register("u2", "p2")
+    # res = s2.login("u2", "p2")
+    # res = s1.appoint_owner("u2", "burekas gedera")
+    #
+    # s3 = service.enter()
+    # res = s3.register("u3", "p3")
+    # res = s3.login("u3", "p3")
+    # res = s3.purchase_with_non_immediate_policy("burekas gedera", "burekas pitriot", "card",
+    #                                             ["4580", "12/2030", "333"],
+    #                                             "beer sheva", "3777777", 2)
+    #
+    # s1.approve_bid("burekas gedera", "burekas pitriot", True)
+    # s2.approve_bid("burekas gedera", "burekas pitriot", True)
+    #
+    # store.new_day()
 
-    r3 = market.update_product_quantity(sesssion.identifier, "Amazon", "Razer Blackwidow V3", -3)
+    #test new day:
 
-    sesssion.get_store("Amazon")
+    # s1 = service.enter()
+    # res = s1.register("sus", "rezah")
+    # re = s1.login("sus", "rezah")
+    # res = s1.open_store("burekas gedera")
+    # res = s1.add_product("burekas gedera", "burekas pitriot", "burekasim", 5, 1, ["burekas", "maafe", "bake"])
+    # res = s1.start_auction("burekas gedera", "burekas pitriot", 2, 5)
+    # store = service.stores.get("burekas gedera")
+    # print(store.products_with_special_purchase_policy)
+    #
+    # s2 = service.enter()
+    # res = s2.register("u2", "p2")
+    # res = s2.login("u2", "p2")
+    # res = s2.purchase_with_non_immediate_policy("burekas gedera", "burekas pitriot", "card",
+    #                                             ["4580", "12/2030", "333"],
+    #                                             "beer sheva", "3777777", 30)
+    # store.new_day()
+    # store.new_day()
+    # store.new_day()
+    # store.new_day()
 
-    # s2 = market.enter()
-    # s2.add_to_cart("Amazon", "Razer Blackwidow V3", 3)
-    # market.show_cart(s2.identifier)
-    #
-    #
-    #
-    # r2 = s2.register("sus", "rezah")
-    # r2 = s2.login("sus", "rezah")
-    #
-    # r3 = s2.get_store("Amazon")
-    #
-    # # s2.close_store("Amazon")
-    # # s2.get_store("Amazon")
-    # #
-    # # sesssion.close_store("Amazon")
-    # #
-    # # s2.get_store("Amazon")
-    # #
-    # s2.open_store("huimazon")
-    # r = sesssion.add_product("huimazon", "keychron v2", "Keyboards", 250, 5)
-    #
-    # market.get_products_by_category(s2.identifier, "Keyboards")
-
-    # r = sesssion.get_store("Amazon")
-    # r = sesssion.update_product_quantity("Amazon", "Razer Blackwidow V3", 23)
-    # market.get_store(sesssion.identifier, "Amazon")
-    # market.purchase_shopping_cart(sesssion.identifier, "card", ["1234", "123", "1234"])
-    # sesssion.get_purchase_history("Amazon")
-    # market.get_store(sesssion.identifier, "Amazon")
-    #
-    # s2 = market.enter()
-    # r2 = s2.register("sus", "rezah")
-    # r2 = s2.login("sus", "rezah")
-    # r2 = market.appoint_manager(sesssion.identifier, "sus", "Amazon")
-    #
-    # r5 = market.get_store_personal(sesssion.identifier, "Amazon")
-    #
-    # r2 = market.set_personal_permissions(sesssion.identifier, "sus", "Amazon", True)
-    #
-    # r2 = market.get_store_purchase_history(s2.identifier, "Amazon")
-    #
-    # r3 = market.shutdown(s2.identifier)
-
-    s3 = market.enter()
-    s3.login("admin", "admin")
-    r4 = market.shutdown(s3.identifier)
-
-
-       # r = sesssion.change_product_name("Amazon", "Razer Blackwidow V3", "Test name")
-    # r = sesssion.change_product_price("Amazon", 799.123, 10.1)
-    # r = sesssion.get_store("Amazon")
-    # # r = sesssion.show_cart() # supposed to be empty
-    # # sesssion.add_to_cart("Amazon", "Razer Blackwidow V3", 2)
-    # # # sesssion.add_to_cart("Amazon", "Razer Blackwidow V3", 123)
-    # # r = sesssion.show_cart()
-    # # # r = sesssion.add_payment_details_paypal("Name", "Password")
-    # # r = sesssion.purchase_shopping_cart("paypal", ["user", "password"])
-    # # r = sesssion.show_cart()  # supposed to be empty
-    # # r = sesssion.get_store("Amazon")
-    # #
-    # # sesssion.add_to_cart("Amazon", "Razer Blackwidow V3", 5)
-    # # # sesssion.add_to_cart("Amazon", "Razer Blackwidow V3", 123)
-    # # r = sesssion.show_cart()
-    # # # r = sesssion.add_payment_details_paypal("Name", "Password")
-    # # r = sesssion.purchase_shopping_cart("card", ["4580", "322", "20/20"])
-    # # r = sesssion.show_cart()  # supposed to be empty
-    # # r = sesssion.get_purchase_history("Amazon")
-    # # r = sesssion.get_store("Amazon")
-    # # r = sesssion.close_store("Amazon")
-    # # r = sesssion.get_store("Amazon")
-    # # r = sesssion.get_all_stores()
-    #
-    #
-    #
-    # r = sesssion.logout()
-    #
     # market.shutdown()
+
+
+    # test
+    s1 = service.enter()
+    s1.register("u", "p")
+    s1.login("u", "p")
+    s1.open_store("s")
+    s1.add_product("s", "p", "sus", 12, 2)
+
+    s1.add_to_cart("s", "p", 1)
+    s1.purchase_shopping_cart("card", ["asd", "asd", "asd"], "sus", "asdasd")

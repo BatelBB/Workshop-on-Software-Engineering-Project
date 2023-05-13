@@ -1,0 +1,18 @@
+{% extends "layout.html" %}
+{% block title %}Create store{% endblock %}
+
+{% block content %}
+
+<h1>{{ name }}</h1>
+
+
+<table>
+    {% for name, data in items.items() %}
+<tr>
+    <td><img src="{{ dicebear_product(name) }}" style="height: 4em;"/></td>
+    <td>{{ name }}</td>
+</tr>
+    {% endfor %}
+</table>
+
+{% endblock %}

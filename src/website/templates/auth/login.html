@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+{% block title %}Login{% endblock %}
+
+{% block content %}
+
+<form method="post">
+    
+  {{ form.hidden_tag() }}
+    <table>
+        {% for field in (form.username, form.password, form.submit) %}
+            <tr>
+                <td>{{field.name}}&nbsp;</td>
+                <td>{{ field }}</td>
+                <td>
+                    {% for error in field.errors %}
+                        {{ error }}
+                    {% endfor %}
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+    Don't have a user? <a href="{{ url_for('auth.register') }}">sign up</a>
+</form>
+
+{% endblock %}

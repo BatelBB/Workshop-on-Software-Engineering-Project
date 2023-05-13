@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+{% block title %}Homepage{% endblock %}
+
+{% block content %}
+
+<table>
+    {% for store in stores %}
+<tr>
+    <td><img src="{{ dicebear_shop(store.name) }}" style="height: 4em;"/></td>
+    <td><a href="{{ url_for('buying.view_store', name=store.name) }}">{{ store.name }}</a></td>
+</tr>
+    {% endfor %}
+</table>
+
+<footer style="font-size: x-large;">
+    Made by: &nbsp;
+    {% for dev in made_by %}
+        <img src="{{ dicebear_user(dev) }}" style="height: 2em;"/>
+        {{dev}}
+{% endfor%}
+</footer>
+{% endblock %}
+
