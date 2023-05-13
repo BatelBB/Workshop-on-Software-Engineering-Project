@@ -8,10 +8,10 @@ class proxy(Bridge):
     def __init__(self):
         self.real = real()
 
-    def enter_market(self) -> int:
+    def enter_market(self) -> Response[int]:
         if self.real is not None:
-            return self.real.enter_market()
-        return 1
+            return Response(self.real.enter_market())
+        return Response(-1)
 
     def exit_market(self, session_id: int) -> Response[bool]:
         if self.real is not None:
