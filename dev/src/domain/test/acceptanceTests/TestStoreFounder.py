@@ -291,7 +291,7 @@ class TestStoreOwner(unittest.TestCase):
         self.app.register(self.session_id, "buyer1", "123")
         self.app.login(self.session_id, "buyer1", "123")
         self.app.add_to_cart(self.session_id, "bakery", "borekas", 3)
-        self.app.buy_cart_with_card(self.session_id, "1234123412341234", "123", "01/01/2025")
+        self.app.buy_cart_with_card(self.session_id, "1234123412341234", "123", "01/01/2025", "zambabir", "010101")
 
         self.app.logout(self.session_id)
         self.app.login(self.session_id, "founder1", "pass1")
@@ -423,7 +423,7 @@ class TestStoreOwner(unittest.TestCase):
         self.app.login(self.session_id, "buyer1", "123")
         self.app.add_to_cart(self.session_id, "bakery", "product1_1", 5)
         self.app.add_to_cart(self.session_id, "bakery", "product1_2", 10)
-        self.app.buy_cart_with_paypal(self.session_id, "user1234", "12345")
+        self.app.buy_cart_with_paypal(self.session_id, "user1234", "12345", "zambabir", "010101")
         self.app.logout(self.session_id)
         self.app.login(self.session_id, "founder1", "pass1")
         self.app.remove_product(self.session_id, "bakery", "product1_1")

@@ -95,14 +95,14 @@ class proxy(Bridge):
             return self.real.add_to_cart(session_id, store_name, product_name, quantity)
         return Response()
 
-    def buy_cart_with_card(self, session_id: int, card_num: str, cvv: str, exp_date: str) -> Response[bool]:
+    def buy_cart_with_card(self, session_id: int, card_num: str, cvv: str, exp_date: str, address: str, postal_code: str) -> Response[bool]:
         if self.real is not None:
-            return self.real.buy_cart_with_card(session_id, card_num, cvv, exp_date)
+            return self.real.buy_cart_with_card(session_id, card_num, cvv, exp_date, address, postal_code)
         return Response()
 
-    def buy_cart_with_paypal(self, session_id: int, username: str, password: str) -> Response[bool]:
+    def buy_cart_with_paypal(self, session_id: int, username: str, password: str, address: str, postal_code: str) -> Response[bool]:
         if self.real is not None:
-            return self.real.buy_cart_with_paypal(session_id, username, password)
+            return self.real.buy_cart_with_paypal(session_id, username, password, address, postal_code)
         return Response()
 
     # registered user operations
@@ -176,3 +176,4 @@ class proxy(Bridge):
         if self.real is not None:
             return self.real.show_cart(session_id)
         return Response()
+

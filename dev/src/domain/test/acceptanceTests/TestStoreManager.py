@@ -24,7 +24,7 @@ class TestStoreManager(unittest.TestCase):
         self.app.login(self.session_id, "buyer1", "123")
         self.app.add_to_cart(self.session_id, "bakery3", "product1_1", 5)
         self.app.add_to_cart(self.session_id, "bakery3", "product1_2", 10)
-        self.app.buy_cart_with_paypal(self.session_id, "user1234", "12345")
+        self.app.buy_cart_with_paypal(self.session_id, "user1234", "12345", "zambabir", "010101")
         self.app.logout(self.session_id)
         self.exit_market()
 
@@ -237,7 +237,7 @@ class TestStoreManager(unittest.TestCase):
         self.app.login(self.session_id, "buyer3", "123")
         self.app.add_to_cart(self.session_id, "bakery3", "product1_1", 5)
         self.app.add_to_cart(self.session_id, "bakery3", "product1_2", 10)
-        self.app.buy_cart_with_paypal(self.session_id, "user1234", "12345")
+        self.app.buy_cart_with_paypal(self.session_id, "user1234", "12345", "zambabir", "010101")
         self.app.logout(self.session_id)
         self.app.login(self.session_id, "manager5", "pass1")
         self.app.remove_product(self.session_id, "bakery3", "product1_1")

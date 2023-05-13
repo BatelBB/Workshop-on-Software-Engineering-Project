@@ -124,19 +124,18 @@ class TestGuest(unittest.TestCase):
         self.assertTrue(products.success, "error: filter product by name action failed")
         self.assertTrue("product1_1" in products.result, "error: product1_1 did not receive")
 
-    # todo - add delivery service check
     # Use Case: Purchase Shopping Cart
     def test_product_purchase(self):
         # happy
         self.set_cart()
-        r = self.app.buy_cart_with_card(self.session_id, "1234123412341234", "123", "01/01/2025")
+        r = self.app.buy_cart_with_card(self.session_id, "1234123412341234", "123", "01/01/2025", "zambabir", "010101")
         self.assertTrue(r.success and r.result, "error: cart payment with card failed")
         cart = self.app.show_cart(self.session_id)
         self.assertEquals(cart.result, {}, "error: cart not empty after purchase!")
         self.app.exit_market(self.session_id)
 
         self.set_cart()
-        r = self.app.buy_cart_with_paypal(self.session_id, "user-xyz", "123")
+        r = self.app.buy_cart_with_paypal(self.session_id, "user-xyz", "123", "zambabir", "010101")
         self.assertTrue(r.success and r.result, "error: cart payment with paypal failed")
         cart = self.app.show_cart(self.session_id)
         self.assertEquals(cart.result, {}, "error: cart not empty after purchase!")
@@ -144,24 +143,27 @@ class TestGuest(unittest.TestCase):
         # sad - bad credit card
         self.app.exit_market(self.session_id)
         self.set_cart()
-        r = self.app.buy_cart_with_card(self.session_id, "1234123412341234", "123", "01/01/1800")
+        r = self.app.buy_cart_with_card(self.session_id, "1234123412341234", "123", "01/01/1800", "zambabir", "010101")
         self.assertFalse(r.success or r.result, "error: cart payment with outdated card not failed")
         cart = self.app.show_cart(self.session_id)
         self.assertTrue("product1_1" in cart.result["store1"], "error: product1_1 not in cart after failed purchase "
                                                                "with card!")
-        # # todo - add invalid paypal details
-        # self.app.exit_market(self.session_id)
-        # self.set_cart()
-        # r = self.app.buy_cart_with_paypal(self.session_id, "u1", "123")
-        # self.assertFalse(r.success or r.result, "error: cart payment with invalid paypal account not failed")
-        # cart = self.app.show_cart(self.session_id)
-        # self.assertTrue("product1_1" in cart.result["store1"], "error: product1_1 not in cart after failed purchase "
-        #                                                        "with paypal!")
+
+        self.app.exit_market(self.session_id)
+        self.set_cart()
+        r = self.app.buy_cart_with_paypal(self.session_id, "embedded_invalid_user", "123", "zambabir", "010101")
+        self.assertFalse(r.success or r.result, "error: cart payment with invalid paypal account not failed")
+        cart = self.app.show_cart(self.session_id)
+        self.assertTrue("product1_1" in cart.result["store1"], "error: product1_1 not in cart after failed purchase "
+                                                               "with paypal!")
 
         # bad
         self.app.exit_market(self.session_id)
-        r = self.app.buy_cart_with_card(self.session_id, "1234123412341234", "123", "01/01/2025")
+        r = self.app.buy_cart_with_card(self.session_id, "1234123412341234", "123", "01/01/2025", "zambabir", "010101")
         self.assertFalse(r.success or r.success, "error: payment succeeded after exiting market")
+        r = self.app.buy_cart_with_paypal(self.session_id, "user856", "123", "zambabir", "010101")
+        self.assertFalse(r.success or r.result, "error: cart payment with after exiting the market "
+                                                "with paypal account not failed")
 
     # Use Case: Inspecting Shopping Cart
     def test_losing_cart(self):

@@ -71,11 +71,11 @@ class real(Bridge):
     def add_to_cart(self, session_id: int, store_name: string, product_name: string, quantity: int) -> Response[bool]:
         return self.market.add_to_cart(session_id, store_name, product_name, quantity)
 
-    def buy_cart_with_card(self, session_id: int, card_num: str, cvv: str, exp_date: str) -> Response[bool]:
-        return self.market.purchase_shopping_cart(session_id, "card", [card_num, cvv, exp_date])
+    def buy_cart_with_card(self, session_id: int, card_num: str, cvv: str, exp_date: str, address: str, postal_code: str) -> Response[bool]:
+        return self.market.purchase_shopping_cart(session_id, "card", [card_num, cvv, exp_date], address, postal_code)
 
-    def buy_cart_with_paypal(self, session_id: int, username: str, password: str) -> Response[bool]:
-        return self.market.purchase_shopping_cart(session_id, "paypal", [username, password])
+    def buy_cart_with_paypal(self, session_id: int, username: str, password: str, address: str, postal_code: str) -> Response[bool]:
+        return self.market.purchase_shopping_cart(session_id, "paypal", [username, password], address, postal_code)
 
     # registered user operations
     def logout(self, session_id: int, ) -> Response[bool]:
