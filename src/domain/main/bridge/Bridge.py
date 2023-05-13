@@ -74,11 +74,11 @@ class Bridge(ABC):
         ...
 
     @abstractmethod
-    def buy_cart_with_card(self, session_id: int, card_num: str, cvv: str, exp_date: str) -> Response[bool]:
+    def buy_cart_with_card(self, session_id: int, card_num: str, cvv: str, exp_date: str, address: str, postal_code: str) -> Response[bool]:
         ...
 
     @abstractmethod
-    def buy_cart_with_paypal(self, session_id: int, username: str, password: str) -> Response[bool]:
+    def buy_cart_with_paypal(self, session_id: int, username: str, password: str, address: str, postal_code: str) -> Response[bool]:
         ...
 
     @abstractmethod
@@ -139,6 +139,7 @@ class Bridge(ABC):
     @abstractmethod
     def show_cart(self, session_id: int) -> Response[dict]:
         ...
+
 
 
 
