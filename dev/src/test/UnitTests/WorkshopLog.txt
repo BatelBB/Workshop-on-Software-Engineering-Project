@@ -1,4 +1,146 @@
-17/04/2023 09:32:02 INFO:	 Session: 7902747237121854664 has been initialized
-17/04/2023 09:32:02 INFO:	 Visitor.leave: Visitor(Guest) left session 7902747237121854664!
-17/04/2023 09:32:02 WARNING:	 Market is closed!
-17/04/2023 09:32:02 WARNING:	 Logger thread exits!
+13/05/2023 19:03:19 INFO:	 Session: 6554010500550381873 has been initialized
+13/05/2023 19:03:19 INFO:	 Visitor.leave: Visitor left session 6554010500550381873!
+13/05/2023 19:03:19 WARNING:	 Market is closed!
+13/05/2023 19:03:19 WARNING:	 Logger thread exits!
+13/05/2023 19:03:27 INFO:	 Session: 4754689613075724179 has been initialized
+13/05/2023 19:03:27 INFO:	 Visitor.register: 'A' is registered!
+13/05/2023 19:03:27 INFO:	 Visitor.login: Member 'A' is logged in.
+13/05/2023 19:03:27 INFO:	 Market.open_store: Member 'A' opened store 'Amazon'.
+13/05/2023 19:03:27 INFO:	 Visitor.register: 'B' is registered!
+13/05/2023 19:03:27 INFO:	 Market.appoint_manager: Member 'A' appointed 'B' to a Store Manager.
+13/05/2023 19:03:27 INFO:	 Visitor.register: 'Mayer' is registered!
+13/05/2023 19:03:27 INFO:	 Market.appoint_manager: Member 'A' appointed 'Mayer' to a Store Manager.
+13/05/2023 19:03:27 INFO:	 Visitor.register: 'foo()' is registered!
+13/05/2023 19:03:27 INFO:	 Market.appoint_manager: Member 'A' appointed 'foo()' to a Store Manager.
+13/05/2023 19:03:27 INFO:	 Visitor.register: 'boo()' is registered!
+13/05/2023 19:03:27 INFO:	 Market.appoint_manager: Member 'A' appointed 'boo()' to a Store Manager.
+13/05/2023 19:03:27 INFO:	 Market.close_store: Founder 'A' CLOSED store 'Amazon'
+13/05/2023 19:03:27 INFO:	 Visitor.login: Member 'B' is logged in.
+13/05/2023 19:03:27 INFO:	 Member.logout: Member 'A' is logged out
+13/05/2023 19:03:27 ERROR:	 Market.add_product: 'B' has no permission to 'Add a Product' at store 'Amazon'
+13/05/2023 19:03:27 ERROR:	 Market.add_product: 'B' has no permission to 'Add a Product' at store 'Amazon'
+13/05/2023 19:03:27 ERROR:	 Market.add_product: 'B' has no permission to 'Add a Product' at store 'Amazon'
+13/05/2023 19:03:27 ERROR:	 Market.add_product: 'B' has no permission to 'Add a Product' at store 'Amazon'
+13/05/2023 19:03:27 ERROR:	 Market.add_product: 'B' has no permission to 'Add a Product' at store 'Amazon'
+13/05/2023 19:03:27 ERROR:	 Market.add_product: 'B' has no permission to 'Add a Product' at store 'Amazon'
+13/05/2023 19:03:27 ERROR:	 Market.add_product: 'B' has no permission to 'Add a Product' at store 'Amazon'
+13/05/2023 19:03:27 INFO:	 Visitor.login: Member 'Mayer' is logged in.
+13/05/2023 19:03:27 INFO:	 Member.logout: Member 'B' is logged out
+13/05/2023 19:03:27 ERROR:	 Market.add_product: 'Mayer' has no permission to 'Add a Product' at store 'Amazon'
+13/05/2023 19:03:27 ERROR:	 Market.add_product: 'Mayer' has no permission to 'Add a Product' at store 'Amazon'
+13/05/2023 19:03:27 ERROR:	 Market.add_product: 'Mayer' has no permission to 'Add a Product' at store 'Amazon'
+13/05/2023 19:03:27 ERROR:	 Market.add_product: 'Mayer' has no permission to 'Add a Product' at store 'Amazon'
+13/05/2023 19:03:27 ERROR:	 Market.add_product: 'Mayer' has no permission to 'Add a Product' at store 'Amazon'
+13/05/2023 19:03:27 ERROR:	 Market.add_product: 'Mayer' has no permission to 'Add a Product' at store 'Amazon'
+13/05/2023 19:03:27 ERROR:	 Market.add_product: 'Mayer' has no permission to 'Add a Product' at store 'Amazon'
+13/05/2023 19:03:27 INFO:	 Visitor.login: Member 'foo()' is logged in.
+13/05/2023 19:03:27 INFO:	 Member.logout: Member 'Mayer' is logged out
+13/05/2023 19:03:27 ERROR:	 Market.add_product: 'foo()' has no permission to 'Add a Product' at store 'Amazon'
+13/05/2023 19:03:27 ERROR:	 Market.add_product: 'foo()' has no permission to 'Add a Product' at store 'Amazon'
+13/05/2023 19:03:27 ERROR:	 Market.add_product: 'foo()' has no permission to 'Add a Product' at store 'Amazon'
+13/05/2023 19:03:27 ERROR:	 Market.add_product: 'foo()' has no permission to 'Add a Product' at store 'Amazon'
+13/05/2023 19:03:27 ERROR:	 Market.add_product: 'foo()' has no permission to 'Add a Product' at store 'Amazon'
+13/05/2023 19:03:27 ERROR:	 Market.add_product: 'foo()' has no permission to 'Add a Product' at store 'Amazon'
+13/05/2023 19:03:27 ERROR:	 Market.add_product: 'foo()' has no permission to 'Add a Product' at store 'Amazon'
+13/05/2023 19:03:27 INFO:	 Visitor.login: Member 'boo()' is logged in.
+13/05/2023 19:03:27 INFO:	 Member.logout: Member 'foo()' is logged out
+13/05/2023 19:03:27 ERROR:	 Market.add_product: 'boo()' has no permission to 'Add a Product' at store 'Amazon'
+13/05/2023 19:03:27 ERROR:	 Market.add_product: 'boo()' has no permission to 'Add a Product' at store 'Amazon'
+13/05/2023 19:03:27 ERROR:	 Market.add_product: 'boo()' has no permission to 'Add a Product' at store 'Amazon'
+13/05/2023 19:03:27 ERROR:	 Market.add_product: 'boo()' has no permission to 'Add a Product' at store 'Amazon'
+13/05/2023 19:03:27 ERROR:	 Market.add_product: 'boo()' has no permission to 'Add a Product' at store 'Amazon'
+13/05/2023 19:03:27 ERROR:	 Market.add_product: 'boo()' has no permission to 'Add a Product' at store 'Amazon'
+13/05/2023 19:03:27 ERROR:	 Market.add_product: 'boo()' has no permission to 'Add a Product' at store 'Amazon'
+13/05/2023 19:03:27 WARNING:	 Market is closed!
+13/05/2023 19:03:27 WARNING:	 Logger thread exits!
+13/05/2023 19:08:50 INFO:	 Session: 4508703513650634762 has been initialized
+13/05/2023 19:08:50 INFO:	 Visitor.register: 'A' is registered!
+13/05/2023 19:08:50 INFO:	 Visitor.login: Member 'A' is logged in.
+13/05/2023 19:08:50 INFO:	 Market.open_store: Member 'A' opened store 'Amazon'.
+13/05/2023 19:08:50 INFO:	 Visitor.register: 'B' is registered!
+13/05/2023 19:08:50 INFO:	 Market.appoint_manager: Member 'A' appointed 'B' to a Store Manager.
+13/05/2023 19:08:50 INFO:	 Visitor.register: 'Mayer' is registered!
+13/05/2023 19:08:50 INFO:	 Market.appoint_manager: Member 'A' appointed 'Mayer' to a Store Manager.
+13/05/2023 19:08:50 INFO:	 Visitor.register: 'foo()' is registered!
+13/05/2023 19:08:50 INFO:	 Market.appoint_manager: Member 'A' appointed 'foo()' to a Store Manager.
+13/05/2023 19:08:50 INFO:	 Visitor.register: 'boo()' is registered!
+13/05/2023 19:08:50 INFO:	 Market.appoint_manager: Member 'A' appointed 'boo()' to a Store Manager.
+13/05/2023 19:08:50 INFO:	 Market.close_store: Founder 'A' CLOSED store 'Amazon'
+13/05/2023 19:08:50 INFO:	 Visitor.login: Member 'B' is logged in.
+13/05/2023 19:08:50 INFO:	 Member.logout: Member 'A' is logged out
+13/05/2023 19:08:50 ERROR:	 Market.add_product: 'B' has no permission to 'Add a Product' at store 'Amazon'
+13/05/2023 19:08:50 ERROR:	 Market.add_product: 'B' has no permission to 'Add a Product' at store 'Amazon'
+13/05/2023 19:08:50 ERROR:	 Market.add_product: 'B' has no permission to 'Add a Product' at store 'Amazon'
+13/05/2023 19:08:50 ERROR:	 Market.add_product: 'B' has no permission to 'Add a Product' at store 'Amazon'
+13/05/2023 19:08:50 ERROR:	 Market.add_product: 'B' has no permission to 'Add a Product' at store 'Amazon'
+13/05/2023 19:08:50 ERROR:	 Market.add_product: 'B' has no permission to 'Add a Product' at store 'Amazon'
+13/05/2023 19:08:50 ERROR:	 Market.add_product: 'B' has no permission to 'Add a Product' at store 'Amazon'
+13/05/2023 19:08:50 INFO:	 Visitor.login: Member 'Mayer' is logged in.
+13/05/2023 19:08:50 INFO:	 Member.logout: Member 'B' is logged out
+13/05/2023 19:08:50 ERROR:	 Market.add_product: 'Mayer' has no permission to 'Add a Product' at store 'Amazon'
+13/05/2023 19:08:50 ERROR:	 Market.add_product: 'Mayer' has no permission to 'Add a Product' at store 'Amazon'
+13/05/2023 19:08:50 ERROR:	 Market.add_product: 'Mayer' has no permission to 'Add a Product' at store 'Amazon'
+13/05/2023 19:08:50 ERROR:	 Market.add_product: 'Mayer' has no permission to 'Add a Product' at store 'Amazon'
+13/05/2023 19:08:50 ERROR:	 Market.add_product: 'Mayer' has no permission to 'Add a Product' at store 'Amazon'
+13/05/2023 19:08:50 ERROR:	 Market.add_product: 'Mayer' has no permission to 'Add a Product' at store 'Amazon'
+13/05/2023 19:08:50 ERROR:	 Market.add_product: 'Mayer' has no permission to 'Add a Product' at store 'Amazon'
+13/05/2023 19:08:50 INFO:	 Visitor.login: Member 'foo()' is logged in.
+13/05/2023 19:08:50 INFO:	 Member.logout: Member 'Mayer' is logged out
+13/05/2023 19:08:50 ERROR:	 Market.add_product: 'foo()' has no permission to 'Add a Product' at store 'Amazon'
+13/05/2023 19:08:50 ERROR:	 Market.add_product: 'foo()' has no permission to 'Add a Product' at store 'Amazon'
+13/05/2023 19:08:50 ERROR:	 Market.add_product: 'foo()' has no permission to 'Add a Product' at store 'Amazon'
+13/05/2023 19:08:50 ERROR:	 Market.add_product: 'foo()' has no permission to 'Add a Product' at store 'Amazon'
+13/05/2023 19:08:50 ERROR:	 Market.add_product: 'foo()' has no permission to 'Add a Product' at store 'Amazon'
+13/05/2023 19:08:50 ERROR:	 Market.add_product: 'foo()' has no permission to 'Add a Product' at store 'Amazon'
+13/05/2023 19:08:50 ERROR:	 Market.add_product: 'foo()' has no permission to 'Add a Product' at store 'Amazon'
+13/05/2023 19:08:50 INFO:	 Visitor.login: Member 'boo()' is logged in.
+13/05/2023 19:08:50 INFO:	 Member.logout: Member 'foo()' is logged out
+13/05/2023 19:08:50 ERROR:	 Market.add_product: 'boo()' has no permission to 'Add a Product' at store 'Amazon'
+13/05/2023 19:08:50 ERROR:	 Market.add_product: 'boo()' has no permission to 'Add a Product' at store 'Amazon'
+13/05/2023 19:08:50 ERROR:	 Market.add_product: 'boo()' has no permission to 'Add a Product' at store 'Amazon'
+13/05/2023 19:08:50 ERROR:	 Market.add_product: 'boo()' has no permission to 'Add a Product' at store 'Amazon'
+13/05/2023 19:08:50 ERROR:	 Market.add_product: 'boo()' has no permission to 'Add a Product' at store 'Amazon'
+13/05/2023 19:08:50 ERROR:	 Market.add_product: 'boo()' has no permission to 'Add a Product' at store 'Amazon'
+13/05/2023 19:08:50 ERROR:	 Market.add_product: 'boo()' has no permission to 'Add a Product' at store 'Amazon'
+13/05/2023 19:08:50 WARNING:	 Market is closed!
+13/05/2023 19:08:50 WARNING:	 Logger thread exits!
+13/05/2023 19:19:54 INFO:	 Session: 5563322494530359063 has been initialized
+13/05/2023 19:19:54 INFO:	 Visitor.leave: Visitor left session 5563322494530359063!
+13/05/2023 19:19:54 WARNING:	 Market is closed!
+13/05/2023 19:19:54 WARNING:	 Logger thread exits!
+13/05/2023 19:26:16 INFO:	 Session: 761216281128599143 has been initialized
+13/05/2023 19:26:16 INFO:	 Visitor.register: 'A' is registered!
+13/05/2023 19:26:16 INFO:	 Visitor.login: Member 'A' is logged in.
+13/05/2023 19:26:16 INFO:	 Market.open_store: Member 'A' opened store 'Amazon'.
+13/05/2023 19:26:16 INFO:	 Visitor.register: 'B' is registered!
+13/05/2023 19:26:16 INFO:	 Market.appoint_manager: Member 'A' appointed 'B' to a Store Manager.
+13/05/2023 19:26:16 INFO:	 Market.add_permission: 'A' ADD permission 'Appoint another manager' to 'B'
+13/05/2023 19:26:16 INFO:	 Visitor.login: Member 'B' is logged in.
+13/05/2023 19:26:16 INFO:	 Member.logout: Member 'A' is logged out
+13/05/2023 19:26:16 INFO:	 Visitor.register: 'Mayer' is registered!
+13/05/2023 19:26:16 INFO:	 Market.appoint_manager: Member 'B' appointed 'Mayer' to a Store Manager.
+13/05/2023 19:26:16 INFO:	 Market.add_permission: 'B' ADD permission 'Appoint another manager' to 'Mayer'
+13/05/2023 19:26:16 INFO:	 Visitor.login: Member 'Mayer' is logged in.
+13/05/2023 19:26:16 INFO:	 Member.logout: Member 'B' is logged out
+13/05/2023 19:26:16 INFO:	 Visitor.register: 'foo()' is registered!
+13/05/2023 19:26:16 INFO:	 Market.appoint_manager: Member 'Mayer' appointed 'foo()' to a Store Manager.
+13/05/2023 19:26:16 INFO:	 Market.add_permission: 'Mayer' ADD permission 'Appoint another manager' to 'foo()'
+13/05/2023 19:26:16 INFO:	 Visitor.login: Member 'foo()' is logged in.
+13/05/2023 19:26:16 INFO:	 Member.logout: Member 'Mayer' is logged out
+13/05/2023 19:26:16 INFO:	 Visitor.register: 'boo()' is registered!
+13/05/2023 19:26:16 INFO:	 Market.appoint_manager: Member 'foo()' appointed 'boo()' to a Store Manager.
+13/05/2023 19:26:16 INFO:	 Market.add_permission: 'foo()' ADD permission 'Appoint another manager' to 'boo()'
+13/05/2023 19:26:16 INFO:	 Visitor.login: Member 'boo()' is logged in.
+13/05/2023 19:26:16 INFO:	 Member.logout: Member 'foo()' is logged out
+13/05/2023 19:26:16 INFO:	 Visitor.login: Member 'A' is logged in.
+13/05/2023 19:26:16 INFO:	 Member.logout: Member 'boo()' is logged out
+13/05/2023 19:26:16 INFO:	 Market.appointees_at: 'A' appointees at store 'Amazon': B, Mayer, foo(), boo()
+13/05/2023 19:26:16 INFO:	 Visitor.login: Member 'B' is logged in.
+13/05/2023 19:26:16 INFO:	 Member.logout: Member 'A' is logged out
+13/05/2023 19:26:16 INFO:	 Market.remove_appointment: 'B' remove appointment of 'Mayer, foo(), boo()' at store 'Amazon'.
+13/05/2023 19:26:16 INFO:	 Market.appointees_at: 'B' appointees at store 'Amazon': 
+13/05/2023 19:26:16 INFO:	 Visitor.login: Member 'A' is logged in.
+13/05/2023 19:26:16 INFO:	 Member.logout: Member 'B' is logged out
+13/05/2023 19:26:16 INFO:	 Market.appointees_at: 'A' appointees at store 'Amazon': B
+13/05/2023 19:26:16 WARNING:	 Market is closed!
+13/05/2023 19:26:16 WARNING:	 Logger thread exits!

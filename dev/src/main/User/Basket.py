@@ -1,27 +1,43 @@
+from datetime import datetime
+from functools import reduce
+from typing import Optional
+
+from dev.src.main.Store.Product import Product
+
+
 class Item:
-    def __init__(self, product_name: str, quantity: int = 0, price: float = 0.0):
-        self.product_name = product_name
+    def __init__(self, product: Product, quantity: int = 1, discount_price: float = None, discount_due_date: datetime = None):
+        self.product = product
         self.quantity = quantity
-        self.price = price
-        self.discount_price = price
+        self.discount_price = discount_price
+        self.discount_due_date = discount_due_date
+        if self.discount_price is None:
+            self.discount_price = product.price
 
     def __str__(self):
-        return f'Item: Product: \'{self.product_name}\', Quantity: {self.quantity}, Price: {self.price}, Discount' \
-               f'-Price: {self.discount_price}'
+        discount_price_str = f', Discount Price: {self.discount_price}, Discount Due Date: {self.discount_due_date}' \
+            if self.discount_price < self.product.price else ''
+        return f'{self.product}, Quantity: {self.quantity}{discount_price_str}.'
 
     def __eq__(self, other):
-        return self.product_name == other.product_name
+        return self.product == other.product
 
 
 class Basket:
-    def __init__(self):
-        self.items: list[Item] = list()
+    def __init__(self, items: list[Item] = None):
+        self.items = items
+        if self.items is None:
+            self.items = []
+        self.purchaser = ''
+        self.seller = ''
+        self.total_price = self.estimate_total_price()
 
     def __str__(self):
         items_strings: list[str] = list(map(lambda i: i.__str__(), self.items))
-        return "Basket: {" + ', '.join(items_strings) + '}'
+        total_price_str = f'\nTotal Price: {self.total_price}.' if self.total_price > 0.0 else ''
+        return "Basket: {" + ', '.join(items_strings) + '}' + total_price_str
 
-    def add_item(self, item: Item) -> int:
+    def add(self, item: Item) -> int:
         new_quantity = item.quantity
         try:
             item_index = self.items.index(item)
@@ -37,8 +53,11 @@ class Basket:
             self.items.append(item)
         return new_quantity
 
-    def remove_item(self, item: Item) -> None:
+    def remove(self, item: Item) -> None:
         try:
-            self.remove_item(item)  # FIXME is that function calling itself?
+            self.items.remove(item)
         except Exception:
             pass
+
+    def estimate_total_price(self) -> float:
+        return reduce(lambda total, item: total + (item.discount_price * item.quantity), self.items, 0.000)

@@ -1,3 +1,4 @@
+from dev.src.main.Store.Product import Product
 from dev.src.main.User.Basket import Basket, Item
 
 
@@ -16,17 +17,17 @@ class Cart:
             self.baskets.update({store_name: Basket()})
         return self.baskets[store_name]
 
-    def add_item(self, store_name: str, product_name: str, price: float, quantity: int) -> None:
+    def add(self, store_name: str, product: Product, quantity: int) -> None:
         basket = self.get_or_create_basket(store_name)
-        item = Item(product_name, quantity, price)
-        basket.add_item(item)
+        item = Item(product, quantity)
+        basket.add(item)
 
-    def remove_item(self, store_name: str, product_name: str) -> None:
+    def remove(self, store_name: str, product: Product) -> None:
         basket = self.get_or_create_basket(store_name)
-        item = Item(product_name)
-        basket.add_item(item)
+        item = Item(product)
+        basket.remove(item)
 
-    def update_item_quantity(self, store_name: str, product_name: str, quantity: int) -> int:
+    def update(self, store_name: str, product: Product, quantity: int) -> int:
         basket = self.get_or_create_basket(store_name)
-        item = Item(product_name, quantity)
-        basket.add_item(item)
+        item = Item(product, quantity)
+        basket.add(item)

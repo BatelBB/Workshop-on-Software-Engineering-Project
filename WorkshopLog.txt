@@ -1,0 +1,378 @@
+12/05/2023 18:06:47 INFO:	 Session: 5548778982081297327 has been initialized
+12/05/2023 18:06:47 INFO:	 Visitor.register: 'Nir' is registered!
+12/05/2023 18:06:47 INFO:	 Visitor.register: 'Yossi' is registered!
+12/05/2023 18:06:47 INFO:	 Visitor.register: 'Dani' is registered!
+12/05/2023 18:06:47 INFO:	 Visitor.login: Member 'Nir' is logged in.
+12/05/2023 18:06:47 INFO:	 Market.open_store: Member 'Nir' opened store 'Amazon'.
+12/05/2023 18:06:47 INFO:	 Visitor.register: 'Moshe' is registered!
+12/05/2023 18:06:47 INFO:	 Market.appoint_manager: Member 'Nir' appointed 'Moshe' to a Store Manager.
+12/05/2023 18:06:47 INFO:	 Visitor.login: Member 'Moshe' is logged in.
+12/05/2023 18:06:47 INFO:	 Member.logout: Member 'Nir' is logged out
+12/05/2023 18:06:47 INFO:	 Market.appoint_manager: Member 'Moshe' appointed 'Yossi' to a Store Manager.
+12/05/2023 18:06:47 INFO:	 Visitor.login: Member 'Yossi' is logged in.
+12/05/2023 18:06:47 INFO:	 Member.logout: Member 'Moshe' is logged out
+12/05/2023 18:06:47 INFO:	 Market.appoint_manager: Member 'Yossi' appointed 'Dani' to a Store Manager.
+12/05/2023 18:06:47 INFO:	 Store.add: Product 'Razer Blackwidow V3', Category: 'Keyboards', Price: 799.123, Rate: Not rated yet, is added to Store 'Amazon' successfully!.
+12/05/2023 18:06:47 INFO:	 Store.add: Store 'Amazon': Product 'Razer Blackwidow V3' quantity is set to 246.
+12/05/2023 18:06:47 INFO:	 Store.update: Store 'Amazon': Product 'Razer Blackwidow V3' quantity is set to 555.
+12/05/2023 18:06:47 INFO:	 Market.get_all_stores: Displaying stores to Member 'Yossi': Amazon
+12/05/2023 18:06:47 INFO:	 Market.get_store: Displaying store Amazon to Member 'Yossi'
+Store: Amazon
+Products:
+0).	Razer Blackwidow V3. Available quantity: 555.
+
+12/05/2023 18:06:47 INFO:	 Market.get_store: Displaying store Amazon to Member 'Yossi'
+Store: Amazon
+Products:
+0).	Razer Blackwidow V3. Available quantity: 555.
+
+12/05/2023 18:06:47 INFO:	 Visitor.add_to_cart: 123 units of Product 'Razer Blackwidow V3' is added to 'Member 'Yossi'' cart
+12/05/2023 18:06:47 INFO:	 Visitor.add_to_cart: 123 units of Product 'Razer Blackwidow V3' is added to 'Member 'Yossi'' cart
+12/05/2023 18:06:47 INFO:	 Visitor.show_cart: Cart:
+	Store 'Amazon'
+	Basket: {Product 'Razer Blackwidow V3', Category: 'Keyboards', Price: 799.123, Rate: Not rated yet, Quantity: 246.}
+12/05/2023 18:06:47 INFO:	 Visitor.login: Member 'Nir' is logged in.
+12/05/2023 18:06:47 INFO:	 Member.logout: Member 'Yossi' is logged out
+12/05/2023 18:06:47 INFO:	 Market.get_store_appointments: Display store 'Amazon' staff to owner 'Nir'
+Staff
+Appointee: 'Nir', appointed_by: 'None'
+Permissions: Retrieve store purchase history, Get and answer customer questions, ('Add a Product',), Update product quantity, Remove product, Change discount policy, Change purchase policy, Appoint another manager, Appoint another owner, Cancel appointment of another manager, Cancel appointment of another owner, Close store, Reopen store, Retrieve store staff details
+Appointee: 'Moshe', appointed_by: 'Nir'
+Permissions: Retrieve store purchase history, Get and answer customer questions, ('Add a Product',), Update product quantity, Remove product, Change discount policy, Change purchase policy, Appoint another manager, Appoint another owner, Cancel appointment of another manager, Cancel appointment of another owner, Close store, Reopen store, Retrieve store staff details
+Appointee: 'Yossi', appointed_by: 'Moshe'
+Permissions: Retrieve store purchase history, Get and answer customer questions, ('Add a Product',), Update product quantity, Remove product, Change discount policy, Change purchase policy, Appoint another manager, Appoint another owner, Cancel appointment of another manager, Cancel appointment of another owner, Close store, Reopen store, Retrieve store staff details
+Appointee: 'Dani', appointed_by: 'Yossi'
+Permissions: Retrieve store purchase history, Get and answer customer questions, ('Add a Product',), Update product quantity, Remove product, Change discount policy, Change purchase policy, Appoint another manager, Appoint another owner, Cancel appointment of another manager, Cancel appointment of another owner, Close store, Reopen store, Retrieve store staff details
+12/05/2023 18:06:47 INFO:	 Market.close_store: Founder 'Nir' CLOSED store 'Amazon'
+12/05/2023 18:06:47 ERROR:	 Market.add_product: 'Nir' has no permission to Add a Product at store 'Amazon'
+12/05/2023 18:06:47 INFO:	 Market.close_store: Founder 'Nir' REOPEN store 'Amazon'
+12/05/2023 18:06:47 INFO:	 Store.add: Store 'Amazon': Product 'Razer Blackwidow V3' quantity is set to 678.
+12/05/2023 18:06:47 WARNING:	 Market is closed!
+12/05/2023 18:06:47 WARNING:	 Logger thread exits!
+13/05/2023 14:34:42 INFO:	 Session: 933099182735152196 has been initialized
+13/05/2023 14:34:42 INFO:	 Visitor.register: 'Nir' is registered!
+13/05/2023 14:34:42 INFO:	 Visitor.register: 'Yossi' is registered!
+13/05/2023 14:34:42 INFO:	 Visitor.register: 'Dani' is registered!
+13/05/2023 14:34:42 INFO:	 Visitor.login: Member 'Nir' is logged in.
+13/05/2023 14:34:42 INFO:	 Session: 568548904059686181 has been initialized
+13/05/2023 14:34:42 INFO:	 Visitor.register: 'Nir' is registered!
+13/05/2023 14:34:42 INFO:	 Visitor.register: 'Yossi' is registered!
+13/05/2023 14:34:42 INFO:	 Visitor.register: 'Dani' is registered!
+13/05/2023 14:34:42 INFO:	 Visitor.login: Member 'Nir' is logged in.
+13/05/2023 14:34:42 WARNING:	 Market is closed!
+13/05/2023 14:34:42 WARNING:	 Logger thread exits!
+13/05/2023 14:35:09 INFO:	 Session: 1756449111828429130 has been initialized
+13/05/2023 14:35:09 INFO:	 Visitor.register: 'Nir' is registered!
+13/05/2023 14:35:09 INFO:	 Visitor.register: 'Yossi' is registered!
+13/05/2023 14:35:09 INFO:	 Visitor.register: 'Dani' is registered!
+13/05/2023 14:35:09 INFO:	 Visitor.login: Member 'Nir' is logged in.
+13/05/2023 14:35:09 INFO:	 Session: 7202503510706168721 has been initialized
+13/05/2023 14:35:09 INFO:	 Visitor.register: 'Nir' is registered!
+13/05/2023 14:35:09 INFO:	 Visitor.register: 'Yossi' is registered!
+13/05/2023 14:35:09 INFO:	 Visitor.register: 'Dani' is registered!
+13/05/2023 14:35:09 INFO:	 Visitor.login: Member 'Nir' is logged in.
+13/05/2023 14:35:09 WARNING:	 Market is closed!
+13/05/2023 14:35:09 WARNING:	 Logger thread exits!
+13/05/2023 14:35:42 INFO:	 Session: 5201917206504519270 has been initialized
+13/05/2023 14:35:42 INFO:	 Visitor.register: 'Nir' is registered!
+13/05/2023 14:35:42 INFO:	 Visitor.register: 'Yossi' is registered!
+13/05/2023 14:35:42 INFO:	 Visitor.register: 'Dani' is registered!
+13/05/2023 14:35:42 INFO:	 Visitor.login: Member 'Nir' is logged in.
+13/05/2023 14:35:42 INFO:	 Session: 7172192567457181489 has been initialized
+13/05/2023 14:35:42 INFO:	 Visitor.register: 'Nir' is registered!
+13/05/2023 14:35:42 INFO:	 Visitor.register: 'Yossi' is registered!
+13/05/2023 14:35:42 INFO:	 Visitor.register: 'Dani' is registered!
+13/05/2023 14:35:42 INFO:	 Visitor.login: Member 'Nir' is logged in.
+13/05/2023 14:35:42 WARNING:	 Market is closed!
+13/05/2023 14:35:42 WARNING:	 Logger thread exits!
+13/05/2023 14:35:56 INFO:	 Session: 7464210164653093097 has been initialized
+13/05/2023 14:35:56 INFO:	 Visitor.register: 'Nir' is registered!
+13/05/2023 14:35:56 INFO:	 Visitor.register: 'Yossi' is registered!
+13/05/2023 14:35:56 INFO:	 Visitor.register: 'Dani' is registered!
+13/05/2023 14:35:56 INFO:	 Visitor.login: Member 'Nir' is logged in.
+13/05/2023 14:35:56 INFO:	 Session: 3259571589870067883 has been initialized
+13/05/2023 14:35:56 ERROR:	 Market.register: Username: 'Nir' is occupied
+13/05/2023 14:35:56 ERROR:	 Market.register: Username: 'Yossi' is occupied
+13/05/2023 14:35:56 ERROR:	 Market.register: Username: 'Dani' is occupied
+13/05/2023 14:35:56 INFO:	 Visitor.login: Member 'Nir' is logged in.
+13/05/2023 14:35:56 WARNING:	 Market is closed!
+13/05/2023 14:35:56 WARNING:	 Logger thread exits!
+13/05/2023 14:36:08 INFO:	 Session: 5010369481667568347 has been initialized
+13/05/2023 14:36:08 INFO:	 Visitor.register: 'Nir' is registered!
+13/05/2023 14:36:08 INFO:	 Visitor.register: 'Yossi' is registered!
+13/05/2023 14:36:08 INFO:	 Visitor.register: 'Dani' is registered!
+13/05/2023 14:36:08 INFO:	 Visitor.login: Member 'Nir' is logged in.
+13/05/2023 14:36:08 INFO:	 Session: 6187928891580223310 has been initialized
+13/05/2023 14:36:08 INFO:	 Visitor.register: 'Nir' is registered!
+13/05/2023 14:36:08 INFO:	 Visitor.register: 'Yossi' is registered!
+13/05/2023 14:36:08 INFO:	 Visitor.register: 'Dani' is registered!
+13/05/2023 14:36:08 INFO:	 Visitor.login: Member 'Nir' is logged in.
+13/05/2023 14:36:08 WARNING:	 Market is closed!
+13/05/2023 14:36:08 WARNING:	 Logger thread exits!
+13/05/2023 14:37:57 INFO:	 Session: 8554720445987726512 has been initialized
+13/05/2023 14:37:57 INFO:	 Visitor.register: 'Nir' is registered!
+13/05/2023 14:37:57 INFO:	 Visitor.register: 'Yossi' is registered!
+13/05/2023 14:37:57 INFO:	 Visitor.register: 'Dani' is registered!
+13/05/2023 14:37:57 INFO:	 Visitor.login: Member 'Nir' is logged in.
+13/05/2023 14:37:57 INFO:	 Session: 9041117983897014647 has been initialized
+13/05/2023 14:37:57 INFO:	 Visitor.register: 'Nir' is registered!
+13/05/2023 14:37:57 INFO:	 Visitor.register: 'Yossi' is registered!
+13/05/2023 14:37:57 INFO:	 Visitor.register: 'Dani' is registered!
+13/05/2023 14:37:57 INFO:	 Visitor.login: Member 'Nir' is logged in.
+13/05/2023 14:37:57 WARNING:	 Market is closed!
+13/05/2023 14:37:57 WARNING:	 Logger thread exits!
+13/05/2023 14:40:53 INFO:	 Session: 4278932467467681506 has been initialized
+13/05/2023 14:40:53 INFO:	 Visitor.register: 'Nir' is registered!
+13/05/2023 14:40:53 INFO:	 Visitor.register: 'Yossi' is registered!
+13/05/2023 14:40:53 INFO:	 Visitor.register: 'Dani' is registered!
+13/05/2023 14:40:53 INFO:	 Visitor.login: Member 'Nir' is logged in.
+13/05/2023 14:40:53 INFO:	 Session: 6836185131037783018 has been initialized
+13/05/2023 14:40:53 ERROR:	 Market.register: Username: 'Nir' is occupied
+13/05/2023 14:40:53 ERROR:	 Market.register: Username: 'Yossi' is occupied
+13/05/2023 14:40:53 ERROR:	 Market.register: Username: 'Dani' is occupied
+13/05/2023 14:40:53 INFO:	 Visitor.login: Member 'Nir' is logged in.
+13/05/2023 14:40:53 WARNING:	 Market is closed!
+13/05/2023 14:40:53 WARNING:	 Logger thread exits!
+13/05/2023 17:19:07 INFO:	 Session: 6294750746307964381 has been initialized
+13/05/2023 17:19:07 INFO:	 Visitor.register: 'Nir' is registered!
+13/05/2023 17:19:07 INFO:	 Visitor.register: 'Yossi' is registered!
+13/05/2023 17:19:07 INFO:	 Visitor.register: 'Dani' is registered!
+13/05/2023 17:19:07 INFO:	 Visitor.login: Member 'Nir' is logged in.
+13/05/2023 17:19:07 INFO:	 Market.open_store: Member 'Nir' opened store 'Amazon'.
+13/05/2023 17:19:07 INFO:	 Visitor.register: 'Moshe' is registered!
+13/05/2023 17:19:07 INFO:	 Market.appoint_manager: Member 'Nir' appointed 'Moshe' to a Store Manager.
+13/05/2023 17:19:07 INFO:	 Visitor.login: Member 'Moshe' is logged in.
+13/05/2023 17:19:07 INFO:	 Member.logout: Member 'Nir' is logged out
+13/05/2023 17:19:07 INFO:	 Market.appoint_manager: Member 'Moshe' appointed 'Yossi' to a Store Manager.
+13/05/2023 17:19:07 INFO:	 Visitor.login: Member 'Yossi' is logged in.
+13/05/2023 17:19:07 INFO:	 Member.logout: Member 'Moshe' is logged out
+13/05/2023 17:19:07 INFO:	 Market.appoint_manager: Member 'Yossi' appointed 'Dani' to a Store Manager.
+13/05/2023 17:19:07 INFO:	 Market.add_product: 'Yossi' add 123 units of Product 'Razer Blackwidow V3', Category: 'Keyboards', Price: 799.123, Rate: Not rated yet to store 'Amazon'
+13/05/2023 17:19:07 INFO:	 Market.add_product: 'Yossi' add 123 units of Product 'Razer Blackwidow V3', Category: 'Keyboards', Price: 799.123, Rate: Not rated yet to store 'Amazon'
+13/05/2023 17:19:07 INFO:	 Market.update_product_quantity: 'Yossi' update product 'Razer Blackwidow V3' at store 'Razer Blackwidow V3' to 555 units
+13/05/2023 17:19:07 INFO:	 Market.get_all_stores: Return all market stores to Member 'Yossi': Amazon
+13/05/2023 17:19:07 INFO:	 Market.get_store: Return store 'Amazon' to Member 'Yossi'
+Store: Amazon
+Products:
+0).	Razer Blackwidow V3. Available quantity: 555.
+
+13/05/2023 17:19:07 WARNING:	 Market is closed!
+13/05/2023 17:19:07 WARNING:	 Logger thread exits!
+13/05/2023 18:30:36 INFO:	 Session: 486740690134027404 has been initialized
+13/05/2023 18:30:36 INFO:	 Visitor.register: 'Nir' is registered!
+13/05/2023 18:30:36 INFO:	 Visitor.login: Member 'Nir' is logged in.
+13/05/2023 18:30:36 INFO:	 Market.open_store: Member 'Nir' opened store 'Amazon'.
+13/05/2023 18:30:36 INFO:	 Market.add_product: 'Nir' add 123 units of Product 'Razer Blackwidow V3', Category: 'Keyboards', Price: 799.123, Rate: Not rated yet to store 'Amazon'
+13/05/2023 18:30:36 INFO:	 Market.add_product: 'Nir' add 123 units of Product 'Razer Blackwidow V3', Category: 'Keyboards', Price: 799.123, Rate: Not rated yet to store 'Amazon'
+13/05/2023 18:30:36 INFO:	 Market.get_product_by_name: Return products with name 'Razer Blackwidow V3' to Member 'Nir'
+13/05/2023 18:30:36 WARNING:	 Market is closed!
+13/05/2023 18:30:36 WARNING:	 Logger thread exits!
+13/05/2023 18:35:42 INFO:	 Session: 2644231178175359989 has been initialized
+13/05/2023 18:35:42 INFO:	 Visitor.register: 'Nir' is registered!
+13/05/2023 18:35:42 INFO:	 Visitor.login: Member 'Nir' is logged in.
+13/05/2023 18:35:42 INFO:	 Market.open_store: Member 'Nir' opened store 'Amazon'.
+13/05/2023 18:35:42 INFO:	 Market.open_store: Member 'Nir' opened store 'Ebay'.
+13/05/2023 18:35:42 INFO:	 Market.open_store: Member 'Nir' opened store 'Yahoo'.
+13/05/2023 18:35:42 INFO:	 Market.add_product: 'Nir' add 123 units of Product 'Razer Blackwidow V3', Category: 'Keyboards', Price: 799.123, Rate: Not rated yet to store 'Amazon'
+13/05/2023 18:35:42 INFO:	 Market.add_product: 'Nir' add 123 units of Product 'Razer Blackwidow V3', Category: 'Keyboards', Price: 499.123, Rate: Not rated yet to store 'Ebay'
+13/05/2023 18:35:42 INFO:	 Market.add_product: 'Nir' add 123 units of Product 'Razer Blackwidow V3', Category: 'Keyboards', Price: 599.123, Rate: Not rated yet to store 'Yahoo'
+13/05/2023 18:35:42 INFO:	 Market.get_product_by_name: Return filtered products with name to Member 'Nir'
+13/05/2023 18:35:42 WARNING:	 Market is closed!
+13/05/2023 18:35:42 WARNING:	 Logger thread exits!
+13/05/2023 18:41:53 INFO:	 Session: 240793040896999625 has been initialized
+13/05/2023 18:41:53 INFO:	 Visitor.register: 'Nir' is registered!
+13/05/2023 18:41:53 INFO:	 Visitor.login: Member 'Nir' is logged in.
+13/05/2023 18:41:53 INFO:	 Market.open_store: Member 'Nir' opened store 'Amazon'.
+13/05/2023 18:41:53 INFO:	 Market.open_store: Member 'Nir' opened store 'Ebay'.
+13/05/2023 18:41:53 INFO:	 Market.open_store: Member 'Nir' opened store 'Yahoo'.
+13/05/2023 18:41:53 INFO:	 Market.add_product: 'Nir' add 123 units of Product 'Razer Blackwidow V3', Category: 'Keyboards', Price: 799.123, Rate: Not rated yet to store 'Amazon'
+13/05/2023 18:41:53 INFO:	 Market.add_product: 'Nir' add 123 units of Product 'Razer Blackwidow V3', Category: 'Keyboards', Price: 499.123, Rate: Not rated yet to store 'Ebay'
+13/05/2023 18:41:53 INFO:	 Market.add_product: 'Nir' add 123 units of Product 'Razer Blackwidow V3', Category: 'Keyboards', Price: 599.123, Rate: Not rated yet to store 'Yahoo'
+13/05/2023 18:41:53 INFO:	 Market.get_product_by_name: Return filtered products with name to Member 'Nir'
+13/05/2023 18:41:53 INFO:	 Market.get_product_by_name: Return filtered products with name to Member 'Nir'
+13/05/2023 18:41:53 INFO:	 Market.get_product_by_name: Return filtered products with name to Member 'Nir'
+13/05/2023 18:41:53 WARNING:	 Market is closed!
+13/05/2023 18:41:53 WARNING:	 Logger thread exits!
+13/05/2023 18:42:03 INFO:	 Session: 3335517700598539549 has been initialized
+13/05/2023 18:42:03 INFO:	 Visitor.register: 'Nir' is registered!
+13/05/2023 18:42:03 INFO:	 Visitor.login: Member 'Nir' is logged in.
+13/05/2023 18:42:03 INFO:	 Market.open_store: Member 'Nir' opened store 'Amazon'.
+13/05/2023 18:42:03 INFO:	 Market.open_store: Member 'Nir' opened store 'Ebay'.
+13/05/2023 18:42:03 INFO:	 Market.open_store: Member 'Nir' opened store 'Yahoo'.
+13/05/2023 18:42:03 INFO:	 Market.add_product: 'Nir' add 123 units of Product 'Razer Blackwidow V3', Category: 'Keyboards', Price: 799.123, Rate: Not rated yet to store 'Amazon'
+13/05/2023 18:42:03 INFO:	 Market.add_product: 'Nir' add 123 units of Product 'Razer Blackwidow V3', Category: 'Keyboards', Price: 499.123, Rate: Not rated yet to store 'Ebay'
+13/05/2023 18:42:03 INFO:	 Market.add_product: 'Nir' add 123 units of Product 'Razer Blackwidow V3', Category: 'Keyboards', Price: 599.123, Rate: Not rated yet to store 'Yahoo'
+13/05/2023 18:42:03 INFO:	 Market.get_product_by_name: Return filtered products with name to Member 'Nir'
+13/05/2023 18:42:03 INFO:	 Market.get_product_by_name: Return filtered products with name to Member 'Nir'
+13/05/2023 18:42:03 INFO:	 Market.get_product_by_name: Return filtered products with name to Member 'Nir'
+13/05/2023 18:42:03 WARNING:	 Market is closed!
+13/05/2023 18:42:03 WARNING:	 Logger thread exits!
+13/05/2023 18:42:15 INFO:	 Session: 9023927217076590592 has been initialized
+13/05/2023 18:42:15 INFO:	 Visitor.register: 'Nir' is registered!
+13/05/2023 18:42:15 INFO:	 Visitor.login: Member 'Nir' is logged in.
+13/05/2023 18:42:15 INFO:	 Market.open_store: Member 'Nir' opened store 'Amazon'.
+13/05/2023 18:42:15 INFO:	 Market.open_store: Member 'Nir' opened store 'Ebay'.
+13/05/2023 18:42:15 INFO:	 Market.open_store: Member 'Nir' opened store 'Yahoo'.
+13/05/2023 18:42:15 INFO:	 Market.add_product: 'Nir' add 123 units of Product 'Razer Blackwidow V3', Category: 'Keyboards', Price: 799.123, Rate: Not rated yet to store 'Amazon'
+13/05/2023 18:42:15 INFO:	 Market.add_product: 'Nir' add 123 units of Product 'Razer Blackwidow V3', Category: 'Keyboards', Price: 499.123, Rate: Not rated yet to store 'Ebay'
+13/05/2023 18:42:15 INFO:	 Market.add_product: 'Nir' add 123 units of Product 'Razer Blackwidow V3', Category: 'Keyboards', Price: 599.123, Rate: Not rated yet to store 'Yahoo'
+13/05/2023 18:42:15 INFO:	 Market.get_product_by_name: Return filtered products with name to Member 'Nir'
+13/05/2023 18:42:15 INFO:	 Market.get_product_by_name: Return filtered products with name to Member 'Nir'
+13/05/2023 18:42:15 INFO:	 Market.get_product_by_name: Return filtered products with name to Member 'Nir'
+13/05/2023 18:42:15 WARNING:	 Market is closed!
+13/05/2023 18:42:15 WARNING:	 Logger thread exits!
+13/05/2023 18:43:17 INFO:	 Session: 4966544149288480723 has been initialized
+13/05/2023 18:43:17 INFO:	 Visitor.register: 'Nir' is registered!
+13/05/2023 18:43:17 INFO:	 Visitor.login: Member 'Nir' is logged in.
+13/05/2023 18:43:17 INFO:	 Market.open_store: Member 'Nir' opened store 'Amazon'.
+13/05/2023 18:43:17 INFO:	 Market.open_store: Member 'Nir' opened store 'Ebay'.
+13/05/2023 18:43:17 INFO:	 Market.open_store: Member 'Nir' opened store 'Yahoo'.
+13/05/2023 18:43:17 INFO:	 Market.add_product: 'Nir' add 123 units of Product 'Razer Blackwidow V3', Category: 'Keyboards', Price: 799.123, Rate: Not rated yet to store 'Amazon'
+13/05/2023 18:43:17 INFO:	 Market.add_product: 'Nir' add 123 units of Product 'Razer Blackwidow V3', Category: 'Keyboards', Price: 499.123, Rate: Not rated yet to store 'Ebay'
+13/05/2023 18:43:17 INFO:	 Market.add_product: 'Nir' add 123 units of Product 'Razer Blackwidow V3', Category: 'Keyboards', Price: 599.123, Rate: Not rated yet to store 'Yahoo'
+13/05/2023 18:43:17 INFO:	 Market.get_product_by_name: Return filtered products with name to Member 'Nir'
+13/05/2023 18:43:17 INFO:	 Market.get_product_by_name: Return filtered products with name to Member 'Nir'
+13/05/2023 18:43:17 WARNING:	 Market is closed!
+13/05/2023 18:43:17 WARNING:	 Logger thread exits!
+13/05/2023 18:45:03 INFO:	 Session: 8678543923501030884 has been initialized
+13/05/2023 18:45:03 INFO:	 Visitor.register: 'Nir' is registered!
+13/05/2023 18:45:03 INFO:	 Visitor.login: Member 'Nir' is logged in.
+13/05/2023 18:45:03 INFO:	 Market.open_store: Member 'Nir' opened store 'Amazon'.
+13/05/2023 18:45:03 INFO:	 Market.open_store: Member 'Nir' opened store 'Ebay'.
+13/05/2023 18:45:03 INFO:	 Market.open_store: Member 'Nir' opened store 'Yahoo'.
+13/05/2023 18:45:03 INFO:	 Market.add_product: 'Nir' add 123 units of Product 'Razer Blackwidow V3', Category: 'Keyboards', Price: 799.123, Rate: Not rated yet to store 'Amazon'
+13/05/2023 18:45:03 INFO:	 Market.add_product: 'Nir' add 123 units of Product 'Razer Blackwidow V3', Category: 'Keyboards', Price: 499.123, Rate: Not rated yet to store 'Ebay'
+13/05/2023 18:45:03 INFO:	 Market.add_product: 'Nir' add 123 units of Product 'Razer Blackwidow V3', Category: 'Keyboards', Price: 599.123, Rate: Not rated yet to store 'Yahoo'
+13/05/2023 18:45:03 INFO:	 Market.get_product_by_keywords: Return filtered products with name to Member 'Nir'
+13/05/2023 18:45:03 WARNING:	 Market is closed!
+13/05/2023 18:45:03 WARNING:	 Logger thread exits!
+13/05/2023 18:48:31 INFO:	 Session: 7737672812393117150 has been initialized
+13/05/2023 18:48:31 INFO:	 Visitor.register: 'Nir' is registered!
+13/05/2023 18:48:31 INFO:	 Visitor.login: Member 'Nir' is logged in.
+13/05/2023 18:48:31 INFO:	 Market.open_store: Member 'Nir' opened store 'Amazon'.
+13/05/2023 18:48:31 INFO:	 Market.open_store: Member 'Nir' opened store 'Ebay'.
+13/05/2023 18:48:31 INFO:	 Market.open_store: Member 'Nir' opened store 'Yahoo'.
+13/05/2023 18:48:31 INFO:	 Market.add_product: 'Nir' add 123 units of Product 'Razer Blackwidow V3', Category: 'Keyboards', Price: 799.123, Rate: Not rated yet to store 'Amazon'
+13/05/2023 18:48:31 INFO:	 Market.add_product: 'Nir' add 123 units of Product 'Razer Blackwidow V3', Category: 'Keyboards', Price: 499.123, Rate: Not rated yet to store 'Ebay'
+13/05/2023 18:48:31 INFO:	 Market.add_product: 'Nir' add 123 units of Product 'Razer Blackwidow V3', Category: 'Keyboards', Price: 599.123, Rate: Not rated yet to store 'Yahoo'
+13/05/2023 18:48:31 INFO:	 Market.get_product_by_keywords: Return filtered products with name to Member 'Nir'
+13/05/2023 18:48:31 WARNING:	 Market is closed!
+13/05/2023 18:48:31 WARNING:	 Logger thread exits!
+13/05/2023 18:48:38 INFO:	 Session: 2517356719696726372 has been initialized
+13/05/2023 18:48:38 INFO:	 Visitor.register: 'Nir' is registered!
+13/05/2023 18:48:38 INFO:	 Visitor.login: Member 'Nir' is logged in.
+13/05/2023 18:48:38 INFO:	 Market.open_store: Member 'Nir' opened store 'Amazon'.
+13/05/2023 18:48:38 INFO:	 Market.open_store: Member 'Nir' opened store 'Ebay'.
+13/05/2023 18:48:38 INFO:	 Market.open_store: Member 'Nir' opened store 'Yahoo'.
+13/05/2023 18:48:38 INFO:	 Market.add_product: 'Nir' add 123 units of Product 'Razer Blackwidow V3', Category: 'Keyboards', Price: 799.123, Rate: Not rated yet to store 'Amazon'
+13/05/2023 18:48:38 INFO:	 Market.add_product: 'Nir' add 123 units of Product 'Razer Blackwidow V3', Category: 'Keyboards', Price: 499.123, Rate: Not rated yet to store 'Ebay'
+13/05/2023 18:48:38 INFO:	 Market.add_product: 'Nir' add 123 units of Product 'Razer Blackwidow V3', Category: 'Keyboards', Price: 599.123, Rate: Not rated yet to store 'Yahoo'
+13/05/2023 18:48:38 INFO:	 Market.get_product_by_keywords: Return filtered products with name to Member 'Nir'
+13/05/2023 18:48:38 WARNING:	 Market is closed!
+13/05/2023 18:48:38 WARNING:	 Logger thread exits!
+13/05/2023 18:48:44 INFO:	 Session: 7011521467418478205 has been initialized
+13/05/2023 18:48:44 INFO:	 Visitor.register: 'Nir' is registered!
+13/05/2023 18:48:44 INFO:	 Visitor.login: Member 'Nir' is logged in.
+13/05/2023 18:48:44 INFO:	 Market.open_store: Member 'Nir' opened store 'Amazon'.
+13/05/2023 18:48:44 INFO:	 Market.open_store: Member 'Nir' opened store 'Ebay'.
+13/05/2023 18:48:44 INFO:	 Market.open_store: Member 'Nir' opened store 'Yahoo'.
+13/05/2023 18:48:44 INFO:	 Market.add_product: 'Nir' add 123 units of Product 'Razer Blackwidow V3', Category: 'Keyboards', Price: 799.123, Rate: Not rated yet to store 'Amazon'
+13/05/2023 18:48:44 INFO:	 Market.add_product: 'Nir' add 123 units of Product 'Razer Blackwidow V3', Category: 'Keyboards', Price: 499.123, Rate: Not rated yet to store 'Ebay'
+13/05/2023 18:48:44 INFO:	 Market.add_product: 'Nir' add 123 units of Product 'Razer Blackwidow V3', Category: 'Keyboards', Price: 599.123, Rate: Not rated yet to store 'Yahoo'
+13/05/2023 18:48:44 INFO:	 Market.get_product_by_keywords: Return filtered products with name to Member 'Nir'
+13/05/2023 18:48:44 WARNING:	 Market is closed!
+13/05/2023 18:48:44 WARNING:	 Logger thread exits!
+13/05/2023 18:56:32 INFO:	 Session: 6124085138459698477 has been initialized
+13/05/2023 18:56:32 INFO:	 Visitor.register: 'Nir' is registered!
+13/05/2023 18:56:32 INFO:	 Visitor.login: Member 'Nir' is logged in.
+13/05/2023 18:56:32 INFO:	 Market.open_store: Member 'Nir' opened store 'Amazon'.
+13/05/2023 18:56:32 INFO:	 Market.open_store: Member 'Nir' opened store 'Ebay'.
+13/05/2023 18:56:32 INFO:	 Market.open_store: Member 'Nir' opened store 'Yahoo'.
+13/05/2023 18:56:32 INFO:	 Market.add_product: 'Nir' add 123 units of Product 'Razer Blackwidow V3', Category: 'Keyboards', Price: 799.123, Rate: Not rated yet to store 'Amazon'
+13/05/2023 18:56:32 INFO:	 Market.add_product: 'Nir' add 123 units of Product 'Razer Blackwidow V3', Category: 'Keyboards', Price: 499.123, Rate: Not rated yet to store 'Ebay'
+13/05/2023 18:56:32 INFO:	 Market.add_product: 'Nir' add 123 units of Product 'Razer Blackwidow V3', Category: 'Keyboards', Price: 599.123, Rate: Not rated yet to store 'Yahoo'
+13/05/2023 18:56:32 INFO:	 Market.get_product_by_keywords: Return filtered products with name to Member 'Nir'
+13/05/2023 18:56:32 WARNING:	 Market is closed!
+13/05/2023 18:56:32 WARNING:	 Logger thread exits!
+13/05/2023 18:59:51 INFO:	 Session: 5233011330810813356 has been initialized
+13/05/2023 18:59:51 INFO:	 Visitor.register: 'Nir' is registered!
+13/05/2023 18:59:51 INFO:	 Visitor.login: Member 'Nir' is logged in.
+13/05/2023 18:59:51 INFO:	 Market.open_store: Member 'Nir' opened store 'Amazon'.
+13/05/2023 18:59:51 INFO:	 Market.open_store: Member 'Nir' opened store 'Ebay'.
+13/05/2023 18:59:51 INFO:	 Market.open_store: Member 'Nir' opened store 'Yahoo'.
+13/05/2023 18:59:51 INFO:	 Market.add_product: 'Nir' add 123 units of Product 'Razer Blackwidow V3', Category: 'Keyboards', Price: 799.123, Rate: Not rated yet to store 'Amazon'
+13/05/2023 18:59:51 INFO:	 Market.add_product: 'Nir' add 123 units of Product 'Razer Blackwidow V3', Category: 'Keyboards', Price: 499.123, Rate: Not rated yet to store 'Ebay'
+13/05/2023 18:59:51 INFO:	 Market.add_product: 'Nir' add 123 units of Product 'Razer Blackwidow V3', Category: 'Keyboards', Price: 599.123, Rate: Not rated yet to store 'Yahoo'
+13/05/2023 18:59:51 INFO:	 Market.get_product_in_price_range: Return filtered products with name to Member 'Nir'
+13/05/2023 18:59:51 WARNING:	 Market is closed!
+13/05/2023 18:59:51 WARNING:	 Logger thread exits!
+13/05/2023 19:08:54 INFO:	 Session: 5843536278716770628 has been initialized
+13/05/2023 19:08:54 INFO:	 Visitor.register: 'Nir' is registered!
+13/05/2023 19:08:54 INFO:	 Visitor.login: Member 'Nir' is logged in.
+13/05/2023 19:08:54 INFO:	 Market.open_store: Member 'Nir' opened store 'Amazon'.
+13/05/2023 19:08:54 INFO:	 Market.open_store: Member 'Nir' opened store 'Ebay'.
+13/05/2023 19:08:54 INFO:	 Market.open_store: Member 'Nir' opened store 'Yahoo'.
+13/05/2023 19:08:54 INFO:	 Market.add_product: 'Nir' add 123 units of Product 'Razer Blackwidow V3', Category: 'Keyboards', Price: 799.123, Rate: Not rated yet to store 'Amazon'
+13/05/2023 19:08:54 INFO:	 Market.add_product: 'Nir' add 123 units of Product 'Razer Blackwidow V3', Category: 'Keyboards', Price: 499.123, Rate: Not rated yet to store 'Ebay'
+13/05/2023 19:08:54 INFO:	 Market.add_product: 'Nir' add 123 units of Product 'Razer Blackwidow V3', Category: 'Keyboards', Price: 599.123, Rate: Not rated yet to store 'Yahoo'
+13/05/2023 19:08:54 INFO:	 Market.get_product_in_price_range: Return filtered products to Member 'Nir':
+	Store: 'Yahoo', Product 'Razer Blackwidow V3', Category: 'Keyboards', Price: 599.123, Rate: Not rated yet
+
+13/05/2023 19:08:54 WARNING:	 Market is closed!
+13/05/2023 19:08:54 WARNING:	 Logger thread exits!
+13/05/2023 19:09:14 INFO:	 Session: 2845994587485858485 has been initialized
+13/05/2023 19:09:14 INFO:	 Visitor.register: 'Nir' is registered!
+13/05/2023 19:09:14 INFO:	 Visitor.login: Member 'Nir' is logged in.
+13/05/2023 19:09:14 INFO:	 Market.open_store: Member 'Nir' opened store 'Amazon'.
+13/05/2023 19:09:14 INFO:	 Market.open_store: Member 'Nir' opened store 'Ebay'.
+13/05/2023 19:09:14 INFO:	 Market.open_store: Member 'Nir' opened store 'Yahoo'.
+13/05/2023 19:09:14 INFO:	 Market.add_product: 'Nir' add 123 units of Product 'Razer Blackwidow V3', Category: 'Keyboards', Price: 799.123, Rate: Not rated yet to store 'Amazon'
+13/05/2023 19:09:14 INFO:	 Market.add_product: 'Nir' add 123 units of Product 'Razer Blackwidow V3', Category: 'Keyboards', Price: 499.123, Rate: Not rated yet to store 'Ebay'
+13/05/2023 19:09:14 INFO:	 Market.add_product: 'Nir' add 123 units of Product 'Razer Blackwidow V3', Category: 'Keyboards', Price: 599.123, Rate: Not rated yet to store 'Yahoo'
+13/05/2023 19:09:14 INFO:	 Market.get_product_in_price_range: Return filtered products to Member 'Nir':
+	Store: 'Yahoo', Product 'Razer Blackwidow V3', Category: 'Keyboards', Price: 599.123, Rate: Not rated yet
+
+13/05/2023 19:09:14 WARNING:	 Market is closed!
+13/05/2023 19:09:14 WARNING:	 Logger thread exits!
+13/05/2023 19:09:19 INFO:	 Session: 1292085696625630703 has been initialized
+13/05/2023 19:09:19 INFO:	 Visitor.register: 'Nir' is registered!
+13/05/2023 19:09:19 INFO:	 Visitor.login: Member 'Nir' is logged in.
+13/05/2023 19:09:19 INFO:	 Market.open_store: Member 'Nir' opened store 'Amazon'.
+13/05/2023 19:09:19 INFO:	 Market.open_store: Member 'Nir' opened store 'Ebay'.
+13/05/2023 19:09:19 INFO:	 Market.open_store: Member 'Nir' opened store 'Yahoo'.
+13/05/2023 19:09:19 INFO:	 Market.add_product: 'Nir' add 123 units of Product 'Razer Blackwidow V3', Category: 'Keyboards', Price: 799.123, Rate: Not rated yet to store 'Amazon'
+13/05/2023 19:09:19 INFO:	 Market.add_product: 'Nir' add 123 units of Product 'Razer Blackwidow V3', Category: 'Keyboards', Price: 499.123, Rate: Not rated yet to store 'Ebay'
+13/05/2023 19:09:19 INFO:	 Market.add_product: 'Nir' add 123 units of Product 'Razer Blackwidow V3', Category: 'Keyboards', Price: 599.123, Rate: Not rated yet to store 'Yahoo'
+13/05/2023 19:09:19 INFO:	 Market.get_product_in_price_range: Return filtered products to Member 'Nir':
+	Store: 'Yahoo', Product 'Razer Blackwidow V3', Category: 'Keyboards', Price: 599.123, Rate: Not rated yet
+
+13/05/2023 19:09:19 WARNING:	 Market is closed!
+13/05/2023 19:09:19 WARNING:	 Logger thread exits!
+13/05/2023 19:09:34 INFO:	 Session: 2154120605613851004 has been initialized
+13/05/2023 19:09:34 INFO:	 Visitor.register: 'Nir' is registered!
+13/05/2023 19:09:34 INFO:	 Visitor.login: Member 'Nir' is logged in.
+13/05/2023 19:09:34 INFO:	 Market.open_store: Member 'Nir' opened store 'Amazon'.
+13/05/2023 19:09:34 INFO:	 Market.open_store: Member 'Nir' opened store 'Ebay'.
+13/05/2023 19:09:34 INFO:	 Market.open_store: Member 'Nir' opened store 'Yahoo'.
+13/05/2023 19:09:34 INFO:	 Market.add_product: 'Nir' add 123 units of Product 'Razer Blackwidow V3', Category: 'Keyboards', Price: 799.123, Rate: Not rated yet to store 'Amazon'
+13/05/2023 19:09:34 INFO:	 Market.add_product: 'Nir' add 123 units of Product 'Razer Blackwidow V3', Category: 'Keyboards', Price: 499.123, Rate: Not rated yet to store 'Ebay'
+13/05/2023 19:09:34 INFO:	 Market.add_product: 'Nir' add 123 units of Product 'Razer Blackwidow V3', Category: 'Keyboards', Price: 599.123, Rate: Not rated yet to store 'Yahoo'
+13/05/2023 19:09:34 INFO:	 Market.get_product_in_price_range: Return filtered products to Member 'Nir':
+Store: 'Yahoo', Product 'Razer Blackwidow V3', Category: 'Keyboards', Price: 599.123, Rate: Not rated yet
+
+13/05/2023 19:09:34 WARNING:	 Market is closed!
+13/05/2023 19:09:34 WARNING:	 Logger thread exits!
+13/05/2023 19:27:56 INFO:	 Session: 3214114629215027404 has been initialized
+13/05/2023 19:27:56 INFO:	 Visitor.register: 'Nir' is registered!
+13/05/2023 19:27:56 INFO:	 Visitor.login: Member 'Nir' is logged in.
+13/05/2023 19:27:56 INFO:	 Market.open_store: Member 'Nir' opened store 'Amazon'.
+13/05/2023 19:27:56 INFO:	 Market.open_store: Member 'Nir' opened store 'Ebay'.
+13/05/2023 19:27:56 INFO:	 Market.open_store: Member 'Nir' opened store 'Yahoo'.
+13/05/2023 19:27:56 INFO:	 Market.add_product: 'Nir' add 123 units of Product 'Razer Blackwidow V3', Category: 'Keyboards', Price: 799.123, Rate: Not rated yet to store 'Amazon'
+13/05/2023 19:27:56 INFO:	 Market.add_product: 'Nir' add 123 units of Product 'Razer Blackwidow V3', Category: 'Keyboards', Price: 499.123, Rate: Not rated yet to store 'Ebay'
+13/05/2023 19:27:56 INFO:	 Market.add_product: 'Nir' add 123 units of Product 'Razer Blackwidow V3', Category: 'Keyboards', Price: 599.123, Rate: Not rated yet to store 'Yahoo'
+13/05/2023 19:27:56 INFO:	 Market.get_product_in_price_range: Return filtered products to Member 'Nir':
+Store: 'Yahoo', Product 'Razer Blackwidow V3', Category: 'Keyboards', Price: 599.123, Rate: Not rated yet
+
+13/05/2023 19:27:56 WARNING:	 Market is closed!
+13/05/2023 19:27:56 WARNING:	 Logger thread exits!

@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 
 from dev.src.main.Store.Product import Product
+from dev.src.main.Store.Store import Store
 from dev.src.main.Utils.Response import Response
 
 
@@ -27,37 +28,16 @@ class IRole(ABC):
     @abstractmethod
     def is_logged_in(self) -> bool:
         ...
-
     @abstractmethod
-    def open_store(self, store_name: str) -> Response[bool]:
+    def is_member(self) -> bool:
         ...
 
     @abstractmethod
-    def is_allowed_add_product(self, store_name: str) -> Response[bool]:
+    def is_admin(self) -> bool:
         ...
 
     @abstractmethod
-    def add_product(self, store_name: str, product: Product, quantity: int) -> Response[bool]:
-        ...
-
-    @abstractmethod
-    def is_allowed_update_product(self, store_name: str) -> Response[bool]:
-        ...
-
-    @abstractmethod
-    def update_product_quantity(self, store_name: str, product_name: str, quantity: int) -> Response[bool]:
-        ...
-
-    @abstractmethod
-    def is_allowed_remove_product(self, store_name: str) -> Response[bool]:
-        ...
-
-    @abstractmethod
-    def remove_product(self, store_name: str, product_name: str) -> Response[bool]:
-        ...
-
-    @abstractmethod
-    def add_to_cart(self, store_name: str, product_name: str, price: float, quantity: int) -> Response[bool]:
+    def add_to_cart(self, store_name: str, product: Product, quantity: int) -> Response[bool]:
         ...
 
     @abstractmethod
@@ -69,5 +49,5 @@ class IRole(ABC):
         ...
 
     @abstractmethod
-    def show_cart(self) -> Response[bool]:
+    def show_cart(self) -> str:
         ...

@@ -31,7 +31,7 @@ class Logger(metaclass=IConcurrentSingleton):
 
     def __init__(self, filename: str = "WorkshopLog.txt", print_to_stdout: bool = True):
         self.queue = queue.Queue()
-        self.logfile = open(filename, "wt")
+        self.logfile = open(filename, "at")
         self.print_to_stdout = print_to_stdout
         self.run = True
         self.condition_variable = threading.Condition()
@@ -97,7 +97,7 @@ def report(msg: str, result: Result, severity: Logger.Severity = Logger.Severity
 
 
 def report_error(calling_method_name: str, error_description: str) -> Response[bool]:
-    return report(f'{calling_method_name}: {error_description}', False, Logger.Severity.ERROR)
+    return report(f'{calling_method_name}: {error_description}', None, Logger.Severity.ERROR)
 
 
 def report_warning(calling_method_name: str, error_description: str) -> Response[bool]:
