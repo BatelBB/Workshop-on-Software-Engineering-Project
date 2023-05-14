@@ -140,6 +140,7 @@ class Store:
             if is_reservation_succeed:
                 reserved[item.product_name] = item.quantity
             else:
+                is_reservation_succeed = False
                 break
         if not is_reservation_succeed:
             self.refill(reserved)
@@ -243,8 +244,17 @@ class Store:
             policy = self.products_with_special_purchase_policy[product_name]
         elif product_name in self.products_with_bid_purchase_policy.keys():
             policy = self.products_with_bid_purchase_policy[product_name]
+        else:
+            return report_error("apply_purchase_policy", f"no specoal policy for product: {product_name}")
 
-        return policy.apply_policy(payment_service, delivery_service, how_much)
+        res = policy.apply_policy(payment_service, delivery_service, how_much)
+        if res.success:
+            if self.products_quantities[product_name].quantity > 0:
+                self.reserve(product_name, 1)
+            else:
+                self.products_with_special_purchase_policy.pop(product_name)
+
+        return res
 
     def new_day(self):
         for p in self.products_with_special_purchase_policy.keys():
