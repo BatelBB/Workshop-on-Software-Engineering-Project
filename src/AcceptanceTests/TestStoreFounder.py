@@ -1,4 +1,4 @@
-from domain.main.bridge.proxy import proxy
+from Service.bridge.proxy import proxy
 import unittest
 
 

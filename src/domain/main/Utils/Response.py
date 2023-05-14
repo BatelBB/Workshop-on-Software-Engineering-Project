@@ -10,6 +10,8 @@ class Response(Generic[Result]):
         self.description = description
         if self.result is None:
             self.success = False
+        elif not self.result:
+            self.success = False
         else:
             self.success = True
 

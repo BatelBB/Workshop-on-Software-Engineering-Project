@@ -1,5 +1,5 @@
 from src.domain.main.Utils.Response import Response
-from domain.main.bridge.Bridge import Bridge
+from Service.bridge.Bridge import Bridge
 from src.domain.main.Market.Market import Market
 import string
 
