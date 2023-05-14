@@ -4,8 +4,6 @@ from flask_wtf import FlaskForm
 import wtforms.validators as validation
 from flask import Blueprint, flash, redirect, render_template, session, url_for
 
-from website.core_features.auth import get_user
-
 
 bp = Blueprint("buying", __name__)
 

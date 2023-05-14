@@ -8,14 +8,9 @@ from src.domain.main.Service.IService import IService
 from domain.main.User.User import User
 from domain.main.Utils.ConcurrentDictionary import ConcurrentDictionary
 from src.domain.main.Utils.Session import Session
-from website.core_features.market_access import get_market
-
+from website.core_features.domain_access.market_access import get_market
 
 _sessions: ConcurrentDictionary[int, Session] = ConcurrentDictionary()
-
-def get_user(s: SessionMixin) -> User:
-    return get_market().get_active_user(get_domain_session_id(s)) # type: ignore
-
 
 def has_bad_session_id(s: SessionMixin) -> bool:
     return ("session_id" in s) and s["session_id"] not in _sessions.dictionary
