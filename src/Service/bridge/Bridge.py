@@ -1,146 +1,206 @@
 from abc import ABC, abstractmethod
+from domain.main.Market.Permissions import Permission
 from src.domain.main.Utils.Response import Response
-import string
 
 
 class Bridge(ABC):
-    def enter_market(self) -> int:
+    ###################
+    # general services
+    @abstractmethod
+    def enter_market(self):
         ...
 
     @abstractmethod
-    def register(self, session_id: int, username: string, password: string) -> Response[bool]:
+    def exit_market(self) -> Response[bool]:
+        ...
+    
+    @abstractmethod
+    def register(self, username: str, password: str) -> Response[bool]:
         ...
 
     @abstractmethod
-    def exit_market(self, session_id: int) -> Response[bool]:
+    def login(self, username: str, password: str) -> Response[bool]:
+        ...
+    
+    @abstractmethod
+    def logout(self, ) -> Response[bool]:
+        ...
+
+    #########################
+    # user purchase services 
+    @abstractmethod
+    def add_to_cart(self, store_name: str, product_name: str, quantity: int) -> Response[bool]:
         ...
 
     @abstractmethod
-    def login(self, session_id: int, username: string, password: string) -> Response[bool]:
+    def remove_from_cart(self, store_name: str,
+                         product_name: str) -> Response[bool]:
         ...
 
     @abstractmethod
-    def open_store(self, session_id: int, store_name: string) -> Response[bool]:
+    def update_cart_product_quantity(self, store_name: str, product_name: str, quantity: int) -> Response[bool]:
         ...
 
     @abstractmethod
-    def remove_product_quantity(self, session_id: int, store_name: str,
-                                product_name: str, quantity: int) -> Response[bool]:
+    def show_cart(self) -> Response[dict | bool]:
         ...
 
     @abstractmethod
-    def remove_from_cart(self, session_id: int, store_name: string,
-                         product_name: string) -> Response[bool]:
+    def purchase_shopping_cart(self, payment_method: str, payment_details: list, address: str, postal_code: str) \
+            -> Response[bool]:
         ...
 
     @abstractmethod
-    def get_all_stores(self, session_id) -> Response[list]:
+    def purchase_with_non_immediate_policy(self, store_name: str, product_name: str,
+                                           payment_method: str, payment_details: list[str], address: str,
+                                           postal_code: str, how_much: float) -> Response[bool]:
+        ...
+
+    ##############################
+    # store management services
+    @abstractmethod
+    def open_store(self, store_name: str) -> Response[bool]:
         ...
 
     @abstractmethod
-    def get_store_products(self, session_id: int, store_name: str) -> Response[dict]:
+    def close_store(self, store_name: str) -> Response[bool]:
+        ...
+
+    def reopen_store(self, store_name: str) -> Response[bool]:
         ...
 
     @abstractmethod
-    def get_products_by_name(self, session_id: int, name: string) -> Response[dict]:
+    def add_product(self, store_name: str, product_name: str, category: str,
+                    price: float, quantity: int, keywords: list[str] = None) -> Response[bool]:
         ...
 
     @abstractmethod
-    def get_products_by_category(self, session_id: int, name: string) -> Response[dict]:
+    def remove_product(self, store_name: str, product_name: str) -> Response[bool]:
         ...
 
     @abstractmethod
-    def get_products_by_keyword(self, session_id: int, name: string) -> Response[dict]:
+    def update_product_quantity(self, store_name: str, product_name: str, quantity: int) -> Response[bool]:
         ...
 
     @abstractmethod
-    def filter_products_by_price_range(self, session_id: int, low: int, high: int) -> Response[dict]:
+    def change_product_name(self, store_name: str,
+                            product_name: str, new_name: str) -> Response[bool]:
         ...
 
     @abstractmethod
-    def filter_products_by_rating(self, session_id: int, low: int, high: int) -> Response[dict]:
+    def change_product_price(self, store_name: str,
+                             product_price: float, new_price: float) -> Response[bool]:
         ...
 
     @abstractmethod
-    def filter_products_by_category(self, session_id: int, category: string) -> Response[dict]:
+    def appoint_owner(self, appointee: str, store: str) -> Response[bool]:
         ...
 
     @abstractmethod
-    def filter_products_by_store_rating(self, session_id: int, low: int, high: int) -> Response[dict]:
+    def appoint_manager(self, appointee: str, store: str) -> Response[bool]:
         ...
 
     @abstractmethod
-    def add_to_cart(self, session_id: int, store_name: string, product_name: string, quantity: int) -> Response[bool]:
+    def appointees_at(self, store: str) -> Response[list[str] | bool]:
         ...
 
     @abstractmethod
-    def buy_cart_with_card(self, session_id: int, card_num: str, cvv: str, exp_date: str, address: str, postal_code: str) -> Response[bool]:
+    def remove_appointment(self, fired_appointee: str, store_name: str) -> Response[bool]:
         ...
 
     @abstractmethod
-    def buy_cart_with_paypal(self, session_id: int, username: str, password: str, address: str, postal_code: str) -> Response[bool]:
+    def add_permission(self, store: str, appointee: str, permission: Permission) -> Response[bool]:
         ...
 
     @abstractmethod
-    # registered user operations
-    def logout(self, session_id: int, ) -> Response[bool]:
+    def remove_permission(self, store: str, appointee: str, permission: Permission) -> Response[bool]:
         ...
 
     @abstractmethod
-    # storeOwner operations
-    def add_product(self, session_identifier: int, store_name: str, product_name: str, category: str,
-                    price: float, quantity: int, keywords: list[str]) -> Response[bool]:
+    def permissions_of(self, store: str, subject: str) -> Response[set[Permission] | bool]:
         ...
 
     @abstractmethod
-    def remove_product(self, session_id: int, store_name: str, product_name: str) -> Response[bool]:
+    def get_store_personal(self, store_name: str) -> Response[dict | bool]:
         ...
 
     @abstractmethod
-    def change_product_name(self, session_id: int, store_name: str,
-                            product_name: str, new_name: string) -> Response[bool]:
+    def get_store_purchase_history(self, store_name: str) -> Response[dict]:
+        ...
+    
+    @abstractmethod
+    def start_auction(self, store_name: str, product_name: str, initial_price: float, duration: int) -> Response[bool]:
         ...
 
     @abstractmethod
-    def change_product_price(self, session_id: int, store_name: str,
-                             product_name: str, new_price: float) -> Response[bool]:
+    def start_lottery(self, store_name: str, product_name: str) -> Response:
         ...
 
     @abstractmethod
-    def appoint_owner(self, session_id: int, store_name: str, new_owner: string) -> Response[bool]:
+    def start_bid(self, store_name: str, product_name: str) -> Response:
         ...
 
     @abstractmethod
-    def appoint_manager(self, session_id: int, store_name: str, new_manager: string) -> Response[bool]:
+    def approve_bid(self, store_name: str, product_name: str, is_approve: bool) -> Response:
         ...
 
     @abstractmethod
-    def set_stock_permission(self, session_id: int, receiving_user_name: str,
-                             store_name: str, give_or_take: bool) -> Response[bool]:
+    def add_purchase_simple_rule(self, store_name: str, product_name: str, gle: str, amount: int) -> Response:
         ...
 
     @abstractmethod
-    def set_personal_permissions(self, session_id: int, receiving_user_name: str,
-                                 store_name: str, give_or_take: bool) -> Response[bool]:
+    def add_purchase_complex_rule(self, store_name: str, p1_name: str, gle1: str, amount1: int, p2_name: str, gle2: str, 
+                                  amount2: int, complex_rule_type: str) -> Response:
+        ...
+    
+    #######################
+    # user search services
+    @abstractmethod
+    def get_all_stores(self) -> Response[list[dict] | bool]:
         ...
 
     @abstractmethod
-    def close_store(self, session_id: int, store_name: str) -> Response[bool]:
+    def get_store(self, store_name: str) -> Response[dict | bool]:
         ...
 
     @abstractmethod
-    def get_store_personal(self, session_id: int, store_name: str) -> Response[dict]:
+    def get_store_products(self, store_name: str) -> Response[dict | bool]:
         ...
 
     @abstractmethod
-    def get_store_purchase_history(self, session_id: int, store_name: str) -> Response[dict]:
+    def get_products_by_name(self, name: str) -> Response[list[dict[str, dict]] | bool]:
         ...
 
     @abstractmethod
-    def show_cart(self, session_id: int) -> Response[dict]:
+    def get_products_by_category(self, name: str) -> Response[list[dict[str, dict]] | bool]:
         ...
 
+    @abstractmethod
+    def get_products_by_keywords(self, keywords: list[str]) -> \
+            Response[list[dict[str, dict]] | bool]:
+        ...
 
+    @abstractmethod
+    def get_products_in_price_range(self, _min: float, _max: float) -> Response[list[dict[str, dict]] | bool]:
+        ...
 
+    # @abstractmethod
+    # def filter_products_by_rating(self, low: int, high: int) -> Response[dict]:
+    #     ...
+    #
+    # @abstractmethod
+    # def filter_products_by_category(self, category: str) -> Response[dict]:
+    #     ...
+    #
+    # @abstractmethod
+    # def filter_products_by_store_rating(self, low: int, high: int) -> Response[dict]:
 
+    ###################
+    # admin service
+    @abstractmethod
+    def cancel_membership_of(self, member_name: str) -> Response[bool]:
+        ...
 
+    @abstractmethod
+    def shutdown(self) -> Response[bool]:
+        ...
