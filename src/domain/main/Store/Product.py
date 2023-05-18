@@ -16,20 +16,14 @@ class Product:
         rate: str = 'Not rated yet' if self.is_unrated() else self.rate
         return f'Product \'{self.name}\', Category: \'{self.category}\', Price: {self.price}, Rate: {rate}'
 
-    def __dic__(self):
-        return {"Price": self.price, "Category": self.category, "Rate": self.rate}
-
     def __eq__(self, other):
         return self.name == other.name
 
     def __hash__(self):
         return hash(self.name)
 
+    def __dic__(self):
+        return {"Name": self.name, "Price": self.price, "Category": self.category, "Rate": self.rate}
+
     def is_unrated(self):
         return self.rate is None
-
-    def set_name(self, name: str):
-        self.name = name
-
-    def set_price(self, price: float):
-        self.price = price

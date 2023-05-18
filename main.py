@@ -1,126 +1,31 @@
-
-
 from src.domain.main.Market.Market import Market
-from src.domain.main.Service import IService
+from src.domain.main.Service.IService import IService
 
-
+admin = ('Kfir', 'Kfir')
 # Basic interaction with Market
 if __name__ == '__main__':
+    market: IService = Market()
+    sesssion = market.enter()
+    r = sesssion.register("Nir", "marry had a little lambda")
+    r = sesssion.login("Nir", "marry had a little lambda")
+    r = sesssion.open_store("Amazon")
+    r = sesssion.open_store("Ebay")
+    r = sesssion.open_store("Yahoo")
+    r = sesssion.add_product("Amazon", "Razer Blackwidow V3", "Keyboards", 799.123, 123, ['BLAH'])
+    r = sesssion.add_product("Ebay", "Razer Blackwidow V3", "Keyboards", 499.123, 123, ['MOSHE'])
+    r = sesssion.add_product("Yahoo", "Razer Blackwidow V3", "Keyboards", 599.123, 123, ['RBV3'])
+    r = sesssion.get_products_by_category('Keyboards')
+    r = sesssion.get_products_in_price_range(500, 799)
+    r = sesssion.change_product_name("Ebay", "Razer Blackwidow V3", "marry had a little lambda")
+    r = sesssion.get_products_by_name("marry had a little lambda")
+    r = sesssion.add_to_cart("Amazon", "Razer Blackwidow V3", 123)
+    r = sesssion.add_to_cart("Yahoo", "Razer Blackwidow V3", 555)
+    r = sesssion.show_cart()
+    r = sesssion.get_cart()
+    r = sesssion.get_store("Amazon")
+    r = sesssion.get_whole_store("Amazon")
+    r = sesssion.get_store("Yahoo")
+    r = sesssion.get_whole_store("Yahoo")
 
-    service = Market()
-    # sesssion = market.enter()
-    #
-    #test auction
-    # s1 = service.enter()
-    # res = s1.register("sus", "rezah")
-    # re = s1.login("sus", "rezah")
-    # res = s1.open_store("burekas gedera")
-    # res = s1.add_product("burekas gedera", "burekas pitriot", "burekasim", 5, 1, ["burekas", "maafe", "bake"])
-    # res = s1.start_auction("burekas gedera", "burekas pitriot", 2, 1)
-    # store = service.stores.get("burekas gedera")
-    # print(store.products_with_special_purchase_policy)
-    #
-    # s2 = service.enter()
-    # res = s2.register("u2", "p2")
-    # res = s2.login("u2", "p2")
-    # res = s2.purchase_with_non_immediate_policy("burekas gedera", "burekas pitriot", "card",
-    #                                             ["4580", "12/2030", "333"],
-    #                                             "beer sheva", "3777777", 30)
-    # res = s2.add_to_cart("burekas gedera", "burekas pitriot", 1)
-    # res = s2.purchase_shopping_cart("card", ["4580", "12/2030", "333"],
-    #                                             "beer sheva", "3777777")
-    # store.new_day()
-    #
-
-    # test lottery
-    # s1 = service.enter()
-    # res = s1.register("sus", "rezah")
-    # re = s1.login("sus", "rezah")
-    # res = s1.open_store("burekas gedera")
-    # res = s1.add_product("burekas gedera", "burekas pitriot", "burekasim", 5, 1, ["burekas", "maafe", "bake"])
-    # res = s1.start_lottery("burekas gedera", "burekas pitriot")
-    # store = service.store_controller.stores.get("burekas gedera")
-    # print(store.products_with_special_purchase_policy)
-    #
-    # s2 = service.enter()
-    # res = s2.register("u2", "p2")
-    # res = s2.login("u2", "p2")
-    # res = s2.purchase_with_non_immediate_policy("burekas gedera", "burekas pitriot", "card",
-    #                                             ["4580", "12/2030", "333"],
-    #                                             "beer sheva", "3777777", 1)
-    #
-    # s3 = service.enter()
-    # res = s3.register("u3", "p3")
-    # res = s3.login("u3", "p3")
-    # res = s3.purchase_with_non_immediate_policy("burekas gedera", "burekas pitriot", "card",
-    #                                             ["4580", "12/2030", "333"],
-    #                                             "beer sheva", "3777777", 2)
-    #
-    # s4 = service.enter()
-    # res = s4.register("u4", "p4")
-    # res = s4.login("u4", "p4")
-    # res = s4.purchase_with_non_immediate_policy("burekas gedera", "burekas pitriot", "card",
-    #                                             ["4580", "12/2030", "333"],
-    #                                             "beer sheva", "3777777", 2)
-    # store.new_day()
-
-    # s1 = service.enter()
-    # res = s1.register("sus", "rezah")
-    # re = s1.login("sus", "rezah")
-    # res = s1.open_store("burekas gedera")
-    # res = s1.add_product("burekas gedera", "burekas pitriot", "burekasim", 5, 1, ["burekas", "maafe", "bake"])
-    # res = s1.start_bid("burekas gedera", "burekas pitriot")
-    # store = service.stores.get("burekas gedera")
-    # print(store.products_with_bid_purchase_policy)
-    #
-    # s2 = service.enter()
-    # res = s2.register("u2", "p2")
-    # res = s2.login("u2", "p2")
-    # res = s1.appoint_owner("u2", "burekas gedera")
-    #
-    # s3 = service.enter()
-    # res = s3.register("u3", "p3")
-    # res = s3.login("u3", "p3")
-    # res = s3.purchase_with_non_immediate_policy("burekas gedera", "burekas pitriot", "card",
-    #                                             ["4580", "12/2030", "333"],
-    #                                             "beer sheva", "3777777", 2)
-    #
-    # s1.approve_bid("burekas gedera", "burekas pitriot", True)
-    # s2.approve_bid("burekas gedera", "burekas pitriot", True)
-    #
-    # store.new_day()
-
-    #test new day:
-
-    # s1 = service.enter()
-    # res = s1.register("sus", "rezah")
-    # re = s1.login("sus", "rezah")
-    # res = s1.open_store("burekas gedera")
-    # res = s1.add_product("burekas gedera", "burekas pitriot", "burekasim", 5, 1, ["burekas", "maafe", "bake"])
-    # res = s1.start_auction("burekas gedera", "burekas pitriot", 2, 5)
-    # store = service.stores.get("burekas gedera")
-    # print(store.products_with_special_purchase_policy)
-    #
-    # s2 = service.enter()
-    # res = s2.register("u2", "p2")
-    # res = s2.login("u2", "p2")
-    # res = s2.purchase_with_non_immediate_policy("burekas gedera", "burekas pitriot", "card",
-    #                                             ["4580", "12/2030", "333"],
-    #                                             "beer sheva", "3777777", 30)
-    # store.new_day()
-    # store.new_day()
-    # store.new_day()
-    # store.new_day()
-
-    # market.shutdown()
-
-
-    # test
-    s1 = service.enter()
-    s1.register("u", "p")
-    s1.login("u", "p")
-    s1.open_store("s")
-    s1.add_product("s", "p", "sus", 12, 2)
-
-    s1.add_to_cart("s", "p", 1)
-    s1.purchase_shopping_cart("card", ["asd", "asd", "asd"], "sus", "asdasd")
+    sesssion.login(*admin)
+    sesssion.shutdown()

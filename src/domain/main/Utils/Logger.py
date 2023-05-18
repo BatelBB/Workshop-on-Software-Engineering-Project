@@ -2,9 +2,9 @@ import queue
 import threading
 from datetime import datetime
 from enum import Enum
-from typing import TypeVar, Any
+from typing import TypeVar
 
-from domain.main.Utils.IConcurrentSingelton import IConcurrentSingleton
+from src.domain.main.Utils.IConcurrentSingelton import IConcurrentSingleton
 from src.domain.main.Utils.Response import Response
 
 def threaded(fn):
@@ -31,7 +31,7 @@ class Logger(metaclass=IConcurrentSingleton):
 
     def __init__(self, filename: str = "WorkshopLog.txt", print_to_stdout: bool = True):
         self.queue = queue.Queue()
-        self.logfile = open(filename, "wt")
+        self.logfile = open(filename, "at")
         self.print_to_stdout = print_to_stdout
         self.run = True
         self.condition_variable = threading.Condition()
@@ -41,7 +41,7 @@ class Logger(metaclass=IConcurrentSingleton):
         with self.condition_variable:
             self.condition_variable.notify()
 
-    def post(self, msg: str, severity: Severity):
+    def post(self, msg: str, severity: Severity = Severity.INFO):
         self.queue.put((msg, severity))
         self.notify()
 
@@ -57,10 +57,10 @@ class Logger(metaclass=IConcurrentSingleton):
     def get_severity_color(self, severity: Severity) -> str:
         return self.Severity(severity).value
 
-    def create_message(self, msg: str, severity: Severity) -> str:
+    def create_message(self, msg: str, severity: Severity = Severity.INFO) -> str:
         return f'{getdate()} {self.get_severity_name(severity)}:\t {msg}'
 
-    def create_colored_message(self, msg: str, severity: Severity) -> str:
+    def create_colored_message(self, msg: str, severity: Severity = Severity.INFO) -> str:
         return f'{self.get_severity_color(severity)}{msg}{self.get_severity_color(severity.ENDLINE)}'
 
     def write(self):
@@ -96,18 +96,17 @@ def report(msg: str, result: Result, severity: Logger.Severity = Logger.Severity
     return Response(result, msg)
 
 
-def report_error(calling_method_name: str, error_description: str) -> Response[Any]:
-    return report(f'{calling_method_name}: {error_description}', False, Logger.Severity.ERROR)
+def report_error(calling_method_name: str, error_description: str) -> Response[bool]:
+    return report(f'{calling_method_name}: {error_description}', None, Logger.Severity.ERROR)
 
 
-def report_warning(calling_method_name: str, error_description: str) -> Response[Any]:
+def report_warning(calling_method_name: str, error_description: str) -> Response[bool]:
     return report(f'{calling_method_name}: {error_description}', False, Logger.Severity.WARNING)
 
 
-def report_info(calling_method_name: str, error_description: str) -> Response[Any]:
+def report_info(calling_method_name: str, error_description: str) -> Response[bool]:
     return report(f'{calling_method_name}: {error_description}', True, Logger.Severity.INFO)
 
 
-def report_debug(msg: str, result: Result, severity: Logger.Severity) -> Response[Any]:
-    Logger().post(msg, severity)
-    return Response(result, msg)
+def report_debug(calling_method_name: str, error_description: str) -> Response[bool]:
+    return report(f'{calling_method_name}: {error_description}', False, Logger.Severity.DEBUG)

@@ -1,0 +1,9 @@
+Tests
+    purchaseRuleTests/test_owner_adding_complex_rule_2
+    PurchaseTest/test_purchaseFlow_ShippingFails_refundIssued
+    PurchaseTest/test_purchaseFlow_returnCorrectly
+    AcceptanceTest/ALL!
+
+Controllers
+    Store, User, Appointment controllers -> Nir
+

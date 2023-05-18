@@ -1,17 +1,13 @@
 from abc import ABC, abstractmethod
 
 from src.domain.main.Store.Product import Product
+from src.domain.main.Store.Store import Store
 from src.domain.main.Utils.Response import Response
 
 
 class IRole(ABC):
     def __init__(self, context):
         self.context = context
-        self.next: IRole
-
-    @abstractmethod
-    def leave(self, session_identifier: int) -> Response[bool]:
-        ...
 
     @abstractmethod
     def register(self) -> Response[bool]:
@@ -30,39 +26,15 @@ class IRole(ABC):
         ...
 
     @abstractmethod
-    def open_store(self, store_name: str) -> Response[bool]:
+    def is_member(self) -> bool:
         ...
 
     @abstractmethod
-    def close_store(self, store_name: str) -> Response[bool]:
+    def is_admin(self) -> bool:
         ...
 
     @abstractmethod
-    def is_allowed_add_product(self, store_name: str) -> Response[bool]:
-        ...
-
-    @abstractmethod
-    def add_product(self, store_name: str) -> Response[bool]:
-        ...
-
-    @abstractmethod
-    def is_allowed_update_product(self, store_name: str) -> Response[bool]:
-        ...
-
-    @abstractmethod
-    def update_product_quantity(self, store_name: str, product_name: str, quantity: int) -> Response[bool]:
-        ...
-
-    @abstractmethod
-    def is_allowed_remove_product(self, store_name: str) -> Response[bool]:
-        ...
-
-    @abstractmethod
-    def remove_product(self, store_name: str, product_name: str) -> Response[bool]:
-        ...
-
-    @abstractmethod
-    def add_to_cart(self, store_name: str, product_name: str, price: float, quantity: int) -> Response[bool]:
+    def add_to_cart(self, store_name: str, product_name: str, price: float, quantity: int = 1) -> Response[bool]:
         ...
 
     @abstractmethod
@@ -82,63 +54,9 @@ class IRole(ABC):
         ...
 
     @abstractmethod
-    def empty_basket(self, store_name: str):
+    def get_baskets(self) -> dict:
         ...
 
     @abstractmethod
-    def is_allowed_to_appoint_owner(self, store_name: str, new_name: str) -> Response[bool]:
-        ...
-
-    @abstractmethod
-    def is_allowed_to_appoint_manager(self, store_name: str, new_name: str) -> Response[bool]:
-        ...
-
-    @abstractmethod
-    def make_me_owner(self, store_name: str) -> Response[bool]:
-        ...
-
-    @abstractmethod
-    def make_me_manager(self, store_name: str) -> Response[bool]:
-        ...
-    @abstractmethod
-    def change_product_name(self, store_name: str, product_name: str) -> Response[bool]:
-        ...
-
-    @abstractmethod
-    def change_product_price(self, store_name: str, product_price: str) -> Response[bool]:
-        ...
-
-    @abstractmethod
-    def is_allowed_to_fire_employee(self, store_name:str) -> Response[bool]:
-        ...
-
-    @abstractmethod
-    def is_allowed_to_get_store_purchase_history(self, store_name: str) -> Response[bool]:
-        ...
-
-    @abstractmethod
-    def is_allowed_to_shutdown_market(self) -> Response[bool]:
-        ...
-
-    @abstractmethod
-    def set_stock_permissions(self, store_name: str, give_or_take: bool) -> Response[bool]:
-        ...
-
-    @abstractmethod
-    def set_personal_permissions(self, store_name: str, give_or_take: bool) -> Response[bool]:
-        ...
-
-    @abstractmethod
-    def is_allowed_to_change_permissions(self, store_name: str) -> Response[bool]:
-        ...
-
-    @abstractmethod
-    def is_allowed_to_view_store_personal(self, store_name: str) -> Response[bool]:
-        ...
-
-    @abstractmethod
-    def purchase_shopping_cart(self, payment_method: str, payment_details: list) -> Response[bool]:
-        ...
-
-    def is_allowed_to_view_entrance_history(self) -> Response[bool]:
+    def empty_basket(self, store_name: str) -> None:
         ...

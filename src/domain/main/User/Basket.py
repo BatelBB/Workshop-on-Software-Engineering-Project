@@ -1,3 +1,6 @@
+from functools import reduce
+
+
 class Item:
     def __init__(self, product_name: str, quantity: int = 0, price: float = 0.0):
         self.product_name = product_name
@@ -6,8 +9,7 @@ class Item:
         self.discount_price = price
 
     def __str__(self):
-        return f'Item: Product: \'{self.product_name}\', Quantity: {self.quantity}, Price: {self.price}, Discount' \
-               f'-Price: {self.discount_price}'
+        return f'Product: \'{self.product_name}\', Quantity: {self.quantity}, Price: {self.price}, Discount-Price: {self.discount_price}'
 
     def __dic__(self) -> dict:
         return {"Quantity": self.quantity, "Price": self.price}
@@ -30,8 +32,7 @@ class Basket:
         self.items: list[Item] = list()
 
     def __str__(self):
-        items_strings: list[str] = list(map(lambda i: i.__str__(), self.items))
-        return "Basket: {" + ', '.join(items_strings) + '}'
+        return reduce(lambda acc, item: acc + '\n' + item.__str__(), self.items, '')
 
     def __dic__(self):
         output = {}
@@ -51,12 +52,13 @@ class Basket:
                 new_quantity = 0
             else:
                 item_in_basket.quantity = new_quantity
-        except Exception:
+        except ValueError:
             self.items.append(item)
         return new_quantity
 
-    def remove_item(self, item: Item) -> None:
+    def remove_item(self, item: Item) -> bool:
         try:
-            self.remove_item(item)  # FIXME is that function calling itself?
+            self.items.remove(item)
+            return True
         except Exception:
-            pass
+            return False

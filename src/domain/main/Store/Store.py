@@ -1,68 +1,60 @@
 import threading
 
+from multipledispatch import dispatch
+
 from src.domain.main.ExternalServices.Payment.PaymentServices import IPaymentService
-from domain.main.ExternalServices.Provision.IProvisionService import provisionProxy
 from src.domain.main.ExternalServices.Provision.ProvisionServiceAdapter import IProvisionService, provisionService
 from src.domain.main.Store.Product import Product
-from domain.main.Store.PurchasePolicy.BidPolicy import BidPolicy
-from src.domain.main.Store.PurchaseRules.IRule import IRule
-from domain.main.User.Basket import Basket
-from domain.main.Utils.ConcurrentDictionary import ConcurrentDictionary
-from src.domain.main.Utils.Logger import report_info, report_error, report
-from src.domain.main.Utils.Response import Response
+from src.domain.main.Store.PurchasePolicy.BidPolicy import BidPolicy
 from src.domain.main.Store.PurchasePolicy.IPurchasePolicy import IPurchasePolicy
+from src.domain.main.Store.PurchaseRules.IRule import IRule
+from src.domain.main.User.Basket import Basket
+from src.domain.main.Utils.Logger import report_error, report
+from src.domain.main.Utils.Response import Response
 
 
 class ProductQuantity:
     def __init__(self, quantity: int):
         self.quantity = quantity
         self.lock = threading.RLock()
-        self.provisionService: IProvisionService = provisionService()
 
     def reserve(self, desired_quantity: int) -> bool:
         with self.lock:
-            if self.quantity >= desired_quantity:
+            if self.quantity > desired_quantity:
                 self.quantity -= desired_quantity
                 return True
             else:
                 return False
 
-    def refill(self, additional_quantity: int) -> None:
+    def refill(self, additional_quantity: int) -> int:
         with self.lock:
-            self.quantity += additional_quantity
+            new_quantity = max(self.quantity + additional_quantity, 0)
+            self.quantity = new_quantity
+            return new_quantity
+
+    def reset(self, new_quantity: int) -> None:
+        with self.lock:
+            self.quantity = new_quantity
 
 
 class Store:
-    # TODO: should be initialized with IPurchasePolicy, IDiscountPolicy
-    # TODO: add stock personal list for bidding purchase policy
     def __init__(self, name: str):
         self.name = name
-        self.products: list[Product] = list()
+        self.products: set[Product] = set()
         self.products_quantities: dict[str, ProductQuantity] = dict()
         self.purchase_history: list[str] = list()
         self.provisionService: IProvisionService = provisionService()
-        self.personal: list[str] = []
         self.products_with_special_purchase_policy: dict[str:IPurchasePolicy] = {}
         self.products_with_bid_purchase_policy: dict[str: BidPolicy] = {}
-        self.stock_personal: list[str] = []
         self.purchase_rules: dict[int:IRule] = {}
         self.purchase_rule_ids = 0
         self.purchase_rule_lock = threading.RLock()
 
     def __str__(self):
-        output: str = f'#####################\nStore: {self.name}\nProducts:\n'
+        output: str = f'Store: {self.name}\nProducts:\n'
         for i, product in enumerate(self.products):
             output += f'{i}).\t{product.name}. Available quantity: {self.products_quantities[product.name].quantity}.\n'
-        output += '#####################'
         return output
-
-    def __dic__(self):
-        dict = {}
-        for p in self.products:
-            p_d = p.__dic__()
-            p_d["Quantity"] = self.products_quantities.get(p.name).quantity
-            dict[p.name] = p_d
-        return dict
 
     def __eq__(self, other):
         return self.name == other.name
@@ -70,56 +62,101 @@ class Store:
     def __hash__(self):
         return hash(self.name)
 
-    def contains(self, product: Product) -> bool:
-        return product in self.products
-
-    def contains_product(self, product_name: str) -> bool:
-        p = Product(product_name)
-        return p in self.products
+    def __dic__(self):
+        out = {}
+        for p in self.products:
+            p_d = p.__dic__()
+            p_d["Quantity"] = self.products_quantities.get(p.name).quantity
+            out[p.name] = p_d
+        return out
 
     def get_name(self):
         return self.name
 
-    def add(self, product: Product, quantity: int) -> Response[bool]:
-        if not self.contains(product):
-            self.products.append(product)
+    def find(self, product_name: str) -> Product | None:
+        filtered = list(filter(lambda p: p.name == product_name, self.products))
+        return filtered.pop() if len(filtered) > 0 else None
+
+    def contains(self, product_name: str) -> bool:
+        return self.find(product_name) is not None
+
+    def add(self, product: Product, quantity: int) -> None:
+        if product not in self.products:
+            self.products.add(product)
             self.products_quantities.update({product.name: ProductQuantity(quantity)})
-            return report_info(self.add.__qualname__, f'{product}, is added to Store \'{self.name}\' successfully!.')
         else:
-            return report_error(self.add.__qualname__,
-                                f'Store \'{self.name}\' already contains Product \'{product.name}\'')
+            self.products_quantities[product.name].refill(quantity)
 
-    def update(self, product_name: str, quantity: int) -> Response[bool]:
+    def update(self, product_name: str, quantity: int) -> bool:
         p = Product(product_name)
-        if self.contains(p):
-            self.products_quantities[product_name].refill(quantity)
-            return report_info(self.update.__qualname__, f'Store \'{self.name}\': Product \'{product_name}\' quantity '
-                                                         f'added {quantity}.')
-        else:
-            return report_error(self.update.__qualname__,
-                                f'Store \'{self.name}\' does not contains Product \'{product_name}\'')
+        is_succeed = p in self.products
+        if is_succeed:
+            self.products_quantities[product_name].reset(quantity)
+        return is_succeed
 
-    def remove(self, product_name: str) -> Response[bool]:
+    def remove(self, product_name: str) -> bool:
         p = Product(product_name)
-        if self.contains(p):
+        try:
             self.products.remove(p)
             del self.products_quantities[product_name]
-            return report_info(self.remove.__qualname__, f'Store \'{self.name}\': removed Product \'{product_name}\'.')
-        else:
-            return report_error(self.remove.__qualname__,
-                                f'Store \'{self.name}\' does not contains Product \'{product_name}\'')
+            return True
+        except KeyError:
+            return False
+
+    def get_product(self, product_name: str) -> Response[Product] | Response[bool]:
+        return Response(product_name) if self.contains(product_name) else report_error(self.get_product.__qualname__,f'Store \'{self.name}\' does not contains Product \'{product_name}\'')
+
+    def get_all(self) -> set[Product]:
+        return self.products
+
+    def amount_of(self, product_name: str) -> int:
+        return self.products_quantities[product_name].quantity if product_name in self.products_quantities else 0
 
     def get_product_price(self, product_name: str) -> float:
-        product = Product(product_name)
-        product_index = self.products.index(product)
-        return self.products[product_index].price
-
-    def reserve(self, product_name: str, quantity: int) -> bool:
-        return self.products_quantities[product_name].reserve(quantity)
+        p = self.find(product_name)
+        return p.price if p is not None else 0.000
 
     def refill(self, reserved: dict[str, int]) -> None:
         for product_name, reserved_quantity in reserved.items():
             self.products_quantities[product_name].refill(reserved_quantity)
+
+    @dispatch(str, int)
+    def reserve(self, product_name: str, quantity: int) -> bool:
+        return self.products_quantities[product_name].reserve(quantity)
+
+    @dispatch(Basket)
+    def reserve(self, basket: Basket) -> bool:
+        reserved: dict[str, int] = dict()
+        is_reservation_succeed = True
+        for item in basket.items:
+            is_reservation_succeed = is_reservation_succeed and self.reserve(item.product_name, item.quantity)
+            if is_reservation_succeed:
+                reserved[item.product_name] = item.quantity
+            else:
+                break
+        if not is_reservation_succeed:
+            self.refill(reserved)
+        return is_reservation_succeed
+
+    def get_products_by(self, predicate) -> dict[str, dict]:
+        acc = {}
+        for p in list(filter(predicate, self.products)):
+            acc.update({p.name: p.__dic__()})
+        return acc
+
+    def change_product_name(self, old: str, new: str) -> bool:
+        product = self.find(old)
+        is_changed = product is not None
+        if is_changed:
+            q = self.products_quantities[old]
+            del self.products_quantities[old]
+            self.products_quantities.update({new: q})
+            product.name = new
+        return is_changed
+
+    def change_product_price(self, old: float, new: float) -> None:
+        for product in filter(lambda p: p.price == old, self.products):
+            product.price = new
 
     def enforce_purchase_rules(self, basket: Basket) -> Response[bool]:
         for rule in self.purchase_rules:
@@ -140,7 +177,6 @@ class Store:
             if is_reservation_succeed:
                 reserved[item.product_name] = item.quantity
             else:
-                is_reservation_succeed = False
                 break
         if not is_reservation_succeed:
             self.refill(reserved)
@@ -175,22 +211,6 @@ class Store:
             price += self.get_product_price(item.product_name)
         return price
 
-    def change_product_name(self, product_old_name: str, product_new_name: str) -> Response[bool]:
-        products = self.get_products_by_name(product_old_name)
-        for product in products:
-            product.set_name(product_new_name)
-            self.products_quantities[product_new_name] = self.products_quantities.pop(product_old_name)
-        return report_info(self.change_product_name.__qualname__, f'Changed {product_old_name} to {product_new_name} '
-                                                                  f'successfully!')
-
-    def change_product_price(self, product_old_price: float, product_new_price: float) -> Response[bool]:
-        products = self.get_products_by_price(product_old_price)
-        for product in products:
-            product.set_price(product_new_price)
-        return report_info(self.change_product_price.__qualname__,
-                           f'Changed {product_old_price} to {product_new_price} '
-                           f'successfully!')
-
     def add_to_purchase_history(self, baskets: Basket):
         self.purchase_history.append(baskets.__str__())
 
@@ -199,16 +219,6 @@ class Store:
         for item in self.purchase_history:
             output += f'{item}\n'
         return output
-
-    def add_personal(self, name: str):
-        self.personal.append(name)
-
-    def remove_personal(self, name: str):
-        self.personal.remove(name)
-
-    def get_personal(self) -> Response[str]:
-        report_info("get_personal", self.personal.__str__())
-        return Response(self.personal.__str__())
 
     def add_product_to_special_purchase_policy(self, product_name: str, p_policy: IPurchasePolicy) -> Response[bool]:
         if not self.reserve(product_name, 1):
@@ -222,7 +232,7 @@ class Store:
         self.products_with_special_purchase_policy[product_name] = p_policy
         return report("add_product_to_special_purchase_policy", True)
 
-    def add_product_to_bid_purchase_policy(self, product_name: str, p_policy: IPurchasePolicy) -> Response[bool]:
+    def add_product_to_bid_purchase_policy(self, product_name: str, p_policy: IPurchasePolicy, staff: list[str]) -> Response[bool]:
         if not self.reserve(product_name, 1):
             return report_error("add_product_to_bid_purchase_policy",
                                 f'cannot reserve product {product_name} for special purchase policy')
@@ -231,7 +241,7 @@ class Store:
             return report_error("add_product_to_bid_purchase_policy", "product can have only 1 special purchase policy")
 
         self.products_with_bid_purchase_policy[product_name] = p_policy
-        self.set_to_approve_for_bid(product_name)
+        self.set_to_approve_for_bid(product_name, staff)
         return report("add_product_to_bid_purchase_policy", True)
 
     def apply_purchase_policy(self, payment_service: IPaymentService, product_name: str,
@@ -244,41 +254,22 @@ class Store:
             policy = self.products_with_special_purchase_policy[product_name]
         elif product_name in self.products_with_bid_purchase_policy.keys():
             policy = self.products_with_bid_purchase_policy[product_name]
-        else:
-            return report_error("apply_purchase_policy", f"no specoal policy for product: {product_name}")
 
-        res = policy.apply_policy(payment_service, delivery_service, how_much)
-        if res.success:
-            if self.products_quantities[product_name].quantity > 0:
-                self.reserve(product_name, 1)
-            else:
-                self.products_with_special_purchase_policy.pop(product_name)
-
-        return res
+        return policy.apply_policy(payment_service, delivery_service, how_much)
 
     def new_day(self):
         for p in self.products_with_special_purchase_policy.keys():
             self.products_with_special_purchase_policy[p].new_day()
 
-    def set_to_approve_for_bid(self, product_name: str):
-        self.products_with_bid_purchase_policy[product_name].set_approval_dict_in_bid_policy(self.stock_personal)
+    def set_to_approve_for_bid(self, product_name: str, staff: list[str]):
+        self.products_with_bid_purchase_policy[product_name].set_approval_dict_in_bid_policy(staff)
 
-    def add_stock_personal(self, person: str):
-        self.stock_personal.append(person)
-        for p in self.products_with_bid_purchase_policy:
-            self.products_with_bid_purchase_policy[p].add_to_approval_dict_in_bid_policy(person)
-
-    def remove_stock_personal(self, person: str):
-        self.stock_personal.remove(person)
-        for p in self.products_with_bid_purchase_policy:
-            self.products_with_bid_purchase_policy[p].remove_from_approval_dict_in_bid_policy(person)
-
-    def approve_bid(self, person: str, product_name: str, is_approve: bool):
+    def approve_bid(self, person: str, product_name: str, is_approve: bool, staff: list[str]):
         if product_name not in self.products_with_bid_purchase_policy.keys():
             return report_error("approve_bid", f"{product_name} not in bidding policy")
 
         if not is_approve:
-            self.set_to_approve_for_bid(product_name)
+            self.set_to_approve_for_bid(product_name, staff)
             return report(f"bid for product {product_name} disapproved", True)
         else:
             return self.products_with_bid_purchase_policy[product_name].approve(person)

@@ -47,6 +47,15 @@ class ConcurrentDictionary(Generic[Key, Value]):
                 return self.dictionary[key]
             return None
 
+    def get_all(self) -> dict[Key, Value]:
+        return self.dictionary
+
+    def get_all_keys(self) -> list[Key]:
+        return list(self.dictionary.keys())
+
+    def get_all_values(self) -> list[Value]:
+        return list(self.dictionary.values())
+
     def update(self, key: Key, new_value: Value):
         with self.lock:
             self.dictionary[key] = new_value

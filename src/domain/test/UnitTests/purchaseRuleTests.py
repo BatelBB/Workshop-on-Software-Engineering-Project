@@ -1,11 +1,11 @@
 import unittest
 
-from domain.main.Store.Product import Product
-from domain.main.Store.PurchaseRules.RuleCombiner.AndRule import AndRule
+from src.domain.main.Store.Product import Product
+from src.domain.main.Store.PurchaseRules.RuleCombiner.AndRule import AndRule
 from src.domain.main.Store.PurchaseRules.RuleCombiner.ConditioningRule import ConditioningRule
 from src.domain.main.Store.PurchaseRules.RuleCombiner.OrRule import OrRule
 from src.domain.main.Store.PurchaseRules.SimpleRule import SimpleRule
-from domain.main.User.Basket import Basket, Item
+from src.domain.main.User.Basket import Basket, Item
 from src.domain.main.Market.Market import Market
 from src.domain.main.Service.IService import IService
 
@@ -170,6 +170,7 @@ class purchaseRuleTests(unittest.TestCase):
         s1.add_product("s", "p2", "sus", 4, 9)
         s1.add_purchase_complex_rule("s", "p1", "=", 2, "p2", ">", 3, "cond")
 
+        # Note: when you enter the market a new session is created with a Visitor role
         s2 = service.enter()
         s2.add_to_cart("s", "p1", 2)
         s2.add_to_cart("s", "p2", 5)

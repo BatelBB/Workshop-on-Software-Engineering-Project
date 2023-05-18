@@ -1,0 +1,66 @@
+18/05/2023 16:57:53 INFO:	 Session: 7512684094987055460 has been initialized
+18/05/2023 16:57:53 INFO:	 Visitor.register: 'Nir' is registered!
+18/05/2023 16:57:53 INFO:	 Visitor.login: Member 'Nir' is logged in.
+18/05/2023 16:57:53 INFO:	 Admin.login: Admin 'Kfir' is logged in.
+18/05/2023 16:57:53 INFO:	 Member.logout: Member 'Nir' is logged out
+18/05/2023 16:57:53 WARNING:	 Market is closed!
+18/05/2023 16:57:53 WARNING:	 Logger thread exits!
+18/05/2023 16:59:45 INFO:	 Session: 1393750785952527136 has been initialized
+18/05/2023 16:59:45 INFO:	 Visitor.register: 'Nir' is registered!
+18/05/2023 16:59:45 INFO:	 Visitor.login: Member 'Nir' is logged in.
+18/05/2023 16:59:45 INFO:	 Market.open_store: Member 'Nir' opened store 'Amazon'.
+18/05/2023 16:59:45 INFO:	 Market.open_store: Member 'Nir' opened store 'Ebay'.
+18/05/2023 16:59:45 INFO:	 Market.open_store: Member 'Nir' opened store 'Yahoo'.
+18/05/2023 16:59:45 INFO:	 Market.add_product: 'Nir' add 123 units of Product 'Razer Blackwidow V3', Category: 'Keyboards', Price: 799.123, Rate: Not rated yet to store 'Amazon'
+18/05/2023 16:59:45 INFO:	 Market.add_product: 'Nir' add 123 units of Product 'Razer Blackwidow V3', Category: 'Keyboards', Price: 499.123, Rate: Not rated yet to store 'Ebay'
+18/05/2023 16:59:45 INFO:	 Market.add_product: 'Nir' add 123 units of Product 'Razer Blackwidow V3', Category: 'Keyboards', Price: 599.123, Rate: Not rated yet to store 'Yahoo'
+18/05/2023 16:59:45 INFO:	 Market.get_products_by_category: Return filtered products to Member 'Nir':
+Store 'Amazon'. Product: {'Razer Blackwidow V3': {'Name': 'Razer Blackwidow V3', 'Price': 799.123, 'Category': 'Keyboards', 'Rate': None}}
+Store 'Ebay'. Product: {'Razer Blackwidow V3': {'Name': 'Razer Blackwidow V3', 'Price': 499.123, 'Category': 'Keyboards', 'Rate': None}}
+Store 'Yahoo'. Product: {'Razer Blackwidow V3': {'Name': 'Razer Blackwidow V3', 'Price': 599.123, 'Category': 'Keyboards', 'Rate': None}}
+
+18/05/2023 16:59:45 INFO:	 Market.get_products_in_price_range: Return filtered products to Member 'Nir':
+Store 'Yahoo'. Product: {'Razer Blackwidow V3': {'Name': 'Razer Blackwidow V3', 'Price': 599.123, 'Category': 'Keyboards', 'Rate': None}}
+
+18/05/2023 16:59:45 INFO:	 Market.change_product_name: Product 'Razer Blackwidow V3' changed to 'marry had a little lambda' at store 'Ebay' by Member 'Nir'
+18/05/2023 16:59:45 INFO:	 Market.get_products_by_name: Return filtered products to Member 'Nir':
+Store 'Ebay'. Product: {'marry had a little lambda': {'Name': 'marry had a little lambda', 'Price': 499.123, 'Category': 'Keyboards', 'Rate': None}}
+
+18/05/2023 16:59:45 INFO:	 Visitor.add_to_cart: 123 units of Product 'Razer Blackwidow V3' from store 'Amazon' is added to Member 'Nir' cart
+18/05/2023 16:59:45 INFO:	 Visitor.add_to_cart: 555 units of Product 'Razer Blackwidow V3' from store 'Yahoo' is added to Member 'Nir' cart
+18/05/2023 16:59:45 INFO:	 Market.show_cart: Cart of Member 'Nir':
+Store 'Amazon'
+Product: 'Razer Blackwidow V3', Quantity: 123, Price: 799.123, Discount-Price: 799.123
+Store 'Yahoo'
+Product: 'Razer Blackwidow V3', Quantity: 555, Price: 599.123, Discount-Price: 599.123
+
+18/05/2023 16:59:45 INFO:	 Market.get_cart: Cart of Member 'Nir'
+Store 'Amazon'
+Product: 'Razer Blackwidow V3', Quantity: 123, Price: 799.123, Discount-Price: 799.123
+Store 'Yahoo'
+Product: 'Razer Blackwidow V3', Quantity: 555, Price: 599.123, Discount-Price: 599.123
+
+18/05/2023 16:59:45 INFO:	 Market.get_store: Return store 'Amazon' to Member 'Nir'
+Store: Amazon
+Products:
+0).	Razer Blackwidow V3. Available quantity: 123.
+
+18/05/2023 16:59:45 INFO:	 Market.get_whole_store: Return store 'Amazon' to Member 'Nir'
+Store: Amazon
+Products:
+0).	Razer Blackwidow V3. Available quantity: 123.
+
+18/05/2023 16:59:45 INFO:	 Market.get_store: Return store 'Yahoo' to Member 'Nir'
+Store: Yahoo
+Products:
+0).	Razer Blackwidow V3. Available quantity: 123.
+
+18/05/2023 16:59:45 INFO:	 Market.get_whole_store: Return store 'Yahoo' to Member 'Nir'
+Store: Yahoo
+Products:
+0).	Razer Blackwidow V3. Available quantity: 123.
+
+18/05/2023 16:59:45 INFO:	 Admin.login: Admin 'Kfir' is logged in.
+18/05/2023 16:59:45 INFO:	 Member.logout: Member 'Nir' is logged out
+18/05/2023 16:59:45 WARNING:	 Market is closed!
+18/05/2023 16:59:45 WARNING:	 Logger thread exits!

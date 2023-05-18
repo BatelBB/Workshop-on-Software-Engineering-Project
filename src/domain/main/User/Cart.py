@@ -1,4 +1,7 @@
-from domain.main.User.Basket import Basket, Item
+from functools import reduce
+
+from src.domain.main.Store.Product import Product
+from src.domain.main.User.Basket import Basket, Item
 
 
 class Cart:
@@ -6,10 +9,7 @@ class Cart:
         self.baskets: dict[str, Basket] = dict()
 
     def __str__(self):
-        output = "Cart:\n"
-        for store_name, basket in self.baskets.items():
-            output += f'#####################\n\tStore \'{store_name}\'\n\t{basket}\n#####################'
-        return output
+        return reduce(lambda acc, key: acc + f'Store \'{key}\'' + self.baskets[key].__str__() + '\n', self.baskets, '')
 
     def __dic__(self):
         output = {}
