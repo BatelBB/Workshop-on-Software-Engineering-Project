@@ -1,18 +1,34 @@
 {% extends "layout.html" %}
 {% block title %}Create store{% endblock %}
 
-{% block content %}
+{% block page %}
 
 <h1>{{ name }}</h1>
 
+{% if not success %}
+
+<p>Error: {{ message }}</p>
+
+{% else %}
 
 <table>
-    {% for name, data in items.items() %}
+    {% for product in products %}
 <tr>
-    <td><img src="{{ dicebear_product(name) }}" style="height: 4em;"/></td>
-    <td>{{ name }}</td>
+    <td><img src="{{ dicebear_product(product.name) }}" style="height: 4em;"/></td>
+    <td>
+        {% with product=product %}
+        {% include "partials/product.html"  %}
+        {% endwith %}
+    </td>
 </tr>
+    {% else %}s
+    <tr>
+        <td></td>
+        <td>No products found. Maybe this store is kinda new?</td>
+    </tr>
     {% endfor %}
 </table>
+
+{% endif %}
 
 {% endblock %}

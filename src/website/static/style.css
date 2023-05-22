@@ -1,0 +1,14 @@
+main {
+    position: absolute;
+    top: 10%;
+    bottom: 20%;
+    left: 15%;
+    right: 15%;
+}
+span.price {
+    font-size: smaller;
+}
+
+span.price::after {
+    content: "₪";
+}
