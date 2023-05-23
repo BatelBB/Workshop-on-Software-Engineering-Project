@@ -1,3 +1,4 @@
+from flask_restful.representations import json
 from wtforms import Form, StringField, PasswordField, SubmitField
 from flask_wtf import FlaskForm
 import wtforms.validators as validation
@@ -35,4 +36,18 @@ def create_store():
 
 @bp.route('/manage/<name>')
 def manage(name: str):
-    return "WIP"
+    domain = get_domain_adapter()
+    if not domain.is_logged_in:
+        flash("can't manage store when not logged in")
+        return redirect(url_for("home.home"))
+    store = domain.get_store(name)
+    username = domain.username
+    if not store.success:
+        flash(f"store not found: {store.result}")
+        return redirect(url_for("home.home"))
+    permissions = domain.get_permissions(username, name)
+    if not permissions.success or len(permissions.result) == 0:
+        flash("You're not staff at this store")
+    return json.dumps(permissions)
+
+

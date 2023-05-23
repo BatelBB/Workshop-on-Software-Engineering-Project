@@ -74,3 +74,7 @@ class SessionAdapter:
         if not perm.success:
             return Response(False)
         return Response(len(perm.result) > 0)
+
+    def get_permissions(self, username, store_name):
+        return self._session.permissions_of(username, store_name)
+
