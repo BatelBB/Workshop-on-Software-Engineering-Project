@@ -1,0 +1,49 @@
+{
+  "$ref": "#/definitions/JsonRoot",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "Action": {
+      "additionalProperties": false,
+      "properties": {
+        "tag": {
+          "$ref": "#/definitions/ActionType"
+        }
+      },
+      "required": [
+        "tag"
+      ],
+      "type": "object"
+    },
+    "ActionType": {
+      "enum": [
+        "enter",
+        "register"
+      ],
+      "type": "string"
+    },
+    "JsonRoot": {
+      "additionalProperties": false,
+      "properties": {
+        "$schema": {
+          "const": "./schema.json",
+          "type": "string"
+        },
+        "init": {
+          "items": {
+            "$ref": "#/definitions/Action"
+          },
+          "type": "array"
+        },
+        "version": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "version",
+        "init",
+        "$schema"
+      ],
+      "type": "object"
+    }
+  }
+}

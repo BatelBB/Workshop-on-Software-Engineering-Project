@@ -21,4 +21,3 @@ class ServiceResponse(ABC):
     def is_error(self) -> bool:
         return not self.success
 
-    

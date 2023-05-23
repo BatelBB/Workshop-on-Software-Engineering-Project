@@ -186,3 +186,6 @@ fabric.properties
 **/__pycache__/
 **/__pycache__/**/*
 /WorkshopLog.txt
+
+
+**/node_modules/**/*
