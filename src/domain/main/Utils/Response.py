@@ -1,7 +1,7 @@
-from typing import TypeVar, Generic
+from typing import TypeVar, Generic, Union, Callable
 
 Result = TypeVar('Result')
-
+T = TypeVar('T')
 
 class BusinessLayerException(Exception):
     pass
@@ -22,3 +22,8 @@ class Response(Generic[Result]):
             return self.result
         raise BusinessLayerException(self.description)
 
+    def get_or(self, other: T) -> Union[T, Result]:
+        return self.result if self.success else other
+
+    def get_or_compute(self, alternative_provider: Callable[[], T]) -> Union[T, Result]:
+        return self.result if self.result else alternative_provider()
