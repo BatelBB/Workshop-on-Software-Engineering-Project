@@ -1,6 +1,7 @@
 from idlelib.multicall import r
-from typing import Optional, List, Dict, Any
+from typing import Optional, List, Dict, Any, Set
 
+from domain.main.Market.Permissions import Permission
 from domain.main.Store.Store import Store
 from domain.main.Utils.Response import Response
 from domain.main.Utils.Session import Session
@@ -21,14 +22,12 @@ class SessionAdapter:
     def username(self):
         return self._username
 
-    def get_stores(self) -> Response[List[Store]]:
+    def get_stores(self) -> List[Store]:
         stores = self._session.get_all_stores()
-        return stores
+        return stores.get_or_throw()
 
-    def get_store(self, name) -> Response[List[ProductDto]]:
-        response = self._session.get_store(name)
-        if not response.success:
-            return response
+    def get_store(self, name) -> List[ProductDto]:
+        response = self._session.get_store(name).get_or_throw()
         data: Dict[str, Dict[str, Any]] = response.result
         products: List[ProductDto] = [
             ProductDto(
@@ -40,7 +39,7 @@ class SessionAdapter:
             )
             for product in data.values()
         ]
-        return Response(products)
+        return products
 
     def register(self, username: str, password: str) -> Response[bool]:
         response = self._session.register(username, password)
@@ -64,17 +63,13 @@ class SessionAdapter:
         return self._session.open_store(store_name)
 
     def your_stores(self):
-        response = self.get_stores()
-        if not response.success:
-            return response
-        return Response([store for store in response.result if self.has_a_role_at(store.name).result])
+        stores = self.get_stores()
+        return [store for store in stores if self.has_a_role_at(store.name)]
 
-    def has_a_role_at(self, store_name: str) -> Response[bool]:
+    def has_a_role_at(self, store_name: str) -> bool:
         perm = self._session.permissions_of(store_name, self._username)
-        if not perm.success:
-            return Response(False)
-        return Response(len(perm.result) > 0)
+        return 0 < len(perm.get_or_throw())
 
-    def get_permissions(self, username, store_name):
-        return self._session.permissions_of(username, store_name)
+    def get_permissions(self, username, store_name) -> Set[Permission]:
+        return self._session.permissions_of(username, store_name).get_or_throw()
 
