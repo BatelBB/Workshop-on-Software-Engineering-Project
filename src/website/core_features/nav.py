@@ -20,6 +20,6 @@ def mynavbar():
         login_part = (View('Register', 'auth.register'), View('Login', 'auth.login'))
     return Navbar(
         f'Logo here',
-        View('Home', 'home'),
+        View('Home', 'home.home'),
         *login_part
     )

@@ -62,3 +62,15 @@ class SessionAdapter:
 
     def open_store(self, store_name: str):
         return self._session.open_store(store_name)
+
+    def your_stores(self):
+        response = self.get_stores()
+        if not response.success:
+            return response
+        return Response([store for store in response.result if self.has_a_role_at(store.name).result])
+
+    def has_a_role_at(self, store_name: str) -> Response[bool]:
+        perm = self._session.permissions_of(store_name, self._username)
+        if not perm.success:
+            return Response(False)
+        return Response(len(perm.result) > 0)

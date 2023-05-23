@@ -18,7 +18,7 @@ def create_store():
     domain = get_domain_adapter()
     if not domain.is_logged_in:
         flash("You tried to create a store, but you need to be logged in for that.")
-        return redirect(url_for('home'))
+        return redirect(url_for('home.home'))
 
     form = CreateStoreForm()
     error = None
@@ -27,7 +27,12 @@ def create_store():
         res = domain.open_store(store_name)
         if res.success:
             flash(f"You've created a store {store_name}. Here's hoping bussiness goes well!", category="success")
-            return redirect(url_for("home"))
+            return redirect(url_for("home.home"))
         error = res.description
         flash(error, category="danger")
     return render_template("selling/create_store.html", form=form, error=error)
+
+
+@bp.route('/manage/<name>')
+def manage(name: str):
+    return "WIP"

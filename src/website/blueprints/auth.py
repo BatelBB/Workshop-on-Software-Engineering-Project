@@ -23,7 +23,7 @@ def register():
         domain = get_domain_adapter()
         res = domain.register(form.username.data, form.password.data)
         if res.success:
-            return redirect(url_for("home"))
+            return redirect(url_for("home.home"))
         error = str(res.description)
         flash(error, category="danger")
     print('form error', form.errors)
@@ -46,7 +46,7 @@ def login():
         res = domain.login(username, form.password.data)
         if res.success:
             flash(f"welcome, {username}", category="success")
-            return redirect(url_for("home"))
+            return redirect(url_for("home.home"))
         error = str(res.description)
         flash(error, category="danger")
     return render_template("auth/login.html", form=form, error=error)
@@ -59,4 +59,4 @@ def logout():
         flash("You're now logged out.", category="success")
     else:
         flash("Couldn't log out: " + response.description, category="danger")
-    return redirect(url_for("home"))
+    return redirect(url_for("home.home"))
