@@ -11,6 +11,5 @@ bp = Blueprint("buying", __name__)
 @bp.get('/store/<name>')
 def view_store(name: str):
     domain = get_domain_adapter()
-    response = domain.get_store(name)
-    success, data, message = response.success, response.result, response.description
-    return render_template("buying/view_store.html", name=name, success=success, message=message, products=data)
+    store = domain.get_store(name)
+    return render_template("buying/view_store.html", products=store)

@@ -5,12 +5,6 @@
 
 <h1>{{ name }}</h1>
 
-{% if not success %}
-
-<p>Error: {{ message }}</p>
-
-{% else %}
-
 <table>
     {% for product in products %}
 <tr>
@@ -29,6 +23,5 @@
     {% endfor %}
 </table>
 
-{% endif %}
 
 {% endblock %}

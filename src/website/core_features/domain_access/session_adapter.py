@@ -67,9 +67,7 @@ class SessionAdapter:
         return [store for store in stores if self.has_a_role_at(store.name)]
 
     def has_a_role_at(self, store_name: str) -> bool:
-        perm = self._session.permissions_of(store_name, self._username)
-        return 0 < len(perm.get_or_throw())
+        return 0 < len(self.get_permissions(self._username, store_name))
 
     def get_permissions(self, username, store_name) -> Set[Permission]:
-        return self._session.permissions_of(username, store_name).get_or_throw()
-
+        return self._session.permissions_of(store_name, self._username).get_or(set())
