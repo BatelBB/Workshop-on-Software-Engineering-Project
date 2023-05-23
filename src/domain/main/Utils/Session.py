@@ -1,5 +1,6 @@
 from typing import Any
 
+from domain.main.Utils.ServiceResponse import returns_responses, ok, error
 from src.domain.main.Market.Appointment import Appointment
 from src.domain.main.Market.Permissions import Permission
 from src.domain.main.Service import IService
@@ -172,3 +173,13 @@ class Session:
 
     def cancel_membership_of(self, member_name: str) -> Response[bool]:
         return self.apply(self.service.cancel_membership_of, self.identifier, member_name)
+
+    @returns_responses
+    def example_of_decorator_function(self, x: int):
+        if not isinstance(x, int):
+            raise Exception("not a number")
+        if x % 2 != 0:
+            return error("not even")
+        if x == 0:
+            return ok('zero')
+        return "not zero"
