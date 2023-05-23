@@ -10,9 +10,7 @@
 <tr>
     <td><img src="{{ dicebear_product(product.name) }}" style="height: 4em;"/></td>
     <td>
-        {% with product=product %}
-        {% include "partials/product.html"  %}
-        {% endwith %}
+        {{ render_template("partials/product.html", product=product) }}
     </td>
 </tr>
     {% else %}s

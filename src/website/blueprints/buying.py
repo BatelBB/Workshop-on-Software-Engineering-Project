@@ -12,4 +12,4 @@ bp = Blueprint("buying", __name__)
 def view_store(name: str):
     domain = get_domain_adapter()
     store = domain.get_store(name)
-    return render_template("buying/view_store.html", products=store)
+    return render_template("buying/view_store.html", products=store, name=name)

@@ -39,5 +39,9 @@ def home():
     made_by = ['Batel', 'Hagai', 'Mendi', 'Nir', 'Yuval']
     shuffle(made_by)
 
-    return render_template('home.html', made_by=made_by, stores=stores, your_stores=your_stores)
+    return render_template('home.html',
+                           made_by=made_by,
+                           stores=stores,
+                           your_stores=your_stores,
+                           username=domain.username)
 

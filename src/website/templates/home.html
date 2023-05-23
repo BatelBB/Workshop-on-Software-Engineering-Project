@@ -6,23 +6,32 @@
 <div class="container">
     <div class="row">
         <div class="col-md-8">
-            
-<table>
-    {% for store in stores %}
-<tr>
-    <td><img src="{{ dicebear_shop(store.name) }}" style="height: 4em;"/></td>
-    <td><a href="{{ url_for('buying.view_store', name=store.name) }}"0+>{{ store.name }}</a></td>
-</tr>
-    {% endfor %}
-</table>
+
+            <table>
+                {% for store in stores %}
+                <tr>
+                    <td><img src="{{ dicebear_shop(store.name) }}" style="height: 4em;" /></td>
+                    <td><a href="{{ url_for('buying.view_store', name=store.name) }}">{{ store.name }}</a></td>
+                </tr>
+                {% endfor %}
+            </table>
         </div>
         <div class="col-md-4">
-            {% for store in your_stores %}
+            {% if username %}
+            <table>
                 <tr>
-                    <td><img src="{{ dicebear_shop(store.name) }}" style="height: 4em;"/></td>
+                    <td colspan="2">
+                        <a href="{{url_for('selling.create_store')}}">Create a new store</a>
+                    </td>
+                </tr>
+                {% for store in your_stores %}
+                <tr>
+                    <td><img src="{{ dicebear_shop(store.name) }}" style="height: 4em;" /></td>
                     <td><a href="{{ url_for('selling.manage', name=store.name) }}">{{ store["name"] }}</a></td>
                 </tr>
-            {% endfor %}
+                {% endfor %}
+            </table>
+            {% endif %}
         </div>
     </div>
 </div>
@@ -30,9 +39,8 @@
 <footer style="font-size: x-large;">
     Made by: &nbsp;
     {% for dev in made_by %}
-        <img src="{{ dicebear_user(dev) }}" style="height: 2em;"/>
-        {{dev}}
-{% endfor%}
+    <img src="{{ dicebear_user(dev) }}" style="height: 2em;" />
+    {{dev}}
+    {% endfor%}
 </footer>
 {% endblock %}
-

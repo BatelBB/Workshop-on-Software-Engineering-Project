@@ -2,7 +2,7 @@ from flask_restful.representations import json
 from wtforms import Form, StringField, PasswordField, SubmitField
 from flask_wtf import FlaskForm
 import wtforms.validators as validation
-from flask import Blueprint, flash, redirect, render_template, session, url_for
+from flask import Blueprint, flash, redirect, render_template, session, url_for, abort
 
 from website.core_features.domain_access.market_access import get_domain_adapter
 
@@ -41,13 +41,9 @@ def manage(name: str):
         flash("can't manage store when not logged in")
         return redirect(url_for("home.home"))
     store = domain.get_store(name)
-    username = domain.username
-    if not store.success:
-        flash(f"store not found: {store.result}")
-        return redirect(url_for("home.home"))
-    permissions = domain.get_permissions(username, name)
-    if not permissions.success or len(permissions.result) == 0:
-        flash("You're not staff at this store")
-    return json.dumps(permissions)
+    permissions = domain.get_permissions(domain.username, name)
+    if len(permissions) == 0:
+        return abort()
+    return [str(perm) for perm in permissions]
 
 

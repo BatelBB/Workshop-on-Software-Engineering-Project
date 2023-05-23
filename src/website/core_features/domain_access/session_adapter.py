@@ -27,8 +27,7 @@ class SessionAdapter:
         return stores.get_or_throw()
 
     def get_store(self, name) -> List[ProductDto]:
-        response = self._session.get_store(name).get_or_throw()
-        data: Dict[str, Dict[str, Any]] = response.result
+        response = self._session.get_store(name)
         products: List[ProductDto] = [
             ProductDto(
                 name=product["Name"],
@@ -37,7 +36,7 @@ class SessionAdapter:
                 rate=product["Rate"],
                 price=product["Price"]
             )
-            for product in data.values()
+            for product in response.get_or_throw().values()
         ]
         return products
 
@@ -70,4 +69,4 @@ class SessionAdapter:
         return 0 < len(self.get_permissions(self._username, store_name))
 
     def get_permissions(self, username, store_name) -> Set[Permission]:
-        return self._session.permissions_of(store_name, self._username).get_or(set())
+        return self._session.permissions_of(store_name, username).get_or(set())
