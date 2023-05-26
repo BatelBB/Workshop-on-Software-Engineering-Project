@@ -10,6 +10,15 @@
 <p>Error: {{ message }}</p>
 
 {% else %}
+<p>
+    you have {{ permissions }}
+</p>
+
+{% if ('Add' in permissions) %}
+    <a href="{{ url_for('selling.add_product', store_name=name) }}">
+        Add product
+    </a>
+{% endif %}
 
 <table>
     {% for product in products %}

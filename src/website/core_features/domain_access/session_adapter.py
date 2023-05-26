@@ -1,6 +1,7 @@
 from idlelib.multicall import r
-from typing import Optional, List, Dict, Any
+from typing import Optional, List, Dict, Any, Set
 
+from domain.main.Market.Permissions import Permission
 from domain.main.Store.Store import Store
 from domain.main.Utils.Response import Response
 from domain.main.Utils.Session import Session
@@ -74,3 +75,12 @@ class SessionAdapter:
         if not perm.success:
             return Response(False)
         return Response(len(perm.result) > 0)
+
+    def permissions_of(self, store_name: str) -> Set[Permission]:
+        if not self.is_logged_in:
+            return set()
+        res = self._session.permissions_of(store_name, self.username)
+        return res.result if res.success else set()
+
+    def add_product(self, store_name: str, product_name: str, category: str, price: float, quantity: int):
+        return self._session.add_product(store_name, product_name, category, price, quantity)
