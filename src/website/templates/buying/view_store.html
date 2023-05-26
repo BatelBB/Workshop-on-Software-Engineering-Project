@@ -15,7 +15,7 @@
 </p>
 
 {% if ('Add' in permissions) %}
-    <a href="{{ url_for('selling.add_product', store_name=name) }}">
+    <a href="{{ url_for('products.add_product', store_name=name) }}">
         Add product
     </a>
 {% endif %}

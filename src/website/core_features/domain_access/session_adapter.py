@@ -84,3 +84,12 @@ class SessionAdapter:
 
     def add_product(self, store_name: str, product_name: str, category: str, price: float, quantity: int):
         return self._session.add_product(store_name, product_name, category, price, quantity)
+
+    def edit_product(self, store_name, old_product_name, new_product_name, category, price, qty):
+        r = self._session.change_product_price(store_name, old_product_name, price)
+        if not r.success:
+            return r
+        r = self._session.update_product_quantity(store_name, old_product_name, qty)
+        if not r.success and store_name != old_product_name:
+            r = self._session.change_product_name(store_name, old_product_name, new_product_name)
+        return r
