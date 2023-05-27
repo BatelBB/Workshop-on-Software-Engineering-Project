@@ -93,3 +93,15 @@ class SessionAdapter:
         if not r.success and store_name != old_product_name:
             r = self._session.change_product_name(store_name, old_product_name, new_product_name)
         return r
+
+    def appoint_manager(self, store_name: str, appointee: str):
+        return self._session.appoint_manager(appointee, store_name)
+
+    def appoint_owner(self, store_name: str, appointee: str):
+        return self._session.appoint_owner(appointee, store_name)
+
+    def remove_manager(self, store_name: str, name: str):
+        return self._session.remove_appointment(name, store_name)
+
+    def remove_owner(self, store_name: str, name: str):
+        return self._session.remove_appointment(name, store_name)

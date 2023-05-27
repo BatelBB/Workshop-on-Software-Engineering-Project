@@ -15,11 +15,34 @@
 </p>
 
 {% if ('Add' in permissions) %}
-    <a href="{{ url_for('products.add_product', store_name=name) }}">
-        Add product
-    </a>
+    <form action="{{ url_for('products.add_product', store_name=name) }}">
+        <button type="submit">Add product</button>
+    </form>
 {% endif %}
 
+{% if ('AppointManager' in permissions) %}
+    <form action="{{ url_for('staff.appoint_manager', store_name=name) }}">
+        <button type="submit">Appoint Manager</button>
+    </form>
+{% endif %}
+
+{% if ('AppointOwner' in permissions) %}
+    <form action="{{ url_for('staff.appoint_owner', store_name=name) }}">
+        <button type="submit">Appoint Owner</button>
+    </form>
+{% endif %}
+
+{% if ('CancelManagerAppointment' in permissions) %}
+    <form action="{{ url_for('staff.remove_manager', store_name=name) }}">
+        <button type="submit">Remove Manager</button>
+    </form>
+{% endif %}
+
+{% if ('CancelOwnerAppointment' in permissions) %}
+    <form action="{{ url_for('staff.remove_owner', store_name=name) }}">
+        <button type="submit">Remove Owner</button>
+    </form>
+{% endif %}
 <table>
     {% for product in products %}
 <tr>
