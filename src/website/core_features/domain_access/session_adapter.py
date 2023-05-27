@@ -96,3 +96,12 @@ class SessionAdapter:
 
     def appoint_manager(self, store_name: str, appointee: str):
         return self._session.appoint_manager(appointee, store_name)
+
+    def appoint_owner(self, store_name: str, appointee: str):
+        return self._session.appoint_owner(appointee, store_name)
+
+    def remove_manager(self, store_name: str, name: str):
+        return self._session.remove_appointment(name, store_name)
+
+    def remove_owner(self, store_name: str, name: str):
+        return self._session.remove_appointment(name, store_name)
