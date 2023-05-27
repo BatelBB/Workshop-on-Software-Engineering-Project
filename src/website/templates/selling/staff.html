@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+{% block title %}Edit staff{% endblock %}
+
+{% block page %}
+
+<form method="post">
+    
+  {{ form.hidden_tag() }}
+    <table>
+            <tr>
+                <td>{{form.manager_name.label}}&nbsp;</td>
+                <td>{{ form.manager_name }}</td>
+                <td>
+                    {% for error in form.manager_name.errors %}
+                        {{ error }}
+                    {% endfor %}
+                </td>
+            </tr>
+    </table>
+</form>
+
+{% endblock %}

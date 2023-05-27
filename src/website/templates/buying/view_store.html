@@ -20,6 +20,11 @@
     </a>
 {% endif %}
 
+{% if ('AppointManager' in permissions) %}
+    <a href="{{ url_for('staff.appoint_manager', store_name=name) }}">
+        Appoint Manager
+    </a>
+{% endif %}
 <table>
     {% for product in products %}
 <tr>

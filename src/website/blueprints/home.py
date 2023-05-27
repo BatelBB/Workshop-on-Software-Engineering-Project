@@ -6,7 +6,7 @@ from flask_bootstrap import Bootstrap
 
 from domain.main.Utils.Response import Response
 from website.blueprints.auth import bp as auth
-from website.blueprints.selling import bp as selling
+#from website.blueprints.selling import bp as selling
 from website.blueprints.buying import bp as buying
 from website.core_features.domain_access.market_access import get_domain_adapter
 
