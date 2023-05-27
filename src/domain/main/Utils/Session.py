@@ -102,8 +102,8 @@ class Session:
     def get_cart(self) -> Response[Cart]:
         return self.apply(self.service.get_cart, self.identifier)
 
-    def purchase_shopping_cart(self, payment_method: str, payment_details: list, address: str, postal_code: str) -> Response[bool]:
-        return self.apply(self.service.purchase_shopping_cart, self.identifier, payment_method, payment_details, address, postal_code)
+    def purchase_shopping_cart(self, payment_method: str, payment_details: list, address: str, postal_code: str, city: str, country: str) -> Response[bool]:
+        return self.apply(self.service.purchase_shopping_cart, self.identifier, payment_method, payment_details, address, postal_code, city, country)
 
     def close_store(self, store_name: str) -> Response[bool]:
         return self.apply(self.service.close_store, self.identifier, store_name)
@@ -149,8 +149,9 @@ class Session:
 
     def purchase_with_non_immediate_policy(self, store_name: str, product_name: str,
                                            payment_method: str, payment_details: list[str], address: str,
-                                           postal_code: str, how_much: float) -> Response[bool]:
-        return self.apply(self.service.purchase_with_non_immediate_policy, store_name, product_name, payment_method, payment_details, address, postal_code, how_much)
+                                           postal_code: str, how_much: float, city: str, country: str) -> Response[bool]:
+        return self.apply(self.service.purchase_with_non_immediate_policy, store_name, product_name, payment_method,
+                          payment_details, address, postal_code, how_much, city, country)
 
     def start_auction(self, store_name: str, product_name: str, initial_price: float, duration: int) -> Response[bool]:
         return self.apply(self.service.start_auction, self.identifier, store_name, product_name, initial_price, duration)

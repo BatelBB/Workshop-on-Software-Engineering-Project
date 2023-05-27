@@ -60,3 +60,31 @@
 18/05/2023 16:55:15 INFO:	 Visitor.login: Member 'Kfir' is logged in.
 18/05/2023 16:55:15 WARNING:	 Market is closed!
 18/05/2023 16:55:15 WARNING:	 Logger thread exits!
+27/05/2023 16:49:05 INFO:	 Session: 9207871736527230844 has been initialized
+27/05/2023 16:49:05 INFO:	 Visitor.register: 'test' is registered!
+27/05/2023 16:49:05 INFO:	 Visitor.login: Member 'test' is logged in.
+27/05/2023 16:49:05 INFO:	 Market.open_store: Member 'test' opened store 'IHerb'.
+27/05/2023 16:49:05 INFO:	 Market.add_product: 'test' add 20 units of Product 'Vitamin A', Category: 'Vitamins', Price: 19.9, Rate: Not rated yet to store 'IHerb'
+27/05/2023 16:49:05 INFO:	 Market.add_product: 'test' add 25 units of Product 'Toothpaste', Category: 'Hygiene', Price: 21.2, Rate: Not rated yet to store 'IHerb'
+27/05/2023 16:49:05 INFO:	 Visitor.add_to_cart: 21 units of Product 'Vitamin A' from store 'IHerb' is added to Member 'test' cart
+27/05/2023 16:49:05 INFO:	 Visitor.verify_cart_not_empty: Member 'test' cart's is NOT empty!
+27/05/2023 16:49:05 INFO:	 all rules are kept: Kfir is happy!
+27/05/2023 16:49:05 ERROR:	 Market.purchase_shopping_cart: payment_succeeded = false
+27/05/2023 16:49:05 WARNING:	 Market is closed!
+27/05/2023 16:49:05 WARNING:	 Logger thread exits!
+27/05/2023 16:50:02 INFO:	 Session: 2785524602995445504 has been initialized
+27/05/2023 16:50:02 INFO:	 Admin.login: Admin 'Kfir' is logged in.
+27/05/2023 16:50:02 INFO:	 Visitor.register: 'test' is registered!
+27/05/2023 16:50:02 INFO:	 Visitor.login: Member 'test' is logged in.
+27/05/2023 16:50:02 INFO:	 Member.logout: Admin 'Kfir' is logged out
+27/05/2023 16:50:02 INFO:	 Market.open_store: Member 'test' opened store 'IHerb'.
+27/05/2023 16:50:02 INFO:	 Market.add_product: 'test' add 20 units of Product 'Vitamin A', Category: 'Vitamins', Price: 19.9, Rate: Not rated yet to store 'IHerb'
+27/05/2023 16:50:02 INFO:	 Market.add_product: 'test' add 25 units of Product 'Toothpaste', Category: 'Hygiene', Price: 21.2, Rate: Not rated yet to store 'IHerb'
+27/05/2023 16:50:02 INFO:	 Visitor.add_to_cart: 21 units of Product 'Vitamin A' from store 'IHerb' is added to Member 'test' cart
+27/05/2023 16:50:02 INFO:	 Visitor.verify_cart_not_empty: Member 'test' cart's is NOT empty!
+27/05/2023 16:50:02 INFO:	 all rules are kept: Kfir is happy!
+27/05/2023 16:50:02 ERROR:	 Market.purchase_shopping_cart: payment_succeeded = false
+27/05/2023 16:50:02 INFO:	 Session: 44872279345969866 has been initialized
+27/05/2023 16:50:02 INFO:	 Visitor.login: Member 'Kfir' is logged in.
+27/05/2023 16:50:02 WARNING:	 Market is closed!
+27/05/2023 16:50:02 WARNING:	 Logger thread exits!

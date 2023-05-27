@@ -1,7 +1,8 @@
+import re
 import string
 from abc import ABC, abstractmethod
 from src.domain.main.ExternalServices.Payment.ExternalPaymentServices import IExternalPaymentService, \
-    ExternalPaymentServiceProxy
+    ExternalPaymentServiceReal
 from src.domain.main.Utils.Logger import report_info, report_error
 from src.domain.main.Utils.Response import Response
 
@@ -10,11 +11,11 @@ class IPaymentService(ABC):
     external_payment_service: IExternalPaymentService
 
     def __init__(self):
-        self.external_payment_service = ExternalPaymentServiceProxy()
-        self.amount_payed:float = 0
+        self.external_payment_service = ExternalPaymentServiceReal()
+        self.amount_payed: float = 0
 
     @abstractmethod
-    def set_information(self, payment_details: list) -> Response[bool]:
+    def set_information(self, payment_details: list, holder: str, user_id: int) -> Response[bool]:
         ...
 
     @abstractmethod
@@ -27,59 +28,50 @@ class IPaymentService(ABC):
 
 
 class PayWithCard(IPaymentService):
-
-    card_number: string
+    card_number: int
     cvv: int
-    exp_date: string
 
     def __init__(self):
         super().__init__()
-        self.card_number = ""
+        self.card_number = -1
         self.cvv = -1
-        self.exp_date = ""
+        self.month = -1
+        self.year = -1
+        self.holder = ""
+        self.user_id = -1
 
-    def set_information(self, payment_details: list) -> Response[bool]:
+    def check_pattern(self, num: str):
+        pattern = r"\d{2}\/\d{2}"
+        match = re.match(pattern, num)
+        if match:
+            return True
+        else:
+            return False
+
+    def set_information(self, payment_details: list, holder: str, user_id: int) -> Response[bool]:
         if len(payment_details) != 3:
             return report_error("set_information in paywithcard",
                                 "invalid payment parameters, excpected card_num: string, "
                                 "cvv: string, exp_date: string")
         else:
+            self.user_id = user_id
+            self.holder = holder
             self.card_number = payment_details[0]
             self.cvv = payment_details[1]
-            self.exp_date = payment_details[2]
+            date = payment_details[2]
+            if self.check_pattern(date):
+                date = date.split('/')
+                self.month = date[0]
+                self.year = date[1]
+            else:
+                return Response(False, "Invalid date - needs to be `mm/yyyy`")
             return Response(True, "success")
 
     def pay(self, price: float):
         self.amount_payed = price
-        return self.external_payment_service.payWIthCard(self.card_number, self.cvv, self.exp_date, price)
+        return self.external_payment_service.payWIthCard(self.card_number, self.cvv, self.month, self.year, self.holder,
+                                                         self.user_id)
 
     def refund(self, amount_to_refund: float):
-        return self.external_payment_service.refundToCard(self.card_number, self.cvv, self.exp_date, amount_to_refund)
+        return self.external_payment_service.refundToCard()
 
-
-class PayWithPayPal(IPaymentService):
-    username: string
-    password: string
-
-    def __init__(self):
-        super().__init__()
-        self.username = ""
-        self.cvv = -1
-        self.exp_date = ""
-
-    def set_information(self, payment_details: list) -> Response[bool]:
-        if len(payment_details) != 2:
-            return report_error("set_information in paywithcard",
-                                "invalid payment parameters, excpected username: string, "
-                                "password: string")
-        else:
-            self.username = payment_details[0]
-            self.password = payment_details[1]
-            return Response(True, "success")
-
-    def pay(self, price: float):
-        self.amount_payed = price
-        return self.external_payment_service.payWIthPayPal(self.username, self.password, price)
-
-    def refund(self, amount_to_refund: float):
-        return self.external_payment_service.refundToPaypal(self.username, self.password, amount_to_refund)

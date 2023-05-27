@@ -59,7 +59,7 @@ class Visitor(IRole, ABC):
         return Response(self.context.cart.__dic__(), f'Cart of {self}:\n{self.context.cart.__str__()}')
 
     def verify_cart_not_empty(self) -> Response[bool]:
-        return report_error(self.verify_cart_not_empty.__qualname__, f'{self} cart\'s is NOT empty!') if self.context.cart.is_empty() \
+        return report_info(self.verify_cart_not_empty.__qualname__, f'{self} cart\'s is NOT empty!') if not self.context.cart.is_empty() \
             else report_error(self.verify_cart_not_empty.__qualname__, f'{self} cart\'s IS empty!')
 
     def get_baskets(self) -> dict:
