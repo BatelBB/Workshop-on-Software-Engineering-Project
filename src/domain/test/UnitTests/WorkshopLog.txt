@@ -88,3 +88,23 @@
 27/05/2023 16:50:02 INFO:	 Visitor.login: Member 'Kfir' is logged in.
 27/05/2023 16:50:02 WARNING:	 Market is closed!
 27/05/2023 16:50:02 WARNING:	 Logger thread exits!
+28/05/2023 16:30:40 INFO:	 Session: 5771091182979797598 has been initialized
+28/05/2023 16:30:40 INFO:	 Admin.login: Admin 'Kfir' is logged in.
+28/05/2023 16:30:40 INFO:	 Session: 4721417733149209723 has been initialized
+28/05/2023 16:30:40 ERROR:	 Admin.login: Admin 'Kfir' is already logged in
+28/05/2023 16:30:40 WARNING:	 Market is closed!
+28/05/2023 16:30:40 WARNING:	 Logger thread exits!
+28/05/2023 16:31:08 INFO:	 Session: 3803822831586190344 has been initialized
+28/05/2023 16:31:08 INFO:	 Admin.login: Admin 'Kfir' is logged in.
+28/05/2023 16:31:08 INFO:	 Visitor.register: 'test' is registered!
+28/05/2023 16:31:08 ERROR:	 Visitor.login: Visitor enter an incorrect password.
+28/05/2023 16:31:08 INFO:	 Member.logout: Admin 'Kfir' is logged out
+28/05/2023 16:31:08 ERROR:	 Market.open_store: Visitor is not allowed to open a store.
+28/05/2023 16:31:08 ERROR:	 Market.add_product: Store 'IHerb' is not registered to the market.
+28/05/2023 16:31:08 ERROR:	 Market.add_product: Store 'IHerb' is not registered to the market.
+28/05/2023 16:31:08 ERROR:	 Market.add_to_cart: Store 'IHerb' is not registered to the market.
+28/05/2023 16:31:08 ERROR:	 Visitor.verify_cart_not_empty: Visitor cart's IS empty!
+28/05/2023 16:31:08 INFO:	 Session: 1096246659709805328 has been initialized
+28/05/2023 16:31:08 INFO:	 Visitor.login: Member 'Kfir' is logged in.
+28/05/2023 16:31:08 WARNING:	 Market is closed!
+28/05/2023 16:31:08 WARNING:	 Logger thread exits!
