@@ -172,3 +172,6 @@ class Session:
 
     def cancel_membership_of(self, member_name: str) -> Response[bool]:
         return self.apply(self.service.cancel_membership_of, self.identifier, member_name)
+
+    def get_all_registered_users(self) -> list[str]:
+        return self.apply(self.service.get_all_registered_users)

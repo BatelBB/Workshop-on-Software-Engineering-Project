@@ -213,3 +213,6 @@ class IService(metaclass=IAbsractConcurrentSingleton):
     @abstractmethod
     def clear(self) -> None:
         ...
+    @abstractmethod
+    def get_all_registered_users(self) -> list[str]:
+        ...
