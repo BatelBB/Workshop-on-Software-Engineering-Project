@@ -170,6 +170,9 @@ class Market(IService):
             return response  # Unregistered store
         return response  # Unregistered user
 
+    def get_all_registered_users(self) -> list[str]:
+        return self.users.get_all_keys()
+
     def verify_store_contains_product(self, calling_method_name: str, store_name: str, product_name: str) -> Response[Store | bool]:
         response = self.verify_registered_store(calling_method_name, store_name)
         if response.success:

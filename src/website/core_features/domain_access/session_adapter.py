@@ -105,3 +105,6 @@ class SessionAdapter:
 
     def remove_owner(self, store_name: str, name: str):
         return self._session.remove_appointment(name, store_name)
+
+    def get_all_registered_users(self):
+        return self._session.get_all_registered_users()

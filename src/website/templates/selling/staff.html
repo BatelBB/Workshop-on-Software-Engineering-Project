@@ -3,8 +3,15 @@
 
 {% block page %}
 
+<h1>{{ headline }}</h1>
+
 <form method="post">
-    
+    <p>
+        Registered users:
+        {% for user in get_all_registered_users %}
+        <li>{{ user }}</li>
+        {% endfor %}
+    </p>
   {{ form.hidden_tag() }}
     <table>
             <tr>
