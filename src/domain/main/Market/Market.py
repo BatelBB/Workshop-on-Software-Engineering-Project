@@ -7,6 +7,12 @@ from typing import Any
 from multipledispatch import dispatch
 
 from domain.main.ExternalServices.Payment.PaymentServices import IPaymentService
+from domain.main.Store.DiscountPolicy.DIscountsFor.CategoryDiscount import CategoryDiscount
+from domain.main.Store.DiscountPolicy.DIscountsFor.IDiscountFor import IDiscountFor
+from domain.main.Store.DiscountPolicy.DIscountsFor.ProductDiscount import ProductDiscount
+from domain.main.Store.DiscountPolicy.DIscountsFor.StoreDiscount import StoreDiscount
+from domain.main.Store.DiscountPolicy.IDiscountPolicy import IDiscountPolicy
+from domain.main.Store.DiscountPolicy.OpenDiscount import OpenDiscount
 from src.domain.main.ExternalServices.Payment.PaymentFactory import PaymentFactory
 from src.domain.main.ExternalServices.Payment.PaymentServices import IPaymentService
 from src.domain.main.ExternalServices.Provision.ProvisionServiceAdapter import provisionService, IProvisionService
@@ -29,6 +35,9 @@ from src.domain.main.Utils.ConcurrentDictionary import ConcurrentDictionary
 from src.domain.main.Utils.Logger import Logger, report_error, report_info
 from src.domain.main.Utils.Response import Response
 from src.domain.main.Utils.Session import Session
+
+
+
 
 
 class Market(IService):
@@ -736,3 +745,54 @@ class Market(IService):
             store = response.result
             return store.apply_purchase_policy(payment_service, product_name, delivery_service, how_much)
         return response
+
+
+
+    def discount_for_factory(self, discount_for_type: str, store, discount_for_name: str = None):
+        if discount_for_type == "product":
+            return Response(ProductDiscount(store.get_product_obj(discount_for_name).result), f"discount_for {discount_for_type} is made")
+        elif discount_for_type == "category":
+            return Response(CategoryDiscount(discount_for_name), f"discount_for {discount_for_type} is made")
+        elif discount_for_type == "store":
+            return Response(StoreDiscount(), f"discount_for {discount_for_type} is made")
+
+        report_error(self.discount_for_factory.__qualname__, f"{discount_for_type} is invalid discount for type")
+
+
+    def discount_factory(self, discount_type: str, discount_percent: int, discount_durations: int, discount_for: IDiscountFor) ->Response[IDiscountPolicy]:
+        discount: IDiscountPolicy
+        if discount_type == "open":
+            discount = OpenDiscount(discount_percent, discount_for, discount_durations)
+        elif discount_type == "cond":
+            discount = None
+        return Response(discount, "made discount")
+
+    ### discount_type = open | cond
+    ###     open ->
+    ### discount_for_type = product | category | store
+    def add_discount(self, session_id: int, store_name: str, discount_type: str, discount_percent: int, discount_duration: int, discount_for_type: str, discount_for_name: str = None):
+        actor = self.get_active_user(session_id)
+        store_res = self.verify_registered_store(self.add_discount.__qualname__, store_name)
+        if not store_res.success:
+            return report_error(self.add_discount.__qualname__, "invalid store")
+        store = store_res.result
+
+        perms = self.permissions_of(session_id, store_name, actor.username)
+        if not perms.success:
+            return report_error(self.add_discount.__qualname__, "failed to retrieve permissions")
+        perms = perms.result
+
+        if Permission.ChangeDiscountPolicy not in perms:
+            return report_error(self.add_discount.__qualname__, f"{actor.username} has no permission to add discount")
+
+        dis_res = self.discount_for_factory(discount_for_type, store ,discount_for_name)
+        if not dis_res.success:
+            return dis_res
+
+        dis_for = dis_res.result
+        dis_res = self.discount_factory(discount_type, discount_percent, discount_duration, dis_for)
+        if not dis_res.success:
+            return dis_res
+
+        return store.add_discount_policy(dis_res.result)
+

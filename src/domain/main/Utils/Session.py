@@ -173,3 +173,8 @@ class Session:
 
     def cancel_membership_of(self, member_name: str) -> Response[bool]:
         return self.apply(self.service.cancel_membership_of, self.identifier, member_name)
+
+    def add_discount(self, store_name: str, discount_type: str, discount_percent: int,
+                     discount_duration: int, discount_for_type: str, discount_for_name: str = None):
+        return self.apply(self.service.add_discount, self.identifier, store_name, discount_type, discount_percent,
+                          discount_duration, discount_for_type, discount_for_name)
