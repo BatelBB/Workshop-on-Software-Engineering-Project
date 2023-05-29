@@ -6,7 +6,7 @@ from domain.main.User.Basket import Basket, Item
 
 class discount_policy_tests(unittest.TestCase):
 
-    def test_open_policy_success(self):
+    def test_basket_policy_fail(self):
         # add a product to a store
         market = Market()
         s1 = market.enter()
@@ -14,19 +14,41 @@ class discount_policy_tests(unittest.TestCase):
         s1.login("u1", "p1")
         s1.open_store("s1")
         s1.add_product("s1", "p1", "c1", 10, 5)
-        s1.add_discount("s1", "open", 20, 3, "product", "p1")
+        s1.add_discount("s1", "cond", 50, 3, "product", "p1", "basket", 30)
         # make a basket with 2 products
         basket = Basket()
-        item = Item("p1", 2, 12)
+        item = Item("p1", 2, 10)
         basket.add_item(item)
         #verify discount
         store = market.verify_registered_store("asd", "s1")
         store = store.result
 
         price = store.calculate_basket_price(basket)
-        self.assertTrue(price == 16, f"price should be 16 but is {price}")
+        self.assertTrue(price == 20, f"price is {price} lower than 30")
 
-    def test_open_discount_with_multiple_products_and_discounts(self):
+
+    def test_basket_policy_success(self):
+        # add a product to a store
+        market = Market()
+        s1 = market.enter()
+        s1.register("u1", "p1")
+        s1.login("u1", "p1")
+        s1.open_store("s1")
+        s1.add_product("s1", "p1", "c1", 10, 5)
+        s1.add_discount("s1", "cond", 50, 3, "product", "p1", "basket", 30)
+        # make a basket with 2 products
+        basket = Basket()
+        item = Item("p1", 3, 10)
+        basket.add_item(item)
+        #verify discount
+        store = market.verify_registered_store("asd", "s1")
+        store = store.result
+
+        price = store.calculate_basket_price(basket)
+        self.assertTrue(price == 15, f"price is {price} should be 15")
+
+
+    def test_simple_fail(self):
         # add a product to a store
         market = Market()
         s1 = market.enter()
@@ -35,24 +57,22 @@ class discount_policy_tests(unittest.TestCase):
         s1.open_store("s1")
         s1.add_product("s1", "p1", "c1", 10, 5)
         s1.add_product("s1", "p2", "c1", 10, 5)
-        s1.add_discount("s1", "open", 20, 3, "product", "p1")
-        s1.add_discount("s1", "open", 50, 3, "product", "p2")
+        s1.add_discount("s1", "cond", 50, 3, "product", "p1", "simple", p1_name="p2", gle1=">", amount1=3)
         # make a basket with 2 products
         basket = Basket()
         item = Item("p1", 2, 10)
-        item2 = Item("p2", 1, 10)
+        item2 = Item("p2", 2, 10)
         basket.add_item(item)
         basket.add_item(item2)
-        # verify discount
+        #verify discount
         store = market.verify_registered_store("asd", "s1")
         store = store.result
 
         price = store.calculate_basket_price(basket)
+        self.assertTrue(price == 40, f"price is {price} should be 40")
 
-        self.assertTrue(price == 21, f"price should be 16 but is {price}")
 
-
-    def test_open_discount_for_category(self):
+    def test_simple_fail(self):
         # add a product to a store
         market = Market()
         s1 = market.enter()
@@ -61,42 +81,16 @@ class discount_policy_tests(unittest.TestCase):
         s1.open_store("s1")
         s1.add_product("s1", "p1", "c1", 10, 5)
         s1.add_product("s1", "p2", "c1", 10, 5)
-        s1.add_discount("s1", "open", 20, 3, "category", "c1")
+        s1.add_discount("s1", "cond", 50, 3, "product", "p1", "simple", p1_name="p2", gle1="=", amount1=3)
         # make a basket with 2 products
         basket = Basket()
         item = Item("p1", 2, 10)
-        item2 = Item("p2", 1, 10)
+        item2 = Item("p2", 3, 10)
         basket.add_item(item)
         basket.add_item(item2)
-        # verify discount
+        #verify discount
         store = market.verify_registered_store("asd", "s1")
         store = store.result
 
         price = store.calculate_basket_price(basket)
-
-        self.assertTrue(price == 24, f"price should be 16 but is {price}")
-
-    def test_open_discount_for_store(self):
-        # add a product to a store
-        market = Market()
-        s1 = market.enter()
-        s1.register("u1", "p1")
-        s1.login("u1", "p1")
-        s1.open_store("s1")
-        s1.add_product("s1", "p1", "c1", 10, 5)
-        s1.add_product("s1", "p2", "c1", 10, 5)
-        s1.add_discount("s1", "open", 20, 3, "store")
-        # make a basket with 2 products
-        basket = Basket()
-        item = Item("p1", 2, 10)
-        item2 = Item("p2", 1, 10)
-        basket.add_item(item)
-        basket.add_item(item2)
-        # verify discount
-        store = market.verify_registered_store("asd", "s1")
-        store = store.result
-
-        price = store.calculate_basket_price(basket)
-
-        self.assertTrue(price == 24, f"price should be 16 but is {price}")
-
+        self.assertTrue(price == 40, f"price is {price} should be 40")

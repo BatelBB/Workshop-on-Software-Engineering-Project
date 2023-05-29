@@ -206,7 +206,13 @@ class Store:
     def get_products_by_keywords(self, keywords: list[str]) -> list[Product]:
         return self.get_products(lambda p: len((set(p.keywords) & set(keywords))) > 0)
 
+    def update_basket_to_current_price(self, basket: Basket):
+        for i in basket.items:
+            i.price = self.get_product_price(i.product_name)
+            i.discount_price = i.price
+
     def calculate_basket_price(self, basket: Basket) -> float:
+        self.update_basket_to_current_price(basket)
         if self.discounts is None:
             price = 0
             # only call from right after reserve
@@ -217,7 +223,7 @@ class Store:
             self.discounts.calculate_price(basket, self.products)
             price = 0
             for i in basket.items:
-                price += (i.price*i.quantity)
+                price += (i.discount_price*i.quantity)
             return price
 
     def add_to_purchase_history(self, baskets: Basket):
