@@ -88,3 +88,51 @@
 27/05/2023 16:50:02 INFO:	 Visitor.login: Member 'Kfir' is logged in.
 27/05/2023 16:50:02 WARNING:	 Market is closed!
 27/05/2023 16:50:02 WARNING:	 Logger thread exits!
+29/05/2023 18:13:09 INFO:	 Session: 2922701824216984537 has been initialized
+29/05/2023 18:13:09 INFO:	 Admin.login: Admin 'Kfir' is logged in.
+29/05/2023 18:13:09 INFO:	 Visitor.register: 'test' is registered!
+29/05/2023 18:13:09 INFO:	 Visitor.login: Member 'test' is logged in.
+29/05/2023 18:13:09 INFO:	 Member.logout: Admin 'Kfir' is logged out
+29/05/2023 18:13:09 INFO:	 Market.open_store: Member 'test' opened store 'IHerb'.
+29/05/2023 18:13:09 INFO:	 Market.add_product: 'test' add 20 units of Product 'Vitamin A', Category: 'Vitamins', Price: 19.9, Rate: Not rated yet to store 'IHerb'
+29/05/2023 18:13:09 INFO:	 Market.add_product: 'test' add 25 units of Product 'Toothpaste', Category: 'Hygiene', Price: 21.2, Rate: Not rated yet to store 'IHerb'
+29/05/2023 18:13:09 INFO:	 Visitor.add_to_cart: 21 units of Product 'Vitamin A' from store 'IHerb' is added to Member 'test' cart
+29/05/2023 18:13:09 INFO:	 Visitor.verify_cart_not_empty: Member 'test' cart's is NOT empty!
+29/05/2023 18:13:09 INFO:	 all rules are kept: Kfir is happy!
+29/05/2023 18:13:09 ERROR:	 Market.purchase_shopping_cart: payment_succeeded = false
+29/05/2023 18:13:09 INFO:	 Session: 1917542823919128439 has been initialized
+29/05/2023 18:13:09 INFO:	 Visitor.login: Member 'Kfir' is logged in.
+29/05/2023 18:13:09 WARNING:	 Market is closed!
+29/05/2023 18:13:09 WARNING:	 Logger thread exits!
+29/05/2023 18:16:29 INFO:	 Session: 1336341330379555366 has been initialized
+29/05/2023 18:16:29 INFO:	 Admin.login: Admin 'Kfir' is logged in.
+29/05/2023 18:16:29 INFO:	 Visitor.register: 'test' is registered!
+29/05/2023 18:16:29 INFO:	 Visitor.login: Member 'test' is logged in.
+29/05/2023 18:16:29 INFO:	 Member.logout: Admin 'Kfir' is logged out
+29/05/2023 18:16:29 INFO:	 Market.open_store: Member 'test' opened store 'IHerb'.
+29/05/2023 18:16:29 INFO:	 Market.add_product: 'test' add 20 units of Product 'Vitamin A', Category: 'Vitamins', Price: 19.9, Rate: Not rated yet to store 'IHerb'
+29/05/2023 18:16:29 INFO:	 Market.add_product: 'test' add 25 units of Product 'Toothpaste', Category: 'Hygiene', Price: 21.2, Rate: Not rated yet to store 'IHerb'
+29/05/2023 18:16:29 INFO:	 Visitor.add_to_cart: 21 units of Product 'Vitamin A' from store 'IHerb' is added to Member 'test' cart
+29/05/2023 18:16:29 INFO:	 Visitor.verify_cart_not_empty: Member 'test' cart's is NOT empty!
+29/05/2023 18:16:29 INFO:	 all rules are kept: Kfir is happy!
+29/05/2023 18:16:29 ERROR:	 Market.purchase_shopping_cart: payment_succeeded = false
+29/05/2023 18:16:29 INFO:	 Session: 1269219519303438762 has been initialized
+29/05/2023 18:16:29 INFO:	 Visitor.login: Member 'Kfir' is logged in.
+29/05/2023 18:16:29 WARNING:	 Market is closed!
+29/05/2023 18:16:29 WARNING:	 Logger thread exits!
+29/05/2023 18:20:15 INFO:	 Session: 7082309579625005900 has been initialized
+29/05/2023 18:20:15 INFO:	 Admin.login: Admin 'Kfir' is logged in.
+29/05/2023 18:20:15 INFO:	 Visitor.register: 'test' is registered!
+29/05/2023 18:20:15 INFO:	 Visitor.login: Member 'test' is logged in.
+29/05/2023 18:20:15 INFO:	 Member.logout: Admin 'Kfir' is logged out
+29/05/2023 18:20:15 INFO:	 Market.open_store: Member 'test' opened store 'IHerb'.
+29/05/2023 18:20:15 INFO:	 Market.add_product: 'test' add 20 units of Product 'Vitamin A', Category: 'Vitamins', Price: 19.9, Rate: Not rated yet to store 'IHerb'
+29/05/2023 18:20:15 INFO:	 Market.add_product: 'test' add 25 units of Product 'Toothpaste', Category: 'Hygiene', Price: 21.2, Rate: Not rated yet to store 'IHerb'
+29/05/2023 18:20:15 INFO:	 Visitor.add_to_cart: 21 units of Product 'Vitamin A' from store 'IHerb' is added to Member 'test' cart
+29/05/2023 18:20:15 INFO:	 Visitor.verify_cart_not_empty: Member 'test' cart's is NOT empty!
+29/05/2023 18:20:15 INFO:	 all rules are kept: Kfir is happy!
+29/05/2023 18:20:15 ERROR:	 Market.purchase_shopping_cart: payment_succeeded = false
+29/05/2023 18:20:15 INFO:	 Session: 3386320807508175816 has been initialized
+29/05/2023 18:20:15 INFO:	 Visitor.login: Member 'Kfir' is logged in.
+29/05/2023 18:20:15 WARNING:	 Market is closed!
+29/05/2023 18:20:15 WARNING:	 Logger thread exits!
