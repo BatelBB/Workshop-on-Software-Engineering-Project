@@ -25,6 +25,8 @@ class provisionReal(IExternalProvisionService):
         self.real = RestAPI('https://php-server-try.000webhostapp.com/')
         self.transaction_id = -1
 
+    def checkValidTransactionID(self, transaction_id: int):
+        return 1000 <= transaction_id <= 10000
     def checkServiceAvailability(self) -> bool:
         checkDic = {"action_type": "handshake"}
         response = self.real.post(checkDic)
@@ -41,9 +43,13 @@ class provisionReal(IExternalProvisionService):
                          }
             response = self.real.post(supplyDic)
             if response.ok:
-                self.transaction_id = response.text
-                report_info(self.getDelivery.__qualname__, "post request for sending delivery success!")
-                return True
+                if self.checkValidTransactionID(int(response.text)):
+                    self.transaction_id = response.text
+                    report_info(self.getDelivery.__qualname__, "post request for sending delivery success!")
+                    return True
+                else:
+                    report_error(self.getDelivery.__qualname__, "transaction id is incorrect")
+                    return False
             else:
                 report_error(self.getDelivery.__qualname__, f'post request failed - {response.status_code}')
                 return False
@@ -56,7 +62,7 @@ class provisionReal(IExternalProvisionService):
             cancelSupplyDic = {"action_type": "cancel_supply",
                                "transaction_id": self.transaction_id}
             response = self.real.post(cancelSupplyDic)
-            if response.ok:
+            if response.ok and response.text.__eq__(1):
                 report_info(self.cancelDelivery.__qualname__, f'post request for canceling delivery successes!')
                 return True
             else:

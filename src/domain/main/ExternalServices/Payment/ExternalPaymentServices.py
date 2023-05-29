@@ -28,6 +28,9 @@ class ExternalPaymentServiceReal(IExternalPaymentService):
         self.real = RestAPI('https://php-server-try.000webhostapp.com/')
         self.transaction_id = -1
 
+    def checkValidTransactionID(self, transaction_id: int):
+        return 1000 <= transaction_id <= 10000
+
     def checkServiceAvailability(self) -> bool:
         checkDic = {"action_type": "handshake"}
         response: Response = self.real.post(checkDic)
@@ -44,9 +47,13 @@ class ExternalPaymentServiceReal(IExternalPaymentService):
                       "id": str(user_id)}
             response: Response = self.real.post(payDic)
             if response.ok:
-                self.transaction_id = response.text
-                report_info(self.payWIthCard.__qualname__, "post request for paying with card success!")
-                return True
+                if self.checkValidTransactionID(int(response.text)):
+                    self.transaction_id = response.text
+                    report_info(self.payWIthCard.__qualname__, "post request for paying with card success!")
+                    return True
+                else:
+                    report_error(self.payWIthCard.__qualname__, "transaction id is incorrect")
+                    return False
             else:
                 report_error(self.payWIthCard.__qualname__, f"post request respond with error {response.status_code}")
                 return False
@@ -59,7 +66,7 @@ class ExternalPaymentServiceReal(IExternalPaymentService):
             refundDic = {"action_type": "cancel_pay",
                          "transaction_id": str(self.transaction_id)}
             response = self.real.post(refundDic)
-            if response.status_code:
+            if response.status_code and response.text.__eq__("1"):
                 report_info(self.refundToCard.__qualname__, "post request for refund to card success!")
                 return True
             else:
