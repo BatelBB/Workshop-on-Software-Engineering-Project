@@ -93,3 +93,5 @@ def edit_product(store_name: str, old_product_name: str):
         error = res.description
         flash(error, category="danger")
     return render_template("products/edit_product.html", form=form, error=error)
+
+
