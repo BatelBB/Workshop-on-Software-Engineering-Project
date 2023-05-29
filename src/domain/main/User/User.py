@@ -8,7 +8,7 @@ from src.domain.main.Utils.Response import Response
 
 
 class User:
-    def __init__(self, mediator: IService, username: str = "Visitor", encrypted_password: str = "Visitor"):
+    def __init__(self, mediator: IService, username: str = "Visitor", encrypted_password: bytes = "Visitor"):
         self.user_id = None
         self.mediator = mediator
         self.username = username

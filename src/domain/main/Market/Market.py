@@ -3,7 +3,8 @@ import sys
 import threading
 from functools import reduce
 from typing import Any
-
+import hashlib
+import os
 from multipledispatch import dispatch
 
 from domain.main.ExternalServices.Payment.PaymentServices import IPaymentService
@@ -193,7 +194,9 @@ class Market(IService):
         return report_info(self.leave.__qualname__, f'{leaving_user} left session: {session_identifier}')
 
     def register(self, session_identifier: int, username: str, encrypted_password: str) -> Response[bool]:
-        new_user = User(self, username, encrypted_password)
+        salt = os.urandom(32)
+        password_hash = hashlib.pbkdf2_hmac('sha256', encrypted_password.encode('utf-8'), salt, 100000)
+        new_user = User(self, username, password_hash)
         registered_user_with_param_username = self.users.insert(username, new_user)
         if registered_user_with_param_username is None:
             return new_user.register()
