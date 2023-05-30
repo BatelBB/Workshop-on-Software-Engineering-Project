@@ -108,3 +108,57 @@
 28/05/2023 16:31:08 INFO:	 Visitor.login: Member 'Kfir' is logged in.
 28/05/2023 16:31:08 WARNING:	 Market is closed!
 28/05/2023 16:31:08 WARNING:	 Logger thread exits!
+30/05/2023 17:53:35 INFO:	 Session: 5721503901692578740 has been initialized
+30/05/2023 17:53:35 INFO:	 Admin.login: Admin 'Kfir' is logged in.
+30/05/2023 17:53:35 INFO:	 Session: 6182518772122373522 has been initialized
+30/05/2023 17:53:35 ERROR:	 Admin.login: Admin 'Kfir' is already logged in
+30/05/2023 17:53:35 WARNING:	 Market is closed!
+30/05/2023 17:53:35 WARNING:	 Logger thread exits!
+30/05/2023 17:55:24 INFO:	 Session: 7169775412477800116 has been initialized
+30/05/2023 17:55:24 INFO:	 Admin.login: Admin 'Kfir' is logged in.
+30/05/2023 17:55:24 INFO:	 Visitor.register: 'test' is registered!
+30/05/2023 17:55:24 INFO:	 Session: 7030509099142309899 has been initialized
+30/05/2023 17:55:24 ERROR:	 Admin.login: Admin 'Kfir' is already logged in
+30/05/2023 17:55:24 WARNING:	 Market is closed!
+30/05/2023 17:55:24 WARNING:	 Logger thread exits!
+30/05/2023 17:56:18 INFO:	 Session: 7671672802815870811 has been initialized
+30/05/2023 17:56:18 INFO:	 Admin.login: Admin 'Kfir' is logged in.
+30/05/2023 17:56:18 INFO:	 Session: 4827844183103256931 has been initialized
+30/05/2023 17:56:18 ERROR:	 Admin.login: Admin 'Kfir' is already logged in
+30/05/2023 17:56:18 WARNING:	 Market is closed!
+30/05/2023 17:56:18 WARNING:	 Logger thread exits!
+30/05/2023 17:59:42 INFO:	 Session: 3043528640918103904 has been initialized
+30/05/2023 17:59:42 INFO:	 Admin.login: Admin 'Kfir' is logged in.
+30/05/2023 17:59:42 INFO:	 Session: 3227414910721628824 has been initialized
+30/05/2023 17:59:42 ERROR:	 Admin.login: Admin 'Kfir' is already logged in
+30/05/2023 17:59:42 WARNING:	 Market is closed!
+30/05/2023 17:59:42 WARNING:	 Logger thread exits!
+30/05/2023 18:00:38 INFO:	 Session: 122476594798825393 has been initialized
+30/05/2023 18:00:38 INFO:	 Admin.login: Admin 'Kfir' is logged in.
+30/05/2023 18:00:38 INFO:	 Visitor.register: 'test' is registered!
+30/05/2023 18:00:38 INFO:	 Session: 7125223668795353772 has been initialized
+30/05/2023 18:00:38 ERROR:	 Admin.login: Admin 'Kfir' is already logged in
+30/05/2023 18:00:38 WARNING:	 Market is closed!
+30/05/2023 18:00:38 WARNING:	 Logger thread exits!
+30/05/2023 18:43:19 INFO:	 Session: 5389214525350926767 has been initialized
+30/05/2023 18:43:19 INFO:	 Admin.login: Admin 'Kfir' is logged in.
+30/05/2023 18:43:20 INFO:	 Visitor.register: 'test' is registered!
+30/05/2023 18:43:20 INFO:	 Session: 3755826152530650003 has been initialized
+30/05/2023 18:43:20 ERROR:	 Admin.login: Admin 'Kfir' is already logged in
+30/05/2023 18:43:20 WARNING:	 Market is closed!
+30/05/2023 18:43:20 WARNING:	 Logger thread exits!
+30/05/2023 18:45:57 INFO:	 Session: 5837888471266578754 has been initialized
+30/05/2023 18:45:57 ERROR:	 Admin.login: Admin 'Kfir' enter an incorrect password.
+30/05/2023 18:45:58 INFO:	 Visitor.register: 'test' is registered!
+30/05/2023 18:45:58 INFO:	 Visitor.login: Member 'test' is logged in.
+30/05/2023 18:45:58 INFO:	 Market.open_store: Member 'test' opened store 'IHerb'.
+30/05/2023 18:45:58 INFO:	 Market.add_product: 'test' add 20 units of Product 'Vitamin A', Category: 'Vitamins', Price: 19.9, Rate: Not rated yet to store 'IHerb'
+30/05/2023 18:45:58 INFO:	 Market.add_product: 'test' add 25 units of Product 'Toothpaste', Category: 'Hygiene', Price: 21.2, Rate: Not rated yet to store 'IHerb'
+30/05/2023 18:45:58 INFO:	 Visitor.add_to_cart: 21 units of Product 'Vitamin A' from store 'IHerb' is added to Member 'test' cart
+30/05/2023 18:45:58 INFO:	 Visitor.verify_cart_not_empty: Member 'test' cart's is NOT empty!
+30/05/2023 18:45:58 INFO:	 all rules are kept: Kfir is happy!
+30/05/2023 18:45:58 ERROR:	 Market.purchase_shopping_cart: payment_succeeded = false
+30/05/2023 18:45:58 INFO:	 Session: 3285870884316316772 has been initialized
+30/05/2023 18:45:58 ERROR:	 Admin.login: Admin 'Kfir' enter an incorrect password.
+30/05/2023 18:45:58 WARNING:	 Market is closed!
+30/05/2023 18:45:58 WARNING:	 Logger thread exits!

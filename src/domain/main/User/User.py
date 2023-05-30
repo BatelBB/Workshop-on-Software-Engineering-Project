@@ -31,7 +31,7 @@ class User:
         self.user_id = random.randint(100000000, 999999999)
         return self.role.register()
 
-    def login(self, encrypted_password: str) -> Response[bool]:
+    def login(self, encrypted_password: bytes) -> Response[bool]:
         return self.role.login(encrypted_password)
 
     def logout(self) -> Response[bool]:
