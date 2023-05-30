@@ -188,8 +188,11 @@ class Session:
 
     def add_discount(self, store_name: str, discount_type: str, discount_percent: int,
                      discount_duration: int, discount_for_type: str, discount_for_name: str = None,
+                     rule_type=None,
+                     discount2_percent=None, discount2_for_type=None, discount2_for_name=None,
                      cond_type: str = None, min_price: float = None,
                      p1_name=None, gle1=None, amount1=None, p2_name=None, gle2=None, amount2=None):
         return self.apply(self.service.add_discount, self.identifier, store_name, discount_type, discount_percent,
-                          discount_duration, discount_for_type, discount_for_name, cond_type, min_price,
+                          discount_duration, discount_for_type, discount_for_name, rule_type, discount2_percent,
+                          discount2_for_type, discount2_for_name, cond_type, min_price,
                           p1_name, gle1, amount1, p2_name, gle2, amount2)

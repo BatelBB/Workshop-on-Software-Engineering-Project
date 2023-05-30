@@ -13,6 +13,7 @@ from domain.main.Store.DiscountPolicy.DIscountsFor.ProductDiscount import Produc
 from domain.main.Store.DiscountPolicy.DIscountsFor.StoreDiscount import StoreDiscount
 from domain.main.Store.DiscountPolicy.IDiscountPolicy import IDiscountPolicy
 from domain.main.Store.DiscountPolicy.OpenDiscount import OpenDiscount
+from domain.main.Store.DiscountPolicy.XorDiscount import XorDiscount
 from domain.main.Store.PurchaseRules.IRule import IRule
 from src.domain.main.ExternalServices.Payment.PaymentFactory import PaymentFactory
 from src.domain.main.ExternalServices.Payment.PaymentServices import IPaymentService
@@ -778,6 +779,8 @@ class Market(IService):
     ###
     def add_discount(self, session_id: int, store_name: str, discount_type: str, discount_percent: int,
                      discount_duration: int, discount_for_type: str, discount_for_name: str = None,
+                     rule_type=None,
+                     discount2_percent=None, discount2_for_type=None, discount2_for_name=None,
                      cond_type: str = None, min_price: float = None,
                      p1_name=None, gle1=None, amount1=None, p2_name=None, gle2=None, amount2=None):
         actor = self.get_active_user(session_id)
@@ -803,15 +806,24 @@ class Market(IService):
         dis_res = self.make_simple_discount(discount_percent, discount_duration, dis_for)
         if not dis_res.success:
             return dis_res
-        simple_discount = dis_res.result
-        discount = simple_discount
+        simple_discount1 = dis_res.result
+        discount = simple_discount1
 
-        if discount_type == "cond":
-            res = self.rule_maker(cond_type, p1_name, gle1, amount1, p2_name, gle2, amount2, min_price)
+        if discount_type == "cond" or discount_type == "xor":
+            res = self.rule_maker(rule_type, p1_name, gle1, amount1, p2_name, gle2, amount2, min_price)
             if not res.success:
                 return res
             rule: IRule = res.result
-            cond_discount = CondDiscount(simple_discount, rule)
+
+        if discount_type == "cond":
+            cond_discount = CondDiscount(simple_discount1, rule)
             discount = cond_discount
+
+        if discount_type == "xor":
+            dis_res2 = self.discount_for_factory(discount2_for_type, store, discount2_for_name)
+            if not dis_res2.success:
+                return dis_res2
+            simple_discount2 = self.make_simple_discount(discount2_percent, discount_duration, dis_res2.result).result
+            discount = XorDiscount(simple_discount1, simple_discount2, rule, discount_duration)
 
         return store.add_discount_policy(discount)

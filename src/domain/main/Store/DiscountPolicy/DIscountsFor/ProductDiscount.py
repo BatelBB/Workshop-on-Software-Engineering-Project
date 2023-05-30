@@ -11,4 +11,5 @@ class ProductDiscount(IDiscountFor):
     def get_products_to_apply_discount_to(self, products: set[Product]):
         if self.product in products:
             return {self.product}
-
+        else:
+            return {}
