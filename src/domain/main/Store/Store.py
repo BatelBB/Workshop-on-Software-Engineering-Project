@@ -2,6 +2,7 @@ import threading
 
 from multipledispatch import dispatch
 
+from domain.main.Store.DiscountPolicy.IDiscountPolicy import IDiscountPolicy
 from src.domain.main.ExternalServices.Payment.PaymentServices import IPaymentService
 from src.domain.main.ExternalServices.Provision.ProvisionServiceAdapter import IProvisionService, provisionService
 from src.domain.main.Store.Product import Product
@@ -49,6 +50,7 @@ class Store:
         self.purchase_rules: dict[int:IRule] = {}
         self.purchase_rule_ids = 0
         self.purchase_rule_lock = threading.RLock()
+        self.discounts: IDiscountPolicy = None
 
     def __str__(self):
         output: str = f'Store: {self.name}\nProducts:\n'
@@ -160,7 +162,7 @@ class Store:
 
     def enforce_purchase_rules(self, basket: Basket) -> Response[bool]:
         for rule in self.purchase_rules:
-            res = self.purchase_rules[rule].enforce_rule(basket)
+            res = self.purchase_rules[rule].result.enforce_rule(basket)
             if not res.success:
                 return res
         return report("all rules are kept: Kfir is happy!", True)
@@ -204,12 +206,25 @@ class Store:
     def get_products_by_keywords(self, keywords: list[str]) -> list[Product]:
         return self.get_products(lambda p: len((set(p.keywords) & set(keywords))) > 0)
 
+    def update_basket_to_current_price(self, basket: Basket):
+        for i in basket.items:
+            i.price = self.get_product_price(i.product_name)
+            i.discount_price = i.price
+
     def calculate_basket_price(self, basket: Basket) -> float:
-        price = 0
-        # only call from right after reserve
-        for item in basket.items:
-            price += self.get_product_price(item.product_name)
-        return price
+        self.update_basket_to_current_price(basket)
+        if self.discounts is None:
+            price = 0
+            # only call from right after reserve
+            for item in basket.items:
+                price += self.get_product_price(item.product_name)
+            return price
+        else:
+            self.discounts.calculate_price(basket, self.products)
+            price = 0
+            for i in basket.items:
+                price += (i.discount_price*i.quantity)
+            return price
 
     def add_to_purchase_history(self, baskets: Basket):
         self.purchase_history.append(baskets.__str__())
@@ -285,3 +300,17 @@ class Store:
 
     def remove_purchase_rule(self, rule_id: int):
         self.purchase_rules.pop(rule_id)
+
+    def add_discount_policy(self, discount_policy) -> Response[bool]:
+        if self.discounts is None:
+            self.discounts = discount_policy
+        else:
+            self.discounts.add_discount(discount_policy)
+        return Response(True, "disount added")
+
+    def get_product_obj(self, p_name):
+        p_names = [p.name for p in self.products]
+        if p_name in p_names:
+            return Response(self.find(p_name), "product found")
+        else:
+            return report_error("get_product_obj", "product doesnt exsist")
