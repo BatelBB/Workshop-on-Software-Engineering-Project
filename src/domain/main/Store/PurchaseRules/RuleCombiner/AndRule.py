@@ -19,3 +19,6 @@ class AndRule(IRuleCombiner):
         elif not con2.success:
             return con2
         return report("and rule good -> Kfir is happy" ,True)
+
+    def __str__(self):
+        return f'{self.rule1} and {self.rule2}'

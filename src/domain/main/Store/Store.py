@@ -118,6 +118,9 @@ class Store:
         p = self.find(product_name)
         return p.price if p is not None else 0.000
 
+    def get_product_discounts_str(self, p_name: str) -> str:
+        return self.discounts.get_discount_for_product(p_name, self.get_product_price(p_name), self.products)
+
     def refill(self, reserved: dict[str, int]) -> None:
         for product_name, reserved_quantity in reserved.items():
             self.products_quantities[product_name].refill(reserved_quantity)

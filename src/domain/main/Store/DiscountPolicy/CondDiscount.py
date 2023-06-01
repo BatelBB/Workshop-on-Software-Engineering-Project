@@ -11,12 +11,16 @@ class CondDiscount(IDiscountPolicy):
         self.discount = simple_discount
         self.rule = rule
 
+    def add_discount(self, discount: 'IDiscountPolicy'):
+        self.discount.add_discount(discount)
+
     def calculate_price(self, basket: Basket, products: set[Product]):
         res = self.rule.enforce_rule(basket)
         if res.success and res.result:
             self.discount.calculate_price(basket, products)
 
-        super().calculate_next_discount(basket, products)
-
     def get_discount_for_product(self, p_name, p_cur_price, products: set[Product]) -> str:
-        return "0"
+        dis = self.discount.get_discount_for_product(p_name, p_cur_price, products)
+        if dis is not None:
+            return f'{self.rule.__str__()} then discount: {dis}'
+        return None

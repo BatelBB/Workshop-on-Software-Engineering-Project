@@ -9,3 +9,7 @@ class IRule(ABC):
     @abstractmethod
     def enforce_rule(self, basket: Basket) -> Response[bool]:
         ...
+
+    @abstractmethod
+    def __str__(self):
+        ...

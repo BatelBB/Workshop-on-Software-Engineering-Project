@@ -27,12 +27,19 @@ class OpenDiscount(IDiscountPolicy):
 
         super().calculate_next_discount(basket, products)
 
-    def get_discount_for_product(self, product, p_cur_price, products: set[Product]) -> str:
+    def get_discount_for_product(self, product_name, p_cur_price, products: set[Product]) -> str:
         discounted_products: set[Product] = self.discount_for.get_products_to_apply_discount_to(products)
         p_names = [p.name for p in discounted_products]
-        if product.name in p_names:
+        if product_name in p_names:
             discounted_price = self.get_discount_price(p_cur_price)
-            return f'original price = {p_cur_price}///only now for {discounted_price}'
+            if self.next is not None:
+                next_discount = self.next.get_discount_for_product(product_name, discounted_price, products)
+                if next_discount is not None:
+                    return f'original price = {p_cur_price} discounted price: {discounted_price}\n {next_discount}'
+            return f'original price = {p_cur_price} discounted price: {discounted_price}'
+        if self.next is not None:
+            return self.next.get_discount_for_product(product_name, p_cur_price, products)
+        return None
 
 
 
