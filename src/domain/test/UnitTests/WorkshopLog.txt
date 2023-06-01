@@ -180,3 +180,18 @@ Description: set_information in paywithcard: invalid payment parameters, excpect
 01/06/2023 15:58:35 ERROR:	 Admin.login: Admin 'Kfir' enter an incorrect password.
 01/06/2023 15:58:35 WARNING:	 Market is closed!
 01/06/2023 15:58:35 WARNING:	 Logger thread exits!
+01/06/2023 16:38:50 INFO:	 Session: 2996674634498080812 has been initialized
+01/06/2023 16:38:50 ERROR:	 Admin.login: Admin 'Kfir' enter an incorrect password.
+01/06/2023 16:38:50 INFO:	 Visitor.register: 'test' is registered!
+01/06/2023 16:38:50 INFO:	 Visitor.login: Member 'test' is logged in.
+01/06/2023 16:38:50 INFO:	 Market.open_store: Member 'test' opened store 'IHerb'.
+01/06/2023 16:38:50 INFO:	 Market.add_product: 'test' add 20 units of Product 'Vitamin A', Category: 'Vitamins', Price: 19.9, Rate: Not rated yet to store 'IHerb'
+01/06/2023 16:38:50 INFO:	 Market.add_product: 'test' add 25 units of Product 'Toothpaste', Category: 'Hygiene', Price: 21.2, Rate: Not rated yet to store 'IHerb'
+01/06/2023 16:38:50 INFO:	 Visitor.add_to_cart: 21 units of Product 'Vitamin A' from store 'IHerb' is added to Member 'test' cart
+01/06/2023 16:38:50 INFO:	 Visitor.verify_cart_not_empty: Member 'test' cart's is NOT empty!
+01/06/2023 16:38:50 INFO:	 all rules are kept: Kfir is happy!
+01/06/2023 16:38:50 ERROR:	 Market.purchase_shopping_cart: payment_succeeded = false
+01/06/2023 16:38:50 INFO:	 Session: 3225841365235130386 has been initialized
+01/06/2023 16:38:50 ERROR:	 Admin.login: Admin 'Kfir' enter an incorrect password.
+01/06/2023 16:38:50 WARNING:	 Market is closed!
+01/06/2023 16:38:50 WARNING:	 Logger thread exits!
