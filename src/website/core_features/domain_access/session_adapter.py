@@ -108,3 +108,6 @@ class SessionAdapter:
 
     def get_all_registered_users(self):
         return self._session.get_all_registered_users()
+
+    def remove_product(self, store_name: str, product_name: str):
+        return self._session.remove_product(store_name, product_name)

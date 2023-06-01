@@ -50,10 +50,15 @@
     <td>
         {% with product=product %}
         {% include "partials/product.html"  %}
+        {% if permissions and 'Remove' in permissions %}
+            <form action="{{ url_for('products.remove_product', store_name=name, product_name=product.name) }}">
+                <button type="submit">Remove Product</button>
+            </form>
+        {% endif %}
         {% endwith %}
     </td>
 </tr>
-    {% else %}s
+    {% else %}
     <tr>
         <td></td>
         <td>No products found. Maybe this store is kinda new?</td>
