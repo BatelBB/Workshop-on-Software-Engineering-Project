@@ -122,14 +122,4 @@ def remove_product(store_name: str, product_name: str):
         error = res.description
         flash(error, category="danger")
 
-
-
-
-
 # update products for all fields
-
-# manage staff
-
-# manage discounts
-
-# manage rules
