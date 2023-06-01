@@ -94,6 +94,18 @@ class SessionAdapter:
             r = self._session.change_product_name(store_name, old_product_name, new_product_name)
         return r
 
+    def edit_product_name(self, store_name: str, old_product_name: str, new_product_name: str):
+        return self._session.change_product_name(store_name, old_product_name, new_product_name)
+
+    def edit_product_category(self, store_name: str, old_product_name: str, category: str):
+        return self._session.change_product_category(store_name, old_product_name, category)
+
+    def edit_product_price(self, store_name: str, old_product_price: float, price: float):
+        return self._session.change_product_price(store_name, old_product_price, price)
+
+    def edit_product_quantity(self, store_name: str, old_product_name: str, quantity: int):
+        return self._session.update_product_quantity(store_name, old_product_name, quantity)
+
     def appoint_manager(self, store_name: str, appointee: str):
         return self._session.appoint_manager(appointee, store_name)
 
@@ -108,3 +120,6 @@ class SessionAdapter:
 
     def get_all_registered_users(self):
         return self._session.get_all_registered_users()
+
+    def remove_product(self, store_name: str, product_name: str):
+        return self._session.remove_product(store_name, product_name)

@@ -3,57 +3,70 @@
 
 {% block page %}
 
-<h1>{{ name }}</h1>
+<h1 style="text-align:center; color:blue; font-size: 2em;">{{ name }}</h1>
 
 {% if not success %}
-
-<p>Error: {{ message }}</p>
-
+<p style="color:red;">Error: {{ message }}</p>
 {% else %}
 <p>
-    you have {{ permissions }}
+    You have {{ permissions }}
 </p>
+
+<div style="display:flex; justify-content:space-around; flex-wrap:wrap; margin-bottom:1em;">
 
 {% if ('Add' in permissions) %}
     <form action="{{ url_for('products.add_product', store_name=name) }}">
-        <button type="submit">Add product</button>
+        <button type="submit" style="background-color: #008CBA; color: white; padding: 10px 24px; margin: 8px 0; border: none; border-radius: 4px; cursor: pointer;">Add product</button>
     </form>
 {% endif %}
 
 {% if ('AppointManager' in permissions) %}
     <form action="{{ url_for('staff.appoint_manager', store_name=name) }}">
-        <button type="submit">Appoint Manager</button>
+        <button type="submit" style="background-color: #008CBA; color: white; padding: 10px 24px; margin: 8px 0; border: none; border-radius: 4px; cursor: pointer;">Appoint Manager</button>
     </form>
 {% endif %}
 
 {% if ('AppointOwner' in permissions) %}
     <form action="{{ url_for('staff.appoint_owner', store_name=name) }}">
-        <button type="submit">Appoint Owner</button>
+        <button type="submit" style="background-color: #008CBA; color: white; padding: 10px 24px; margin: 8px 0; border: none; border-radius: 4px; cursor: pointer;">Appoint Owner</button>
     </form>
 {% endif %}
 
 {% if ('CancelManagerAppointment' in permissions) %}
     <form action="{{ url_for('staff.remove_manager', store_name=name) }}">
-        <button type="submit">Remove Manager</button>
+        <button type="submit" style="background-color: #008CBA; color: white; padding: 10px 24px; margin: 8px 0; border: none; border-radius: 4px; cursor: pointer;">Remove Manager</button>
     </form>
 {% endif %}
 
 {% if ('CancelOwnerAppointment' in permissions) %}
     <form action="{{ url_for('staff.remove_owner', store_name=name) }}">
-        <button type="submit">Remove Owner</button>
+        <button type="submit" style="background-color: #008CBA; color: white; padding: 10px 24px; margin: 8px 0; border: none; border-radius: 4px; cursor: pointer;">Remove Owner</button>
     </form>
 {% endif %}
+
+</div>
+
 <table>
-    {% for product in products %}
+ {% for product in products %}
 <tr>
     <td><img src="{{ dicebear_product(product.name) }}" style="height: 4em;"/></td>
     <td>
         {% with product=product %}
-        {% include "partials/product.html"  %}
+            {% include "partials/product.html"  %}
+            {% if permissions and 'Remove' in permissions %}
+                <form action="{{ url_for('products.remove_product', store_name=name, product_name=product.name) }}">
+                    <button type="submit" style="background-color: #019CBA; color: white; padding: 4px 10px; margin: 5px 0; border: none; border-radius: 4px; cursor: pointer;">Remove Product</button>
+                </form>
+            {% endif %}
         {% endwith %}
+        {% if permissions and 'Update' in permissions %}
+            <form action="{{ url_for('products.edit_product_one_field', store_name=name, product_name=product.name) }}">
+                <button type="submit" style="background-color: #019CBA; color: white; padding: 4px 10px; margin: 5px 0; border: none; border-radius: 4px; cursor: pointer;">Edit Product</button>
+            </form>
+        {% endif %}
     </td>
 </tr>
-    {% else %}s
+    {% else %}
     <tr>
         <td></td>
         <td>No products found. Maybe this store is kinda new?</td>

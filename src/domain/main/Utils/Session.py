@@ -144,6 +144,9 @@ class Session:
     def change_product_price(self, store_name: str, product_old_price: float, product_new_price: float) -> Response[bool]:
         return self.apply(self.service.change_product_price, self.identifier, store_name, product_old_price, product_new_price)
 
+    def change_product_category(self, store_name: str, old_product_name: str, category: str) -> Response[bool]:
+        return self.apply(self.service.change_product_category, self.identifier, store_name, old_product_name, category)
+
     def get_store_purchase_history(self, store_name: str) -> Response[str]:
         return self.apply(self.service.get_store_purchase_history, store_name)
 
