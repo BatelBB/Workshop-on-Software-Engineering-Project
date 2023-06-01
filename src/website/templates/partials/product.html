@@ -6,4 +6,7 @@
 >
     <h3>{{ product.name }}</h3>
     <p><span class="price">{{ product.price }}</span></p>
+    {% if permissions and 'Update' in permissions %}
+        can edit
+    {% endif %}
 </div>

@@ -63,7 +63,7 @@ def init_batel_store(market):
 
 def seed(market: Market):
     market.init_admin()
-    for username in ("batel", "yuval", "hagai", "nir", "mendi"):
+    for username in ("batel", "yuval", "hagai", "nir_m.", "mendi"):
         market.register(0, username, "123456")
     init_yuvals_store(market)
     init_batel_store(market)

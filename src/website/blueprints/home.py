@@ -6,7 +6,7 @@ from flask_bootstrap import Bootstrap
 
 from domain.main.Utils.Response import Response
 from website.blueprints.auth import bp as auth
-from website.blueprints.selling import bp as selling
+#from website.blueprints.selling import bp as selling
 from website.blueprints.buying import bp as buying
 from website.core_features.domain_access.market_access import get_domain_adapter
 
@@ -19,7 +19,7 @@ bp = Blueprint("home", __name__)
 @bp.route("/")
 def home():
     domain = get_domain_adapter()
-    stores_result = domain.get_stores() # TODO get_domain_session(session).get_all_stores().result
+    stores_result = domain.get_stores()  # TODO get_domain_session(session).get_all_stores().result
     from random import shuffle
     made_by = ['Batel', 'Hagai', 'Mendi', 'Nir', 'Yuval']
     shuffle(made_by)

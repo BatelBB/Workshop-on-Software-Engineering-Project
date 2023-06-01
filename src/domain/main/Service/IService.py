@@ -213,6 +213,9 @@ class IService(metaclass=IAbsractConcurrentSingleton):
     @abstractmethod
     def clear(self) -> None:
         ...
+    @abstractmethod
+    def get_all_registered_users(self) -> list[str]:
+        ...
 
     @abstractmethod
     def add_discount(self, session_id: int, store_name: str, discount_type: str, discount_percent: int,

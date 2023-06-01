@@ -20,7 +20,6 @@
             {% for store in your_stores %}
                 <tr>
                     <td><img src="{{ dicebear_shop(store.name) }}" style="height: 4em;"/></td>
-                    <td><a href="{{ url_for('selling.manage', name=store.name) }}">{{ store["name"] }}</a></td>
                 </tr>
             {% endfor %}
         </div>

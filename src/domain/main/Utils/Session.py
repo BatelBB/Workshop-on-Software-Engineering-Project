@@ -152,6 +152,9 @@ class Session:
         return self.apply(self.service.change_product_price, self.identifier, store_name, product_old_price,
                           product_new_price)
 
+    def change_product_category(self, store_name: str, old_product_name: str, category: str) -> Response[bool]:
+        return self.apply(self.service.change_product_category, self.identifier, store_name, old_product_name, category)
+
     def get_store_purchase_history(self, store_name: str) -> Response[str]:
         return self.apply(self.service.get_store_purchase_history, store_name)
 
@@ -185,6 +188,9 @@ class Session:
 
     def cancel_membership_of(self, member_name: str) -> Response[bool]:
         return self.apply(self.service.cancel_membership_of, self.identifier, member_name)
+
+    def get_all_registered_users(self) -> list[str]:
+        return self.apply(self.service.get_all_registered_users)
 
     def add_discount(self, store_name: str, discount_type: str, discount_percent: int,
                      discount_duration: int, discount_for_type: str, discount_for_name: str = None,

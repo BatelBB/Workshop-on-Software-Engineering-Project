@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+{% block title %}Edit staff{% endblock %}
+
+{% block page %}
+
+<h1>{{ headline }}</h1>
+
+<form method="post">
+    <p>
+        Registered users:
+        {% for user in get_all_registered_users %}
+        <li>{{ user }}</li>
+        {% endfor %}
+    </p>
+  {{ form.hidden_tag() }}
+    <table>
+            <tr>
+                <td>{{form.appointee.label}}&nbsp;</td>
+                <td>{{ form.appointee }}</td>
+                <td>
+                    {% for error in form.appointee.errors %}
+                        {{ error }}
+                    {% endfor %}
+                </td>
+            </tr>
+    </table>
+</form>
+
+{% endblock %}

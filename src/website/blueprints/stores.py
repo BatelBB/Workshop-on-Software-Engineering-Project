@@ -1,11 +1,18 @@
-from wtforms import Form, StringField, PasswordField, SubmitField
+# Blueprint for creating, updating, opening, closing and deleting stores.
+# Not including staff, products.
+
+from typing import List
+
+from wtforms import Form, StringField, PasswordField, SubmitField, FloatField, IntegerField
 from flask_wtf import FlaskForm
 import wtforms.validators as validation
 from flask import Blueprint, flash, redirect, render_template, session, url_for
 
+from domain.main.Market.Permissions import Permission
 from website.core_features.domain_access.market_access import get_domain_adapter
+from website.core_features.domain_access.session_adapter_dto import ProductDto
 
-bp = Blueprint("selling", __name__)
+bp = Blueprint("stores", __name__)
 
 
 class CreateStoreForm(FlaskForm):
@@ -30,9 +37,4 @@ def create_store():
             return redirect(url_for("home.home"))
         error = res.description
         flash(error, category="danger")
-    return render_template("selling/create_store.html", form=form, error=error)
-
-
-@bp.route('/manage/<name>')
-def manage(name: str):
-    return "WIP"
+    return render_template("stores/create_store.html", form=form, error=error)

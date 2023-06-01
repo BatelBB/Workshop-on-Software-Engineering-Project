@@ -156,6 +156,16 @@ class Store:
             product.name = new
         return is_changed
 
+    def change_product_category(self, old: str, new: str) -> bool:
+        product = self.find(old)
+        is_changed = product is not None
+        if is_changed:
+            q = self.products_quantities[old]
+            del self.products_quantities[old]
+            self.products_quantities.update({new: q})
+            product.category = new
+        return is_changed
+
     def change_product_price(self, old: float, new: float) -> None:
         for product in filter(lambda p: p.price == old, self.products):
             product.price = new

@@ -184,6 +184,9 @@ class Market(IService):
             return response  # Unregistered store
         return response  # Unregistered user
 
+    def get_all_registered_users(self) -> list[str]:
+        return self.users.get_all_keys()
+
     def verify_store_contains_product(self, calling_method_name: str, store_name: str, product_name: str) -> Response[
         Store | bool]:
         response = self.verify_registered_store(calling_method_name, store_name)
@@ -543,6 +546,19 @@ class Market(IService):
                 return report_info(self.change_product_price.__qualname__,
                                    f'Product of price {product_old_price} changed to \'{product_new_price}\' at store \'{store_name}\' by {actor}')
             return self.report_no_permission(self.change_product_price.__qualname__, actor, store_name,
+                                             Permission.Update)
+        return response
+
+    def change_product_category(self, session_identifier: int, store_name: str, product_name: str, category: str) -> Response[bool]:
+        response = self.verify_registered_store(self.change_product_category.__qualname__, store_name)
+        if response.success:
+            store = response.result
+            actor = self.get_active_user(session_identifier)
+            if self.has_permission_at(store_name, actor, Permission.Update):
+                store.change_product_category(product_name, category)
+                return report_info(self.change_product_category.__qualname__,
+                                   f'Product {product_name} category changed to \'{category}\' at store \'{store_name}\' by {actor}')
+            return self.report_no_permission(self.change_product_category.__qualname__, actor, store_name,
                                              Permission.Update)
         return response
 
