@@ -1,6 +1,6 @@
 from typing import List
 
-from wtforms import Form, StringField, PasswordField, SubmitField, FloatField, IntegerField
+from wtforms import Form, StringField, PasswordField, SubmitField, FloatField, IntegerField, SelectField
 from flask_wtf import FlaskForm
 import wtforms.validators as validation
 from flask import Blueprint, flash, redirect, render_template, session, url_for
@@ -14,7 +14,7 @@ bp = Blueprint("staff", __name__)
 
 # appoint manager
 class AppointmentForm(FlaskForm):
-    appointee = StringField(validators=[validation.Length(min=3, max=100)])
+    appointee = SelectField('Select User', validators=[validation.DataRequired()], choices=[])
     submit = SubmitField()
 
 
@@ -30,6 +30,7 @@ def appoint_manager(store_name: str):
         flash("Not allowed to appoint manager to this store")
         return redirect(url_for("buying.view_store", name=store_name))
     form = AppointmentForm()
+    form.appointee.choices = [(user, user) for user in all_users]
     if form.validate_on_submit():
         manager_name = form.appointee.data
         if domain.appoint_manager(store_name, manager_name):
@@ -53,6 +54,7 @@ def appoint_owner(store_name: str):
         flash("Not allowed to appoint owner to this store")
         return redirect(url_for("buying.view_store", name=store_name))
     form = AppointmentForm()
+    form.appointee.choices = [(user, user) for user in all_users]
     if form.validate_on_submit():
         owner_name = form.appointee.data
         if domain.appoint_owner(store_name, owner_name):
@@ -76,6 +78,7 @@ def remove_manager(store_name: str):
         flash("Not allowed to remove manager from this store")
         return redirect(url_for("buying.view_store", name=store_name))
     form = AppointmentForm()
+    form.appointee.choices = [(user, user) for user in all_users]
     if form.validate_on_submit():
         manager_name = form.appointee.data
         if domain.remove_manager(store_name, manager_name):
@@ -98,9 +101,10 @@ def remove_owner(store_name: str):
         flash("Not allowed to remove owner from this store")
         return redirect(url_for("buying.view_store", name=store_name))
     form = AppointmentForm()
+    form.appointee.choices = [(user, user) for user in all_users]
     if form.validate_on_submit():
         owner_name = form.appointee.data
-        if domain.remove_owner(store_name, owner_name):
+        if domain.remove_owner(store_name, owner_name).success:
             flash(f'{owner_name} is not appointed owner of {store_name}')
             return redirect(url_for("buying.view_store", name=store_name))
         else:
