@@ -6,12 +6,6 @@
 <h1>{{ headline }}</h1>
 
 <form method="post">
-    <p>
-        Registered users:
-        {% for user in get_all_registered_users %}
-        <li>{{ user }}</li>
-        {% endfor %}
-    </p>
   {{ form.hidden_tag() }}
     <table>
             <tr>
@@ -22,6 +16,9 @@
                         {{ error }}
                     {% endfor %}
                 </td>
+            </tr>
+            <tr>
+                <td colspan="3"><input type="submit" value="Submit"></td>
             </tr>
     </table>
 </form>

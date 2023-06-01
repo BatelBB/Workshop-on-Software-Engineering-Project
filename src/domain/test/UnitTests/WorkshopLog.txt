@@ -162,3 +162,21 @@
 30/05/2023 18:45:58 ERROR:	 Admin.login: Admin 'Kfir' enter an incorrect password.
 30/05/2023 18:45:58 WARNING:	 Market is closed!
 30/05/2023 18:45:58 WARNING:	 Logger thread exits!
+01/06/2023 15:58:34 INFO:	 Session: 2532733237364338925 has been initialized
+01/06/2023 15:58:34 ERROR:	 Admin.login: Admin 'Kfir' enter an incorrect password.
+01/06/2023 15:58:35 INFO:	 Visitor.register: 'test' is registered!
+01/06/2023 15:58:35 INFO:	 Visitor.login: Member 'test' is logged in.
+01/06/2023 15:58:35 INFO:	 Market.open_store: Member 'test' opened store 'IHerb'.
+01/06/2023 15:58:35 INFO:	 Market.add_product: 'test' add 20 units of Product 'Vitamin A', Category: 'Vitamins', Price: 19.9, Rate: Not rated yet to store 'IHerb'
+01/06/2023 15:58:35 INFO:	 Market.add_product: 'test' add 25 units of Product 'Toothpaste', Category: 'Hygiene', Price: 21.2, Rate: Not rated yet to store 'IHerb'
+01/06/2023 15:58:35 INFO:	 Visitor.add_to_cart: 2 units of Product 'Vitamin A' from store 'IHerb' is added to Member 'test' cart
+01/06/2023 15:58:35 INFO:	 Visitor.verify_cart_not_empty: Member 'test' cart's is NOT empty!
+01/06/2023 15:58:35 INFO:	 all rules are kept: Kfir is happy!
+01/06/2023 15:58:35 ERROR:	 set_information in paywithcard: invalid payment parameters, excpected card_num: string, cvv: string, exp_date: string
+01/06/2023 15:58:35 ERROR:	 Market.pay: setting payment information failed Request result is: None
+Description: set_information in paywithcard: invalid payment parameters, excpected card_num: string, cvv: string, exp_date: string
+01/06/2023 15:58:35 ERROR:	 Market.purchase_shopping_cart: payment_succeeded = false
+01/06/2023 15:58:35 INFO:	 Session: 6213939210624761317 has been initialized
+01/06/2023 15:58:35 ERROR:	 Admin.login: Admin 'Kfir' enter an incorrect password.
+01/06/2023 15:58:35 WARNING:	 Market is closed!
+01/06/2023 15:58:35 WARNING:	 Logger thread exits!
