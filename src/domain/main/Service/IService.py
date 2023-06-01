@@ -180,7 +180,7 @@ class IService(metaclass=IAbsractConcurrentSingleton):
     @abstractmethod
     def purchase_with_non_immediate_policy(self, session_identifier: int, store_name: str, product_name: str,
                                            payment_method: str, payment_details: list[str], address: str,
-                                           postal_code: str, how_much: float) -> Response[bool]:
+                                           postal_code: str, how_much: float, city: str, country: str) -> Response[bool]:
         ...
 
     def start_auction(self, session_id: int, store_name: str, product_name: str, initial_price: float, duration: int) -> Response[bool]:
@@ -215,4 +215,13 @@ class IService(metaclass=IAbsractConcurrentSingleton):
         ...
     @abstractmethod
     def get_all_registered_users(self) -> list[str]:
+        ...
+
+    @abstractmethod
+    def add_discount(self, session_id: int, store_name: str, discount_type: str, discount_percent: int,
+                     discount_duration: int, discount_for_type: str, discount_for_name: str = None,
+                     rule_type=None,
+                     discount2_percent=None, discount2_for_type=None, discount2_for_name=None,
+                     cond_type: str = None, min_price: float = None,
+                     p1_name=None, gle1=None, amount1=None, p2_name=None, gle2=None, amount2=None):
         ...

@@ -1,3 +1,5 @@
+import random
+
 from src.domain.main.Service.IService import IService
 from src.domain.main.Store.Product import Product
 from src.domain.main.User.Cart import Cart
@@ -6,7 +8,8 @@ from src.domain.main.Utils.Response import Response
 
 
 class User:
-    def __init__(self, mediator: IService, username: str = "Visitor", encrypted_password: str = "Visitor"):
+    def __init__(self, mediator: IService, username: str = "Visitor", encrypted_password: bytes = "Visitor"):
+        self.user_id = None
         self.mediator = mediator
         self.username = username
         self.encrypted_password = encrypted_password
@@ -25,9 +28,10 @@ class User:
         return hash(self.username)
 
     def register(self) -> Response[bool]:
+        self.user_id = random.randint(100000000, 999999999)
         return self.role.register()
 
-    def login(self, encrypted_password: str) -> Response[bool]:
+    def login(self, encrypted_password: bytes) -> Response[bool]:
         return self.role.login(encrypted_password)
 
     def logout(self) -> Response[bool]:
@@ -59,3 +63,6 @@ class User:
 
     def empty_basket(self, store_name: str) -> None:
         self.role.empty_basket(store_name)
+
+    def get_user_id(self) -> int:
+        return self.user_id

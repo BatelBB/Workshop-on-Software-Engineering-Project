@@ -156,7 +156,7 @@ class purchaseRuleTests(unittest.TestCase):
         s2 = service.enter()
         s2.add_to_cart("s", "p1", 2)
 
-        res = s2.purchase_shopping_cart("card", ["asd", "asd", "Asd"], "ashdod", "74664")
+        res = s2.purchase_shopping_cart("card", ["asd", "asd", "Asd"], "ben gurion 1", "74664", "beer sheva", "israel")
         self.assertFalse(res.success, "fail")
 
 
@@ -175,5 +175,5 @@ class purchaseRuleTests(unittest.TestCase):
         s2.add_to_cart("s", "p1", 2)
         s2.add_to_cart("s", "p2", 5)
 
-        res = s2.purchase_shopping_cart("card", ["asd", "asd", "Asd"], "ashdod", "74664")
+        res = s2.purchase_shopping_cart("card", ["asd", "asd", "Asd"], "ben gurion 1", "74664", "beer sheva", "israel")
         self.assertTrue(res.success, "fail")

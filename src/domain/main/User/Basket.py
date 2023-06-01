@@ -62,3 +62,9 @@ class Basket:
             return True
         except Exception:
             return False
+
+    def get_item(self, name):
+        for i in self.items:
+            if i.product_name == name:
+                return i
+

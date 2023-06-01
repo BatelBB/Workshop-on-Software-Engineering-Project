@@ -1,10 +1,9 @@
+import unittest
+
 from src.domain.main.Market.Market import Market
 
 
-class test_purchase_policy:
-
-    def __init__(self):
-        self.service = None
+class test_purchase_policy(unittest.TestCase):
 
     def setUp(self) -> None:
         self.service: Market = Market()
@@ -22,7 +21,13 @@ class test_purchase_policy:
         s2 = self.service.enter()
         res = s2.register("u2", "p2")
         res = s2.login("u2", "p2")
-        res = s2.purchase_with_non_immediate_policy("burekas gedera", "burekas pitriot", "credit",
-                                                    ["4580", "12/2030", "333"],
-                                                    "beer sheva", "3777777")
+        res = s2.purchase_with_non_immediate_policy("burekas gedera",
+                                                    "burekas pitriot",
+                                                    "credit",
+                                                    ["4580", "12/3790", "333"],
+                                                    "beer sheva",
+                                                    "3777777",
+                                                    43.4,
+                                                    "tel aviv",
+                                                    "israel")
         store.new_day()
