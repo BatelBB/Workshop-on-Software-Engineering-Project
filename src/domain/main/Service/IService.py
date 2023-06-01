@@ -225,3 +225,7 @@ class IService(metaclass=IAbsractConcurrentSingleton):
                      cond_type: str = None, min_price: float = None,
                      p1_name=None, gle1=None, amount1=None, p2_name=None, gle2=None, amount2=None):
         ...
+
+    @abstractmethod
+    def get_store_products_with_discounts(self, sessiont_id: int, store_name: str) -> dict[Product:str]:
+        ...

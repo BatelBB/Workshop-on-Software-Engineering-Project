@@ -202,3 +202,6 @@ class Session:
                           discount_duration, discount_for_type, discount_for_name, rule_type, discount2_percent,
                           discount2_for_type, discount2_for_name, cond_type, min_price,
                           p1_name, gle1, amount1, p2_name, gle2, amount2)
+
+    def get_store_products_with_discounts(self, store_name: str) -> dict[Product:str]:
+        self.apply(self.get_store_products_with_discounts, self.identifier, store_name)
