@@ -317,3 +317,9 @@ class Store:
             return Response(self.find(p_name), "product found")
         else:
             return report_error("get_product_obj", "product doesnt exsist")
+
+    def get_products_with_discounts(self) -> dict[Product:str]:
+        dict = {}
+        for product in self.products:
+            dict[product] = self.get_product_discounts_str(product.name)
+        return dict

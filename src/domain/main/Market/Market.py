@@ -827,3 +827,12 @@ class Market(IService):
             discount = XorDiscount(simple_discount1, simple_discount2, rule, discount_duration)
 
         return store.add_discount_policy(discount)
+
+    def get_store_products_with_discounts(self, session_id: int, store_name: str) -> dict[Product:str]:
+        store_res = self.verify_registered_store(self.add_discount.__qualname__, store_name)
+        if not store_res.success:
+            return report_error(self.add_discount.__qualname__, "invalid store")
+        store = store_res.result
+
+        dict = store.get_products_with_discounts()
+        return dict
