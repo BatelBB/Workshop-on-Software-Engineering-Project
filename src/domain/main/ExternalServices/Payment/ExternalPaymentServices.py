@@ -2,6 +2,7 @@ import string
 from abc import ABC, abstractmethod
 
 from requests import Response
+from requests.exceptions import Timeout
 
 from domain.main.ExternalServices.REST_API.RestAPI_Service import RestAPI
 from domain.main.Utils.Logger import report_error, report_info
@@ -24,17 +25,30 @@ class IExternalPaymentService(ABC):
 
 class ExternalPaymentServiceReal(IExternalPaymentService):
 
-    def __init__(self):
+    def __init__(self, retry_limit=3, request_timeout=5):
         self.real = RestAPI('https://php-server-try.000webhostapp.com/')
         self.transaction_id = -1
+        self.retry_limit = retry_limit
+        self.request_timeout = request_timeout
 
     def checkValidTransactionID(self, transaction_id: int):
         return 1000 <= transaction_id <= 10000
 
+    def handle_request(self, data: dict):
+        for _ in range(self.retry_limit):
+            try:
+                response: Response = self.real.post(data, timeout=self.request_timeout)
+                if response.ok:
+                    return response
+            except Timeout:
+                report_error(__name__, f"Request timed out. Retrying...")
+        report_error(__name__, f"Request failed after {self.retry_limit} attempts.")
+        return None
+
     def checkServiceAvailability(self) -> bool:
         checkDic = {"action_type": "handshake"}
-        response: Response = self.real.post(checkDic)
-        return True if response.ok else False
+        response = self.handle_request(checkDic)
+        return True if response and response.ok else False
 
     def payWIthCard(self, num: int, cvv: int, month: int, year: int, holder: string, user_id: int):
         if self.checkServiceAvailability():
@@ -45,7 +59,7 @@ class ExternalPaymentServiceReal(IExternalPaymentService):
                       "holder": holder,
                       "ccv": str(cvv),
                       "id": str(user_id)}
-            response: Response = self.real.post(payDic)
+            response: Response = self.handle_request(payDic)
             if response.ok:
                 if self.checkValidTransactionID(int(response.text)):
                     self.transaction_id = response.text
@@ -70,7 +84,8 @@ class ExternalPaymentServiceReal(IExternalPaymentService):
                 report_info(self.refundToCard.__qualname__, "post request for refund to card success!")
                 return True
             else:
-                report_error(self.refundToCard.__qualname__, f'post request for refund to card failed {response.status_code}')
+                report_error(self.refundToCard.__qualname__,
+                             f'post request for refund to card failed {response.status_code}')
                 return False
         else:
             report_error(self.refundToCard.__qualname__, "handshake failed")

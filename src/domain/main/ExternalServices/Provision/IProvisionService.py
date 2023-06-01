@@ -7,7 +7,8 @@ from domain.main.Utils.Logger import report_error, report_info
 
 class IExternalProvisionService(ABC):
     @abstractmethod
-    def getDelivery(self, user_name: str, shop_name: str, packageID: int, address: str, postal_code: str, country: str, city: str) -> bool:
+    def getDelivery(self, user_name: str, shop_name: str, packageID: int, address: str, postal_code: str, country: str,
+                    city: str) -> bool:
         ...
 
     @abstractmethod
@@ -27,12 +28,14 @@ class provisionReal(IExternalProvisionService):
 
     def checkValidTransactionID(self, transaction_id: int):
         return 1000 <= transaction_id <= 10000
+
     def checkServiceAvailability(self) -> bool:
         checkDic = {"action_type": "handshake"}
         response = self.real.post(checkDic)
         return True if response.ok else False
 
-    def getDelivery(self, user_name: str, shop_name: str, packageID: int, address: str, postal_code: str, country: str, city: str) -> bool:
+    def getDelivery(self, user_name: str, shop_name: str, packageID: int, address: str, postal_code: str, country: str,
+                    city: str) -> bool:
         if self.checkServiceAvailability():
             supplyDic = {"action_type": "supply",
                          "name": user_name,
@@ -66,7 +69,8 @@ class provisionReal(IExternalProvisionService):
                 report_info(self.cancelDelivery.__qualname__, f'post request for canceling delivery successes!')
                 return True
             else:
-                report_error(self.cancelDelivery.__qualname__, f'post request for canceling delivery failed - {response.status_code}')
+                report_error(self.cancelDelivery.__qualname__,
+                             f'post request for canceling delivery failed - {response.status_code}')
         else:
             report_error(self.cancelDelivery.__qualname__, "handshake failed")
             return False
