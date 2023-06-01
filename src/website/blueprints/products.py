@@ -1,6 +1,6 @@
 from typing import List
 
-from wtforms import Form, StringField, PasswordField, SubmitField, FloatField, IntegerField
+from wtforms import Form, StringField, PasswordField, SubmitField, FloatField, IntegerField, SelectField
 from flask_wtf import FlaskForm
 import wtforms.validators as validation
 from flask import Blueprint, flash, redirect, render_template, session, url_for
@@ -44,55 +44,15 @@ def add_product(store_name: str):
             return redirect(url_for("buying.view_store", name=store_name))
         error = res.description
         flash(error, category="danger")
-    return render_template("products/add_product.html", form=form, error=error)
+    return render_template("selling/add_product.html", form=form, error=error)
 
-
-class EditProductForm(FlaskForm):
-    product_name = StringField(validators=[validation.Length(min=3, max=100)])
-    category = StringField(validators=[validation.DataRequired()])
-    price = FloatField(validators=[validation.NumberRange(min=0.01)])
-    quantity = IntegerField(validators=[validation.NumberRange(min=0)])
+class EditProductForm_one_field(FlaskForm):
+    field_to_change = SelectField('Choose field to edit', choices=[('name', 'Name'), ('category', 'Category'),
+                                                                   ('price', 'Price'), ('quantity', 'Quantity')],
+                                  validators=[validation.DataRequired()])
+    new_value = StringField('New value', validators=[validation.DataRequired()])
     submit = SubmitField()
 
-
-@bp.route('/add_product/<store_name>/<old_product_name>', methods=('POST', 'GET'))
-def edit_product(store_name: str, old_product_name: str):
-    domain = get_domain_adapter()
-    if not domain.is_logged_in:
-        flash("You tried to create a store, but you need to be logged in for that.")
-        return redirect(url_for('home.home'))
-    perms = {p.name for p in domain.permissions_of(store_name)}
-    if Permission.Update.name not in perms:
-        flash("Not allowed to update products to this store")
-        return redirect(url_for("buying.view_store", name=store_name))
-    store_response = domain.get_store(store_name)
-    if not store_response.success:
-        flash(store_response.description)
-        return redirect(url_for('home.home'))
-    matching: List[ProductDto] = [p for p in store_response.result if p.name == old_product_name]
-    if len(matching) == 0:
-        flash(f"no such product found: {store_name}/{old_product_name}")
-        return redirect(url_for("buying.view_store", name=store_name))
-    product = matching[0]
-    form = EditProductForm()
-    form.price.data = product.price
-    form.quantity.data = product.quantity
-    form.product_name.data = product.name
-    form.category.data = product.category
-
-    error = None
-    if form.validate_on_submit():
-        new_product_name = form.product_name.data
-        category = form.category.data
-        price = form.price.data
-        qty = form.quantity.data
-        res = domain.edit_product(store_name, old_product_name, new_product_name, category, price, qty)
-        if res.success:
-            flash(f"You've added a product!", category="success")
-            return redirect(url_for("buying.view_store", name=store_name))
-        error = res.description
-        flash(error, category="danger")
-    return render_template("products/edit_product.html", form=form, error=error)
 
 # remove product
 @bp.route("/remove_product/<store_name>/<product_name>", methods=['POST','GET','DELETE'])
@@ -121,5 +81,55 @@ def remove_product(store_name: str, product_name: str):
     else:
         error = res.description
         flash(error, category="danger")
+        return redirect(url_for("buying.view_store", name=store_name))
 
-# update products for all fields
+# update product's one field
+@bp.route('/edit_product_one_field/<store_name>/<product_name>', methods=('POST', 'GET'))
+def edit_product_one_field(store_name: str, product_name: str):
+    domain = get_domain_adapter()
+    if not domain.is_logged_in:
+        flash("You tried to create a store, but you need to be logged in for that.")
+        return redirect(url_for('home.home'))
+    perms = {p.name for p in domain.permissions_of(store_name)}
+    if Permission.Update.name not in perms:
+        flash("Not allowed to update products to this store")
+        return redirect(url_for("buying.view_store", name=store_name))
+    store_response = domain.get_store(store_name)
+    if not store_response.success:
+        flash(store_response.description)
+        return redirect(url_for('home.home'))
+    matching: List[ProductDto] = [p for p in store_response.result if p.name == product_name]
+    if len(matching) == 0:
+        flash(f"no such product found: {store_name}/{product_name}")
+        return redirect(url_for("buying.view_store", name=store_name))
+    product = matching[0]
+    form = EditProductForm_one_field()
+    error = None
+    if form.validate_on_submit():
+        field_to_change = form.field_to_change.data
+        new_value = form.new_value.data
+        if field_to_change == 'name':
+            res = domain.edit_product_name(store_name, product_name, new_value)
+        elif field_to_change == 'category':
+            res = domain.edit_product_category(store_name, product_name, new_value)
+        elif field_to_change == 'price':
+            try:
+                new_value = float(new_value)
+            except ValueError:
+                flash("Invalid value for price. Please enter a valid number.")
+                return redirect(url_for("buying.view_store", name=store_name))
+            res = domain.edit_product_price(store_name, product.price, new_value)
+        elif field_to_change == 'quantity':
+            try:
+                new_value = int(new_value)
+            except ValueError:
+                flash("Invalid value for quantity. Please enter a valid integer.")
+                return redirect(url_for("buying.view_store", name=store_name))
+            res = domain.edit_product_quantity(store_name, product_name, new_value)
+        if res.success:
+            flash(f"You've change {product_name} {field_to_change} to {new_value}!", category="success")
+            return redirect(url_for("buying.view_store", name=store_name))
+        error = res.description
+        flash(error, category="danger")
+        return redirect(url_for("buying.view_store", name=store_name))
+    return render_template("selling/edit_product.html", form=form, error=error)

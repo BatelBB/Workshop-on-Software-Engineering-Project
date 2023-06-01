@@ -1,13 +1,12 @@
 {% extends "layout.html" %}
-{% block title %}Create store{% endblock %}
+{% block title %}Edit Product{% endblock %}
 
 {% block page %}
 
 <form method="post">
-    
   {{ form.hidden_tag() }}
     <table>
-        {% for field in (form.product_name, form.category, form.price, form.quantity, form.submit) %}
+        {% for field in (form.field_to_change, form.new_value, form.submit) %}
             <tr>
                 <td>{{field.label}}&nbsp;</td>
                 <td>{{ field }}</td>

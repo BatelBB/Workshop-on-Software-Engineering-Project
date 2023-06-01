@@ -525,6 +525,19 @@ class Market(IService):
                                              Permission.Update)
         return response
 
+    def change_product_category(self, session_identifier: int, store_name: str, product_name: str, category: str) -> Response[bool]:
+        response = self.verify_registered_store(self.change_product_category.__qualname__, store_name)
+        if response.success:
+            store = response.result
+            actor = self.get_active_user(session_identifier)
+            if self.has_permission_at(store_name, actor, Permission.Update):
+                store.change_product_category(product_name, category)
+                return report_info(self.change_product_category.__qualname__,
+                                   f'Product {product_name} category changed to \'{category}\' at store \'{store_name}\' by {actor}')
+            return self.report_no_permission(self.change_product_category.__qualname__, actor, store_name,
+                                             Permission.Update)
+        return response
+
     def show_cart(self, session_identifier: int) -> Response[dict | bool]:
         actor = self.get_active_user(session_identifier)
         r = actor.show_cart()

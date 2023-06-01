@@ -52,13 +52,18 @@
     <td><img src="{{ dicebear_product(product.name) }}" style="height: 4em;"/></td>
     <td>
         {% with product=product %}
-        {% include "partials/product.html"  %}
-        {% if permissions and 'Remove' in permissions %}
-            <form action="{{ url_for('products.remove_product', store_name=name, product_name=product.name) }}">
-                <button type="submit" style="background-color: #019CBA; color: white; padding: 4px 10px; margin: 5px 0; border: none; border-radius: 4px; cursor: pointer;">Remove Product</button>
+            {% include "partials/product.html"  %}
+            {% if permissions and 'Remove' in permissions %}
+                <form action="{{ url_for('products.remove_product', store_name=name, product_name=product.name) }}">
+                    <button type="submit" style="background-color: #019CBA; color: white; padding: 4px 10px; margin: 5px 0; border: none; border-radius: 4px; cursor: pointer;">Remove Product</button>
+                </form>
+            {% endif %}
+        {% endwith %}
+        {% if permissions and 'Update' in permissions %}
+            <form action="{{ url_for('products.edit_product_one_field', store_name=name, product_name=product.name) }}">
+                <button type="submit" style="background-color: #019CBA; color: white; padding: 4px 10px; margin: 5px 0; border: none; border-radius: 4px; cursor: pointer;">Edit Product</button>
             </form>
         {% endif %}
-        {% endwith %}
     </td>
 </tr>
     {% else %}
