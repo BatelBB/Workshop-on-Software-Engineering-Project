@@ -33,3 +33,6 @@ class SimpleRule(IRule):
             return report_error("enforce_rule", "justice is served!")
 
         return Response(True, "good")
+
+    def __str__(self):
+        return f'rule: if {self.product_name} quantity {self.gle} {self.num}'

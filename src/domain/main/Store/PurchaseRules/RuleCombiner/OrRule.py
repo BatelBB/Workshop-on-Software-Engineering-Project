@@ -17,3 +17,6 @@ class OrRule(IRuleCombiner):
             return report_error("enforce_rule" ,"or law is violated")
 
         return report("or rule good -> Kfir is happy", True)
+
+    def __str__(self):
+        return f'{self.rule1} or {self.rule2}'

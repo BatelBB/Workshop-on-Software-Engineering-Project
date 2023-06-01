@@ -16,3 +16,6 @@ class ConditioningRule(IRuleCombiner):
         if con1.success and not con2.success:
             return con2
         return report("conditioning rule good -> Kfir is happy" ,True)
+
+    def __str__(self):
+        return f'if {self.rule1} then must be also {self.rule2}'
