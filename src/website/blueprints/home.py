@@ -22,6 +22,7 @@ def home():
     stores_result = domain.get_stores()  # TODO get_domain_session(session).get_all_stores().result
     from random import shuffle
     made_by = ['Batel', 'Hagai', 'Mendi', 'Nir', 'Yuval']
+    permissions = {p.name for p in domain.get_admin_permissions()}
     shuffle(made_by)
     if stores_result.success:
         stores = stores_result.result
@@ -40,5 +41,5 @@ def home():
             your_stores = your_stores_result
     else:
         your_stores = []
-    return render_template('home.html', made_by=made_by, stores=stores, your_stores=your_stores)
+    return render_template('home.html', made_by=made_by, stores=stores, your_stores=your_stores, permissions=permissions)
 

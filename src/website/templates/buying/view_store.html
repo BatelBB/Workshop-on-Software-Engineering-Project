@@ -1,5 +1,5 @@
 {% extends "layout.html" %}
-{% block title %}Create store{% endblock %}
+{% block title %}View Store{% endblock %}
 
 {% block page %}
 
@@ -9,8 +9,17 @@
 <p style="color:red;">Error: {{ message }}</p>
 {% else %}
 <p>
-    You have {{ permissions }}
+    <strong>Your Permissions:</strong>
+    <div style="width: max-content; max-width: 260px; height: 150px; overflow: auto; border: 1px solid #cccccc; padding: 10px; margin-top: 10px; white-space: normal; word-wrap: break-word;">
+        <ul>
+        {% for permission in permissions %}
+            <li>{{ permission }}</li>
+        {% endfor %}
+        </ul>
+    </div>
 </p>
+
+
 
 <div style="display:flex; justify-content:space-around; flex-wrap:wrap; margin-bottom:1em;">
 

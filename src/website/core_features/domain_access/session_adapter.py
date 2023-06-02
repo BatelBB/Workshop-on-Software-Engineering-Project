@@ -65,6 +65,12 @@ class SessionAdapter:
     def open_store(self, store_name: str):
         return self._session.open_store(store_name)
 
+    def remove_store(self, store_name: str):
+        return self._session.remove_store(store_name)
+
+    def get_deleted_stores(self):
+        return self._session.get_all_deleted_stores()
+
     def your_stores(self):
         response = self.get_stores()
         if not response.success:
@@ -81,6 +87,12 @@ class SessionAdapter:
         if not self.is_logged_in:
             return set()
         res = self._session.permissions_of(store_name, self.username)
+        return res.result if res.success else set()
+
+    def get_admin_permissions(self) -> Set[Permission]:
+        if not self.is_logged_in:
+            return set()
+        res = self._session.get_admin_permissions()
         return res.result if res.success else set()
 
     def add_product(self, store_name: str, product_name: str, category: str, price: float, quantity: int):
