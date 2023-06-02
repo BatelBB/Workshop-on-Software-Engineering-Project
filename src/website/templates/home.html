@@ -1,20 +1,38 @@
 {% extends "layout.html" %}
 {% block title %}Homepage{% endblock %}
 
-
 {% block page %}
 <div class="container">
     <div class="row">
         <div class="col-md-8">
-            
 <table>
     {% for store in stores %}
 <tr>
     <td><img src="{{ dicebear_shop(store.name) }}" style="height: 4em;"/></td>
-    <td><a href="{{ url_for('buying.view_store', name=store.name) }}"0+>{{ store.name }}</a></td>
+    <td><a href="{{ url_for('buying.view_store', name=store.name) }}">{{ store.name }}</a></td>
 </tr>
     {% endfor %}
 </table>
+
+<div style="display: flex;">
+    {% if ('OpenStore' in permissions) %}
+        <form action="{{ url_for('stores.create_store') }}">
+            <button type="submit" style="background-color: #008CBA; color: white; padding: 10px 24px; margin: 8px 0; border: none; border-radius: 4px; cursor: pointer; margin-right: 15px;">Create Store</button>
+        </form>
+    {% endif %}
+
+    {% if ('CloseStore' in permissions) %}
+        <form action="{{ url_for('stores.remove_store') }}">
+            <button type="submit" style="background-color: #008CBA; color: white; padding: 10px 24px; margin: 8px 0; border: none; border-radius: 4px; cursor: pointer; margin-right: 15px;">Remove Store</button>
+        </form>
+    {% endif %}
+
+    {% if ('CloseStore' in permissions) %}
+        <form action="{{ url_for('stores.reopen_store') }}">
+            <button type="submit" style="background-color: #008CBA; color: white; padding: 10px 24px; margin: 8px 0; border: none; border-radius: 4px; cursor: pointer;">Reopen Store</button>
+        </form>
+    {% endif %}
+</div>
         </div>
         <div class="col-md-4">
             {% for store in your_stores %}
@@ -34,4 +52,3 @@
 {% endfor%}
 </footer>
 {% endblock %}
-

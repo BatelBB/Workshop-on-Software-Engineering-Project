@@ -17,10 +17,12 @@ class Permission(Enum):
     CancelOwnerAppointment = 'Cancel appointment of another owner'
     CloseStore = 'Close store'
     ReopenStore = 'Reopen store'
+    OpenStore = 'Open store'
     OpenAuction = 'Open Auction'
-    OpenLottery= 'Open Lottery'
+    OpenLottery = 'Open Lottery'
     StartBid = 'Start a bid'
     ApproveBid = 'Approve a bid'
+
 
 
 

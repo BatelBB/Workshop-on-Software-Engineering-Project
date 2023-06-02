@@ -51,8 +51,14 @@ class Session:
     def open_store(self, store_name: str) -> Response[bool]:
         return self.apply(self.service.open_store, self.identifier, store_name)
 
+    def remove_store(self, store_name: str) -> Response[bool]:
+        return self.apply(self.service.remove_store, self.identifier, store_name)
+
     def get_all_stores(self) -> Response[list[Store] | bool]:
         return self.apply(self.service.get_all_stores, self.identifier)
+
+    def get_all_deleted_stores(self) -> Response[list[Store] | bool]:
+        return self.apply(self.service.get_all_deleted_stores, self.identifier)
 
     def get_store(self, store_name: str) -> Response[dict | bool]:
         return self.apply(self.service.get_store, self.identifier, store_name)
@@ -133,6 +139,9 @@ class Session:
 
     def permissions_of(self, store: str, subject: str) -> Response[set[Permission] | bool]:
         return self.apply(self.service.permissions_of, self.identifier, store, subject)
+
+    def get_admin_permissions(self) -> Response[set[Permission] | bool]:
+        return self.apply(self.service.get_admin_permissions)
 
     def reopen_store(self, store_name: str) -> Response[bool]:
         return self.apply(self.service.reopen_store, self.identifier, store_name)
