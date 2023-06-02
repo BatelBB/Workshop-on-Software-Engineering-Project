@@ -868,6 +868,24 @@ class Market(IService):
         perms = perms.result
 
         if Permission.ChangePurchasePolicy not in perms:
-            return report_error(self.add_discount.__qualname__, f"{actor.username} has no permission to manage purchase policy")
+            return report_error(self.add_discount.__qualname__, f"{actor.username} has no permission to manage purchase rules")
 
         return Response(store.get_purchase_rules(), "purchase rules")
+
+    def delete_purchase_rule(self, session_id: int, store_name: str, index: int):
+        actor = self.get_active_user(session_id)
+        store_res = self.verify_registered_store(self.add_discount.__qualname__, store_name)
+        if not store_res.success:
+            return report_error(self.add_discount.__qualname__, "invalid store")
+        store = store_res.result
+
+        perms = self.permissions_of(session_id, store_name, actor.username)
+        if not perms.success:
+            return report_error(self.add_discount.__qualname__, "failed to retrieve permissions")
+        perms = perms.result
+
+        if Permission.ChangePurchasePolicy not in perms:
+            return report_error(self.add_discount.__qualname__,
+                                f"{actor.username} has no permission to manage purchase rules")
+
+        return store.remove_purchase_rule(index)

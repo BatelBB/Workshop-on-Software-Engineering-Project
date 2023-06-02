@@ -209,3 +209,6 @@ class Session:
 
     def get_purchase_rules(self, store_name: str) -> Response[dict[int:IRule]]:
         return self.apply(self.service.get_purchase_rules, self.identifier, store_name)
+
+    def delete_purchase_rule(self, index, store_name):
+        return self.apply(self.service.delete_purchase_rule, self.identifier, store_name, index)

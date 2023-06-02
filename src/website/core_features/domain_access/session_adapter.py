@@ -130,8 +130,17 @@ class SessionAdapter:
         if not rules.success:
             return None
         rules_dict: dict = rules.result
-        list = []
+        rule_str_dict = {}
         for rule_num in rules_dict.keys():
-            list.append(rules_dict[rule_num].__str__())
+            rule_str_dict[rule_num] = rules_dict[rule_num].__str__()
 
-        return list
+        return rule_str_dict
+
+    def delete_purchase_rule(self, index: int, store_name: str):
+        self._session.delete_purchase_rule(index, store_name)
+
+    def add_simple_purchase_rule(self, store_name: str, p_name, gle, amount):
+        res = self._session.add_purchase_simple_rule(store_name, p_name, gle, amount)
+        if res.success:
+            return 'successfuly added rule'
+        return res.description

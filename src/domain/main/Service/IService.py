@@ -234,3 +234,7 @@ class IService(metaclass=IAbsractConcurrentSingleton):
     @abstractmethod
     def get_purchase_rules(self, session_id: int, store_name: str) -> Response[list[IRule]]:
         ...
+
+    @abstractmethod
+    def delete_purchase_rule(self, session_id: int, store_name: str, index: int):
+        ...

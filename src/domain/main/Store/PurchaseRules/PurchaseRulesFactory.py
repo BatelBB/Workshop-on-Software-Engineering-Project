@@ -17,8 +17,8 @@ def make_simple_rule(p_name: str, gle: str, amount: int) -> Response:
 
 
 def make_complex_rule(p1: str, gle1: str, amount1: int, p2: str, gle2: str, amount2: int, rule_type: str) -> Response:
-    r1 = make_simple_rule(p1, gle1, amount1)
-    r2 = make_simple_rule(p2, gle2, amount2)
+    r1 = make_simple_rule(p1, gle1, amount1).result
+    r2 = make_simple_rule(p2, gle2, amount2).result
 
     if rule_type not in rule_types.keys():
         return report_error("make_complex_rule", "invalid ruletype, only: and/or/cond")
