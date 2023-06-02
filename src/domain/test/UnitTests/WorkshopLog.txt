@@ -195,3 +195,123 @@ Description: set_information in paywithcard: invalid payment parameters, excpect
 01/06/2023 16:38:50 ERROR:	 Admin.login: Admin 'Kfir' enter an incorrect password.
 01/06/2023 16:38:50 WARNING:	 Market is closed!
 01/06/2023 16:38:50 WARNING:	 Logger thread exits!
+02/06/2023 08:04:35 INFO:	 Session: 4434030997087664619 has been initialized
+02/06/2023 08:04:35 ERROR:	 Admin.login: Admin 'Kfir' enter an incorrect password.
+02/06/2023 08:04:35 INFO:	 Visitor.register: 'test' is registered!
+02/06/2023 08:04:35 INFO:	 Visitor.login: Member 'test' is logged in.
+02/06/2023 08:04:35 INFO:	 Market.open_store: Member 'test' opened store 'IHerb'.
+02/06/2023 08:04:35 INFO:	 Market.add_product: 'test' add 20 units of Product 'Vitamin A', Category: 'Vitamins', Price: 19.9, Rate: Not rated yet to store 'IHerb'
+02/06/2023 08:04:35 INFO:	 Market.add_product: 'test' add 25 units of Product 'Toothpaste', Category: 'Hygiene', Price: 21.2, Rate: Not rated yet to store 'IHerb'
+02/06/2023 08:04:35 INFO:	 Visitor.add_to_cart: 21 units of Product 'Vitamin A' from store 'IHerb' is added to Member 'test' cart
+02/06/2023 08:04:35 INFO:	 Visitor.verify_cart_not_empty: Member 'test' cart's is NOT empty!
+02/06/2023 08:04:35 INFO:	 all rules are kept: Kfir is happy!
+02/06/2023 08:04:35 ERROR:	 Market.purchase_shopping_cart: payment_succeeded = false
+02/06/2023 08:04:35 INFO:	 Session: 8528983366918803676 has been initialized
+02/06/2023 08:04:35 ERROR:	 Admin.login: Admin 'Kfir' enter an incorrect password.
+02/06/2023 08:04:35 WARNING:	 Market is closed!
+02/06/2023 08:04:35 WARNING:	 Logger thread exits!
+02/06/2023 08:07:06 INFO:	 Session: 7586941002602360950 has been initialized
+02/06/2023 08:07:06 ERROR:	 Admin.login: Admin 'Kfir' enter an incorrect password.
+02/06/2023 08:07:07 INFO:	 Visitor.register: 'test' is registered!
+02/06/2023 08:07:07 INFO:	 Visitor.login: Member 'test' is logged in.
+02/06/2023 08:07:07 INFO:	 Market.open_store: Member 'test' opened store 'IHerb'.
+02/06/2023 08:07:07 INFO:	 Market.add_product: 'test' add 20 units of Product 'Vitamin A', Category: 'Vitamins', Price: 19.9, Rate: Not rated yet to store 'IHerb'
+02/06/2023 08:07:07 INFO:	 Market.add_product: 'test' add 25 units of Product 'Toothpaste', Category: 'Hygiene', Price: 21.2, Rate: Not rated yet to store 'IHerb'
+02/06/2023 08:07:07 INFO:	 Visitor.add_to_cart: 21 units of Product 'Vitamin A' from store 'IHerb' is added to Member 'test' cart
+02/06/2023 08:07:10 INFO:	 Visitor.verify_cart_not_empty: Member 'test' cart's is NOT empty!
+02/06/2023 08:07:10 INFO:	 all rules are kept: Kfir is happy!
+02/06/2023 08:07:12 ERROR:	 Market.purchase_shopping_cart: payment_succeeded = false
+02/06/2023 08:07:12 INFO:	 Session: 1924721863768615843 has been initialized
+02/06/2023 08:07:12 ERROR:	 Admin.login: Admin 'Kfir' enter an incorrect password.
+02/06/2023 08:07:12 WARNING:	 Market is closed!
+02/06/2023 08:07:12 WARNING:	 Logger thread exits!
+02/06/2023 08:07:34 INFO:	 Session: 8071548257363158850 has been initialized
+02/06/2023 08:07:34 ERROR:	 Admin.login: Admin 'Kfir' enter an incorrect password.
+02/06/2023 08:07:35 INFO:	 Visitor.register: 'test' is registered!
+02/06/2023 08:07:35 INFO:	 Visitor.login: Member 'test' is logged in.
+02/06/2023 08:07:35 INFO:	 Market.open_store: Member 'test' opened store 'IHerb'.
+02/06/2023 08:07:35 INFO:	 Market.add_product: 'test' add 20 units of Product 'Vitamin A', Category: 'Vitamins', Price: 19.9, Rate: Not rated yet to store 'IHerb'
+02/06/2023 08:07:35 INFO:	 Market.add_product: 'test' add 25 units of Product 'Toothpaste', Category: 'Hygiene', Price: 21.2, Rate: Not rated yet to store 'IHerb'
+02/06/2023 08:07:35 INFO:	 Visitor.add_to_cart: 21 units of Product 'Vitamin A' from store 'IHerb' is added to Member 'test' cart
+02/06/2023 08:07:39 INFO:	 Visitor.verify_cart_not_empty: Member 'test' cart's is NOT empty!
+02/06/2023 08:07:39 INFO:	 all rules are kept: Kfir is happy!
+02/06/2023 08:07:41 ERROR:	 Market.purchase_shopping_cart: payment_succeeded = false
+02/06/2023 08:07:41 INFO:	 Session: 3568378601614013804 has been initialized
+02/06/2023 08:07:41 ERROR:	 Admin.login: Admin 'Kfir' enter an incorrect password.
+02/06/2023 08:07:41 WARNING:	 Market is closed!
+02/06/2023 08:07:41 WARNING:	 Logger thread exits!
+02/06/2023 08:16:16 INFO:	 Session: 7308279045337597531 has been initialized
+02/06/2023 08:16:16 ERROR:	 Admin.login: Admin 'Kfir' enter an incorrect password.
+02/06/2023 08:16:16 INFO:	 Visitor.register: 'test' is registered!
+02/06/2023 08:16:16 INFO:	 Visitor.login: Member 'test' is logged in.
+02/06/2023 08:16:16 INFO:	 Market.open_store: Member 'test' opened store 'IHerb'.
+02/06/2023 08:16:16 INFO:	 Market.add_product: 'test' add 20 units of Product 'Vitamin A', Category: 'Vitamins', Price: 19.9, Rate: Not rated yet to store 'IHerb'
+02/06/2023 08:16:16 INFO:	 Market.add_product: 'test' add 25 units of Product 'Toothpaste', Category: 'Hygiene', Price: 21.2, Rate: Not rated yet to store 'IHerb'
+02/06/2023 08:16:16 INFO:	 Visitor.add_to_cart: 21 units of Product 'Vitamin A' from store 'IHerb' is added to Member 'test' cart
+02/06/2023 08:16:16 INFO:	 Visitor.verify_cart_not_empty: Member 'test' cart's is NOT empty!
+02/06/2023 08:16:16 INFO:	 all rules are kept: Kfir is happy!
+02/06/2023 08:16:16 ERROR:	 Market.purchase_shopping_cart: payment_succeeded = false
+02/06/2023 08:16:16 INFO:	 Session: 8004194506575703033 has been initialized
+02/06/2023 08:16:16 ERROR:	 Admin.login: Admin 'Kfir' enter an incorrect password.
+02/06/2023 08:16:16 WARNING:	 Market is closed!
+02/06/2023 08:16:16 WARNING:	 Logger thread exits!
+02/06/2023 08:16:39 INFO:	 Session: 7845316416964559401 has been initialized
+02/06/2023 08:16:39 ERROR:	 Admin.login: Admin 'Kfir' enter an incorrect password.
+02/06/2023 08:16:39 INFO:	 Visitor.register: 'test' is registered!
+02/06/2023 08:16:39 INFO:	 Visitor.login: Member 'test' is logged in.
+02/06/2023 08:16:39 INFO:	 Market.open_store: Member 'test' opened store 'IHerb'.
+02/06/2023 08:16:39 INFO:	 Market.add_product: 'test' add 20 units of Product 'Vitamin A', Category: 'Vitamins', Price: 19.9, Rate: Not rated yet to store 'IHerb'
+02/06/2023 08:16:39 INFO:	 Market.add_product: 'test' add 25 units of Product 'Toothpaste', Category: 'Hygiene', Price: 21.2, Rate: Not rated yet to store 'IHerb'
+02/06/2023 08:16:39 INFO:	 Visitor.add_to_cart: 21 units of Product 'Vitamin A' from store 'IHerb' is added to Member 'test' cart
+02/06/2023 08:16:39 INFO:	 Visitor.verify_cart_not_empty: Member 'test' cart's is NOT empty!
+02/06/2023 08:16:39 INFO:	 all rules are kept: Kfir is happy!
+02/06/2023 08:16:44 ERROR:	 Market.purchase_shopping_cart: payment_succeeded = false
+02/06/2023 08:16:44 INFO:	 Session: 1369883659692468601 has been initialized
+02/06/2023 08:16:44 ERROR:	 Admin.login: Admin 'Kfir' enter an incorrect password.
+02/06/2023 08:16:44 WARNING:	 Market is closed!
+02/06/2023 08:16:44 WARNING:	 Logger thread exits!
+02/06/2023 08:18:04 INFO:	 Session: 4517209283312349207 has been initialized
+02/06/2023 08:18:04 ERROR:	 Admin.login: Admin 'Kfir' enter an incorrect password.
+02/06/2023 08:18:04 INFO:	 Visitor.register: 'test' is registered!
+02/06/2023 08:18:04 INFO:	 Visitor.login: Member 'test' is logged in.
+02/06/2023 08:18:04 INFO:	 Market.open_store: Member 'test' opened store 'IHerb'.
+02/06/2023 08:18:04 INFO:	 Market.add_product: 'test' add 20 units of Product 'Vitamin A', Category: 'Vitamins', Price: 19.9, Rate: Not rated yet to store 'IHerb'
+02/06/2023 08:18:04 INFO:	 Market.add_product: 'test' add 25 units of Product 'Toothpaste', Category: 'Hygiene', Price: 21.2, Rate: Not rated yet to store 'IHerb'
+02/06/2023 08:18:04 INFO:	 Visitor.add_to_cart: 21 units of Product 'Vitamin A' from store 'IHerb' is added to Member 'test' cart
+02/06/2023 08:18:04 INFO:	 Visitor.verify_cart_not_empty: Member 'test' cart's is NOT empty!
+02/06/2023 08:18:04 INFO:	 all rules are kept: Kfir is happy!
+02/06/2023 08:18:04 ERROR:	 Market.purchase_shopping_cart: payment_succeeded = false
+02/06/2023 08:18:04 INFO:	 Session: 3286471597879593257 has been initialized
+02/06/2023 08:18:04 ERROR:	 Admin.login: Admin 'Kfir' enter an incorrect password.
+02/06/2023 08:18:04 WARNING:	 Market is closed!
+02/06/2023 08:18:04 WARNING:	 Logger thread exits!
+02/06/2023 08:19:36 INFO:	 Session: 1539920514162631961 has been initialized
+02/06/2023 08:19:36 ERROR:	 Admin.login: Admin 'Kfir' enter an incorrect password.
+02/06/2023 08:19:36 INFO:	 Visitor.register: 'test' is registered!
+02/06/2023 08:19:36 INFO:	 Visitor.login: Member 'test' is logged in.
+02/06/2023 08:19:36 INFO:	 Market.open_store: Member 'test' opened store 'IHerb'.
+02/06/2023 08:19:36 INFO:	 Market.add_product: 'test' add 20 units of Product 'Vitamin A', Category: 'Vitamins', Price: 19.9, Rate: Not rated yet to store 'IHerb'
+02/06/2023 08:19:36 INFO:	 Market.add_product: 'test' add 25 units of Product 'Toothpaste', Category: 'Hygiene', Price: 21.2, Rate: Not rated yet to store 'IHerb'
+02/06/2023 08:19:36 INFO:	 Visitor.add_to_cart: 21 units of Product 'Vitamin A' from store 'IHerb' is added to Member 'test' cart
+02/06/2023 08:19:36 INFO:	 Visitor.verify_cart_not_empty: Member 'test' cart's is NOT empty!
+02/06/2023 08:19:36 INFO:	 all rules are kept: Kfir is happy!
+02/06/2023 08:19:36 ERROR:	 Market.purchase_shopping_cart: payment_succeeded = false
+02/06/2023 08:19:36 INFO:	 Session: 5524018811533948822 has been initialized
+02/06/2023 08:19:36 ERROR:	 Admin.login: Admin 'Kfir' enter an incorrect password.
+02/06/2023 08:19:36 WARNING:	 Market is closed!
+02/06/2023 08:19:36 WARNING:	 Logger thread exits!
+02/06/2023 08:23:46 INFO:	 Session: 1380719357834065105 has been initialized
+02/06/2023 08:23:46 ERROR:	 Admin.login: Admin 'Kfir' enter an incorrect password.
+02/06/2023 08:23:47 INFO:	 Visitor.register: 'test' is registered!
+02/06/2023 08:23:47 INFO:	 Visitor.login: Member 'test' is logged in.
+02/06/2023 08:23:47 INFO:	 Market.open_store: Member 'test' opened store 'IHerb'.
+02/06/2023 08:23:47 INFO:	 Market.add_product: 'test' add 20 units of Product 'Vitamin A', Category: 'Vitamins', Price: 19.9, Rate: Not rated yet to store 'IHerb'
+02/06/2023 08:23:47 INFO:	 Market.add_product: 'test' add 25 units of Product 'Toothpaste', Category: 'Hygiene', Price: 21.2, Rate: Not rated yet to store 'IHerb'
+02/06/2023 08:23:47 INFO:	 Visitor.add_to_cart: 21 units of Product 'Vitamin A' from store 'IHerb' is added to Member 'test' cart
+02/06/2023 08:23:47 INFO:	 Visitor.verify_cart_not_empty: Member 'test' cart's is NOT empty!
+02/06/2023 08:23:47 INFO:	 all rules are kept: Kfir is happy!
+02/06/2023 08:23:47 ERROR:	 Market.purchase_shopping_cart: payment_succeeded = false
+02/06/2023 08:23:47 INFO:	 Session: 3278840203672437699 has been initialized
+02/06/2023 08:23:47 ERROR:	 Admin.login: Admin 'Kfir' enter an incorrect password.
+02/06/2023 08:23:47 WARNING:	 Market is closed!
+02/06/2023 08:23:47 WARNING:	 Logger thread exits!
