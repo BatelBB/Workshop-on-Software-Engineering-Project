@@ -27,7 +27,7 @@ class provisionReal(IExternalProvisionService):
         self.transaction_id = -1
 
     def checkValidTransactionID(self, transaction_id: int):
-        return 1000 <= transaction_id <= 10000
+        return 10000 <= transaction_id <= 100000
 
     def checkServiceAvailability(self) -> bool:
         checkDic = {"action_type": "handshake"}
@@ -46,8 +46,13 @@ class provisionReal(IExternalProvisionService):
                          }
             response = self.real.post(supplyDic)
             if response.ok:
-                if self.checkValidTransactionID(int(response.text)):
-                    self.transaction_id = response.text
+                try:
+                    new_response = int(response.text)
+                except ValueError:
+                    report_error(self.getDelivery.__qualname__, "response text is invalid")
+                    return False
+                if self.checkValidTransactionID(int(new_response)):
+                    self.transaction_id = new_response
                     report_info(self.getDelivery.__qualname__, "post request for sending delivery success!")
                     return True
                 else:

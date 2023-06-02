@@ -32,7 +32,7 @@ class ExternalPaymentServiceReal(IExternalPaymentService):
         self.request_timeout = request_timeout
 
     def checkValidTransactionID(self, transaction_id: int):
-        return 1000 <= transaction_id <= 10000
+        return 10000 <= transaction_id <= 100000
 
     def handle_request(self, data: dict):
         for _ in range(self.retry_limit):
@@ -61,8 +61,13 @@ class ExternalPaymentServiceReal(IExternalPaymentService):
                       "id": str(user_id)}
             response: Response = self.handle_request(payDic)
             if response.ok:
-                if self.checkValidTransactionID(int(response.text)):
-                    self.transaction_id = response.text
+                try:
+                    new_response = int(response.text)
+                except ValueError:
+                    report_error(self.payWIthCard.__qualname__, "response text is invalid")
+                    return False
+                if self.checkValidTransactionID(int(new_response)):
+                    self.transaction_id = new_response
                     report_info(self.payWIthCard.__qualname__, "post request for paying with card success!")
                     return True
                 else:

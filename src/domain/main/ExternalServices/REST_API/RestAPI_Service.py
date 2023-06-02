@@ -11,7 +11,7 @@ class RestAPI:
 
     def post(self, params, timeout=None):
         try:
-            response: Response = requests.post(f'{self.base_url}', json=params, timeout=timeout)
+            response: Response = requests.post(f'{self.base_url}', params, timeout=timeout)
             return response
         except RequestException as e:
             report_error(__name__, f"Request failed due to: {str(e)}")
