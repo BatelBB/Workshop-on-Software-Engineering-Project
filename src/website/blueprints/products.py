@@ -30,7 +30,6 @@ def add_product(store_name: str):
     if Permission.Add.name not in perms:
         flash("Not allowed to add products to this store")
         return redirect(url_for("buying.view_store", name=store_name))
-
     form = AddProductForm()
     error = None
     if form.validate_on_submit():
@@ -73,7 +72,6 @@ def remove_product(store_name: str, product_name: str):
     if len(matching) == 0:
         flash(f"no such product found: {store_name}/{product_name}")
         return redirect(url_for("buying.view_store", name=store_name))
-    error = None
     res = domain.remove_product(store_name, product_name)
     if res.success:
         flash(f"You've removed product {product_name}!", category="success")
