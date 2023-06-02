@@ -153,20 +153,24 @@ class Store:
         product = self.find(old)
         is_changed = product is not None
         if is_changed:
+            self.products.remove(product)
             q = self.products_quantities[old]
             del self.products_quantities[old]
             self.products_quantities.update({new: q})
             product.name = new
+            self.products.add(product)
         return is_changed
 
     def change_product_category(self, old: str, new: str) -> bool:
         product = self.find(old)
         is_changed = product is not None
         if is_changed:
+            self.products.remove(product)
             q = self.products_quantities[old]
             del self.products_quantities[old]
             self.products_quantities.update({new: q})
             product.category = new
+            self.products.add(product)
         return is_changed
 
     def change_product_price(self, old: float, new: float) -> None:
