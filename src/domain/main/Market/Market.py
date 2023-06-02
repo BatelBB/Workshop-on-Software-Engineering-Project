@@ -260,7 +260,7 @@ class Market(IService):
         actor = self.get_active_user(session_identifier)
         store: Store = self.stores.get(store_name)
         if store is not None:
-            if actor.is_member():
+            if actor.is_member() and self.has_permission_at(store_name, actor, Permission.CloseStore):
                 products = store.get_all()
                 self.stores.delete(store_name)
                 self.removed_stores.insert(store_name, store)
@@ -269,7 +269,7 @@ class Market(IService):
                     self.removed_products_quantity.insert(product, store.amount_of(product.name))
                 return report_info(self.remove_store.__qualname__, f'{actor} removed store {store_name}')
             else:
-                return report_error(self.remove_store.__qualname__, f'{actor} is not allowed to remove a store')
+                return report_error(self.remove_store.__qualname__, f'{actor} is not allowed to remove store {store_name}')
         return report_error(self.remove_store.__qualname__, f'store {store_name} doesn\'t exist and can\'t be removed')
 
     def get_all_stores(self, session_identifier: int) -> Response[list[Store] | bool]:
