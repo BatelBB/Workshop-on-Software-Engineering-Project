@@ -19,3 +19,6 @@ class BasketRule(IRule):
             return report_error("enfore basket rule", f"basket price is {price} lower than {self.min_price}")
 
         return Response(True, "good")
+
+    def __str__(self):
+        return f'rule: basket price >= {self.min_price}'

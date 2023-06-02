@@ -746,7 +746,7 @@ class Market(IService):
             actor = self.get_active_user(session_id)
             if self.has_permission_at(store_name, actor, Permission.AddRule):
                 rule = PurchaseRulesFactory.make_simple_rule(product_name, gle, amount)
-                return store.add_purchase_rule(rule)
+                return store.add_purchase_rule(rule.result)
             return self.report_no_permission(self.add_purchase_simple_rule.__qualname__, actor, store_name,
                                              Permission.AddRule)
         return response
@@ -761,7 +761,7 @@ class Market(IService):
             if self.has_permission_at(store_name, actor, Permission.AddRule):
                 rule = PurchaseRulesFactory.make_complex_rule(p1_name, gle1, amount1, p2_name, gle2, amount2,
                                                               complex_rule_type)
-                return store.add_purchase_rule(rule)
+                return store.add_purchase_rule(rule.result)
             return self.report_no_permission(self.add_purchase_complex_rule.__qualname__, actor, store_name,
                                              Permission.AddRule)
         return response
@@ -854,3 +854,20 @@ class Market(IService):
 
         dict = store.get_products_with_discounts()
         return dict
+
+    def get_purchase_rules(self, session_id: int, store_name: str) -> Response[dict[int:IRule]]:
+        actor = self.get_active_user(session_id)
+        store_res = self.verify_registered_store(self.add_discount.__qualname__, store_name)
+        if not store_res.success:
+            return report_error(self.add_discount.__qualname__, "invalid store")
+        store = store_res.result
+
+        perms = self.permissions_of(session_id, store_name, actor.username)
+        if not perms.success:
+            return report_error(self.add_discount.__qualname__, "failed to retrieve permissions")
+        perms = perms.result
+
+        if Permission.ChangePurchasePolicy not in perms:
+            return report_error(self.add_discount.__qualname__, f"{actor.username} has no permission to manage purchase policy")
+
+        return Response(store.get_purchase_rules(), "purchase rules")

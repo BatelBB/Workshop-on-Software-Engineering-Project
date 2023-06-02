@@ -2,6 +2,7 @@ from idlelib.multicall import r
 from typing import Optional, List, Dict, Any, Set
 
 from domain.main.Market.Permissions import Permission
+from domain.main.Store.PurchaseRules.IRule import IRule
 from domain.main.Store.Store import Store
 from domain.main.Utils.Response import Response
 from domain.main.Utils.Session import Session
@@ -123,3 +124,14 @@ class SessionAdapter:
 
     def remove_product(self, store_name: str, product_name: str):
         return self._session.remove_product(store_name, product_name)
+
+    def get_purchase_rules(self, store_name: str) -> list[str]:
+        rules = self._session.get_purchase_rules(store_name)
+        if not rules.success:
+            return None
+        rules_dict: dict = rules.result
+        list = []
+        for rule_num in rules_dict.keys():
+            list.append(rules_dict[rule_num].__str__())
+
+        return list

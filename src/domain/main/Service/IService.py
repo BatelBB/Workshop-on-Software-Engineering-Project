@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 
+from domain.main.Store.PurchaseRules.IRule import IRule
 from src.domain.main.Market.Appointment import Appointment
 from src.domain.main.Market.Permissions import Permission
 from src.domain.main.Store.Product import Product
@@ -228,4 +229,8 @@ class IService(metaclass=IAbsractConcurrentSingleton):
 
     @abstractmethod
     def get_store_products_with_discounts(self, sessiont_id: int, store_name: str) -> dict[Product:str]:
+        ...
+
+    @abstractmethod
+    def get_purchase_rules(self, session_id: int, store_name: str) -> Response[list[IRule]]:
         ...
