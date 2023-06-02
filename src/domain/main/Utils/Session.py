@@ -134,6 +134,9 @@ class Session:
     def permissions_of(self, store: str, subject: str) -> Response[set[Permission] | bool]:
         return self.apply(self.service.permissions_of, self.identifier, store, subject)
 
+    def get_admin_permissions(self) -> Response[set[Permission] | bool]:
+        return self.apply(self.service.get_admin_permissions)
+
     def reopen_store(self, store_name: str) -> Response[bool]:
         return self.apply(self.service.reopen_store, self.identifier, store_name)
 

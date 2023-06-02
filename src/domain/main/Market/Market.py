@@ -418,6 +418,11 @@ class Market(IService):
             return Response(appointment.permissions, r.description)
         return report_error(self.permissions_of.__qualname__, f'\'{subject}\' has no role at store \'{store}\'')
 
+    def get_admin_permissions(self) -> Response[set[Permission] | bool]:
+        r = report_info(self.permissions_of.__qualname__,
+                        f'Display permission of admin')
+        return Response(get_default_owner_permissions(), r.description)
+
     '''
         Store appointments creates a tree
         We iterate over the subtree of root in a breath-first-manner to aggregate all its successive appointees

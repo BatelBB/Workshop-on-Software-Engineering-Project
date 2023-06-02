@@ -82,6 +82,12 @@ class SessionAdapter:
         res = self._session.permissions_of(store_name, self.username)
         return res.result if res.success else set()
 
+    def get_admin_permissions(self) -> Set[Permission]:
+        if not self.is_logged_in:
+            return set()
+        res = self._session.get_admin_permissions()
+        return res.result if res.success else set()
+
     def add_product(self, store_name: str, product_name: str, category: str, price: float, quantity: int):
         return self._session.add_product(store_name, product_name, category, price, quantity)
 

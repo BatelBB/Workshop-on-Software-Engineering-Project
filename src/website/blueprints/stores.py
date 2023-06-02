@@ -26,7 +26,6 @@ def create_store():
     if not domain.is_logged_in:
         flash("You tried to create a store, but you need to be logged in for that.")
         return redirect(url_for('home.home'))
-
     form = CreateStoreForm()
     error = None
     if form.validate_on_submit():
@@ -37,4 +36,8 @@ def create_store():
             return redirect(url_for("home.home"))
         error = res.description
         flash(error, category="danger")
-    return render_template("stores/create_store.html", form=form, error=error)
+    return render_template("selling/create_store.html", form=form, error=error)
+
+# remove store
+
+# reopen store
