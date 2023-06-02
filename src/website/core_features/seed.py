@@ -102,6 +102,9 @@ def init_hagais_store(market):
 
     hagai.add_purchase_simple_rule('Hagai\'s Store', "Blue T-Shirt", "<", 3)
     hagai.add_purchase_complex_rule('Hagai\'s Store', "Sports Watcht", "=", 2, "Wireless Earbuds", ">", 0, "and")
+
+    hagai.add_discount('Hagai\'s Store', "open", 50, 3, "product", "Sports Watch")
+
     hagai.logout()
     hagai.leave()
 

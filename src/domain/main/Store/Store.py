@@ -334,3 +334,15 @@ class Store:
         for product in self.products:
             dict[product] = self.get_product_discounts_str(product.name)
         return dict
+
+    def get_discounts(self):
+        return self.discounts
+
+    def delete_discount(self, index: int) -> Response:
+        if index == 1:
+            to_remove = self.discounts
+            self.discounts = to_remove.next
+            return report(f"deleted: {to_remove.__str__()}", True)
+
+        res = self.discounts.delete_discount(index-1)
+        return res

@@ -1,0 +1,88 @@
+from flask import flash, redirect, url_for, render_template, Blueprint
+from flask_wtf import FlaskForm
+from wtforms import SelectField, IntegerField, StringField, SubmitField
+from wtforms.validators import NumberRange, Length, DataRequired, Optional
+
+from website.core_features.domain_access.market_access import get_domain_adapter
+
+bp = Blueprint("discounts", __name__)
+
+@bp.route('/discounts_view/<store_name>', methods=('POST', 'GET'))
+def discounts_view(store_name: str):
+    domain = get_domain_adapter()
+    if not domain.is_logged_in:
+        flash("You tried to manage discounts but you need to be logged in for that.")
+        return redirect(url_for('home.home'))
+
+    discounts = domain.get_discounts(store_name)
+    if discounts is None:
+        discounts = {}
+    return render_template("selling/discounts_view.html", discounts_dict=discounts, store_name=store_name)
+    # else:
+    #     return redirect(url_for("buying.view_store", name=store_name))
+
+@bp.route('/delete_discount/<store_name>/<int:index>', methods=['POST'])
+def delete_discount(store_name, index):
+    domain = get_domain_adapter()
+    if not domain.is_logged_in:
+        flash("You tried to manage discounts but you need to be logged in for that.")
+        return redirect(url_for('home.home'))
+
+    res = domain.delete_discount(store_name, index)
+
+    flash(res)
+    return redirect(url_for('discounts.discounts_view', store_name=store_name))
+
+
+class AddDiscount(FlaskForm):
+    discount_type = SelectField('Discount Type', choices=[('open', 'OPEN'), ('cond', 'COND'), ('xor', 'XOR')])
+    percent = IntegerField(validators=[Optional(), NumberRange(min=0, max=100)])
+    duration = IntegerField(validators=[Optional(),NumberRange(min=0, max=30)])
+    discount_for = SelectField('Discount For', choices=[('product', 'PRODUCT'), ('category', 'CATEGORY'), ('store', 'STORE')])
+    discount_for_name = StringField(validators=[Optional(), Length(min=3, max=100)])
+    rule_type = SelectField('Rule Type', choices=[('and', 'AND'), ('or', 'OR'), ('basket', 'BASKET')])
+    percent2 = IntegerField(validators=[Optional(), NumberRange(min=0, max=100)])
+    discount_for2 = SelectField('Discount For',
+                               choices=[('product', 'PRODUCT'), ('category', 'CATEGORY'), ('store', 'STORE')])
+    discount_for_name2 = StringField(validators=[Optional(), Length(min=3, max=100)])
+    min_price = IntegerField(validators=[Optional(), NumberRange(min=0)])
+    product1_name = StringField(validators=[Optional(), Length(min=3, max=100)])
+    gle1 = StringField(validators=[Optional()])
+    amount1 = IntegerField(validators=[Optional(), NumberRange(min=0)])
+    product2_name = StringField(validators=[Optional(), Length(min=3, max=100)])
+    gle2 = StringField(validators=[Optional()])
+    amount2 = IntegerField(validators=[Optional(), NumberRange(min=0)])
+    submit = SubmitField()
+
+@bp.route('/add_discount/<store_name>',  methods=('POST', 'GET'))
+def add_discount(store_name: str):
+    domain = get_domain_adapter()
+    if not domain.is_logged_in:
+        flash("You tried to add a discount but you need to be logged in for that.")
+        return redirect(url_for('home.home'))
+    form = AddDiscount()
+    if form.validate_on_submit():
+        discount_type = form.discount_type.data
+        percent = form.percent.data
+        duration = form.duration.data
+        discount_for = form.discount_for.data
+        discount_for_name = form.discount_for_name.data
+        rule_type = form.rule_type.data
+        percent2 = form.percent2.data
+        discount_for2 = form.discount_for2.data
+        discount_for_name2 = form.discount_for_name2.data
+        min_price = form.min_price.data
+        product1_name = form.product1_name.data
+        gle1 = form.gle1.data
+        amount1 = form.amount1.data
+        product2_name = form.product2_name.data
+        gle2 = form.gle2.data
+        amount2 = form.amount2.data
+
+        msg = domain.add_discount(store_name, discount_type, percent, duration, discount_for,
+                                         discount_for_name, rule_type, percent2, discount_for2,
+                                         discount_for_name2, min_price, product1_name, gle1, amount1, product2_name,
+                                         gle2, amount2)
+        flash(msg)
+        return redirect(url_for('discounts.discounts_view', store_name=store_name))
+    return render_template("selling/add_discount.html", form=form)

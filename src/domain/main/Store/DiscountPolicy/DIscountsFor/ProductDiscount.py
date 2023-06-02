@@ -13,3 +13,6 @@ class ProductDiscount(IDiscountFor):
             return {self.product}
         else:
             return {}
+
+    def __str__(self):
+        return f'discount_for: product: {self.product}'

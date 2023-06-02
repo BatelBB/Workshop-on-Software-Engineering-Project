@@ -206,11 +206,11 @@ class Session:
                      discount_duration: int, discount_for_type: str, discount_for_name: str = None,
                      rule_type=None,
                      discount2_percent=None, discount2_for_type=None, discount2_for_name=None,
-                     cond_type: str = None, min_price: float = None,
+                      min_price: float = None,
                      p1_name=None, gle1=None, amount1=None, p2_name=None, gle2=None, amount2=None):
         return self.apply(self.service.add_discount, self.identifier, store_name, discount_type, discount_percent,
                           discount_duration, discount_for_type, discount_for_name, rule_type, discount2_percent,
-                          discount2_for_type, discount2_for_name, cond_type, min_price,
+                          discount2_for_type, discount2_for_name, min_price,
                           p1_name, gle1, amount1, p2_name, gle2, amount2)
 
     def get_store_products_with_discounts(self, store_name: str) -> dict[Product:str]:
@@ -224,3 +224,9 @@ class Session:
 
     def add_basket_purchase_rule(self, store_name: str, min_price: float) -> Response:
         return self.apply(self.service.add_basket_purchase_rule, self.identifier, store_name, min_price)
+
+    def get_discounts(self, store_name: str):
+        return self.apply(self.service.get_discounts, self.identifier, store_name)
+
+    def delete_discount(self, store_name: str, index: int):
+        return self.apply(self.service.delete_discount, self.identifier, store_name, index)

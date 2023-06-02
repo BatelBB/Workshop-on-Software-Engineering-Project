@@ -1,3 +1,4 @@
+import threading
 from idlelib.multicall import r
 from typing import Optional, List, Dict, Any, Set
 
@@ -14,6 +15,7 @@ class SessionAdapter:
         self._session = domain_session
         self._username: Optional[str] = None
         self._is_logged_in = False
+        self.lock = threading.RLock()
 
     @property
     def is_logged_in(self):
@@ -167,4 +169,32 @@ class SessionAdapter:
         res = self._session.add_basket_purchase_rule(store_name, min_price)
         if res.success:
             return 'successfuly added rule'
+        return res.description
+
+    def get_discounts(self, store_name):
+        res = self._session.get_discounts(store_name)
+        if not res.success:
+            return None
+        with self.lock:
+            d = {}
+            counter = 1
+            next = res.result
+            while next is not None:
+                d[counter] = next.__str__()
+                next = next.next
+                counter += 1
+        return d
+
+    def delete_discount(self, store_name, index):
+        res = self._session.delete_discount(store_name, index)
+        return res.description
+
+    def add_discount(self, store_name: str, discount_type: str, discount_percent: int,
+                     discount_duration: int, discount_for_type: str, discount_for_name: str = None,
+                     rule_type=None,
+                     discount2_percent=None, discount2_for_type=None, discount2_for_name=None, min_price: float = None,
+                     p1_name=None, gle1=None, amount1=None, p2_name=None, gle2=None, amount2=None):
+        res = self._session.add_discount(store_name, discount_type, discount_percent, discount_duration, discount_for_type,
+                                         discount_for_name, rule_type, discount2_percent, discount2_for_type,
+                                         discount2_for_name, min_price, p1_name, gle1, amount1, p2_name, gle2, amount2)
         return res.description

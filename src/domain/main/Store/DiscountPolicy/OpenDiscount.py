@@ -41,5 +41,6 @@ class OpenDiscount(IDiscountPolicy):
             return self.next.get_discount_for_product(product_name, p_cur_price, products)
         return None
 
-
+    def __str__(self):
+        return f'discount_type: open, discount_percent: {self.percent}, {self.discount_for.__str__()}'
 
