@@ -7,12 +7,12 @@ from src.domain.main.Store.Store import Store
 from src.domain.main.User.Cart import Cart
 from src.domain.main.Utils.IConcurrentSingelton import IAbsractConcurrentSingleton
 from src.domain.main.Utils.Response import Response
-from src.domain.main.Utils.Session import Session
+# from src.domain.main.Utils.Session import Session
 
 
 class IService(metaclass=IAbsractConcurrentSingleton):
     @abstractmethod
-    def enter(self) -> Session:
+    def enter(self):
         ...
 
     @abstractmethod

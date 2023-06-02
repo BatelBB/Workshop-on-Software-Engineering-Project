@@ -18,6 +18,9 @@ class Proxy(Bridge):
     def exit_market(self) -> Response[bool]:
         return self.real.exit_market()
 
+    def clear_data(self) -> None:
+        self.real.clear_data()
+
     def register(self, username: str, password: str) -> Response[bool]:
         return self.real.register(username, password)
 

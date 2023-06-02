@@ -7,13 +7,17 @@ class Bridge(ABC):
     ###################
     # general services
     @abstractmethod
-    def enter_market(self):
+    def enter_market(self) -> None:
         ...
 
     @abstractmethod
     def exit_market(self) -> Response[bool]:
         ...
-    
+
+    @abstractmethod
+    def clear_data(self) -> None:
+        ...
+
     @abstractmethod
     def register(self, username: str, password: str) -> Response[bool]:
         ...

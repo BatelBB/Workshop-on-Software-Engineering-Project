@@ -15,11 +15,14 @@ class Real(Bridge):
 
     ###################
     # general services
-    def enter_market(self):
-        session = self.market.enter()
+    def enter_market(self) -> None:
+        self.session = self.market.enter()
 
     def exit_market(self) -> Response[bool]:
         return self.session.leave()
+
+    def clear_data(self) -> None:
+        self.market.clear()
     
     def register(self, username: str, password: str) -> Response[bool]:
         return self.session.register(username, password)

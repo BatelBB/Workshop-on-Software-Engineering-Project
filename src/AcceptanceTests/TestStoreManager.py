@@ -1,13 +1,13 @@
-from Service.bridge.proxy import proxy
+from Service.bridge.proxy import Proxy
 import unittest
 
 
 class TestStoreManager(unittest.TestCase):
     session_id: int
-    app: proxy
+    app: Proxy
 
     def setUp(self) -> None:
-        self.app = proxy()
+        self.app = Proxy()
         self.enter_market()
         self.app.register(self.session_id, "manager5", "pass1")
         self.app.register(self.session_id, "owner5", "pass1")
