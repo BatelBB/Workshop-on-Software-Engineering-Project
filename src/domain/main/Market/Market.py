@@ -48,6 +48,7 @@ class Market(IService):
         self.users: ConcurrentDictionary[str, User] = ConcurrentDictionary()
         self.stores: ConcurrentDictionary[str, Store] = ConcurrentDictionary()
         self.removed_stores: ConcurrentDictionary[str, Store] = ConcurrentDictionary()
+        self.removed_store_products: ConcurrentDictionary[Store, set[Product]] = ConcurrentDictionary()
         self.appointments: ConcurrentDictionary[str, list[Appointment]] = ConcurrentDictionary()
         self.provision_service: IProvisionService = provisionService()
         self.PurchasePolicyFactory: PurchasePolicyFactory = PurchasePolicyFactory()
@@ -241,6 +242,9 @@ class Market(IService):
         actor = self.get_active_user(session_identifier)
         store: Store = Store(store_name)
         registered_store_with_same_name = self.stores.insert(store_name, store)
+        remove_store
+        if self.removed_store_products(store) is not None:
+
         if registered_store_with_same_name is None:
             if actor.is_member():
                 self.add_appointment(store_name, Appointment(actor.username))
@@ -255,19 +259,26 @@ class Market(IService):
         store: Store = Store(store_name)
         if store is not None:
             if actor.is_member():
+                products = store.get_all()
                 self.stores.delete(store_name)
                 self.removed_stores.insert(store_name, store)
+                self.removed_store_products.insert(store, products)
                 return report_info(self.remove_store.__qualname__, f'{actor} removed store {store_name}')
             else:
                 return report_error(self.remove_store.__qualname__, f'{actor} is not allowed to remove a store')
         return report_error(self.remove_store.__qualname__, f'store {store_name} doesn\'t exist and can\'t be removed')
-
 
     def get_all_stores(self, session_identifier: int) -> Response[list[Store] | bool]:
         actor = self.get_active_user(session_identifier)
         r = report_info(self.get_all_stores.__qualname__,
                         f'Return all market stores to {actor}: {self.stores.to_string_keys()}')
         return Response(self.stores.get_all_values(), r.description)
+
+    def get_all_deleted_stores(self, session_identifier: int) -> Response[list[Store] | bool]:
+        actor = self.get_active_user(session_identifier)
+        r = report_info(self.get_all_deleted_stores.__qualname__,
+                        f'Return all market deleted stores to {actor}: {self.removed_stores.to_string_keys()}')
+        return Response(self.removed_stores.get_all_values(), r.description)
 
     def get_store(self, session_identifier: int, store_name: str) -> Response[dict | bool]:
         response = self.verify_registered_store(self.get_store.__qualname__, store_name)
@@ -568,7 +579,8 @@ class Market(IService):
                                              Permission.Update)
         return response
 
-    def change_product_category(self, session_identifier: int, store_name: str, product_name: str, category: str) -> Response[bool]:
+    def change_product_category(self, session_identifier: int, store_name: str, product_name: str, category: str) -> \
+    Response[bool]:
         response = self.verify_registered_store(self.change_product_category.__qualname__, store_name)
         if response.success:
             store = response.result
@@ -745,8 +757,9 @@ class Market(IService):
             return self.report_no_permission(self.approve_bid.__qualname__, actor, store_name, Permission.StartBid)
         return response
 
-    def rule_maker(self, rule_type: str, p1_name: str = None, gle1: str = None, amount1: int= None, p2_name: str= None,
-                   gle2: str= None, amount2: int= None, min_price: float = None) -> Response[IRule]:
+    def rule_maker(self, rule_type: str, p1_name: str = None, gle1: str = None, amount1: int = None,
+                   p2_name: str = None,
+                   gle2: str = None, amount2: int = None, min_price: float = None) -> Response[IRule]:
         if rule_type == "basket":
             return PurchaseRulesFactory.make_basket_rule(min_price)
         elif rule_type == "simple":
@@ -755,7 +768,6 @@ class Market(IService):
             return PurchaseRulesFactory.make_complex_rule(p1_name, gle1, amount1, p2_name, gle2, amount2, rule_type)
         else:
             report_error(self.rule_maker.__qualname__, f"no such rule type: {rule_type}")
-
 
     def add_purchase_simple_rule(self, session_id: int, store_name: str, product_name: str, gle: str,
                                  amount: int) -> Response:
@@ -806,7 +818,7 @@ class Market(IService):
         report_error(self.discount_for_factory.__qualname__, f"{discount_for_type} is invalid discount for type")
 
     def make_simple_discount(self, discount_percent: int, discount_durations: int,
-                         discount_for: IDiscountFor, rule: IRule = None) -> Response[IDiscountPolicy]:
+                             discount_for: IDiscountFor, rule: IRule = None) -> Response[IDiscountPolicy]:
         discount = OpenDiscount(discount_percent, discount_for, discount_durations)
         return Response(discount, "made discount")
 

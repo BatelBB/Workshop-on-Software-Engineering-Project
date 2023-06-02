@@ -23,7 +23,13 @@
 
     {% if ('CloseStore' in permissions) %}
         <form action="{{ url_for('stores.remove_store') }}">
-            <button type="submit" style="background-color: #008CBA; color: white; padding: 10px 24px; margin: 8px 0; border: none; border-radius: 4px; cursor: pointer;">Remove Store</button>
+            <button type="submit" style="background-color: #008CBA; color: white; padding: 10px 24px; margin: 8px 0; border: none; border-radius: 4px; cursor: pointer; margin-right: 15px;">Remove Store</button>
+        </form>
+    {% endif %}
+
+    {% if ('CloseStore' in permissions) %}
+        <form action="{{ url_for('stores.reopen_store') }}">
+            <button type="submit" style="background-color: #008CBA; color: white; padding: 10px 24px; margin: 8px 0; border: none; border-radius: 4px; cursor: pointer;">Reopen Store</button>
         </form>
     {% endif %}
 </div>

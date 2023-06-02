@@ -57,6 +57,9 @@ class Session:
     def get_all_stores(self) -> Response[list[Store] | bool]:
         return self.apply(self.service.get_all_stores, self.identifier)
 
+    def get_all_deleted_stores(self) -> Response[list[Store] | bool]:
+        return self.apply(self.service.get_all_deleted_stores, self.identifier)
+
     def get_store(self, store_name: str) -> Response[dict | bool]:
         return self.apply(self.service.get_store, self.identifier, store_name)
 

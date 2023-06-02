@@ -67,6 +67,9 @@ class SessionAdapter:
     def remove_store(self, store_name: str):
         return self._session.remove_store(store_name)
 
+    def get_deleted_stores(self):
+        return self._session.get_all_deleted_stores()
+
     def your_stores(self):
         response = self.get_stores()
         if not response.success:
