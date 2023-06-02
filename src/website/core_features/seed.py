@@ -2,20 +2,13 @@ from src.domain.main.Market.Market import Market
 from random import randint, sample
 
 electronics = """
-פילטר אקווריום
 נורית כיבוי
 לחצנים
-חרצנים
 טוסטר משולשים
-דגי חשמל
 פיורדים
 משחת שיניים חשמלית
 כיסא תאורה
-גגון אלקטרוני
 מד לחץ פסיכולוגי
-רדיו טייפ
-שעון למסדרון
-אינטרקום
 וילון חשמלי
 טוסטר מקבילים
 עין אלקטרונית
@@ -23,12 +16,12 @@ electronics = """
 כיסא חשמלי
 חיבור בננה
 סאב וופרים
-שלט למיקרוגל
 מנורת לבה עם לבה אורגנית
 תנור מקרר
-כינור חשמלי
+חתול חשמלי
 חוט להט
-הלוגן
+חוט רהט
+מנורת נחת
 """
 
 def init_yuvals_store(market: Market):
@@ -36,7 +29,9 @@ def init_yuvals_store(market: Market):
     yuval.login('yuval', '123456')
     yuvals_store_name = "מרתפי אלקטרוניקה"
     yuval.open_store(yuvals_store_name)
-    for item in sample(electronics.splitlines(), 10):
+    for item in electronics.splitlines():
+        if not item:
+            continue
         price = randint(10, 150)
         yuval.add_product(yuvals_store_name, item.strip(), "electronics", price, 100, ["electronics", item.strip()])
     yuval.logout()
@@ -68,7 +63,7 @@ def init_batel_store(market):
 
 def seed(market: Market):
     market.init_admin()
-    for username in ("batel", "yuval", "hagai", "nir", "mendi"):
+    for username in ("batel", "yuval", "hagai", "nir_m.", "mendi"):
         market.register(0, username, "123456")
     init_yuvals_store(market)
     init_batel_store(market)

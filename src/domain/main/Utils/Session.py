@@ -75,10 +75,12 @@ class Session:
     def get_products_in_price_range(self, min: float, max: float) -> Response[list[dict[str, dict]] | bool]:
         return self.apply(self.service.get_products_in_price_range, self.identifier, min, max)
 
-    def add_product(self, store_name: str, product_name: str, category: str, price: float, quantity: int, keywords: list[str] = None) -> Response[bool]:
-        return self.apply(self.service.add_product, self.identifier, store_name, product_name, category, price, quantity, keywords)
+    def add_product(self, store_name: str, product_name: str, category: str, price: float, quantity: int,
+                    keywords: list[str] = None) -> Response[bool]:
+        return self.apply(self.service.add_product, self.identifier, store_name, product_name, category, price,
+                          quantity, keywords)
 
-    def update_product_quantity(self, store_name: str, product_name: str, quantity: int) ->Response[bool]:
+    def update_product_quantity(self, store_name: str, product_name: str, quantity: int) -> Response[bool]:
         return self.apply(self.service.update_product_quantity, self.identifier, store_name, product_name, quantity)
 
     def get_amount_of(self, product_name: str, store_name: str) -> Response[int]:
@@ -94,7 +96,8 @@ class Session:
         return self.apply(self.service.remove_product_from_cart, self.identifier, store_name, product_name)
 
     def update_cart_product_quantity(self, store_name: str, product_name: str, quantity: int) -> Response[bool]:
-        return self.apply(self.service.update_cart_product_quantity, self.identifier, store_name, product_name, quantity)
+        return self.apply(self.service.update_cart_product_quantity, self.identifier, store_name, product_name,
+                          quantity)
 
     def show_cart(self) -> Response[dict | bool]:
         return self.apply(self.service.show_cart, self.identifier)
@@ -102,13 +105,15 @@ class Session:
     def get_cart(self) -> Response[Cart]:
         return self.apply(self.service.get_cart, self.identifier)
 
-    def purchase_shopping_cart(self, payment_method: str, payment_details: list, address: str, postal_code: str) -> Response[bool]:
-        return self.apply(self.service.purchase_shopping_cart, self.identifier, payment_method, payment_details, address, postal_code)
+    def purchase_shopping_cart(self, payment_method: str, payment_details: list, address: str, postal_code: str,
+                               city: str, country: str) -> Response[bool]:
+        return self.apply(self.service.purchase_shopping_cart, self.identifier, payment_method, payment_details,
+                          address, postal_code, city, country)
 
     def close_store(self, store_name: str) -> Response[bool]:
         return self.apply(self.service.close_store, self.identifier, store_name)
 
-    def appoint_manager(self, appointee: str, store: str,) -> Response[bool]:
+    def appoint_manager(self, appointee: str, store: str, ) -> Response[bool]:
         return self.apply(self.service.appoint_manager, self.identifier, appointee, store)
 
     def appoint_owner(self, appointee: str, store: str) -> Response[bool]:
@@ -139,21 +144,30 @@ class Session:
         return self.apply(self.service.get_store_personal, self.identifier, store_name)
 
     def change_product_name(self, store_name: str, product_old_name: str, product_new_name: str) -> Response[bool]:
-        return self.apply(self.service.change_product_name, self.identifier, store_name, product_old_name, product_new_name)
+        return self.apply(self.service.change_product_name, self.identifier, store_name, product_old_name,
+                          product_new_name)
 
-    def change_product_price(self, store_name: str, product_old_price: float, product_new_price: float) -> Response[bool]:
-        return self.apply(self.service.change_product_price, self.identifier, store_name, product_old_price, product_new_price)
+    def change_product_price(self, store_name: str, product_old_price: float, product_new_price: float) -> Response[
+        bool]:
+        return self.apply(self.service.change_product_price, self.identifier, store_name, product_old_price,
+                          product_new_price)
+
+    def change_product_category(self, store_name: str, old_product_name: str, category: str) -> Response[bool]:
+        return self.apply(self.service.change_product_category, self.identifier, store_name, old_product_name, category)
 
     def get_store_purchase_history(self, store_name: str) -> Response[str]:
         return self.apply(self.service.get_store_purchase_history, store_name)
 
     def purchase_with_non_immediate_policy(self, store_name: str, product_name: str,
                                            payment_method: str, payment_details: list[str], address: str,
-                                           postal_code: str, how_much: float) -> Response[bool]:
-        return self.apply(self.service.purchase_with_non_immediate_policy, store_name, product_name, payment_method, payment_details, address, postal_code, how_much)
+                                           postal_code: str, how_much: float, city: str, country: str) -> Response[
+        bool]:
+        return self.apply(self.service.purchase_with_non_immediate_policy, store_name, product_name, payment_method,
+                          payment_details, address, postal_code, how_much, city, country)
 
     def start_auction(self, store_name: str, product_name: str, initial_price: float, duration: int) -> Response[bool]:
-        return self.apply(self.service.start_auction, self.identifier, store_name, product_name, initial_price, duration)
+        return self.apply(self.service.start_auction, self.identifier, store_name, product_name, initial_price,
+                          duration)
 
     def start_lottery(self, store_name: str, product_name: str) -> Response:
         return self.apply(self.service.start_lottery, self.identifier, store_name, product_name)
@@ -167,8 +181,27 @@ class Session:
     def add_purchase_simple_rule(self, store_name: str, product_name: str, gle: str, amount: int) -> Response:
         return self.apply(self.service.add_purchase_simple_rule, self.identifier, store_name, product_name, gle, amount)
 
-    def add_purchase_complex_rule(self, store_name: str, p1_name: str, gle1: str, amount1: int, p2_name: str, gle2: str, amount2: int, complex_rule_type: str) -> Response:
-        return self.apply(self.service.add_purchase_complex_rule, self.identifier, store_name, p1_name, gle1, amount1, p2_name, gle2, amount2, complex_rule_type)
+    def add_purchase_complex_rule(self, store_name: str, p1_name: str, gle1: str, amount1: int, p2_name: str, gle2: str,
+                                  amount2: int, complex_rule_type: str) -> Response:
+        return self.apply(self.service.add_purchase_complex_rule, self.identifier, store_name, p1_name, gle1, amount1,
+                          p2_name, gle2, amount2, complex_rule_type)
 
     def cancel_membership_of(self, member_name: str) -> Response[bool]:
         return self.apply(self.service.cancel_membership_of, self.identifier, member_name)
+
+    def get_all_registered_users(self) -> list[str]:
+        return self.apply(self.service.get_all_registered_users)
+
+    def add_discount(self, store_name: str, discount_type: str, discount_percent: int,
+                     discount_duration: int, discount_for_type: str, discount_for_name: str = None,
+                     rule_type=None,
+                     discount2_percent=None, discount2_for_type=None, discount2_for_name=None,
+                     cond_type: str = None, min_price: float = None,
+                     p1_name=None, gle1=None, amount1=None, p2_name=None, gle2=None, amount2=None):
+        return self.apply(self.service.add_discount, self.identifier, store_name, discount_type, discount_percent,
+                          discount_duration, discount_for_type, discount_for_name, rule_type, discount2_percent,
+                          discount2_for_type, discount2_for_name, cond_type, min_price,
+                          p1_name, gle1, amount1, p2_name, gle2, amount2)
+
+    def get_store_products_with_discounts(self, store_name: str) -> dict[Product:str]:
+        self.apply(self.get_store_products_with_discounts, self.identifier, store_name)

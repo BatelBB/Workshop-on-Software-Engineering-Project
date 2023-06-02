@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 {% block title %}Create store{% endblock %}
 
-{% block content %}
+{% block page %}
 
 <form method="post">
     
@@ -19,7 +19,6 @@
             </tr>
         {% endfor %}
     </table>
-    Already have a user? <a href="{{ url_for('selling.create_store') }}">login</a>
 </form>
 
 {% endblock %}

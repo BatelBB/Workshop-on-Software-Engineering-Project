@@ -1,7 +1,7 @@
 Tests
     purchaseRuleTests/test_owner_adding_complex_rule_2
-    PurchaseTest/test_purchaseFlow_ShippingFails_refundIssued
-    PurchaseTest/test_purchaseFlow_returnCorrectly
+    PurchaseTest/test_purchaseFlow_ShippingFails_refundIssued - Batel fixed
+    PurchaseTest/test_purchaseFlow_returnCorrectly - Batel fixed
     AcceptanceTest/ALL!
 
 Controllers

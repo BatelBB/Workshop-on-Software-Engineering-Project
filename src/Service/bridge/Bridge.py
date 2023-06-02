@@ -57,7 +57,7 @@ class Bridge(ABC):
     @abstractmethod
     def purchase_with_non_immediate_policy(self, store_name: str, product_name: str,
                                            payment_method: str, payment_details: list[str], address: str,
-                                           postal_code: str, how_much: float) -> Response[bool]:
+                                           postal_code: str, how_much: float, city: str, country: str) -> Response[bool]:
         ...
 
     ##############################

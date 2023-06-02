@@ -14,7 +14,7 @@ When you change the python files, it restarts, so that you're always running you
 
 See the blueprints for examples. If you're adding a blueprint, add it in the `app.py` and make sure you're giving it a unique name.
 
-Links and redirects are using `url_for`. If it's not in a blueprint (like the homepage), it's the method name, like `url_for('home')`, and if it's in a blueprint, you need the blueprint name, like `url_for('selling.create_store')`. If the route takes parameters, use keyword arguments, like `url_for('buying.view_store', name=store.name)`.
+Links and redirects are using `url_for`. If it's not in a blueprint (like the homepage), it's the method name, like `url_for('home.home')`, and if it's in a blueprint, you need the blueprint name, like `url_for('selling.create_store')`. If the route takes parameters, use keyword arguments, like `url_for('buying.view_store', name=store.name)`.
 
 For forms, use WTForms. See examples in `auth` and `selling` blueprints.
 

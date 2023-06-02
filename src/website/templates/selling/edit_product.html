@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+{% block title %}Edit Product{% endblock %}
+
+{% block page %}
+
+<form method="post">
+  {{ form.hidden_tag() }}
+    <table>
+        {% for field in (form.field_to_change, form.new_value, form.submit) %}
+            <tr>
+                <td>{{field.label}}&nbsp;</td>
+                <td>{{ field }}</td>
+                <td>
+                    {% for error in field.errors %}
+                        {{ error }}
+                    {% endfor %}
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+</form>
+
+{% endblock %}

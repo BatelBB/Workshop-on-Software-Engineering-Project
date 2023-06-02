@@ -1,0 +1,26 @@
+{% extends "layout.html" %}
+{% block title %}Edit staff{% endblock %}
+
+{% block page %}
+
+<h1>{{ headline }}</h1>
+
+<form method="post">
+  {{ form.hidden_tag() }}
+    <table>
+            <tr>
+                <td>{{form.appointee.label}}&nbsp;</td>
+                <td>{{ form.appointee }}</td>
+                <td>
+                    {% for error in form.appointee.errors %}
+                        {{ error }}
+                    {% endfor %}
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3"><input type="submit" value="Submit"></td>
+            </tr>
+    </table>
+</form>
+
+{% endblock %}

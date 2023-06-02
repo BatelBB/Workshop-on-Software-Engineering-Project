@@ -4,11 +4,15 @@ import wtforms as wtf
 from flask import Flask, render_template
 from flask_bootstrap import Bootstrap
 
+from domain.main.Utils.Response import Response
 from website.blueprints.auth import bp as auth
-from website.blueprints.selling import bp as selling
 from website.blueprints.buying import bp as buying
+from website.blueprints.home import bp as home
+from website.blueprints.products import bp as products
+from website.blueprints.stores import bp as stores
+from website.blueprints.staff import bp as staff
 
-from website.core_features.auth import get_domain_session, get_market
+
 from website.core_features.nav import nav
 from website.core_features.dicebear import dicebear_methods
 
@@ -24,20 +28,17 @@ nav.init_app(app)
 
 app.jinja_env.globals.update(**dicebear_methods)
 
+app.register_blueprint(home)
 app.register_blueprint(auth)
-app.register_blueprint(selling)
+app.register_blueprint(stores)
+app.register_blueprint(staff)
+app.register_blueprint(products)
 app.register_blueprint(buying)
 
-@app.route("/")
-def home():
-    stores = get_domain_session(session).get_all_stores().result
-    print('\n\nstores', stores)
-    from random import shuffle
-    made_by = ['Batel', 'Hagai', 'Mendi', 'Nir', 'Yuval']
-    shuffle(made_by)
-    return render_template('home.html', made_by=made_by, stores=stores)
 
-
+@app.errorhandler(500)
+def internal_error(error):
+    return render_template('500.html'), 500
 
 if __name__ == '__main__':
     app.run(debug=True)

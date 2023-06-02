@@ -54,9 +54,10 @@ class Real(Bridge):
     
     def purchase_with_non_immediate_policy(self, store_name: str, product_name: str,
                                            payment_method: str, payment_details: list[str], address: str,
-                                           postal_code: str, how_much: float) -> Response[bool]:
+                                           postal_code: str, how_much: float, city: str, country: str) -> Response[bool]:
         return self.session.purchase_with_non_immediate_policy(store_name, product_name, payment_method,
-                                                               payment_details, address, postal_code, how_much)
+                                                               payment_details, address, postal_code, how_much, city,
+                                                               country)
 
     ##############################
     # store management services
