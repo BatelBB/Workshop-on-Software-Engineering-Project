@@ -924,3 +924,22 @@ class Market(IService):
                                 f"{actor.username} has no permission to manage purchase rules")
 
         return store.remove_purchase_rule(index)
+
+    def add_basket_purchase_rule(self, session_id: int, store_name: str, min_price: float):
+        actor = self.get_active_user(session_id)
+        store_res = self.verify_registered_store(self.add_discount.__qualname__, store_name)
+        if not store_res.success:
+            return report_error(self.add_discount.__qualname__, "invalid store")
+        store = store_res.result
+
+        perms = self.permissions_of(session_id, store_name, actor.username)
+        if not perms.success:
+            return report_error(self.add_discount.__qualname__, "failed to retrieve permissions")
+        perms = perms.result
+
+        if Permission.ChangePurchasePolicy not in perms:
+            return report_error(self.add_discount.__qualname__,
+                                f"{actor.username} has no permission to manage purchase rules")
+
+        rule = self.rule_maker("basket", min_price=min_price)
+        return store.add_purchase_rule(rule.result)

@@ -156,3 +156,15 @@ class SessionAdapter:
         if res.success:
             return 'successfuly added rule'
         return res.description
+
+    def add_complex_purchase_rule(self, store_name, p1_name, gle1, amount1, p2_name, gle2, amount2, rule_type):
+        res = self._session.add_purchase_complex_rule(store_name, p1_name, gle1, amount1, p2_name, gle2, amount2, rule_type)
+        if res.success:
+            return 'successfuly added rule'
+        return res.description
+
+    def add_basket_purchase_rule(self, store_name, min_price):
+        res = self._session.add_basket_purchase_rule(store_name, min_price)
+        if res.success:
+            return 'successfuly added rule'
+        return res.description

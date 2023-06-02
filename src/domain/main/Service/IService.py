@@ -238,3 +238,7 @@ class IService(metaclass=IAbsractConcurrentSingleton):
     @abstractmethod
     def delete_purchase_rule(self, session_id: int, store_name: str, index: int):
         ...
+
+    @abstractmethod
+    def add_basket_purchase_rule(self, session_id: int, store_name: str, min_price: float):
+        ...

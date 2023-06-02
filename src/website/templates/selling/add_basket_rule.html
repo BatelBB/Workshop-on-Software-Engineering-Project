@@ -1,13 +1,13 @@
 {% extends "layout.html" %}
-{% block title %}Add Purchase Rules{% endblock %}
+{% block title %}Add Purchase Rule{% endblock %}
 
 {% block page %}
 
 <form method="post">
-    
+
   {{ form.hidden_tag() }}
     <table>
-        {% for field in (form.product_name, form.gle, form.amount, form.submit) %}
+        {% for field in (form.min_price, form.submit) %}
             <tr>
                 <td>{{field.label}}&nbsp;</td>
                 <td>{{ field }}</td>

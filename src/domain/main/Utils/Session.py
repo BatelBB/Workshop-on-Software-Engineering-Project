@@ -221,3 +221,6 @@ class Session:
 
     def delete_purchase_rule(self, index, store_name):
         return self.apply(self.service.delete_purchase_rule, self.identifier, store_name, index)
+
+    def add_basket_purchase_rule(self, store_name: str, min_price: float) -> Response:
+        return self.apply(self.service.add_basket_purchase_rule, self.identifier, store_name, min_price)
