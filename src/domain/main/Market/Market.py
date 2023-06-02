@@ -47,6 +47,7 @@ class Market(IService):
         self.sessions: ConcurrentDictionary[int, User] = ConcurrentDictionary()
         self.users: ConcurrentDictionary[str, User] = ConcurrentDictionary()
         self.stores: ConcurrentDictionary[str, Store] = ConcurrentDictionary()
+        self.removed_stores: ConcurrentDictionary[str, Store] = ConcurrentDictionary()
         self.appointments: ConcurrentDictionary[str, list[Appointment]] = ConcurrentDictionary()
         self.provision_service: IProvisionService = provisionService()
         self.PurchasePolicyFactory: PurchasePolicyFactory = PurchasePolicyFactory()
@@ -248,6 +249,19 @@ class Market(IService):
                 self.stores.delete(store_name)
                 return report_error(self.open_store.__qualname__, f'{actor} is not allowed to open a store.')
         return report_error(self.open_store.__qualname__, f'Store name \'{store_name}\' is occupied.')
+
+    def remove_store(self, session_identifier: int, store_name: str) -> Response[bool]:
+        actor = self.get_active_user(session_identifier)
+        store: Store = Store(store_name)
+        if store is not None:
+            if actor.is_member():
+                self.stores.delete(store_name)
+                self.removed_stores.insert(store_name, store)
+                return report_info(self.remove_store.__qualname__, f'{actor} removed store {store_name}')
+            else:
+                return report_error(self.remove_store.__qualname__, f'{actor} is not allowed to remove a store')
+        return report_error(self.remove_store.__qualname__, f'store {store_name} doesn\'t exist and can\'t be removed')
+
 
     def get_all_stores(self, session_identifier: int) -> Response[list[Store] | bool]:
         actor = self.get_active_user(session_identifier)

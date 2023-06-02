@@ -51,6 +51,9 @@ class Session:
     def open_store(self, store_name: str) -> Response[bool]:
         return self.apply(self.service.open_store, self.identifier, store_name)
 
+    def remove_store(self, store_name: str) -> Response[bool]:
+        return self.apply(self.service.remove_store, self.identifier, store_name)
+
     def get_all_stores(self) -> Response[list[Store] | bool]:
         return self.apply(self.service.get_all_stores, self.identifier)
 

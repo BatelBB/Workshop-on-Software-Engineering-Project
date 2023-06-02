@@ -1,0 +1,24 @@
+{% extends "layout.html" %}
+{% block title %}Create store{% endblock %}
+
+{% block page %}
+
+<form method="post">
+    
+  {{ form.hidden_tag() }}
+    <table>
+        {% for field in (form.store, form.submit) %}
+            <tr>
+                <td>{{field.label}}&nbsp;</td>
+                <td>{{ field }}</td>
+                <td>
+                    {% for error in field.errors %}
+                        {{ error }}
+                    {% endfor %}
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+</form>
+
+{% endblock %}
