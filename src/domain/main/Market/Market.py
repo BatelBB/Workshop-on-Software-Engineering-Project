@@ -49,6 +49,7 @@ class Market(IService):
         self.stores: ConcurrentDictionary[str, Store] = ConcurrentDictionary()
         self.removed_stores: ConcurrentDictionary[str, Store] = ConcurrentDictionary()
         self.removed_store_products: ConcurrentDictionary[Store, set[Product]] = ConcurrentDictionary()
+        self.removed_products_quantity: ConcurrentDictionary[Product, int] = ConcurrentDictionary()
         self.appointments: ConcurrentDictionary[str, list[Appointment]] = ConcurrentDictionary()
         self.provision_service: IProvisionService = provisionService()
         self.PurchasePolicyFactory: PurchasePolicyFactory = PurchasePolicyFactory()
@@ -242,9 +243,10 @@ class Market(IService):
         actor = self.get_active_user(session_identifier)
         store: Store = Store(store_name)
         registered_store_with_same_name = self.stores.insert(store_name, store)
-        remove_store
-        if self.removed_store_products(store) is not None:
-
+        products_of_removed_store = self.removed_store_products.get(store)
+        if products_of_removed_store is not None:
+            for product in products_of_removed_store:
+                store.add(product, self.removed_products_quantity.get(product))
         if registered_store_with_same_name is None:
             if actor.is_member():
                 self.add_appointment(store_name, Appointment(actor.username))
@@ -256,13 +258,15 @@ class Market(IService):
 
     def remove_store(self, session_identifier: int, store_name: str) -> Response[bool]:
         actor = self.get_active_user(session_identifier)
-        store: Store = Store(store_name)
+        store: Store = self.stores.get(store_name)
         if store is not None:
             if actor.is_member():
                 products = store.get_all()
                 self.stores.delete(store_name)
                 self.removed_stores.insert(store_name, store)
                 self.removed_store_products.insert(store, products)
+                for product in products:
+                    self.removed_products_quantity.insert(product, store.amount_of(product.name))
                 return report_info(self.remove_store.__qualname__, f'{actor} removed store {store_name}')
             else:
                 return report_error(self.remove_store.__qualname__, f'{actor} is not allowed to remove a store')
