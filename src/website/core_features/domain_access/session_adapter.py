@@ -1,11 +1,11 @@
 from idlelib.multicall import r
-from typing import Optional, List, Dict, Any, Set
+from typing import Optional, List, Dict, Any, Set, Mapping
 
 from domain.main.Market.Permissions import Permission
 from domain.main.Store.Store import Store
 from domain.main.Utils.Response import Response
 from domain.main.Utils.Session import Session
-from website.core_features.domain_access.session_adapter_dto import ProductDto
+from website.core_features.domain_access.session_adapter_dto import ProductDto, BasketDto
 
 
 class SessionAdapter:
@@ -37,7 +37,8 @@ class SessionAdapter:
                 category=product["Category"],
                 quantity=product["Quantity"],
                 rate=product["Rate"],
-                price=product["Price"]
+                price=product["Price"],
+                store_name=name
             )
             for product in data.values()
         ]
@@ -100,12 +101,18 @@ class SessionAdapter:
             return r_cart
         cart = r_cart.result
         if not cart.has_basket(store_name):
-            return Response(BasketDto(store_name, dict()))
+            return Response(BasketDto(store_name, dict(), dict()))
         basket = cart.get_or_create_basket(store_name)
-        return Response(BasketDto(store_name, {
-            x.product_name: x.quantity
-            for x in basket.items
-        }))
+        return Response(BasketDto(store_name=store_name,
+                                  amounts={
+                                      x.product_name: x.quantity
+                                      for x in basket.items
+                                  },
+                                  products={
+                                      x.product_name: x
+                                      for x in basket.items
+                                  }
+                          ))
 
     def get_product(self, store_name, product_name) -> Response[ProductDto]:
         store = self.get_store(store_name)
@@ -115,7 +122,7 @@ class SessionAdapter:
             (Response(product)
              for product in store.result
              if product.name == product_name),
-            Response("no such product") # \← default if not found
+            Response("no such product")  # \← default if not found
         )
 
     def update_cart_product_quantity(self, store_name, product_name, qty) -> Response[None]:
@@ -150,3 +157,18 @@ class SessionAdapter:
 
     def remove_product(self, store_name: str, product_name: str):
         return self._session.remove_product(store_name, product_name)
+
+    def get_cart(self) -> Response[Mapping[str, BasketDto]]:
+        cart = self._session.get_cart()
+        if not cart.success:
+            return cart
+        return Response({
+            store_name: self.get_basket(store_name).result
+            for store_name in cart.result.baskets.keys()
+        })
+
+    def purchase_by_card(self, number, exp_month, exp_year, ccv, street, apt_number, city, country):
+        return self._session.purchase_shopping_cart('card', [str(number), f'{exp_month}/{exp_year}', ccv],
+                                                    street, apt_number, city, country)
+
+

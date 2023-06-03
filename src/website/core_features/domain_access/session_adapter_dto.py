@@ -16,3 +16,4 @@ class ProductDto:
 class BasketDto:
     store_name: str
     amounts: Mapping[str, int]
+    products: Mapping[str, ProductDto]
