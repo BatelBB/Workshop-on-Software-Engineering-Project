@@ -15,11 +15,12 @@ def mynavbar():
     domain = get_domain_adapter()
     login_part: Tuple[NavigationItem, ...] = tuple()
     if domain.is_logged_in:
-        login_part = (Text(f'Hello, {domain.username}'), )
+        login_part = (Text(f'Hello, {domain.username}'), View('Logout', 'auth.logout'))
     else:
         login_part = (View('Register', 'auth.register'), View('Login', 'auth.login'))
     return Navbar(
         f'Logo here',
         View('Home', 'home.home'),
-        *login_part
+        *login_part,
+        View('Your cart', 'buying.view_cart')
     )

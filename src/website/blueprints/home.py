@@ -10,9 +10,6 @@ from website.blueprints.auth import bp as auth
 from website.blueprints.buying import bp as buying
 from website.core_features.domain_access.market_access import get_domain_adapter
 
-from website.core_features.nav import nav
-from website.core_features.dicebear import dicebear_methods
-
 bp = Blueprint("home", __name__)
 
 
