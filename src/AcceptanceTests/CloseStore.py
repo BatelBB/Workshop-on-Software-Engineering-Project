@@ -11,7 +11,7 @@ class CloseStore(unittest.TestCase):
         cls.app = Proxy()
         cls.store_owner1 = ("usr1", "password")
         cls.store_owner2 = ("usr2", "password")
-        cls.registered_user = ("user3", "password")
+        cls.registered_user = ("user33", "password")
         cls.service_admin = ('Kfir', 'Kfir')
 
     def setUp(self) -> None:

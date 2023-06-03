@@ -10,7 +10,7 @@ class InspectingCart(unittest.TestCase):
     def setUpClass(cls) -> None:
         cls.app = Proxy()
         cls.store_owner1 = ("usr1", "password")
-        cls.store_owner2 = ("usr44", "password")
+        cls.store_owner2 = ("usr444", "password")
         cls.registered_buyer = ("usr2", "password")
         cls.service_admin = ('Kfir', 'Kfir')
 

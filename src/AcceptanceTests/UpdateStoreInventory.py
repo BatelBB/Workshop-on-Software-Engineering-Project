@@ -9,7 +9,7 @@ class UpdateStoreInventory(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         cls.app = Proxy()
-        cls.store_owner1 = ("usr1", "password")
+        cls.store_owner1 = ("usr11", "password")
         cls.service_admin = ('Kfir', 'Kfir')
 
     def setUp(self) -> None:
@@ -100,15 +100,13 @@ class UpdateStoreInventory(unittest.TestCase):
         self.app.login(*self.store_owner1)
         r = self.app.update_product_quantity("bakery", "bread", 100)
         self.assertTrue(r.success, "error: update product quantity action failed")
-        products = self.app.get_products_by_name("bread").result
-        self.assertEqual(1, len(products), "error: didn't get 1 stores that has the products while the market has 1")
-        bakery = products[0]
-        self.assertIn("bread", bakery, "error: bread not found")
-        self.assertEqual("bread", bakery["bread"]["Name"], "error: bread name incorrect")
-        self.assertEqual(10, bakery["bread"]["Price"], "error: bread price incorrect")
-        self.assertEqual("1", bakery["bread"]["Category"], "error: bread category incorrect")
-        self.assertEqual(None, bakery["bread"]["Rate"], "error: bread rate incorrect")
-        # todo add quantity check
+        products = self.app.get_all_stores().result["bakery"]
+        self.assertEqual(2, len(products), "error: didn't get 1 stores that has the products while the market has 1")
+        self.assertIn("bread", products, "error: bread not found")
+        self.assertEqual(10, products["bread"]["Price"], "error: bread price incorrect")
+        self.assertEqual("1", products["bread"]["Category"], "error: bread category incorrect")
+        self.assertEqual(None, products["bread"]["Rate"], "error: bread rate incorrect")
+        self.assertEqual(100, products["bread"]["Quantity"], "error: bread rate incorrect")
         self.app.logout()
 
     def test_owner_update_product_quantity_illegal_quantity(self):
@@ -116,15 +114,13 @@ class UpdateStoreInventory(unittest.TestCase):
         self.app.login(*self.store_owner1)
         r = self.app.update_product_quantity("bakery", "bread", -5)
         self.assertFalse(r.success, "error: update product quantity action succeeded")
-        products = self.app.get_products_by_name("bread").result
-        self.assertEqual(1, len(products), "error: didn't get 1 stores that has the products while the market has 1")
-        bakery = products[0]
-        self.assertIn("bread", bakery, "error: bread not found")
-        self.assertEqual("bread", bakery["bread"]["Name"], "error: bread name incorrect")
-        self.assertEqual(10, bakery["bread"]["Price"], "error: bread price incorrect")
-        self.assertEqual("1", bakery["bread"]["Category"], "error: bread category incorrect")
-        self.assertEqual(None, bakery["bread"]["Rate"], "error: bread rate incorrect")
-        # todo add quantity check
+        products = self.app.get_all_stores().result["bakery"]
+        self.assertEqual(2, len(products), "error: didn't get 1 stores that has the products while the market has 1")
+        self.assertIn("bread", products, "error: bread not found")
+        self.assertEqual(10, products["bread"]["Price"], "error: bread price incorrect")
+        self.assertEqual("1", products["bread"]["Category"], "error: bread category incorrect")
+        self.assertEqual(None, products["bread"]["Rate"], "error: bread rate incorrect")
+        self.assertEqual(15, products["bread"]["Quantity"], "error: bread rate incorrect")
         self.app.logout()
 
     def test_owner_change_product_name(self):
