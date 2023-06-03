@@ -47,3 +47,5 @@ class XorDiscount(IDiscountPolicy):
         else:
             self.discount1.calculate_price(basket, products)
 
+    def __str__(self):
+        return f'discount_type: xor,\n discount1: {self.discount1.__str__()} \n discount2: {self.discount2.__str__()}'

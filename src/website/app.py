@@ -5,6 +5,8 @@ from flask import Flask, render_template
 from flask_bootstrap import Bootstrap
 
 from domain.main.Utils.Response import Response
+from website.blueprints.discounts import bp as discounts
+from website.blueprints.rules import bp as rules
 from website.blueprints.auth import bp as auth
 from website.blueprints.buying import bp as buying
 from website.blueprints.home import bp as home
@@ -34,6 +36,8 @@ app.register_blueprint(stores)
 app.register_blueprint(staff)
 app.register_blueprint(products)
 app.register_blueprint(buying)
+app.register_blueprint(rules)
+app.register_blueprint(discounts)
 
 
 @app.errorhandler(500)

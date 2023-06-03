@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 
+from domain.main.Store.PurchaseRules.IRule import IRule
 from src.domain.main.Market.Appointment import Appointment
 from src.domain.main.Market.Permissions import Permission
 from src.domain.main.Store.Product import Product
@@ -221,11 +222,30 @@ class IService(metaclass=IAbsractConcurrentSingleton):
     def add_discount(self, session_id: int, store_name: str, discount_type: str, discount_percent: int,
                      discount_duration: int, discount_for_type: str, discount_for_name: str = None,
                      rule_type=None,
-                     discount2_percent=None, discount2_for_type=None, discount2_for_name=None,
-                     cond_type: str = None, min_price: float = None,
+                     discount2_percent=None, discount2_for_type=None, discount2_for_name=None, min_price: float = None,
                      p1_name=None, gle1=None, amount1=None, p2_name=None, gle2=None, amount2=None):
         ...
 
     @abstractmethod
     def get_store_products_with_discounts(self, sessiont_id: int, store_name: str) -> dict[Product:str]:
+        ...
+
+    @abstractmethod
+    def get_purchase_rules(self, session_id: int, store_name: str) -> Response[list[IRule]]:
+        ...
+
+    @abstractmethod
+    def delete_purchase_rule(self, session_id: int, store_name: str, index: int):
+        ...
+
+    @abstractmethod
+    def add_basket_purchase_rule(self, session_id: int, store_name: str, min_price: float):
+        ...
+
+    @abstractmethod
+    def get_discounts(self, session_id: int, store_name: str):
+        ...
+
+    @abstractmethod
+    def delete_discount(self, session_id: int, store_name: str, index: int):
         ...

@@ -35,4 +35,4 @@ class SimpleRule(IRule):
         return Response(True, "good")
 
     def __str__(self):
-        return f'rule: if {self.product_name} quantity {self.gle} {self.num}'
+        return f'rule: {self.product_name} quantity {self.gle} {self.num}'

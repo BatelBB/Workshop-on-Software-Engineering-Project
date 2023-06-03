@@ -24,3 +24,6 @@ class CondDiscount(IDiscountPolicy):
         if dis is not None:
             return f'{self.rule.__str__()} then discount: {dis}'
         return None
+
+    def __str__(self):
+        return f'discount_type: cond: \n rule: {self.rule.__str__()}\n discount: {self.discount.__str__()}'

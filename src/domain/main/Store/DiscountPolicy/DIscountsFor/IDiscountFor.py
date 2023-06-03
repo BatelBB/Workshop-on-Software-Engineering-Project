@@ -8,3 +8,4 @@ class IDiscountFor(ABC):
     @abstractmethod
     def get_products_to_apply_discount_to(self, products: set[Product]):
         ...
+

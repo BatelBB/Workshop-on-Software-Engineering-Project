@@ -1,5 +1,6 @@
 from typing import Any
 
+from domain.main.Store.PurchaseRules.IRule import IRule
 from src.domain.main.Market.Appointment import Appointment
 from src.domain.main.Market.Permissions import Permission
 from src.domain.main.Service import IService
@@ -51,8 +52,14 @@ class Session:
     def open_store(self, store_name: str) -> Response[bool]:
         return self.apply(self.service.open_store, self.identifier, store_name)
 
+    def remove_store(self, store_name: str) -> Response[bool]:
+        return self.apply(self.service.remove_store, self.identifier, store_name)
+
     def get_all_stores(self) -> Response[list[Store] | bool]:
         return self.apply(self.service.get_all_stores, self.identifier)
+
+    def get_all_deleted_stores(self) -> Response[list[Store] | bool]:
+        return self.apply(self.service.get_all_deleted_stores, self.identifier)
 
     def get_store(self, store_name: str) -> Response[dict | bool]:
         return self.apply(self.service.get_store, self.identifier, store_name)
@@ -134,6 +141,9 @@ class Session:
     def permissions_of(self, store: str, subject: str) -> Response[set[Permission] | bool]:
         return self.apply(self.service.permissions_of, self.identifier, store, subject)
 
+    def get_admin_permissions(self) -> Response[set[Permission] | bool]:
+        return self.apply(self.service.get_admin_permissions)
+
     def reopen_store(self, store_name: str) -> Response[bool]:
         return self.apply(self.service.reopen_store, self.identifier, store_name)
 
@@ -196,12 +206,27 @@ class Session:
                      discount_duration: int, discount_for_type: str, discount_for_name: str = None,
                      rule_type=None,
                      discount2_percent=None, discount2_for_type=None, discount2_for_name=None,
-                     cond_type: str = None, min_price: float = None,
+                      min_price: float = None,
                      p1_name=None, gle1=None, amount1=None, p2_name=None, gle2=None, amount2=None):
         return self.apply(self.service.add_discount, self.identifier, store_name, discount_type, discount_percent,
                           discount_duration, discount_for_type, discount_for_name, rule_type, discount2_percent,
-                          discount2_for_type, discount2_for_name, cond_type, min_price,
+                          discount2_for_type, discount2_for_name, min_price,
                           p1_name, gle1, amount1, p2_name, gle2, amount2)
 
     def get_store_products_with_discounts(self, store_name: str) -> dict[Product:str]:
-        self.apply(self.get_store_products_with_discounts, self.identifier, store_name)
+        self.apply(self.service.get_store_products_with_discounts, self.identifier, store_name)
+
+    def get_purchase_rules(self, store_name: str) -> Response[dict[int:IRule]]:
+        return self.apply(self.service.get_purchase_rules, self.identifier, store_name)
+
+    def delete_purchase_rule(self, index, store_name):
+        return self.apply(self.service.delete_purchase_rule, self.identifier, store_name, index)
+
+    def add_basket_purchase_rule(self, store_name: str, min_price: float) -> Response:
+        return self.apply(self.service.add_basket_purchase_rule, self.identifier, store_name, min_price)
+
+    def get_discounts(self, store_name: str):
+        return self.apply(self.service.get_discounts, self.identifier, store_name)
+
+    def delete_discount(self, store_name: str, index: int):
+        return self.apply(self.service.delete_discount, self.identifier, store_name, index)

@@ -1,5 +1,5 @@
 {% extends "layout.html" %}
-{% block title %}Add Product{% endblock %}
+{% block title %}Add Purchase Rule{% endblock %}
 
 {% block page %}
 
@@ -7,7 +7,7 @@
     
   {{ form.hidden_tag() }}
     <table>
-        {% for field in (form.product_name, form.category, form.price, form.quantity, form.submit) %}
+        {% for field in (form.product1_name, form.gle1, form.amount1, form.product2_name, form.gle2, form.amount2, form.rule_type, form.submit) %}
             <tr>
                 <td>{{field.label}}&nbsp;</td>
                 <td>{{ field }}</td>

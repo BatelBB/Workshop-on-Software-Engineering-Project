@@ -14,3 +14,5 @@ class CategoryDiscount(IDiscountFor):
                 p.add(product)
         return p
 
+    def __str__(self):
+        return f'discount_for: category: {self.cat_name}'
