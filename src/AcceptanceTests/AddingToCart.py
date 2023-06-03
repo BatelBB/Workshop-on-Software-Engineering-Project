@@ -9,7 +9,7 @@ class AddingToCart(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         cls.app = Proxy()
-        cls.store_owner1 = ("usr1", "password")
+        cls.store_owner1 = ("usr11", "password")
         cls.store_owner2 = ("usr5", "password")
         cls.registered_buyer1 = ("usr2", "password")
         cls.registered_buyer2 = ("usr3", "45sdfgs#$%1")
@@ -95,13 +95,13 @@ class AddingToCart(unittest.TestCase):
     def test_adding_exceeding_product_quantity(self):
         self.set_stores()
         self.app.login(*self.registered_buyer1)
-        self.app.add_to_cart("market", "tuna", 10)
+        self.app.add_to_cart("bakery", "pita", 10)
         r = self.app.add_to_cart("bakery", "bread", 100)
         self.assertFalse(r.success, "error: update product quantity action not failed!")
         cart = self.app.show_cart().result
         self.assertNotIn("bread", cart["bakery"], "error: bread in cart after add to cart action with exceeding amount")
-        self.assertIn("tuna", cart["market"], "error: tuna not in cart")
-        self.assertEqual(10, cart["market"]["tuna"]["Quantity"], "error: tuna quantity doesn't match")
+        self.assertIn("pita", cart["bakery"], "error: pita not in cart")
+        self.assertEqual(10, cart["bakery"]["pita"]["Quantity"], "error: pita quantity doesn't match")
         self.app.logout()
 
     def test_update_product_quantity_with_exceeding_quantity(self):

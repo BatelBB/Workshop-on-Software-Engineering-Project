@@ -10,7 +10,7 @@ class PurchaseCart(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         cls.app = Proxy()
-        cls.store_owner1 = ("usr1", "password")
+        cls.store_owner1 = ("usr11", "password")
         cls.store_owner2 = ("usr4", "password")
         cls.registered_buyer1 = ("usr2", "password")
         cls.registered_buyer2 = ("usr3", "password")

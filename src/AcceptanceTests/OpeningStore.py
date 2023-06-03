@@ -9,7 +9,7 @@ class OpeningStore(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         cls.app = Proxy()
-        cls.registered_user1 = ("usr4", "45sdfgs#$%1")
+        cls.registered_user1 = ("usr44", "45sdfgs#$%1")
         cls.registered_user2 = ("usr5", "45sdfgs#$%1")
         cls.service_admin = ('Kfir', 'Kfir')
 

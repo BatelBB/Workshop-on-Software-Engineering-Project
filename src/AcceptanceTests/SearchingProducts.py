@@ -28,25 +28,24 @@ class SearchingProducts(unittest.TestCase):
         cls.app.login(*cls.service_admin)
         cls.app.shutdown()
 
-    # def test_get_store_products_happy(self):
-    #     self.set_stores()
-    #     r = self.app.get_store_products("bakery")
-    #     self.assertTrue(r.success, "error: get store product failed")
-    #     products = r.result
-    #     # self.assertIn("pita", store, "error: pita not found")
-    #     # self.assertEqual("pita", store["pita"]["Name"], "error: pita name incorrect")
-    #     # self.assertEqual(5, store["pita"]["Price"], "error: pita price incorrect")
-    #     # self.assertEqual("1", store["pita"]["Category"], "error: pita category incorrect")
-    #     # self.assertEqual(None, store["pita"]["Rate"], "error: pita rate incorrect")
-    #     # self.assertEqual(20, store["pita"]["Quantity"], "error: pita quantity incorrect")
-    #     # self.assertIn("bread", store, "error: bread not found")
-    #     # self.assertEqual("bread", store["bread"]["Name"], "error: bread name incorrect")
-    #     # self.assertEqual(10, store["bread"]["Price"], "error: bread price incorrect")
-    #     # self.assertEqual("1", store["bread"]["Category"], "error: bread category incorrect")
-    #     # self.assertEqual(None, store["bread"]["Rate"], "error: bread rate incorrect")
-    #     # self.assertEqual(15, store["bread"]["Quantity"], "error: bread quantity incorrect")
-    #
-    # def test_get_store_products_invalid_store(self):
+    def test_get_store_products_happy(self):
+        self.set_stores()
+        r = self.app.get_store_products("bakery")
+        self.assertTrue(r.success, "error: get store product failed")
+        products = r.result
+        self.assertIn("pita", products, "error: pita not found")
+        self.assertEqual(5, products["pita"]["Price"], "error: pita price incorrect")
+        self.assertEqual("1", products["pita"]["Category"], "error: pita category incorrect")
+        self.assertEqual(None, products["pita"]["Rate"], "error: pita rate incorrect")
+        self.assertIn("bread", products, "error: bread not found")
+        self.assertEqual(10, products["bread"]["Price"], "error: bread price incorrect")
+        self.assertEqual("1", products["bread"]["Category"], "error: bread category incorrect")
+        self.assertEqual(None, products["bread"]["Rate"], "error: bread rate incorrect")
+
+    def test_get_store_products_invalid_store(self):
+        self.set_stores()
+        r = self.app.get_store_products("xxx")
+        self.assertFalse(r.success, "error: get store product succeeded")
 
     def test_get_products_by_name_unique_name(self):
         self.set_stores()
@@ -142,7 +141,7 @@ class SearchingProducts(unittest.TestCase):
         self.assertEqual("2", product["tuna"]["Category"], "error: tuna category incorrect")
         self.assertEqual(None, product["tuna"]["Rate"], "error: tuna rate incorrect")
 
-        product2 = self.app.get_products_by_keywords(["z"]).result
+        product2 = self.app.get_products_by_keywords(["z"]).result[0]
         self.assertEqual(product2, product, "error: keywords 'z' and 'fish' should yield the same result")
 
     def test_get_products_by_keywords_common_keyword(self):

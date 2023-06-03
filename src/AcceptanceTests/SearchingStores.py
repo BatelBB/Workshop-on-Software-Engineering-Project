@@ -9,7 +9,7 @@ class SearchingStores(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         cls.app = Proxy()
-        cls.store_owner1 = ("usr1", "password")
+        cls.store_owner1 = ("usr11", "password")
         cls.store_owner2 = ("usr2", "password")
         cls.service_admin = ('Kfir', 'Kfir')
 

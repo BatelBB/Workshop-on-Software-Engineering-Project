@@ -47,7 +47,7 @@ class Login(unittest.TestCase):
         r = self.app.login(*self.happy_user1)
         self.assertTrue(r.success and r.result, "error: login failed")
         r = self.app.login(*self.happy_user2)
-        self.assertTrue(r.success and r.result, "error: login succeeded "
+        self.assertTrue(r.success and r.result, "error: login failed "
                                                 "while another user is logged in in the same session")
         self.app.logout()
 
