@@ -551,7 +551,7 @@ class Market(IService):
                                      quantity: int) -> Response[bool]:
         actor = self.get_active_user(session_identifier)
         response = self.verify_store_contains_product(self.update_cart_product_quantity.__qualname__, store_name,
-                                                      product_name, 1)
+                                                      product_name, quantity)
         return actor.update_cart_product_quantity(store_name, product_name, quantity) if response.success else response
 
     def change_product_name(self, session_identifier: int, store_name: str, product_old_name: str,
