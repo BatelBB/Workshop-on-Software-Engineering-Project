@@ -82,12 +82,25 @@ class Store:
     def contains(self, product_name: str) -> bool:
         return self.find(product_name) is not None
 
-    def add(self, product: Product, quantity: int) -> None:
+    def add(self, product: Product, quantity: int):
         if product not in self.products:
-            self.products.add(product)
-            self.products_quantities.update({product.name: ProductQuantity(quantity)})
+            if quantity > 0:
+                self.products.add(product)
+                self.products_quantities.update({product.name: ProductQuantity(quantity)})
+                return Response(True)
+            else:
+                return report_error(self.add.__qualname__, "Can't create a product with zero or negative quantity")
         else:
-            self.products_quantities[product.name].refill(quantity)
+            if quantity < 0:
+                if self.products_quantities.get(product.name).quantity + quantity >= 0:
+                    self.products_quantities[product.name].refill(quantity)
+                    return Response(True)
+                else:
+                    return report_error(self.add.__qualname__,
+                                        "Cannot update negative quantity-it will result in negative quantity")
+            else:
+                self.products_quantities[product.name].refill(quantity)
+                return Response(True)
 
     def update(self, product_name: str, quantity: int) -> bool:
         p = Product(product_name)
@@ -106,7 +119,8 @@ class Store:
             return False
 
     def get_product(self, product_name: str) -> Response[Product] | Response[bool]:
-        return Response(product_name) if self.contains(product_name) else report_error(self.get_product.__qualname__,f'Store \'{self.name}\' does not contains Product \'{product_name}\'')
+        return Response(product_name) if self.contains(product_name) else report_error(self.get_product.__qualname__,
+                                                                                       f'Store \'{self.name}\' does not contains Product \'{product_name}\'')
 
     def get_all(self) -> set[Product]:
         return self.products
@@ -237,7 +251,7 @@ class Store:
             self.discounts.calculate_price(basket, self.products)
             price = 0
             for i in basket.items:
-                price += (i.discount_price*i.quantity)
+                price += (i.discount_price * i.quantity)
             return price
 
     def add_to_purchase_history(self, baskets: Basket):
@@ -261,7 +275,8 @@ class Store:
         self.products_with_special_purchase_policy[product_name] = p_policy
         return report("add_product_to_special_purchase_policy", True)
 
-    def add_product_to_bid_purchase_policy(self, product_name: str, p_policy: IPurchasePolicy, staff: list[str]) -> Response[bool]:
+    def add_product_to_bid_purchase_policy(self, product_name: str, p_policy: IPurchasePolicy, staff: list[str]) -> \
+    Response[bool]:
         if not self.reserve(product_name, 1):
             return report_error("add_product_to_bid_purchase_policy",
                                 f'cannot reserve product {product_name} for special purchase policy')
@@ -344,5 +359,5 @@ class Store:
             self.discounts = to_remove.next
             return report(f"deleted: {to_remove.__str__()}", True)
 
-        res = self.discounts.delete_discount(index-1)
+        res = self.discounts.delete_discount(index - 1)
         return res
