@@ -6,7 +6,11 @@ from typing import Any
 import bcrypt
 import os
 from multipledispatch import dispatch
+from reactivex import Observable, empty
+import reactivex.operators as rx_op
 
+from domain.main.Chat.chat_controller import ChatController
+from domain.main.Chat.chat_message import ChatMessage
 from domain.main.ExternalServices.Payment.PaymentServices import IPaymentService
 from domain.main.Store.DiscountPolicy.DIscountsFor.CategoryDiscount import CategoryDiscount
 from domain.main.Store.DiscountPolicy.DIscountsFor.IDiscountFor import IDiscountFor
@@ -46,6 +50,7 @@ class Market(IService):
     def __init__(self):
         self.sessions: ConcurrentDictionary[int, User] = ConcurrentDictionary()
         self.users: ConcurrentDictionary[str, User] = ConcurrentDictionary()
+        self.chat: ChatController = ChatController()
         self.stores: ConcurrentDictionary[str, Store] = ConcurrentDictionary()
         self.appointments: ConcurrentDictionary[str, list[Appointment]] = ConcurrentDictionary()
         self.provision_service: IProvisionService = provisionService()
@@ -56,10 +61,16 @@ class Market(IService):
         self.init_admin()
 
     def init_admin(self):
-        admin_credentials = ('Kfir', 'Kfir')
-        admin_user = User(self, *admin_credentials)
-        admin_user.role = Admin(admin_user)
-        self.users.insert(admin_credentials[0], admin_user)
+        from domain.main.Chat.chat_controller import NOREPLY_USERNAME
+        from bcrypt import gensalt
+        admins = [
+            ('Kfir', 'Kfir'),
+            (NOREPLY_USERNAME, gensalt())  # nobody should try to connect to noreply.
+        ]
+        for admin_credentials in admins:
+            admin_user = User(self, *admin_credentials)
+            admin_user.role = Admin(admin_user)
+            self.users.insert(admin_credentials[0], admin_user)
 
     def generate_session_identifier(self):
         min: int = 1
@@ -854,3 +865,19 @@ class Market(IService):
 
         dict = store.get_products_with_discounts()
         return dict
+
+    def get_messages_including_past(self, session_id: int) -> Observable[ChatMessage]:
+        user = self.get_active_user(session_id)
+        if not user.is_logged_in:
+            return empty()
+
+        return self.chat.all_messages_including_past.pipe(
+            rx_op.filter(lambda x: x.is_participant(user.username))
+        )
+
+    def send_message(self, session_id: int, recipient: str, content: str) -> Response[None]:
+        user = self.get_active_user(session_id)
+        if not user.is_logged_in:
+            return report_error("send_message", "guest can't send a message")
+        self.chat.send(user.username, recipient, content)
+        return report_info("send_message", f"message: {user.username} -> {recipient}: {content}")

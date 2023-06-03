@@ -61,10 +61,14 @@ def init_batel_store(market):
     batel.leave()
 
 
+def init_chat():
+    pass
+
+
 def seed(market: Market):
     market.init_admin()
     for username in ("batel", "yuval", "hagai", "nir_m.", "mendi"):
         market.register(0, username, "123456")
     init_yuvals_store(market)
     init_batel_store(market)
-
+    init_chat()

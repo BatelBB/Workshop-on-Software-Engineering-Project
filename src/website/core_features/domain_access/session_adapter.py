@@ -171,4 +171,9 @@ class SessionAdapter:
         return self._session.purchase_shopping_cart('card', [str(number), f'{exp_month}/{exp_year}', ccv],
                                                     street, apt_number, city, country)
 
+    def send_message(self, recipient: str, content: str):
+        return self._session.send_message(recipient, content)
 
+    @property
+    def all_messages_including_past(self):
+        return self._session.all_messages_including_past

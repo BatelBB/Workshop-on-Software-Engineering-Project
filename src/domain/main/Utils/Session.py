@@ -1,5 +1,8 @@
 from typing import Any
 
+from reactivex import Observable
+
+from domain.main.Chat.chat_message import ChatMessage
 from src.domain.main.Market.Appointment import Appointment
 from src.domain.main.Market.Permissions import Permission
 from src.domain.main.Service import IService
@@ -205,3 +208,10 @@ class Session:
 
     def get_store_products_with_discounts(self, store_name: str) -> dict[Product:str]:
         self.apply(self.get_store_products_with_discounts, self.identifier, store_name)
+
+    @property
+    def all_messages_including_past(self) -> Observable[ChatMessage]:
+        return self.service.get_messages_including_past(self.identifier)
+
+    def send_message(self, recipient: str, content: str):
+        return self.service.send_message(self.identifier, recipient, content)

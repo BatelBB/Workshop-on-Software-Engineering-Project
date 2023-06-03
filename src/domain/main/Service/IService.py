@@ -1,5 +1,8 @@
 from abc import ABC, abstractmethod
 
+from reactivex import Observable
+
+from domain.main.Chat.chat_message import ChatMessage
 from src.domain.main.Market.Appointment import Appointment
 from src.domain.main.Market.Permissions import Permission
 from src.domain.main.Store.Product import Product
@@ -228,4 +231,12 @@ class IService(metaclass=IAbsractConcurrentSingleton):
 
     @abstractmethod
     def get_store_products_with_discounts(self, sessiont_id: int, store_name: str) -> dict[Product:str]:
+        ...
+
+    @abstractmethod
+    def get_messages_including_past(self, session_id: int,) -> Observable[ChatMessage]:
+        ...
+
+    @abstractmethod
+    def send_message(self,session_id: int, recipient: str, content: str) -> Response[None]:
         ...

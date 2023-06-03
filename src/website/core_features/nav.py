@@ -2,7 +2,7 @@ from typing import Tuple
 
 from flask import session, url_for
 from flask_nav import Nav
-from flask_nav.elements import Navbar, View, NavigationItem, Text, Subgroup
+from flask_nav.elements import Navbar, View, NavigationItem, Text, Markup
 
 # from auth import get_user, get_domain_session, get_domain_session_id, is_logged_in
 from website.core_features.domain_access.market_access import get_domain_adapter
@@ -22,5 +22,6 @@ def mynavbar():
         f'Logo here',
         View('Home', 'home.home'),
         *login_part,
-        View('Your cart', 'buying.view_cart')
+        View('Your cart', 'buying.view_cart'),
+        View('{{ inbox }}', 'chat.inbox')
     )
