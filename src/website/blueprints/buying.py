@@ -15,8 +15,9 @@ def view_store(name: str):
     response = domain.get_store(name)
     success, data, message = response.success, response.result, response.description
     permissions = {p.name for p in domain.permissions_of(name)}
-    return render_template("buying/view_store.html", name=name,
-                           success=success, message=message,
-                           products=data,
-                           permissions=permissions
-                       )
+    return render_template(
+        "buying/view_store.html", name=name,
+       success=success, message=message,
+       products=data,
+       permissions=permissions
+   )
