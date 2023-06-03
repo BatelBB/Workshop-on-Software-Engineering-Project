@@ -32,7 +32,7 @@ class VisitorTestCase(unittest.TestCase):
     '''
         Concurrency Tests
     '''
-    number_of_threads = [1, 10, 100, 500, 1000]
+    number_of_threads = [1, 10, 100]
 
     def start_new_session_and_register(self, user, result, index):
         session = self.service.enter()

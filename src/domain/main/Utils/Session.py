@@ -6,7 +6,7 @@ from src.domain.main.Market.Permissions import Permission
 from src.domain.main.Service import IService
 from src.domain.main.Store.Product import Product
 from src.domain.main.Store.Store import Store
-from src.domain.main.User.Cart import Cart
+from src.domain.main.UserModule.Cart import Cart
 from src.domain.main.Utils.Logger import report, Logger
 from src.domain.main.Utils.Response import Response
 

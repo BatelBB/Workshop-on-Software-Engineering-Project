@@ -2,13 +2,13 @@ from abc import ABC
 
 import bcrypt
 
-from src.domain.main.User.Role.Member import Member
+from src.domain.main.UserModule.Role.Member import Member
 from src.domain.main.Utils.Logger import report_error, report_info
 from src.domain.main.Utils.Response import Response
 
 
 class Admin(Member, ABC):
-    from src.domain.main.User.User import User
+    from src.domain.main.UserModule.User import User
     def __init__(self, context: User):
         super().__init__(context)
 
