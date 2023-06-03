@@ -44,7 +44,8 @@ def buy_product(store_name: str, product_name: str):
     amount = basket.result.amounts[product_name] if product_name in basket.result.amounts else None
     form = BuyProductForm()
     if form.validate_on_submit(extra_validators={"amount": [NumberRange(max=product.result.quantity)]}):
-        update_basket = domain.update_cart_product_quantity(store_name, product_name, form.amount.data)
+        update_basket = domain.update_cart_product_quantity(store_name, product_name,
+                            form.amount.data - (amount or 0))
         if update_basket.success:
             flash(f"You have succesfully updated your basket in store {store_name}: {form.amount.data} of {product_name}",
                   category="success")
@@ -54,3 +55,4 @@ def buy_product(store_name: str, product_name: str):
     return render_template("buying/buy_product.html",
         product=product.result, store_name=store_name, amount=amount, form=form
     )
+
