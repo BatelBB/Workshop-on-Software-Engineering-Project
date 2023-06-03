@@ -12,6 +12,7 @@ class IPurchasePolicy(ABC):
     delivery_service: IProvisionService
     price: float
     status = 0
+    is_active = 1
 
     def pay(self) -> bool:
         return self.payment_service.pay(self.price)

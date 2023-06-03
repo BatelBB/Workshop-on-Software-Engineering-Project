@@ -31,3 +31,4 @@ class AuctionPolicy(IPurchasePolicy):
             else:
                 # TODO: notify managers
                 pass
+            self.is_active = 0

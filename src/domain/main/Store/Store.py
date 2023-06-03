@@ -287,8 +287,15 @@ class Store:
         return policy.apply_policy(payment_service, delivery_service, how_much)
 
     def new_day(self):
+        list_to_remove = []
         for p in self.products_with_special_purchase_policy.keys():
             self.products_with_special_purchase_policy[p].new_day()
+            if self.products_with_special_purchase_policy[p].is_active == 0:
+                list_to_remove.append(p)
+
+        for p in list_to_remove:
+            self.products_with_special_purchase_policy.pop(p)
+
 
     def set_to_approve_for_bid(self, product_name: str, staff: list[str]):
         self.products_with_bid_purchase_policy[product_name].set_approval_dict_in_bid_policy(staff)

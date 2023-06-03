@@ -715,7 +715,7 @@ class Market(IService):
                 report_error(self.purchase_with_non_immediate_policy.__qualname__, f'failed getting payment service')
             payment_service.set_information(payment_details, holder, user_id)
             delivery_service = provisionService()
-            delivery_service.set_info(actor.username, 0, address, postal_code, store_name, city, country)
+            delivery_service.set_info(actor.username, 0, address, postal_code, city, country, store_name)
             return store.apply_purchase_policy(payment_service, product_name, delivery_service, how_much)
 
     def start_auction(self, session_id: int, store_name: str, product_name: str, initial_price: float, duration: int) -> \
