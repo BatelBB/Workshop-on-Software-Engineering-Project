@@ -4393,3 +4393,1165 @@ Product: 'pita', Quantity: 20, Price: 8, Discount-Price: 8
 02/06/2023 03:33:30 INFO:	 Admin.login: Admin 'Kfir' is logged in.
 02/06/2023 03:33:30 WARNING:	 Market is closed!
 02/06/2023 03:33:30 WARNING:	 Logger thread exits!
+03/06/2023 11:50:00 INFO:	 Session: 3705658734252723777 has been initialized
+03/06/2023 11:50:00 INFO:	 Visitor.register: 'usr1' is registered!
+03/06/2023 11:50:01 INFO:	 Visitor.register: 'usr5' is registered!
+03/06/2023 11:50:01 INFO:	 Visitor.register: 'usr2' is registered!
+03/06/2023 11:50:01 INFO:	 Visitor.register: 'usr3' is registered!
+03/06/2023 11:50:01 INFO:	 Visitor.login: Member 'usr1' is logged in.
+03/06/2023 11:50:01 INFO:	 Market.open_store: Member 'usr1' opened store 'bakery'.
+03/06/2023 11:50:01 INFO:	 Market.add_product: 'usr1' add 15 units of Product 'bread', Category: '1', Price: 10, Rate: Not rated yet to store 'bakery'
+03/06/2023 11:50:01 INFO:	 Market.add_product: 'usr1' add 20 units of Product 'pita', Category: '1', Price: 5, Rate: Not rated yet to store 'bakery'
+03/06/2023 11:50:01 INFO:	 Member.logout: Member 'usr1' is logged out
+03/06/2023 11:50:02 INFO:	 Visitor.login: Member 'usr5' is logged in.
+03/06/2023 11:50:02 INFO:	 Market.open_store: Member 'usr5' opened store 'market'.
+03/06/2023 11:50:02 INFO:	 Market.add_product: 'usr5' add 40 units of Product 'tuna', Category: '1', Price: 20, Rate: Not rated yet to store 'market'
+03/06/2023 11:50:02 INFO:	 Market.add_product: 'usr5' add 20 units of Product 'pita', Category: '1', Price: 10, Rate: Not rated yet to store 'market'
+03/06/2023 11:50:02 INFO:	 Member.logout: Member 'usr5' is logged out
+03/06/2023 11:50:02 INFO:	 Visitor.login: Member 'usr2' is logged in.
+03/06/2023 11:50:02 INFO:	 Visitor.add_to_cart: 10 units of Product 'tuna' from store 'market' is added to Member 'usr2' cart
+03/06/2023 11:50:02 INFO:	 Visitor.add_to_cart: 100 units of Product 'bread' from store 'bakery' is added to Member 'usr2' cart
+03/06/2023 11:50:02 INFO:	 Member.logout: Member 'usr2' is logged out
+03/06/2023 11:50:02 INFO:	 Market.leave: Visitor left session: 3705658734252723777
+03/06/2023 11:50:02 INFO:	 Session: 1895562904062902552 has been initialized
+03/06/2023 11:50:02 INFO:	 Visitor.register: 'usr1' is registered!
+03/06/2023 11:50:02 INFO:	 Visitor.register: 'usr5' is registered!
+03/06/2023 11:50:03 INFO:	 Visitor.register: 'usr2' is registered!
+03/06/2023 11:50:03 INFO:	 Visitor.register: 'usr3' is registered!
+03/06/2023 11:50:03 INFO:	 Visitor.login: Member 'usr1' is logged in.
+03/06/2023 11:50:03 INFO:	 Market.open_store: Member 'usr1' opened store 'bakery'.
+03/06/2023 11:50:03 INFO:	 Market.add_product: 'usr1' add 15 units of Product 'bread', Category: '1', Price: 10, Rate: Not rated yet to store 'bakery'
+03/06/2023 11:50:03 INFO:	 Market.add_product: 'usr1' add 20 units of Product 'pita', Category: '1', Price: 5, Rate: Not rated yet to store 'bakery'
+03/06/2023 11:50:03 INFO:	 Member.logout: Member 'usr1' is logged out
+03/06/2023 11:50:03 INFO:	 Visitor.login: Member 'usr5' is logged in.
+03/06/2023 11:50:03 INFO:	 Market.open_store: Member 'usr5' opened store 'market'.
+03/06/2023 11:50:03 INFO:	 Market.add_product: 'usr5' add 40 units of Product 'tuna', Category: '1', Price: 20, Rate: Not rated yet to store 'market'
+03/06/2023 11:50:03 INFO:	 Market.add_product: 'usr5' add 20 units of Product 'pita', Category: '1', Price: 10, Rate: Not rated yet to store 'market'
+03/06/2023 11:50:03 INFO:	 Member.logout: Member 'usr5' is logged out
+03/06/2023 11:50:04 INFO:	 Visitor.login: Member 'usr2' is logged in.
+03/06/2023 11:50:04 INFO:	 Visitor.add_to_cart: 10 units of Product 'tuna' from store 'market' is added to Member 'usr2' cart
+03/06/2023 11:50:04 ERROR:	 Market.add_to_cart: Store 'market' does not contains Product 'xxx'
+03/06/2023 11:50:04 INFO:	 Market.show_cart: Cart of Member 'usr2':
+Store 'market'
+Product: 'tuna', Quantity: 10, Price: 20, Discount-Price: 20
+
+03/06/2023 11:50:04 INFO:	 Member.logout: Member 'usr2' is logged out
+03/06/2023 11:50:04 ERROR:	 Visitor.logout: Visitor attempted to logout.
+03/06/2023 11:50:04 INFO:	 Market.leave: Visitor left session: 1895562904062902552
+03/06/2023 11:50:04 INFO:	 Session: 2228396797153967988 has been initialized
+03/06/2023 11:50:04 INFO:	 Visitor.register: 'usr1' is registered!
+03/06/2023 11:50:04 INFO:	 Visitor.register: 'usr5' is registered!
+03/06/2023 11:50:04 INFO:	 Visitor.register: 'usr2' is registered!
+03/06/2023 11:50:05 INFO:	 Visitor.register: 'usr3' is registered!
+03/06/2023 11:50:05 INFO:	 Visitor.login: Member 'usr1' is logged in.
+03/06/2023 11:50:05 INFO:	 Market.open_store: Member 'usr1' opened store 'bakery'.
+03/06/2023 11:50:05 INFO:	 Market.add_product: 'usr1' add 15 units of Product 'bread', Category: '1', Price: 10, Rate: Not rated yet to store 'bakery'
+03/06/2023 11:50:05 INFO:	 Market.add_product: 'usr1' add 20 units of Product 'pita', Category: '1', Price: 5, Rate: Not rated yet to store 'bakery'
+03/06/2023 11:50:05 INFO:	 Member.logout: Member 'usr1' is logged out
+03/06/2023 11:50:05 INFO:	 Visitor.login: Member 'usr5' is logged in.
+03/06/2023 11:50:05 INFO:	 Market.open_store: Member 'usr5' opened store 'market'.
+03/06/2023 11:50:05 INFO:	 Market.add_product: 'usr5' add 40 units of Product 'tuna', Category: '1', Price: 20, Rate: Not rated yet to store 'market'
+03/06/2023 11:50:05 INFO:	 Market.add_product: 'usr5' add 20 units of Product 'pita', Category: '1', Price: 10, Rate: Not rated yet to store 'market'
+03/06/2023 11:50:05 INFO:	 Member.logout: Member 'usr5' is logged out
+03/06/2023 11:50:05 INFO:	 Visitor.login: Member 'usr2' is logged in.
+03/06/2023 11:50:05 INFO:	 Visitor.add_to_cart: 10 units of Product 'tuna' from store 'market' is added to Member 'usr2' cart
+03/06/2023 11:50:05 ERROR:	 Market.add_to_cart: Store 'xxx' is not registered to the market.
+03/06/2023 11:50:05 INFO:	 Market.show_cart: Cart of Member 'usr2':
+Store 'market'
+Product: 'tuna', Quantity: 10, Price: 20, Discount-Price: 20
+
+03/06/2023 11:50:05 INFO:	 Member.logout: Member 'usr2' is logged out
+03/06/2023 11:50:05 ERROR:	 Visitor.logout: Visitor attempted to logout.
+03/06/2023 11:50:05 INFO:	 Market.leave: Visitor left session: 2228396797153967988
+03/06/2023 11:50:05 INFO:	 Session: 7097867426879054335 has been initialized
+03/06/2023 11:50:06 INFO:	 Visitor.register: 'usr1' is registered!
+03/06/2023 11:50:06 INFO:	 Visitor.register: 'usr5' is registered!
+03/06/2023 11:50:06 INFO:	 Visitor.register: 'usr2' is registered!
+03/06/2023 11:50:06 INFO:	 Visitor.register: 'usr3' is registered!
+03/06/2023 11:50:07 INFO:	 Visitor.login: Member 'usr1' is logged in.
+03/06/2023 11:50:07 INFO:	 Market.open_store: Member 'usr1' opened store 'bakery'.
+03/06/2023 11:50:07 INFO:	 Market.add_product: 'usr1' add 15 units of Product 'bread', Category: '1', Price: 10, Rate: Not rated yet to store 'bakery'
+03/06/2023 11:50:07 INFO:	 Market.add_product: 'usr1' add 20 units of Product 'pita', Category: '1', Price: 5, Rate: Not rated yet to store 'bakery'
+03/06/2023 11:50:07 INFO:	 Member.logout: Member 'usr1' is logged out
+03/06/2023 11:50:07 INFO:	 Visitor.login: Member 'usr5' is logged in.
+03/06/2023 11:50:07 INFO:	 Market.open_store: Member 'usr5' opened store 'market'.
+03/06/2023 11:50:07 INFO:	 Market.add_product: 'usr5' add 40 units of Product 'tuna', Category: '1', Price: 20, Rate: Not rated yet to store 'market'
+03/06/2023 11:50:07 INFO:	 Market.add_product: 'usr5' add 20 units of Product 'pita', Category: '1', Price: 10, Rate: Not rated yet to store 'market'
+03/06/2023 11:50:07 INFO:	 Member.logout: Member 'usr5' is logged out
+03/06/2023 11:50:07 INFO:	 Visitor.login: Member 'usr2' is logged in.
+03/06/2023 11:50:07 INFO:	 Visitor.add_to_cart: 0 units of Product 'tuna' from store 'market' is added to Member 'usr2' cart
+03/06/2023 11:50:07 INFO:	 Member.logout: Member 'usr2' is logged out
+03/06/2023 11:50:07 INFO:	 Market.leave: Visitor left session: 7097867426879054335
+03/06/2023 11:50:07 INFO:	 Session: 1485853384227748898 has been initialized
+03/06/2023 11:50:07 INFO:	 Visitor.register: 'usr1' is registered!
+03/06/2023 11:50:08 INFO:	 Visitor.register: 'usr5' is registered!
+03/06/2023 11:50:08 INFO:	 Visitor.register: 'usr2' is registered!
+03/06/2023 11:50:08 INFO:	 Visitor.register: 'usr3' is registered!
+03/06/2023 11:50:09 INFO:	 Visitor.login: Member 'usr1' is logged in.
+03/06/2023 11:50:09 INFO:	 Market.open_store: Member 'usr1' opened store 'bakery'.
+03/06/2023 11:50:09 INFO:	 Market.add_product: 'usr1' add 15 units of Product 'bread', Category: '1', Price: 10, Rate: Not rated yet to store 'bakery'
+03/06/2023 11:50:09 INFO:	 Market.add_product: 'usr1' add 20 units of Product 'pita', Category: '1', Price: 5, Rate: Not rated yet to store 'bakery'
+03/06/2023 11:50:09 INFO:	 Member.logout: Member 'usr1' is logged out
+03/06/2023 11:50:09 INFO:	 Visitor.login: Member 'usr5' is logged in.
+03/06/2023 11:50:09 INFO:	 Market.open_store: Member 'usr5' opened store 'market'.
+03/06/2023 11:50:09 INFO:	 Market.add_product: 'usr5' add 40 units of Product 'tuna', Category: '1', Price: 20, Rate: Not rated yet to store 'market'
+03/06/2023 11:50:09 INFO:	 Market.add_product: 'usr5' add 20 units of Product 'pita', Category: '1', Price: 10, Rate: Not rated yet to store 'market'
+03/06/2023 11:50:09 INFO:	 Member.logout: Member 'usr5' is logged out
+03/06/2023 11:50:09 INFO:	 Visitor.add_to_cart: 5 units of Product 'bread' from store 'bakery' is added to Visitor cart
+03/06/2023 11:50:09 INFO:	 Visitor.add_to_cart: 10 units of Product 'tuna' from store 'market' is added to Visitor cart
+03/06/2023 11:50:09 INFO:	 Market.show_cart: Cart of Visitor:
+Store 'bakery'
+Product: 'bread', Quantity: 5, Price: 10, Discount-Price: 10
+Store 'market'
+Product: 'tuna', Quantity: 10, Price: 20, Discount-Price: 20
+
+03/06/2023 11:50:09 ERROR:	 Visitor.logout: Visitor attempted to logout.
+03/06/2023 11:50:09 INFO:	 Market.leave: Visitor left session: 1485853384227748898
+03/06/2023 11:50:09 INFO:	 Session: 6127228517750072254 has been initialized
+03/06/2023 11:50:09 INFO:	 Visitor.register: 'usr1' is registered!
+03/06/2023 11:50:09 INFO:	 Visitor.register: 'usr5' is registered!
+03/06/2023 11:50:10 INFO:	 Visitor.register: 'usr2' is registered!
+03/06/2023 11:50:10 INFO:	 Visitor.register: 'usr3' is registered!
+03/06/2023 11:50:10 INFO:	 Visitor.login: Member 'usr1' is logged in.
+03/06/2023 11:50:10 INFO:	 Market.open_store: Member 'usr1' opened store 'bakery'.
+03/06/2023 11:50:10 INFO:	 Market.add_product: 'usr1' add 15 units of Product 'bread', Category: '1', Price: 10, Rate: Not rated yet to store 'bakery'
+03/06/2023 11:50:10 INFO:	 Market.add_product: 'usr1' add 20 units of Product 'pita', Category: '1', Price: 5, Rate: Not rated yet to store 'bakery'
+03/06/2023 11:50:10 INFO:	 Member.logout: Member 'usr1' is logged out
+03/06/2023 11:50:10 INFO:	 Visitor.login: Member 'usr5' is logged in.
+03/06/2023 11:50:10 INFO:	 Market.open_store: Member 'usr5' opened store 'market'.
+03/06/2023 11:50:10 INFO:	 Market.add_product: 'usr5' add 40 units of Product 'tuna', Category: '1', Price: 20, Rate: Not rated yet to store 'market'
+03/06/2023 11:50:10 INFO:	 Market.add_product: 'usr5' add 20 units of Product 'pita', Category: '1', Price: 10, Rate: Not rated yet to store 'market'
+03/06/2023 11:50:10 INFO:	 Member.logout: Member 'usr5' is logged out
+03/06/2023 11:50:11 INFO:	 Visitor.login: Member 'usr2' is logged in.
+03/06/2023 11:50:11 INFO:	 Visitor.add_to_cart: 5 units of Product 'bread' from store 'bakery' is added to Member 'usr2' cart
+03/06/2023 11:50:11 INFO:	 Visitor.add_to_cart: 10 units of Product 'pita' from store 'bakery' is added to Member 'usr2' cart
+03/06/2023 11:50:11 INFO:	 Visitor.add_to_cart: 10 units of Product 'pita' from store 'market' is added to Member 'usr2' cart
+03/06/2023 11:50:11 INFO:	 Visitor.add_to_cart: 20 units of Product 'tuna' from store 'market' is added to Member 'usr2' cart
+03/06/2023 11:50:11 INFO:	 Market.show_cart: Cart of Member 'usr2':
+Store 'bakery'
+Product: 'bread', Quantity: 5, Price: 10, Discount-Price: 10
+Product: 'pita', Quantity: 10, Price: 5, Discount-Price: 5
+Store 'market'
+Product: 'pita', Quantity: 10, Price: 10, Discount-Price: 10
+Product: 'tuna', Quantity: 20, Price: 20, Discount-Price: 20
+
+03/06/2023 11:50:11 INFO:	 Member.logout: Member 'usr2' is logged out
+03/06/2023 11:50:11 ERROR:	 Visitor.logout: Visitor attempted to logout.
+03/06/2023 11:50:11 INFO:	 Market.leave: Visitor left session: 6127228517750072254
+03/06/2023 11:50:11 INFO:	 Session: 5076710108396487014 has been initialized
+03/06/2023 11:50:11 INFO:	 Visitor.register: 'usr1' is registered!
+03/06/2023 11:50:11 INFO:	 Visitor.register: 'usr5' is registered!
+03/06/2023 11:50:11 INFO:	 Visitor.register: 'usr2' is registered!
+03/06/2023 11:50:12 INFO:	 Visitor.register: 'usr3' is registered!
+03/06/2023 11:50:12 INFO:	 Visitor.login: Member 'usr1' is logged in.
+03/06/2023 11:50:12 INFO:	 Market.open_store: Member 'usr1' opened store 'bakery'.
+03/06/2023 11:50:12 INFO:	 Market.add_product: 'usr1' add 15 units of Product 'bread', Category: '1', Price: 10, Rate: Not rated yet to store 'bakery'
+03/06/2023 11:50:12 INFO:	 Market.add_product: 'usr1' add 20 units of Product 'pita', Category: '1', Price: 5, Rate: Not rated yet to store 'bakery'
+03/06/2023 11:50:12 INFO:	 Member.logout: Member 'usr1' is logged out
+03/06/2023 11:50:12 INFO:	 Visitor.login: Member 'usr5' is logged in.
+03/06/2023 11:50:12 INFO:	 Market.open_store: Member 'usr5' opened store 'market'.
+03/06/2023 11:50:12 INFO:	 Market.add_product: 'usr5' add 40 units of Product 'tuna', Category: '1', Price: 20, Rate: Not rated yet to store 'market'
+03/06/2023 11:50:12 INFO:	 Market.add_product: 'usr5' add 20 units of Product 'pita', Category: '1', Price: 10, Rate: Not rated yet to store 'market'
+03/06/2023 11:50:12 INFO:	 Member.logout: Member 'usr5' is logged out
+03/06/2023 11:50:12 INFO:	 Visitor.login: Member 'usr2' is logged in.
+03/06/2023 11:50:12 INFO:	 Visitor.add_to_cart: 5 units of Product 'bread' from store 'bakery' is added to Member 'usr2' cart
+03/06/2023 11:50:12 INFO:	 Visitor.add_to_cart: 10 units of Product 'pita' from store 'market' is added to Member 'usr2' cart
+03/06/2023 11:50:12 INFO:	 Visitor.remove_product_from_cart: Product 'bread' is removed from Member 'usr2' cart
+03/06/2023 11:50:12 INFO:	 Market.show_cart: Cart of Member 'usr2':
+Store 'bakery'
+Product: 'bread', Quantity: 5, Price: 10, Discount-Price: 10
+Store 'market'
+Product: 'pita', Quantity: 10, Price: 10, Discount-Price: 10
+
+03/06/2023 11:50:12 INFO:	 Member.logout: Member 'usr2' is logged out
+03/06/2023 11:50:12 INFO:	 Market.leave: Visitor left session: 5076710108396487014
+03/06/2023 11:50:12 INFO:	 Session: 5713190926841452529 has been initialized
+03/06/2023 11:50:13 INFO:	 Visitor.register: 'usr1' is registered!
+03/06/2023 11:50:13 INFO:	 Visitor.register: 'usr5' is registered!
+03/06/2023 11:50:13 INFO:	 Visitor.register: 'usr2' is registered!
+03/06/2023 11:50:13 INFO:	 Visitor.register: 'usr3' is registered!
+03/06/2023 11:50:14 INFO:	 Visitor.login: Member 'usr1' is logged in.
+03/06/2023 11:50:14 INFO:	 Market.open_store: Member 'usr1' opened store 'bakery'.
+03/06/2023 11:50:14 INFO:	 Market.add_product: 'usr1' add 15 units of Product 'bread', Category: '1', Price: 10, Rate: Not rated yet to store 'bakery'
+03/06/2023 11:50:14 INFO:	 Market.add_product: 'usr1' add 20 units of Product 'pita', Category: '1', Price: 5, Rate: Not rated yet to store 'bakery'
+03/06/2023 11:50:14 INFO:	 Member.logout: Member 'usr1' is logged out
+03/06/2023 11:50:14 INFO:	 Visitor.login: Member 'usr5' is logged in.
+03/06/2023 11:50:14 INFO:	 Market.open_store: Member 'usr5' opened store 'market'.
+03/06/2023 11:50:14 INFO:	 Market.add_product: 'usr5' add 40 units of Product 'tuna', Category: '1', Price: 20, Rate: Not rated yet to store 'market'
+03/06/2023 11:50:14 INFO:	 Market.add_product: 'usr5' add 20 units of Product 'pita', Category: '1', Price: 10, Rate: Not rated yet to store 'market'
+03/06/2023 11:50:14 INFO:	 Member.logout: Member 'usr5' is logged out
+03/06/2023 11:50:14 INFO:	 Visitor.login: Member 'usr2' is logged in.
+03/06/2023 11:50:14 INFO:	 Visitor.add_to_cart: 5 units of Product 'bread' from store 'bakery' is added to Member 'usr2' cart
+03/06/2023 11:50:14 INFO:	 Visitor.add_to_cart: 10 units of Product 'tuna' from store 'market' is added to Member 'usr2' cart
+03/06/2023 11:50:14 ERROR:	 Market.remove_product_from_cart: Store 'bakery' does not contains Product 'xxx'
+03/06/2023 11:50:14 INFO:	 Market.show_cart: Cart of Member 'usr2':
+Store 'bakery'
+Product: 'bread', Quantity: 5, Price: 10, Discount-Price: 10
+Store 'market'
+Product: 'tuna', Quantity: 10, Price: 20, Discount-Price: 20
+
+03/06/2023 11:50:14 INFO:	 Member.logout: Member 'usr2' is logged out
+03/06/2023 11:50:14 ERROR:	 Visitor.logout: Visitor attempted to logout.
+03/06/2023 11:50:14 INFO:	 Market.leave: Visitor left session: 5713190926841452529
+03/06/2023 11:50:14 INFO:	 Session: 1456462779678845375 has been initialized
+03/06/2023 11:50:15 INFO:	 Visitor.register: 'usr1' is registered!
+03/06/2023 11:50:15 INFO:	 Visitor.register: 'usr5' is registered!
+03/06/2023 11:50:15 INFO:	 Visitor.register: 'usr2' is registered!
+03/06/2023 11:50:15 INFO:	 Visitor.register: 'usr3' is registered!
+03/06/2023 11:50:16 INFO:	 Visitor.login: Member 'usr1' is logged in.
+03/06/2023 11:50:16 INFO:	 Market.open_store: Member 'usr1' opened store 'bakery'.
+03/06/2023 11:50:16 INFO:	 Market.add_product: 'usr1' add 15 units of Product 'bread', Category: '1', Price: 10, Rate: Not rated yet to store 'bakery'
+03/06/2023 11:50:16 INFO:	 Market.add_product: 'usr1' add 20 units of Product 'pita', Category: '1', Price: 5, Rate: Not rated yet to store 'bakery'
+03/06/2023 11:50:16 INFO:	 Member.logout: Member 'usr1' is logged out
+03/06/2023 11:50:16 INFO:	 Visitor.login: Member 'usr5' is logged in.
+03/06/2023 11:50:16 INFO:	 Market.open_store: Member 'usr5' opened store 'market'.
+03/06/2023 11:50:16 INFO:	 Market.add_product: 'usr5' add 40 units of Product 'tuna', Category: '1', Price: 20, Rate: Not rated yet to store 'market'
+03/06/2023 11:50:16 INFO:	 Market.add_product: 'usr5' add 20 units of Product 'pita', Category: '1', Price: 10, Rate: Not rated yet to store 'market'
+03/06/2023 11:50:16 INFO:	 Member.logout: Member 'usr5' is logged out
+03/06/2023 11:50:16 INFO:	 Visitor.login: Member 'usr2' is logged in.
+03/06/2023 11:50:16 INFO:	 Visitor.add_to_cart: 5 units of Product 'bread' from store 'bakery' is added to Member 'usr2' cart
+03/06/2023 11:50:16 INFO:	 Visitor.add_to_cart: 10 units of Product 'tuna' from store 'market' is added to Member 'usr2' cart
+03/06/2023 11:50:16 ERROR:	 Market.remove_product_from_cart: Store 'xxx' is not registered to the market.
+03/06/2023 11:50:16 INFO:	 Market.show_cart: Cart of Member 'usr2':
+Store 'bakery'
+Product: 'bread', Quantity: 5, Price: 10, Discount-Price: 10
+Store 'market'
+Product: 'tuna', Quantity: 10, Price: 20, Discount-Price: 20
+
+03/06/2023 11:50:16 INFO:	 Member.logout: Member 'usr2' is logged out
+03/06/2023 11:50:16 ERROR:	 Visitor.logout: Visitor attempted to logout.
+03/06/2023 11:50:16 INFO:	 Market.leave: Visitor left session: 1456462779678845375
+03/06/2023 11:50:16 INFO:	 Session: 8815066805175769308 has been initialized
+03/06/2023 11:50:16 INFO:	 Visitor.register: 'usr1' is registered!
+03/06/2023 11:50:17 INFO:	 Visitor.register: 'usr5' is registered!
+03/06/2023 11:50:17 INFO:	 Visitor.register: 'usr2' is registered!
+03/06/2023 11:50:17 INFO:	 Visitor.register: 'usr3' is registered!
+03/06/2023 11:50:17 INFO:	 Visitor.login: Member 'usr1' is logged in.
+03/06/2023 11:50:17 INFO:	 Market.open_store: Member 'usr1' opened store 'bakery'.
+03/06/2023 11:50:17 INFO:	 Market.add_product: 'usr1' add 15 units of Product 'bread', Category: '1', Price: 10, Rate: Not rated yet to store 'bakery'
+03/06/2023 11:50:17 INFO:	 Market.add_product: 'usr1' add 20 units of Product 'pita', Category: '1', Price: 5, Rate: Not rated yet to store 'bakery'
+03/06/2023 11:50:17 INFO:	 Member.logout: Member 'usr1' is logged out
+03/06/2023 11:50:18 INFO:	 Visitor.login: Member 'usr5' is logged in.
+03/06/2023 11:50:18 INFO:	 Market.open_store: Member 'usr5' opened store 'market'.
+03/06/2023 11:50:18 INFO:	 Market.add_product: 'usr5' add 40 units of Product 'tuna', Category: '1', Price: 20, Rate: Not rated yet to store 'market'
+03/06/2023 11:50:18 INFO:	 Market.add_product: 'usr5' add 20 units of Product 'pita', Category: '1', Price: 10, Rate: Not rated yet to store 'market'
+03/06/2023 11:50:18 INFO:	 Member.logout: Member 'usr5' is logged out
+03/06/2023 11:50:18 INFO:	 Visitor.login: Member 'usr2' is logged in.
+03/06/2023 11:50:18 INFO:	 Visitor.add_to_cart: 5 units of Product 'bread' from store 'bakery' is added to Member 'usr2' cart
+03/06/2023 11:50:18 INFO:	 Visitor.add_to_cart: 10 units of Product 'pita' from store 'market' is added to Member 'usr2' cart
+03/06/2023 11:50:18 INFO:	 Visitor.update_cart_product_quantity: Product 'bread', of Member 'usr2' cart is set to None.
+03/06/2023 11:50:18 INFO:	 Market.show_cart: Cart of Member 'usr2':
+Store 'bakery'
+Product: 'bread', Quantity: 15, Price: 10, Discount-Price: 10
+Store 'market'
+Product: 'pita', Quantity: 10, Price: 10, Discount-Price: 10
+
+03/06/2023 11:50:18 INFO:	 Member.logout: Member 'usr2' is logged out
+03/06/2023 11:50:18 INFO:	 Market.leave: Visitor left session: 8815066805175769308
+03/06/2023 11:50:18 INFO:	 Session: 2058322742015903424 has been initialized
+03/06/2023 11:50:18 INFO:	 Visitor.register: 'usr1' is registered!
+03/06/2023 11:50:18 INFO:	 Visitor.register: 'usr5' is registered!
+03/06/2023 11:50:19 INFO:	 Visitor.register: 'usr2' is registered!
+03/06/2023 11:50:19 INFO:	 Visitor.register: 'usr3' is registered!
+03/06/2023 11:50:19 INFO:	 Visitor.login: Member 'usr1' is logged in.
+03/06/2023 11:50:19 INFO:	 Market.open_store: Member 'usr1' opened store 'bakery'.
+03/06/2023 11:50:19 INFO:	 Market.add_product: 'usr1' add 15 units of Product 'bread', Category: '1', Price: 10, Rate: Not rated yet to store 'bakery'
+03/06/2023 11:50:19 INFO:	 Market.add_product: 'usr1' add 20 units of Product 'pita', Category: '1', Price: 5, Rate: Not rated yet to store 'bakery'
+03/06/2023 11:50:19 INFO:	 Member.logout: Member 'usr1' is logged out
+03/06/2023 11:50:19 INFO:	 Visitor.login: Member 'usr5' is logged in.
+03/06/2023 11:50:19 INFO:	 Market.open_store: Member 'usr5' opened store 'market'.
+03/06/2023 11:50:19 INFO:	 Market.add_product: 'usr5' add 40 units of Product 'tuna', Category: '1', Price: 20, Rate: Not rated yet to store 'market'
+03/06/2023 11:50:19 INFO:	 Market.add_product: 'usr5' add 20 units of Product 'pita', Category: '1', Price: 10, Rate: Not rated yet to store 'market'
+03/06/2023 11:50:19 INFO:	 Member.logout: Member 'usr5' is logged out
+03/06/2023 11:50:20 INFO:	 Visitor.login: Member 'usr2' is logged in.
+03/06/2023 11:50:20 INFO:	 Visitor.add_to_cart: 5 units of Product 'bread' from store 'bakery' is added to Member 'usr2' cart
+03/06/2023 11:50:20 INFO:	 Visitor.add_to_cart: 10 units of Product 'pita' from store 'market' is added to Member 'usr2' cart
+03/06/2023 11:50:20 INFO:	 Visitor.update_cart_product_quantity: Product 'bread', of Member 'usr2' cart is set to None.
+03/06/2023 11:50:20 INFO:	 Member.logout: Member 'usr2' is logged out
+03/06/2023 11:50:20 INFO:	 Market.leave: Visitor left session: 2058322742015903424
+03/06/2023 11:50:20 INFO:	 Session: 7628128250277466068 has been initialized
+03/06/2023 11:50:20 ERROR:	 Admin.login: Admin 'Kfir' enter an incorrect password.
+03/06/2023 11:50:20 WARNING:	 Market is closed!
+03/06/2023 11:50:20 WARNING:	 Logger thread exits!
+03/06/2023 11:55:52 INFO:	 Session: 7379444730443745501 has been initialized
+03/06/2023 11:55:53 INFO:	 Visitor.register: 'usr1' is registered!
+03/06/2023 11:55:53 INFO:	 Visitor.register: 'usr5' is registered!
+03/06/2023 11:55:53 INFO:	 Visitor.register: 'usr2' is registered!
+03/06/2023 11:55:53 INFO:	 Visitor.register: 'usr3' is registered!
+03/06/2023 11:55:53 INFO:	 Visitor.login: Member 'usr1' is logged in.
+03/06/2023 11:55:53 INFO:	 Market.open_store: Member 'usr1' opened store 'bakery'.
+03/06/2023 11:55:53 INFO:	 Market.add_product: 'usr1' add 15 units of Product 'bread', Category: '1', Price: 10, Rate: Not rated yet to store 'bakery'
+03/06/2023 11:55:53 INFO:	 Market.add_product: 'usr1' add 20 units of Product 'pita', Category: '1', Price: 5, Rate: Not rated yet to store 'bakery'
+03/06/2023 11:55:53 INFO:	 Member.logout: Member 'usr1' is logged out
+03/06/2023 11:55:54 INFO:	 Visitor.login: Member 'usr5' is logged in.
+03/06/2023 11:55:54 INFO:	 Market.open_store: Member 'usr5' opened store 'market'.
+03/06/2023 11:55:54 INFO:	 Market.add_product: 'usr5' add 40 units of Product 'tuna', Category: '1', Price: 20, Rate: Not rated yet to store 'market'
+03/06/2023 11:55:54 INFO:	 Market.add_product: 'usr5' add 20 units of Product 'pita', Category: '1', Price: 10, Rate: Not rated yet to store 'market'
+03/06/2023 11:55:54 INFO:	 Member.logout: Member 'usr5' is logged out
+03/06/2023 11:55:54 INFO:	 Visitor.login: Member 'usr2' is logged in.
+03/06/2023 11:55:54 INFO:	 Visitor.add_to_cart: 10 units of Product 'tuna' from store 'market' is added to Member 'usr2' cart
+03/06/2023 11:55:54 ERROR:	 Market.add_to_cart: Store 'bakery' does not contains Product 'bread'
+03/06/2023 11:55:54 INFO:	 Market.show_cart: Cart of Member 'usr2':
+Store 'market'
+Product: 'tuna', Quantity: 10, Price: 20, Discount-Price: 20
+
+03/06/2023 11:55:54 INFO:	 Member.logout: Member 'usr2' is logged out
+03/06/2023 11:55:54 INFO:	 Market.leave: Visitor left session: 7379444730443745501
+03/06/2023 11:55:54 INFO:	 Session: 8823501249742141847 has been initialized
+03/06/2023 11:55:54 ERROR:	 Admin.login: Admin 'Kfir' enter an incorrect password.
+03/06/2023 11:55:54 WARNING:	 Market is closed!
+03/06/2023 11:55:54 WARNING:	 Logger thread exits!
+03/06/2023 11:56:12 INFO:	 Session: 8035854675634327191 has been initialized
+03/06/2023 11:56:12 INFO:	 Visitor.register: 'usr1' is registered!
+03/06/2023 11:56:12 INFO:	 Visitor.register: 'usr5' is registered!
+03/06/2023 11:56:12 INFO:	 Visitor.register: 'usr2' is registered!
+03/06/2023 11:56:13 INFO:	 Visitor.register: 'usr3' is registered!
+03/06/2023 11:56:13 INFO:	 Visitor.login: Member 'usr1' is logged in.
+03/06/2023 11:56:13 INFO:	 Market.open_store: Member 'usr1' opened store 'bakery'.
+03/06/2023 11:56:13 INFO:	 Market.add_product: 'usr1' add 15 units of Product 'bread', Category: '1', Price: 10, Rate: Not rated yet to store 'bakery'
+03/06/2023 11:56:13 INFO:	 Market.add_product: 'usr1' add 20 units of Product 'pita', Category: '1', Price: 5, Rate: Not rated yet to store 'bakery'
+03/06/2023 11:56:13 INFO:	 Member.logout: Member 'usr1' is logged out
+03/06/2023 11:56:13 INFO:	 Visitor.login: Member 'usr5' is logged in.
+03/06/2023 11:56:13 INFO:	 Market.open_store: Member 'usr5' opened store 'market'.
+03/06/2023 11:56:13 INFO:	 Market.add_product: 'usr5' add 40 units of Product 'tuna', Category: '1', Price: 20, Rate: Not rated yet to store 'market'
+03/06/2023 11:56:13 INFO:	 Market.add_product: 'usr5' add 20 units of Product 'pita', Category: '1', Price: 10, Rate: Not rated yet to store 'market'
+03/06/2023 11:56:13 INFO:	 Member.logout: Member 'usr5' is logged out
+03/06/2023 11:56:13 INFO:	 Visitor.login: Member 'usr2' is logged in.
+03/06/2023 11:56:13 INFO:	 Visitor.add_to_cart: 10 units of Product 'tuna' from store 'market' is added to Member 'usr2' cart
+03/06/2023 11:56:13 ERROR:	 Market.add_to_cart: Store 'bakery' does not contains Product 'bread'
+03/06/2023 11:56:13 INFO:	 Market.show_cart: Cart of Member 'usr2':
+Store 'market'
+Product: 'tuna', Quantity: 10, Price: 20, Discount-Price: 20
+
+03/06/2023 11:56:13 INFO:	 Member.logout: Member 'usr2' is logged out
+03/06/2023 11:56:13 INFO:	 Market.leave: Visitor left session: 8035854675634327191
+03/06/2023 11:56:13 INFO:	 Session: 4333343933262775408 has been initialized
+03/06/2023 11:56:13 ERROR:	 Admin.login: Admin 'Kfir' enter an incorrect password.
+03/06/2023 11:56:13 WARNING:	 Market is closed!
+03/06/2023 11:56:13 WARNING:	 Logger thread exits!
+03/06/2023 11:57:40 INFO:	 Session: 7436406111896591825 has been initialized
+03/06/2023 11:57:40 INFO:	 Visitor.register: 'usr1' is registered!
+03/06/2023 11:57:40 INFO:	 Visitor.register: 'usr5' is registered!
+03/06/2023 11:57:40 INFO:	 Visitor.register: 'usr2' is registered!
+03/06/2023 11:57:41 INFO:	 Visitor.register: 'usr3' is registered!
+03/06/2023 11:57:41 INFO:	 Visitor.login: Member 'usr1' is logged in.
+03/06/2023 11:57:41 INFO:	 Market.open_store: Member 'usr1' opened store 'bakery'.
+03/06/2023 11:57:41 INFO:	 Market.add_product: 'usr1' add 15 units of Product 'bread', Category: '1', Price: 10, Rate: Not rated yet to store 'bakery'
+03/06/2023 11:57:41 INFO:	 Market.add_product: 'usr1' add 20 units of Product 'pita', Category: '1', Price: 5, Rate: Not rated yet to store 'bakery'
+03/06/2023 11:57:41 INFO:	 Member.logout: Member 'usr1' is logged out
+03/06/2023 11:57:41 INFO:	 Visitor.login: Member 'usr5' is logged in.
+03/06/2023 11:57:41 INFO:	 Market.open_store: Member 'usr5' opened store 'market'.
+03/06/2023 11:57:41 INFO:	 Market.add_product: 'usr5' add 40 units of Product 'tuna', Category: '1', Price: 20, Rate: Not rated yet to store 'market'
+03/06/2023 11:57:41 INFO:	 Market.add_product: 'usr5' add 20 units of Product 'pita', Category: '1', Price: 10, Rate: Not rated yet to store 'market'
+03/06/2023 11:57:41 INFO:	 Member.logout: Member 'usr5' is logged out
+03/06/2023 11:57:41 INFO:	 Visitor.login: Member 'usr2' is logged in.
+03/06/2023 11:58:55 INFO:	 Visitor.add_to_cart: 10 units of Product 'tuna' from store 'market' is added to Member 'usr2' cart
+03/06/2023 11:58:55 ERROR:	 Market.add_to_cart: Store 'bakery' does not contains Product 'bread'
+03/06/2023 11:58:55 INFO:	 Market.show_cart: Cart of Member 'usr2':
+Store 'market'
+Product: 'tuna', Quantity: 10, Price: 20, Discount-Price: 20
+
+03/06/2023 11:58:55 INFO:	 Member.logout: Member 'usr2' is logged out
+03/06/2023 11:58:55 INFO:	 Market.leave: Visitor left session: 7436406111896591825
+03/06/2023 11:58:55 INFO:	 Session: 2736051837137154555 has been initialized
+03/06/2023 11:58:55 ERROR:	 Admin.login: Admin 'Kfir' enter an incorrect password.
+03/06/2023 11:58:55 WARNING:	 Market is closed!
+03/06/2023 11:58:55 WARNING:	 Logger thread exits!
+03/06/2023 12:05:45 INFO:	 Session: 5168946639285546244 has been initialized
+03/06/2023 12:05:45 INFO:	 Visitor.register: 'usr1' is registered!
+03/06/2023 12:05:45 INFO:	 Visitor.register: 'usr5' is registered!
+03/06/2023 12:05:45 INFO:	 Visitor.register: 'usr2' is registered!
+03/06/2023 12:05:46 INFO:	 Visitor.register: 'usr3' is registered!
+03/06/2023 12:05:46 INFO:	 Visitor.login: Member 'usr1' is logged in.
+03/06/2023 12:05:46 INFO:	 Market.open_store: Member 'usr1' opened store 'bakery'.
+03/06/2023 12:05:46 INFO:	 Market.add_product: 'usr1' add 15 units of Product 'bread', Category: '1', Price: 10, Rate: Not rated yet to store 'bakery'
+03/06/2023 12:05:46 INFO:	 Market.add_product: 'usr1' add 20 units of Product 'pita', Category: '1', Price: 5, Rate: Not rated yet to store 'bakery'
+03/06/2023 12:05:46 INFO:	 Member.logout: Member 'usr1' is logged out
+03/06/2023 12:05:46 INFO:	 Visitor.login: Member 'usr5' is logged in.
+03/06/2023 12:05:46 INFO:	 Market.open_store: Member 'usr5' opened store 'market'.
+03/06/2023 12:05:46 INFO:	 Market.add_product: 'usr5' add 40 units of Product 'tuna', Category: '1', Price: 20, Rate: Not rated yet to store 'market'
+03/06/2023 12:05:46 INFO:	 Market.add_product: 'usr5' add 20 units of Product 'pita', Category: '1', Price: 10, Rate: Not rated yet to store 'market'
+03/06/2023 12:05:46 INFO:	 Member.logout: Member 'usr5' is logged out
+03/06/2023 12:05:46 INFO:	 Visitor.login: Member 'usr2' is logged in.
+03/06/2023 12:05:46 INFO:	 Visitor.add_to_cart: 10 units of Product 'tuna' from store 'market' is added to Member 'usr2' cart
+03/06/2023 12:05:46 ERROR:	 Market.add_to_cart: Store 'bakery' does not contains Product 'bread'
+03/06/2023 12:05:46 INFO:	 Market.show_cart: Cart of Member 'usr2':
+Store 'market'
+Product: 'tuna', Quantity: 10, Price: 20, Discount-Price: 20
+
+03/06/2023 12:05:46 INFO:	 Member.logout: Member 'usr2' is logged out
+03/06/2023 12:05:46 INFO:	 Market.leave: Visitor left session: 5168946639285546244
+03/06/2023 12:05:46 INFO:	 Session: 4473354833670654441 has been initialized
+03/06/2023 12:05:46 INFO:	 Visitor.register: 'usr1' is registered!
+03/06/2023 12:05:47 INFO:	 Visitor.register: 'usr5' is registered!
+03/06/2023 12:05:47 INFO:	 Visitor.register: 'usr2' is registered!
+03/06/2023 12:05:47 INFO:	 Visitor.register: 'usr3' is registered!
+03/06/2023 12:05:47 INFO:	 Visitor.login: Member 'usr1' is logged in.
+03/06/2023 12:05:47 INFO:	 Market.open_store: Member 'usr1' opened store 'bakery'.
+03/06/2023 12:05:47 INFO:	 Market.add_product: 'usr1' add 15 units of Product 'bread', Category: '1', Price: 10, Rate: Not rated yet to store 'bakery'
+03/06/2023 12:05:47 INFO:	 Market.add_product: 'usr1' add 20 units of Product 'pita', Category: '1', Price: 5, Rate: Not rated yet to store 'bakery'
+03/06/2023 12:05:47 INFO:	 Member.logout: Member 'usr1' is logged out
+03/06/2023 12:05:48 INFO:	 Visitor.login: Member 'usr5' is logged in.
+03/06/2023 12:05:48 INFO:	 Market.open_store: Member 'usr5' opened store 'market'.
+03/06/2023 12:05:48 INFO:	 Market.add_product: 'usr5' add 40 units of Product 'tuna', Category: '1', Price: 20, Rate: Not rated yet to store 'market'
+03/06/2023 12:05:48 INFO:	 Market.add_product: 'usr5' add 20 units of Product 'pita', Category: '1', Price: 10, Rate: Not rated yet to store 'market'
+03/06/2023 12:05:48 INFO:	 Member.logout: Member 'usr5' is logged out
+03/06/2023 12:05:48 INFO:	 Visitor.login: Member 'usr2' is logged in.
+03/06/2023 12:05:48 INFO:	 Visitor.add_to_cart: 10 units of Product 'tuna' from store 'market' is added to Member 'usr2' cart
+03/06/2023 12:05:48 ERROR:	 Market.add_to_cart: Store 'market' does not contains Product 'xxx'
+03/06/2023 12:05:48 INFO:	 Market.show_cart: Cart of Member 'usr2':
+Store 'market'
+Product: 'tuna', Quantity: 10, Price: 20, Discount-Price: 20
+
+03/06/2023 12:05:48 INFO:	 Member.logout: Member 'usr2' is logged out
+03/06/2023 12:05:48 ERROR:	 Visitor.logout: Visitor attempted to logout.
+03/06/2023 12:05:48 INFO:	 Market.leave: Visitor left session: 4473354833670654441
+03/06/2023 12:05:48 INFO:	 Session: 3211607700237536230 has been initialized
+03/06/2023 12:05:48 INFO:	 Visitor.register: 'usr1' is registered!
+03/06/2023 12:05:48 INFO:	 Visitor.register: 'usr5' is registered!
+03/06/2023 12:05:49 INFO:	 Visitor.register: 'usr2' is registered!
+03/06/2023 12:05:49 INFO:	 Visitor.register: 'usr3' is registered!
+03/06/2023 12:05:49 INFO:	 Visitor.login: Member 'usr1' is logged in.
+03/06/2023 12:05:49 INFO:	 Market.open_store: Member 'usr1' opened store 'bakery'.
+03/06/2023 12:05:49 INFO:	 Market.add_product: 'usr1' add 15 units of Product 'bread', Category: '1', Price: 10, Rate: Not rated yet to store 'bakery'
+03/06/2023 12:05:49 INFO:	 Market.add_product: 'usr1' add 20 units of Product 'pita', Category: '1', Price: 5, Rate: Not rated yet to store 'bakery'
+03/06/2023 12:05:49 INFO:	 Member.logout: Member 'usr1' is logged out
+03/06/2023 12:05:49 INFO:	 Visitor.login: Member 'usr5' is logged in.
+03/06/2023 12:05:49 INFO:	 Market.open_store: Member 'usr5' opened store 'market'.
+03/06/2023 12:05:49 INFO:	 Market.add_product: 'usr5' add 40 units of Product 'tuna', Category: '1', Price: 20, Rate: Not rated yet to store 'market'
+03/06/2023 12:05:49 INFO:	 Market.add_product: 'usr5' add 20 units of Product 'pita', Category: '1', Price: 10, Rate: Not rated yet to store 'market'
+03/06/2023 12:05:49 INFO:	 Member.logout: Member 'usr5' is logged out
+03/06/2023 12:05:49 INFO:	 Visitor.login: Member 'usr2' is logged in.
+03/06/2023 12:05:49 INFO:	 Visitor.add_to_cart: 10 units of Product 'tuna' from store 'market' is added to Member 'usr2' cart
+03/06/2023 12:05:49 ERROR:	 Market.add_to_cart: Store 'xxx' is not registered to the market.
+03/06/2023 12:05:49 INFO:	 Market.show_cart: Cart of Member 'usr2':
+Store 'market'
+Product: 'tuna', Quantity: 10, Price: 20, Discount-Price: 20
+
+03/06/2023 12:05:49 INFO:	 Member.logout: Member 'usr2' is logged out
+03/06/2023 12:05:49 ERROR:	 Visitor.logout: Visitor attempted to logout.
+03/06/2023 12:05:49 INFO:	 Market.leave: Visitor left session: 3211607700237536230
+03/06/2023 12:05:49 INFO:	 Session: 3834396500163992828 has been initialized
+03/06/2023 12:05:50 INFO:	 Visitor.register: 'usr1' is registered!
+03/06/2023 12:05:50 INFO:	 Visitor.register: 'usr5' is registered!
+03/06/2023 12:05:50 INFO:	 Visitor.register: 'usr2' is registered!
+03/06/2023 12:05:50 INFO:	 Visitor.register: 'usr3' is registered!
+03/06/2023 12:05:51 INFO:	 Visitor.login: Member 'usr1' is logged in.
+03/06/2023 12:05:51 INFO:	 Market.open_store: Member 'usr1' opened store 'bakery'.
+03/06/2023 12:05:51 INFO:	 Market.add_product: 'usr1' add 15 units of Product 'bread', Category: '1', Price: 10, Rate: Not rated yet to store 'bakery'
+03/06/2023 12:05:51 INFO:	 Market.add_product: 'usr1' add 20 units of Product 'pita', Category: '1', Price: 5, Rate: Not rated yet to store 'bakery'
+03/06/2023 12:05:51 INFO:	 Member.logout: Member 'usr1' is logged out
+03/06/2023 12:05:51 INFO:	 Visitor.login: Member 'usr5' is logged in.
+03/06/2023 12:05:51 INFO:	 Market.open_store: Member 'usr5' opened store 'market'.
+03/06/2023 12:05:51 INFO:	 Market.add_product: 'usr5' add 40 units of Product 'tuna', Category: '1', Price: 20, Rate: Not rated yet to store 'market'
+03/06/2023 12:05:51 INFO:	 Market.add_product: 'usr5' add 20 units of Product 'pita', Category: '1', Price: 10, Rate: Not rated yet to store 'market'
+03/06/2023 12:05:51 INFO:	 Member.logout: Member 'usr5' is logged out
+03/06/2023 12:05:51 INFO:	 Visitor.login: Member 'usr2' is logged in.
+03/06/2023 12:05:51 INFO:	 Visitor.add_to_cart: 0 units of Product 'tuna' from store 'market' is added to Member 'usr2' cart
+03/06/2023 12:05:51 INFO:	 Member.logout: Member 'usr2' is logged out
+03/06/2023 12:05:51 INFO:	 Market.leave: Visitor left session: 3834396500163992828
+03/06/2023 12:05:51 INFO:	 Session: 7272634025309714797 has been initialized
+03/06/2023 12:05:51 INFO:	 Visitor.register: 'usr1' is registered!
+03/06/2023 12:05:51 INFO:	 Visitor.register: 'usr5' is registered!
+03/06/2023 12:05:52 INFO:	 Visitor.register: 'usr2' is registered!
+03/06/2023 12:05:52 INFO:	 Visitor.register: 'usr3' is registered!
+03/06/2023 12:05:52 INFO:	 Visitor.login: Member 'usr1' is logged in.
+03/06/2023 12:05:52 INFO:	 Market.open_store: Member 'usr1' opened store 'bakery'.
+03/06/2023 12:05:52 INFO:	 Market.add_product: 'usr1' add 15 units of Product 'bread', Category: '1', Price: 10, Rate: Not rated yet to store 'bakery'
+03/06/2023 12:05:52 INFO:	 Market.add_product: 'usr1' add 20 units of Product 'pita', Category: '1', Price: 5, Rate: Not rated yet to store 'bakery'
+03/06/2023 12:05:52 INFO:	 Member.logout: Member 'usr1' is logged out
+03/06/2023 12:05:52 INFO:	 Visitor.login: Member 'usr5' is logged in.
+03/06/2023 12:05:52 INFO:	 Market.open_store: Member 'usr5' opened store 'market'.
+03/06/2023 12:05:52 INFO:	 Market.add_product: 'usr5' add 40 units of Product 'tuna', Category: '1', Price: 20, Rate: Not rated yet to store 'market'
+03/06/2023 12:05:52 INFO:	 Market.add_product: 'usr5' add 20 units of Product 'pita', Category: '1', Price: 10, Rate: Not rated yet to store 'market'
+03/06/2023 12:05:52 INFO:	 Member.logout: Member 'usr5' is logged out
+03/06/2023 12:05:52 INFO:	 Visitor.add_to_cart: 5 units of Product 'bread' from store 'bakery' is added to Visitor cart
+03/06/2023 12:05:52 INFO:	 Visitor.add_to_cart: 10 units of Product 'tuna' from store 'market' is added to Visitor cart
+03/06/2023 12:05:52 INFO:	 Market.show_cart: Cart of Visitor:
+Store 'bakery'
+Product: 'bread', Quantity: 5, Price: 10, Discount-Price: 10
+Store 'market'
+Product: 'tuna', Quantity: 10, Price: 20, Discount-Price: 20
+
+03/06/2023 12:05:52 ERROR:	 Visitor.logout: Visitor attempted to logout.
+03/06/2023 12:05:52 INFO:	 Market.leave: Visitor left session: 7272634025309714797
+03/06/2023 12:05:52 INFO:	 Session: 5196879083892614164 has been initialized
+03/06/2023 12:05:53 INFO:	 Visitor.register: 'usr1' is registered!
+03/06/2023 12:05:53 INFO:	 Visitor.register: 'usr5' is registered!
+03/06/2023 12:05:53 INFO:	 Visitor.register: 'usr2' is registered!
+03/06/2023 12:05:53 INFO:	 Visitor.register: 'usr3' is registered!
+03/06/2023 12:05:54 INFO:	 Visitor.login: Member 'usr1' is logged in.
+03/06/2023 12:05:54 INFO:	 Market.open_store: Member 'usr1' opened store 'bakery'.
+03/06/2023 12:05:54 INFO:	 Market.add_product: 'usr1' add 15 units of Product 'bread', Category: '1', Price: 10, Rate: Not rated yet to store 'bakery'
+03/06/2023 12:05:54 INFO:	 Market.add_product: 'usr1' add 20 units of Product 'pita', Category: '1', Price: 5, Rate: Not rated yet to store 'bakery'
+03/06/2023 12:05:54 INFO:	 Member.logout: Member 'usr1' is logged out
+03/06/2023 12:05:54 INFO:	 Visitor.login: Member 'usr5' is logged in.
+03/06/2023 12:05:54 INFO:	 Market.open_store: Member 'usr5' opened store 'market'.
+03/06/2023 12:05:54 INFO:	 Market.add_product: 'usr5' add 40 units of Product 'tuna', Category: '1', Price: 20, Rate: Not rated yet to store 'market'
+03/06/2023 12:05:54 INFO:	 Market.add_product: 'usr5' add 20 units of Product 'pita', Category: '1', Price: 10, Rate: Not rated yet to store 'market'
+03/06/2023 12:05:54 INFO:	 Member.logout: Member 'usr5' is logged out
+03/06/2023 12:05:54 INFO:	 Visitor.login: Member 'usr2' is logged in.
+03/06/2023 12:05:54 INFO:	 Visitor.add_to_cart: 5 units of Product 'bread' from store 'bakery' is added to Member 'usr2' cart
+03/06/2023 12:05:54 INFO:	 Visitor.add_to_cart: 10 units of Product 'pita' from store 'bakery' is added to Member 'usr2' cart
+03/06/2023 12:05:54 INFO:	 Visitor.add_to_cart: 10 units of Product 'pita' from store 'market' is added to Member 'usr2' cart
+03/06/2023 12:05:54 INFO:	 Visitor.add_to_cart: 20 units of Product 'tuna' from store 'market' is added to Member 'usr2' cart
+03/06/2023 12:05:54 INFO:	 Market.show_cart: Cart of Member 'usr2':
+Store 'bakery'
+Product: 'bread', Quantity: 5, Price: 10, Discount-Price: 10
+Product: 'pita', Quantity: 10, Price: 5, Discount-Price: 5
+Store 'market'
+Product: 'pita', Quantity: 10, Price: 10, Discount-Price: 10
+Product: 'tuna', Quantity: 20, Price: 20, Discount-Price: 20
+
+03/06/2023 12:05:54 INFO:	 Member.logout: Member 'usr2' is logged out
+03/06/2023 12:05:54 ERROR:	 Visitor.logout: Visitor attempted to logout.
+03/06/2023 12:05:54 INFO:	 Market.leave: Visitor left session: 5196879083892614164
+03/06/2023 12:05:54 INFO:	 Session: 9046861668330708017 has been initialized
+03/06/2023 12:05:54 INFO:	 Visitor.register: 'usr1' is registered!
+03/06/2023 12:05:54 INFO:	 Visitor.register: 'usr5' is registered!
+03/06/2023 12:05:55 INFO:	 Visitor.register: 'usr2' is registered!
+03/06/2023 12:05:55 INFO:	 Visitor.register: 'usr3' is registered!
+03/06/2023 12:05:55 INFO:	 Visitor.login: Member 'usr1' is logged in.
+03/06/2023 12:05:55 INFO:	 Market.open_store: Member 'usr1' opened store 'bakery'.
+03/06/2023 12:05:55 INFO:	 Market.add_product: 'usr1' add 15 units of Product 'bread', Category: '1', Price: 10, Rate: Not rated yet to store 'bakery'
+03/06/2023 12:05:55 INFO:	 Market.add_product: 'usr1' add 20 units of Product 'pita', Category: '1', Price: 5, Rate: Not rated yet to store 'bakery'
+03/06/2023 12:05:55 INFO:	 Member.logout: Member 'usr1' is logged out
+03/06/2023 12:05:55 INFO:	 Visitor.login: Member 'usr5' is logged in.
+03/06/2023 12:05:55 INFO:	 Market.open_store: Member 'usr5' opened store 'market'.
+03/06/2023 12:05:55 INFO:	 Market.add_product: 'usr5' add 40 units of Product 'tuna', Category: '1', Price: 20, Rate: Not rated yet to store 'market'
+03/06/2023 12:05:55 INFO:	 Market.add_product: 'usr5' add 20 units of Product 'pita', Category: '1', Price: 10, Rate: Not rated yet to store 'market'
+03/06/2023 12:05:55 INFO:	 Member.logout: Member 'usr5' is logged out
+03/06/2023 12:05:56 INFO:	 Visitor.login: Member 'usr2' is logged in.
+03/06/2023 12:05:56 INFO:	 Visitor.add_to_cart: 5 units of Product 'bread' from store 'bakery' is added to Member 'usr2' cart
+03/06/2023 12:05:56 INFO:	 Visitor.add_to_cart: 10 units of Product 'pita' from store 'market' is added to Member 'usr2' cart
+03/06/2023 12:05:56 INFO:	 Member.logout: Member 'usr2' is logged out
+03/06/2023 12:05:56 INFO:	 Market.leave: Visitor left session: 9046861668330708017
+03/06/2023 12:05:56 INFO:	 Session: 3024869465658029015 has been initialized
+03/06/2023 12:05:56 INFO:	 Visitor.register: 'usr1' is registered!
+03/06/2023 12:05:56 INFO:	 Visitor.register: 'usr5' is registered!
+03/06/2023 12:05:56 INFO:	 Visitor.register: 'usr2' is registered!
+03/06/2023 12:05:57 INFO:	 Visitor.register: 'usr3' is registered!
+03/06/2023 12:05:57 INFO:	 Visitor.login: Member 'usr1' is logged in.
+03/06/2023 12:05:57 INFO:	 Market.open_store: Member 'usr1' opened store 'bakery'.
+03/06/2023 12:05:57 INFO:	 Market.add_product: 'usr1' add 15 units of Product 'bread', Category: '1', Price: 10, Rate: Not rated yet to store 'bakery'
+03/06/2023 12:05:57 INFO:	 Market.add_product: 'usr1' add 20 units of Product 'pita', Category: '1', Price: 5, Rate: Not rated yet to store 'bakery'
+03/06/2023 12:05:57 INFO:	 Member.logout: Member 'usr1' is logged out
+03/06/2023 12:05:57 INFO:	 Visitor.login: Member 'usr5' is logged in.
+03/06/2023 12:05:57 INFO:	 Market.open_store: Member 'usr5' opened store 'market'.
+03/06/2023 12:05:57 INFO:	 Market.add_product: 'usr5' add 40 units of Product 'tuna', Category: '1', Price: 20, Rate: Not rated yet to store 'market'
+03/06/2023 12:05:57 INFO:	 Market.add_product: 'usr5' add 20 units of Product 'pita', Category: '1', Price: 10, Rate: Not rated yet to store 'market'
+03/06/2023 12:05:57 INFO:	 Member.logout: Member 'usr5' is logged out
+03/06/2023 12:05:57 INFO:	 Visitor.login: Member 'usr2' is logged in.
+03/06/2023 12:05:57 INFO:	 Visitor.add_to_cart: 5 units of Product 'bread' from store 'bakery' is added to Member 'usr2' cart
+03/06/2023 12:05:57 INFO:	 Visitor.add_to_cart: 10 units of Product 'tuna' from store 'market' is added to Member 'usr2' cart
+03/06/2023 12:05:57 INFO:	 Member.logout: Member 'usr2' is logged out
+03/06/2023 12:05:57 INFO:	 Market.leave: Visitor left session: 3024869465658029015
+03/06/2023 12:05:57 INFO:	 Session: 6230024632290233957 has been initialized
+03/06/2023 12:05:57 INFO:	 Visitor.register: 'usr1' is registered!
+03/06/2023 12:05:58 INFO:	 Visitor.register: 'usr5' is registered!
+03/06/2023 12:05:58 INFO:	 Visitor.register: 'usr2' is registered!
+03/06/2023 12:05:58 INFO:	 Visitor.register: 'usr3' is registered!
+03/06/2023 12:05:58 INFO:	 Visitor.login: Member 'usr1' is logged in.
+03/06/2023 12:05:58 INFO:	 Market.open_store: Member 'usr1' opened store 'bakery'.
+03/06/2023 12:05:58 INFO:	 Market.add_product: 'usr1' add 15 units of Product 'bread', Category: '1', Price: 10, Rate: Not rated yet to store 'bakery'
+03/06/2023 12:05:58 INFO:	 Market.add_product: 'usr1' add 20 units of Product 'pita', Category: '1', Price: 5, Rate: Not rated yet to store 'bakery'
+03/06/2023 12:05:58 INFO:	 Member.logout: Member 'usr1' is logged out
+03/06/2023 12:05:59 INFO:	 Visitor.login: Member 'usr5' is logged in.
+03/06/2023 12:05:59 INFO:	 Market.open_store: Member 'usr5' opened store 'market'.
+03/06/2023 12:05:59 INFO:	 Market.add_product: 'usr5' add 40 units of Product 'tuna', Category: '1', Price: 20, Rate: Not rated yet to store 'market'
+03/06/2023 12:05:59 INFO:	 Market.add_product: 'usr5' add 20 units of Product 'pita', Category: '1', Price: 10, Rate: Not rated yet to store 'market'
+03/06/2023 12:05:59 INFO:	 Member.logout: Member 'usr5' is logged out
+03/06/2023 12:05:59 INFO:	 Visitor.login: Member 'usr2' is logged in.
+03/06/2023 12:05:59 INFO:	 Visitor.add_to_cart: 5 units of Product 'bread' from store 'bakery' is added to Member 'usr2' cart
+03/06/2023 12:05:59 INFO:	 Visitor.add_to_cart: 10 units of Product 'tuna' from store 'market' is added to Member 'usr2' cart
+03/06/2023 12:05:59 INFO:	 Member.logout: Member 'usr2' is logged out
+03/06/2023 12:05:59 INFO:	 Market.leave: Visitor left session: 6230024632290233957
+03/06/2023 12:05:59 INFO:	 Session: 7561511299046412551 has been initialized
+03/06/2023 12:05:59 INFO:	 Visitor.register: 'usr1' is registered!
+03/06/2023 12:05:59 INFO:	 Visitor.register: 'usr5' is registered!
+03/06/2023 12:05:59 INFO:	 Visitor.register: 'usr2' is registered!
+03/06/2023 12:06:00 INFO:	 Visitor.register: 'usr3' is registered!
+03/06/2023 12:06:00 INFO:	 Visitor.login: Member 'usr1' is logged in.
+03/06/2023 12:06:00 INFO:	 Market.open_store: Member 'usr1' opened store 'bakery'.
+03/06/2023 12:06:00 INFO:	 Market.add_product: 'usr1' add 15 units of Product 'bread', Category: '1', Price: 10, Rate: Not rated yet to store 'bakery'
+03/06/2023 12:06:00 INFO:	 Market.add_product: 'usr1' add 20 units of Product 'pita', Category: '1', Price: 5, Rate: Not rated yet to store 'bakery'
+03/06/2023 12:06:00 INFO:	 Member.logout: Member 'usr1' is logged out
+03/06/2023 12:06:00 INFO:	 Visitor.login: Member 'usr5' is logged in.
+03/06/2023 12:06:00 INFO:	 Market.open_store: Member 'usr5' opened store 'market'.
+03/06/2023 12:06:00 INFO:	 Market.add_product: 'usr5' add 40 units of Product 'tuna', Category: '1', Price: 20, Rate: Not rated yet to store 'market'
+03/06/2023 12:06:00 INFO:	 Market.add_product: 'usr5' add 20 units of Product 'pita', Category: '1', Price: 10, Rate: Not rated yet to store 'market'
+03/06/2023 12:06:00 INFO:	 Member.logout: Member 'usr5' is logged out
+03/06/2023 12:06:00 INFO:	 Visitor.login: Member 'usr2' is logged in.
+03/06/2023 12:06:00 INFO:	 Visitor.add_to_cart: 5 units of Product 'bread' from store 'bakery' is added to Member 'usr2' cart
+03/06/2023 12:06:00 INFO:	 Visitor.add_to_cart: 10 units of Product 'pita' from store 'market' is added to Member 'usr2' cart
+03/06/2023 12:06:00 INFO:	 Member.logout: Member 'usr2' is logged out
+03/06/2023 12:06:00 INFO:	 Market.leave: Visitor left session: 7561511299046412551
+03/06/2023 12:06:00 INFO:	 Session: 8439690229273658586 has been initialized
+03/06/2023 12:06:01 INFO:	 Visitor.register: 'usr1' is registered!
+03/06/2023 12:06:01 INFO:	 Visitor.register: 'usr5' is registered!
+03/06/2023 12:06:01 INFO:	 Visitor.register: 'usr2' is registered!
+03/06/2023 12:06:01 INFO:	 Visitor.register: 'usr3' is registered!
+03/06/2023 12:06:01 INFO:	 Visitor.login: Member 'usr1' is logged in.
+03/06/2023 12:06:01 INFO:	 Market.open_store: Member 'usr1' opened store 'bakery'.
+03/06/2023 12:06:01 INFO:	 Market.add_product: 'usr1' add 15 units of Product 'bread', Category: '1', Price: 10, Rate: Not rated yet to store 'bakery'
+03/06/2023 12:06:01 INFO:	 Market.add_product: 'usr1' add 20 units of Product 'pita', Category: '1', Price: 5, Rate: Not rated yet to store 'bakery'
+03/06/2023 12:06:01 INFO:	 Member.logout: Member 'usr1' is logged out
+03/06/2023 12:06:02 INFO:	 Visitor.login: Member 'usr5' is logged in.
+03/06/2023 12:06:02 INFO:	 Market.open_store: Member 'usr5' opened store 'market'.
+03/06/2023 12:06:02 INFO:	 Market.add_product: 'usr5' add 40 units of Product 'tuna', Category: '1', Price: 20, Rate: Not rated yet to store 'market'
+03/06/2023 12:06:02 INFO:	 Market.add_product: 'usr5' add 20 units of Product 'pita', Category: '1', Price: 10, Rate: Not rated yet to store 'market'
+03/06/2023 12:06:02 INFO:	 Member.logout: Member 'usr5' is logged out
+03/06/2023 12:06:02 INFO:	 Visitor.login: Member 'usr2' is logged in.
+03/06/2023 12:06:02 INFO:	 Visitor.add_to_cart: 5 units of Product 'bread' from store 'bakery' is added to Member 'usr2' cart
+03/06/2023 12:06:02 INFO:	 Visitor.add_to_cart: 10 units of Product 'pita' from store 'market' is added to Member 'usr2' cart
+03/06/2023 12:06:02 INFO:	 Member.logout: Member 'usr2' is logged out
+03/06/2023 12:06:02 INFO:	 Market.leave: Visitor left session: 8439690229273658586
+03/06/2023 12:06:02 INFO:	 Session: 73437191530764314 has been initialized
+03/06/2023 12:06:02 ERROR:	 Admin.login: Admin 'Kfir' enter an incorrect password.
+03/06/2023 12:06:02 WARNING:	 Market is closed!
+03/06/2023 12:06:02 WARNING:	 Logger thread exits!
+03/06/2023 12:07:00 INFO:	 Session: 8659792497524068449 has been initialized
+03/06/2023 12:07:00 INFO:	 Visitor.register: 'usr1' is registered!
+03/06/2023 12:07:00 INFO:	 Visitor.register: 'usr5' is registered!
+03/06/2023 12:07:01 INFO:	 Visitor.register: 'usr2' is registered!
+03/06/2023 12:07:01 INFO:	 Visitor.register: 'usr3' is registered!
+03/06/2023 12:07:01 INFO:	 Visitor.login: Member 'usr1' is logged in.
+03/06/2023 12:07:01 INFO:	 Market.open_store: Member 'usr1' opened store 'bakery'.
+03/06/2023 12:07:01 INFO:	 Market.add_product: 'usr1' add 15 units of Product 'bread', Category: '1', Price: 10, Rate: Not rated yet to store 'bakery'
+03/06/2023 12:07:01 INFO:	 Market.add_product: 'usr1' add 20 units of Product 'pita', Category: '1', Price: 5, Rate: Not rated yet to store 'bakery'
+03/06/2023 12:07:01 INFO:	 Member.logout: Member 'usr1' is logged out
+03/06/2023 12:07:01 INFO:	 Visitor.login: Member 'usr5' is logged in.
+03/06/2023 12:07:01 INFO:	 Market.open_store: Member 'usr5' opened store 'market'.
+03/06/2023 12:07:01 INFO:	 Market.add_product: 'usr5' add 40 units of Product 'tuna', Category: '1', Price: 20, Rate: Not rated yet to store 'market'
+03/06/2023 12:07:01 INFO:	 Market.add_product: 'usr5' add 20 units of Product 'pita', Category: '1', Price: 10, Rate: Not rated yet to store 'market'
+03/06/2023 12:07:01 INFO:	 Member.logout: Member 'usr5' is logged out
+03/06/2023 12:07:01 INFO:	 Visitor.login: Member 'usr2' is logged in.
+03/06/2023 12:07:01 INFO:	 Visitor.add_to_cart: 10 units of Product 'tuna' from store 'market' is added to Member 'usr2' cart
+03/06/2023 12:07:01 ERROR:	 Market.add_to_cart: Store 'bakery' does not contains Product 'bread'
+03/06/2023 12:07:01 INFO:	 Market.show_cart: Cart of Member 'usr2':
+Store 'market'
+Product: 'tuna', Quantity: 10, Price: 20, Discount-Price: 20
+
+03/06/2023 12:07:01 INFO:	 Member.logout: Member 'usr2' is logged out
+03/06/2023 12:07:01 INFO:	 Market.leave: Visitor left session: 8659792497524068449
+03/06/2023 12:07:01 INFO:	 Session: 8523531714978573532 has been initialized
+03/06/2023 12:07:02 INFO:	 Visitor.register: 'usr1' is registered!
+03/06/2023 12:07:02 INFO:	 Visitor.register: 'usr5' is registered!
+03/06/2023 12:07:02 INFO:	 Visitor.register: 'usr2' is registered!
+03/06/2023 12:07:02 INFO:	 Visitor.register: 'usr3' is registered!
+03/06/2023 12:07:03 INFO:	 Visitor.login: Member 'usr1' is logged in.
+03/06/2023 12:07:03 INFO:	 Market.open_store: Member 'usr1' opened store 'bakery'.
+03/06/2023 12:07:03 INFO:	 Market.add_product: 'usr1' add 15 units of Product 'bread', Category: '1', Price: 10, Rate: Not rated yet to store 'bakery'
+03/06/2023 12:07:03 INFO:	 Market.add_product: 'usr1' add 20 units of Product 'pita', Category: '1', Price: 5, Rate: Not rated yet to store 'bakery'
+03/06/2023 12:07:03 INFO:	 Member.logout: Member 'usr1' is logged out
+03/06/2023 12:07:03 INFO:	 Visitor.login: Member 'usr5' is logged in.
+03/06/2023 12:07:03 INFO:	 Market.open_store: Member 'usr5' opened store 'market'.
+03/06/2023 12:07:03 INFO:	 Market.add_product: 'usr5' add 40 units of Product 'tuna', Category: '1', Price: 20, Rate: Not rated yet to store 'market'
+03/06/2023 12:07:03 INFO:	 Market.add_product: 'usr5' add 20 units of Product 'pita', Category: '1', Price: 10, Rate: Not rated yet to store 'market'
+03/06/2023 12:07:03 INFO:	 Member.logout: Member 'usr5' is logged out
+03/06/2023 12:07:03 INFO:	 Visitor.login: Member 'usr2' is logged in.
+03/06/2023 12:07:03 INFO:	 Visitor.add_to_cart: 10 units of Product 'tuna' from store 'market' is added to Member 'usr2' cart
+03/06/2023 12:07:03 ERROR:	 Market.add_to_cart: Store 'market' does not contains Product 'xxx'
+03/06/2023 12:07:03 INFO:	 Market.show_cart: Cart of Member 'usr2':
+Store 'market'
+Product: 'tuna', Quantity: 10, Price: 20, Discount-Price: 20
+
+03/06/2023 12:07:03 INFO:	 Member.logout: Member 'usr2' is logged out
+03/06/2023 12:07:03 ERROR:	 Visitor.logout: Visitor attempted to logout.
+03/06/2023 12:07:03 INFO:	 Market.leave: Visitor left session: 8523531714978573532
+03/06/2023 12:07:03 INFO:	 Session: 5512395063207832063 has been initialized
+03/06/2023 12:07:03 INFO:	 Visitor.register: 'usr1' is registered!
+03/06/2023 12:07:04 INFO:	 Visitor.register: 'usr5' is registered!
+03/06/2023 12:07:04 INFO:	 Visitor.register: 'usr2' is registered!
+03/06/2023 12:07:04 INFO:	 Visitor.register: 'usr3' is registered!
+03/06/2023 12:07:04 INFO:	 Visitor.login: Member 'usr1' is logged in.
+03/06/2023 12:07:04 INFO:	 Market.open_store: Member 'usr1' opened store 'bakery'.
+03/06/2023 12:07:04 INFO:	 Market.add_product: 'usr1' add 15 units of Product 'bread', Category: '1', Price: 10, Rate: Not rated yet to store 'bakery'
+03/06/2023 12:07:04 INFO:	 Market.add_product: 'usr1' add 20 units of Product 'pita', Category: '1', Price: 5, Rate: Not rated yet to store 'bakery'
+03/06/2023 12:07:04 INFO:	 Member.logout: Member 'usr1' is logged out
+03/06/2023 12:07:04 INFO:	 Visitor.login: Member 'usr5' is logged in.
+03/06/2023 12:07:04 INFO:	 Market.open_store: Member 'usr5' opened store 'market'.
+03/06/2023 12:07:04 INFO:	 Market.add_product: 'usr5' add 40 units of Product 'tuna', Category: '1', Price: 20, Rate: Not rated yet to store 'market'
+03/06/2023 12:07:04 INFO:	 Market.add_product: 'usr5' add 20 units of Product 'pita', Category: '1', Price: 10, Rate: Not rated yet to store 'market'
+03/06/2023 12:07:04 INFO:	 Member.logout: Member 'usr5' is logged out
+03/06/2023 12:07:05 INFO:	 Visitor.login: Member 'usr2' is logged in.
+03/06/2023 12:07:05 INFO:	 Visitor.add_to_cart: 10 units of Product 'tuna' from store 'market' is added to Member 'usr2' cart
+03/06/2023 12:07:05 ERROR:	 Market.add_to_cart: Store 'xxx' is not registered to the market.
+03/06/2023 12:07:05 INFO:	 Market.show_cart: Cart of Member 'usr2':
+Store 'market'
+Product: 'tuna', Quantity: 10, Price: 20, Discount-Price: 20
+
+03/06/2023 12:07:05 INFO:	 Member.logout: Member 'usr2' is logged out
+03/06/2023 12:07:05 ERROR:	 Visitor.logout: Visitor attempted to logout.
+03/06/2023 12:07:05 INFO:	 Market.leave: Visitor left session: 5512395063207832063
+03/06/2023 12:07:05 INFO:	 Session: 2459435019054099457 has been initialized
+03/06/2023 12:07:05 INFO:	 Visitor.register: 'usr1' is registered!
+03/06/2023 12:07:05 INFO:	 Visitor.register: 'usr5' is registered!
+03/06/2023 12:07:05 INFO:	 Visitor.register: 'usr2' is registered!
+03/06/2023 12:07:06 INFO:	 Visitor.register: 'usr3' is registered!
+03/06/2023 12:07:06 INFO:	 Visitor.login: Member 'usr1' is logged in.
+03/06/2023 12:07:06 INFO:	 Market.open_store: Member 'usr1' opened store 'bakery'.
+03/06/2023 12:07:06 INFO:	 Market.add_product: 'usr1' add 15 units of Product 'bread', Category: '1', Price: 10, Rate: Not rated yet to store 'bakery'
+03/06/2023 12:07:06 INFO:	 Market.add_product: 'usr1' add 20 units of Product 'pita', Category: '1', Price: 5, Rate: Not rated yet to store 'bakery'
+03/06/2023 12:07:06 INFO:	 Member.logout: Member 'usr1' is logged out
+03/06/2023 12:07:06 INFO:	 Visitor.login: Member 'usr5' is logged in.
+03/06/2023 12:07:06 INFO:	 Market.open_store: Member 'usr5' opened store 'market'.
+03/06/2023 12:07:06 INFO:	 Market.add_product: 'usr5' add 40 units of Product 'tuna', Category: '1', Price: 20, Rate: Not rated yet to store 'market'
+03/06/2023 12:07:06 INFO:	 Market.add_product: 'usr5' add 20 units of Product 'pita', Category: '1', Price: 10, Rate: Not rated yet to store 'market'
+03/06/2023 12:07:06 INFO:	 Member.logout: Member 'usr5' is logged out
+03/06/2023 12:07:06 INFO:	 Visitor.login: Member 'usr2' is logged in.
+03/06/2023 12:07:06 ERROR:	 Market.add_to_cart: Store 'market' does not contains Product 'tuna'
+03/06/2023 12:07:06 ERROR:	 Market.add_to_cart: Store 'bakery' does not contains Product 'bread'
+03/06/2023 12:07:06 INFO:	 Market.show_cart: Cart of Member 'usr2':
+
+03/06/2023 12:07:06 INFO:	 Member.logout: Member 'usr2' is logged out
+03/06/2023 12:07:06 ERROR:	 Visitor.logout: Visitor attempted to logout.
+03/06/2023 12:07:06 INFO:	 Market.leave: Visitor left session: 2459435019054099457
+03/06/2023 12:07:06 INFO:	 Session: 4574911655528967581 has been initialized
+03/06/2023 12:07:07 INFO:	 Visitor.register: 'usr1' is registered!
+03/06/2023 12:07:07 INFO:	 Visitor.register: 'usr5' is registered!
+03/06/2023 12:07:07 INFO:	 Visitor.register: 'usr2' is registered!
+03/06/2023 12:07:07 INFO:	 Visitor.register: 'usr3' is registered!
+03/06/2023 12:07:07 INFO:	 Visitor.login: Member 'usr1' is logged in.
+03/06/2023 12:07:07 INFO:	 Market.open_store: Member 'usr1' opened store 'bakery'.
+03/06/2023 12:07:07 INFO:	 Market.add_product: 'usr1' add 15 units of Product 'bread', Category: '1', Price: 10, Rate: Not rated yet to store 'bakery'
+03/06/2023 12:07:07 INFO:	 Market.add_product: 'usr1' add 20 units of Product 'pita', Category: '1', Price: 5, Rate: Not rated yet to store 'bakery'
+03/06/2023 12:07:07 INFO:	 Member.logout: Member 'usr1' is logged out
+03/06/2023 12:07:08 INFO:	 Visitor.login: Member 'usr5' is logged in.
+03/06/2023 12:07:08 INFO:	 Market.open_store: Member 'usr5' opened store 'market'.
+03/06/2023 12:07:08 INFO:	 Market.add_product: 'usr5' add 40 units of Product 'tuna', Category: '1', Price: 20, Rate: Not rated yet to store 'market'
+03/06/2023 12:07:08 INFO:	 Market.add_product: 'usr5' add 20 units of Product 'pita', Category: '1', Price: 10, Rate: Not rated yet to store 'market'
+03/06/2023 12:07:08 INFO:	 Member.logout: Member 'usr5' is logged out
+03/06/2023 12:07:08 INFO:	 Visitor.add_to_cart: 5 units of Product 'bread' from store 'bakery' is added to Visitor cart
+03/06/2023 12:07:08 INFO:	 Visitor.add_to_cart: 10 units of Product 'tuna' from store 'market' is added to Visitor cart
+03/06/2023 12:07:08 INFO:	 Market.show_cart: Cart of Visitor:
+Store 'bakery'
+Product: 'bread', Quantity: 5, Price: 10, Discount-Price: 10
+Store 'market'
+Product: 'tuna', Quantity: 10, Price: 20, Discount-Price: 20
+
+03/06/2023 12:07:08 ERROR:	 Visitor.logout: Visitor attempted to logout.
+03/06/2023 12:07:08 INFO:	 Market.leave: Visitor left session: 4574911655528967581
+03/06/2023 12:07:08 INFO:	 Session: 1185496733081666454 has been initialized
+03/06/2023 12:07:08 INFO:	 Visitor.register: 'usr1' is registered!
+03/06/2023 12:07:08 INFO:	 Visitor.register: 'usr5' is registered!
+03/06/2023 12:07:08 INFO:	 Visitor.register: 'usr2' is registered!
+03/06/2023 12:07:09 INFO:	 Visitor.register: 'usr3' is registered!
+03/06/2023 12:07:09 INFO:	 Visitor.login: Member 'usr1' is logged in.
+03/06/2023 12:07:09 INFO:	 Market.open_store: Member 'usr1' opened store 'bakery'.
+03/06/2023 12:07:09 INFO:	 Market.add_product: 'usr1' add 15 units of Product 'bread', Category: '1', Price: 10, Rate: Not rated yet to store 'bakery'
+03/06/2023 12:07:09 INFO:	 Market.add_product: 'usr1' add 20 units of Product 'pita', Category: '1', Price: 5, Rate: Not rated yet to store 'bakery'
+03/06/2023 12:07:09 INFO:	 Member.logout: Member 'usr1' is logged out
+03/06/2023 12:07:09 INFO:	 Visitor.login: Member 'usr5' is logged in.
+03/06/2023 12:07:09 INFO:	 Market.open_store: Member 'usr5' opened store 'market'.
+03/06/2023 12:07:09 INFO:	 Market.add_product: 'usr5' add 40 units of Product 'tuna', Category: '1', Price: 20, Rate: Not rated yet to store 'market'
+03/06/2023 12:07:09 INFO:	 Market.add_product: 'usr5' add 20 units of Product 'pita', Category: '1', Price: 10, Rate: Not rated yet to store 'market'
+03/06/2023 12:07:09 INFO:	 Member.logout: Member 'usr5' is logged out
+03/06/2023 12:07:09 INFO:	 Visitor.login: Member 'usr2' is logged in.
+03/06/2023 12:07:09 INFO:	 Visitor.add_to_cart: 5 units of Product 'bread' from store 'bakery' is added to Member 'usr2' cart
+03/06/2023 12:07:09 INFO:	 Visitor.add_to_cart: 10 units of Product 'pita' from store 'bakery' is added to Member 'usr2' cart
+03/06/2023 12:07:09 INFO:	 Visitor.add_to_cart: 10 units of Product 'pita' from store 'market' is added to Member 'usr2' cart
+03/06/2023 12:07:09 INFO:	 Visitor.add_to_cart: 20 units of Product 'tuna' from store 'market' is added to Member 'usr2' cart
+03/06/2023 12:07:09 INFO:	 Market.show_cart: Cart of Member 'usr2':
+Store 'bakery'
+Product: 'bread', Quantity: 5, Price: 10, Discount-Price: 10
+Product: 'pita', Quantity: 10, Price: 5, Discount-Price: 5
+Store 'market'
+Product: 'pita', Quantity: 10, Price: 10, Discount-Price: 10
+Product: 'tuna', Quantity: 20, Price: 20, Discount-Price: 20
+
+03/06/2023 12:07:09 INFO:	 Member.logout: Member 'usr2' is logged out
+03/06/2023 12:07:09 ERROR:	 Visitor.logout: Visitor attempted to logout.
+03/06/2023 12:07:09 INFO:	 Market.leave: Visitor left session: 1185496733081666454
+03/06/2023 12:07:09 INFO:	 Session: 8293803826425142571 has been initialized
+03/06/2023 12:07:09 INFO:	 Visitor.register: 'usr1' is registered!
+03/06/2023 12:07:10 INFO:	 Visitor.register: 'usr5' is registered!
+03/06/2023 12:07:10 INFO:	 Visitor.register: 'usr2' is registered!
+03/06/2023 12:07:10 INFO:	 Visitor.register: 'usr3' is registered!
+03/06/2023 12:07:10 INFO:	 Visitor.login: Member 'usr1' is logged in.
+03/06/2023 12:07:10 INFO:	 Market.open_store: Member 'usr1' opened store 'bakery'.
+03/06/2023 12:07:10 INFO:	 Market.add_product: 'usr1' add 15 units of Product 'bread', Category: '1', Price: 10, Rate: Not rated yet to store 'bakery'
+03/06/2023 12:07:10 INFO:	 Market.add_product: 'usr1' add 20 units of Product 'pita', Category: '1', Price: 5, Rate: Not rated yet to store 'bakery'
+03/06/2023 12:07:10 INFO:	 Member.logout: Member 'usr1' is logged out
+03/06/2023 12:07:11 INFO:	 Visitor.login: Member 'usr5' is logged in.
+03/06/2023 12:07:11 INFO:	 Market.open_store: Member 'usr5' opened store 'market'.
+03/06/2023 12:07:11 INFO:	 Market.add_product: 'usr5' add 40 units of Product 'tuna', Category: '1', Price: 20, Rate: Not rated yet to store 'market'
+03/06/2023 12:07:11 INFO:	 Market.add_product: 'usr5' add 20 units of Product 'pita', Category: '1', Price: 10, Rate: Not rated yet to store 'market'
+03/06/2023 12:07:11 INFO:	 Member.logout: Member 'usr5' is logged out
+03/06/2023 12:07:11 INFO:	 Visitor.login: Member 'usr2' is logged in.
+03/06/2023 12:07:11 INFO:	 Visitor.add_to_cart: 5 units of Product 'bread' from store 'bakery' is added to Member 'usr2' cart
+03/06/2023 12:07:11 INFO:	 Visitor.add_to_cart: 10 units of Product 'pita' from store 'market' is added to Member 'usr2' cart
+03/06/2023 12:07:11 INFO:	 Member.logout: Member 'usr2' is logged out
+03/06/2023 12:07:11 INFO:	 Market.leave: Visitor left session: 8293803826425142571
+03/06/2023 12:07:11 INFO:	 Session: 8463262543764639493 has been initialized
+03/06/2023 12:07:11 INFO:	 Visitor.register: 'usr1' is registered!
+03/06/2023 12:07:11 INFO:	 Visitor.register: 'usr5' is registered!
+03/06/2023 12:07:11 INFO:	 Visitor.register: 'usr2' is registered!
+03/06/2023 12:07:12 INFO:	 Visitor.register: 'usr3' is registered!
+03/06/2023 12:07:12 INFO:	 Visitor.login: Member 'usr1' is logged in.
+03/06/2023 12:07:12 INFO:	 Market.open_store: Member 'usr1' opened store 'bakery'.
+03/06/2023 12:07:12 INFO:	 Market.add_product: 'usr1' add 15 units of Product 'bread', Category: '1', Price: 10, Rate: Not rated yet to store 'bakery'
+03/06/2023 12:07:12 INFO:	 Market.add_product: 'usr1' add 20 units of Product 'pita', Category: '1', Price: 5, Rate: Not rated yet to store 'bakery'
+03/06/2023 12:07:12 INFO:	 Member.logout: Member 'usr1' is logged out
+03/06/2023 12:07:12 INFO:	 Visitor.login: Member 'usr5' is logged in.
+03/06/2023 12:07:12 INFO:	 Market.open_store: Member 'usr5' opened store 'market'.
+03/06/2023 12:07:12 INFO:	 Market.add_product: 'usr5' add 40 units of Product 'tuna', Category: '1', Price: 20, Rate: Not rated yet to store 'market'
+03/06/2023 12:07:12 INFO:	 Market.add_product: 'usr5' add 20 units of Product 'pita', Category: '1', Price: 10, Rate: Not rated yet to store 'market'
+03/06/2023 12:07:12 INFO:	 Member.logout: Member 'usr5' is logged out
+03/06/2023 12:07:12 INFO:	 Visitor.login: Member 'usr2' is logged in.
+03/06/2023 12:07:12 INFO:	 Visitor.add_to_cart: 5 units of Product 'bread' from store 'bakery' is added to Member 'usr2' cart
+03/06/2023 12:07:12 INFO:	 Visitor.add_to_cart: 10 units of Product 'tuna' from store 'market' is added to Member 'usr2' cart
+03/06/2023 12:07:12 INFO:	 Member.logout: Member 'usr2' is logged out
+03/06/2023 12:07:12 INFO:	 Market.leave: Visitor left session: 8463262543764639493
+03/06/2023 12:07:12 INFO:	 Session: 7512471454573177372 has been initialized
+03/06/2023 12:07:13 INFO:	 Visitor.register: 'usr1' is registered!
+03/06/2023 12:07:13 INFO:	 Visitor.register: 'usr5' is registered!
+03/06/2023 12:07:13 INFO:	 Visitor.register: 'usr2' is registered!
+03/06/2023 12:07:13 INFO:	 Visitor.register: 'usr3' is registered!
+03/06/2023 12:07:14 INFO:	 Visitor.login: Member 'usr1' is logged in.
+03/06/2023 12:07:14 INFO:	 Market.open_store: Member 'usr1' opened store 'bakery'.
+03/06/2023 12:07:14 INFO:	 Market.add_product: 'usr1' add 15 units of Product 'bread', Category: '1', Price: 10, Rate: Not rated yet to store 'bakery'
+03/06/2023 12:07:14 INFO:	 Market.add_product: 'usr1' add 20 units of Product 'pita', Category: '1', Price: 5, Rate: Not rated yet to store 'bakery'
+03/06/2023 12:07:14 INFO:	 Member.logout: Member 'usr1' is logged out
+03/06/2023 12:07:14 INFO:	 Visitor.login: Member 'usr5' is logged in.
+03/06/2023 12:07:14 INFO:	 Market.open_store: Member 'usr5' opened store 'market'.
+03/06/2023 12:07:14 INFO:	 Market.add_product: 'usr5' add 40 units of Product 'tuna', Category: '1', Price: 20, Rate: Not rated yet to store 'market'
+03/06/2023 12:07:14 INFO:	 Market.add_product: 'usr5' add 20 units of Product 'pita', Category: '1', Price: 10, Rate: Not rated yet to store 'market'
+03/06/2023 12:07:14 INFO:	 Member.logout: Member 'usr5' is logged out
+03/06/2023 12:07:14 INFO:	 Visitor.login: Member 'usr2' is logged in.
+03/06/2023 12:07:14 INFO:	 Visitor.add_to_cart: 5 units of Product 'bread' from store 'bakery' is added to Member 'usr2' cart
+03/06/2023 12:07:14 INFO:	 Visitor.add_to_cart: 10 units of Product 'tuna' from store 'market' is added to Member 'usr2' cart
+03/06/2023 12:07:14 INFO:	 Member.logout: Member 'usr2' is logged out
+03/06/2023 12:07:14 INFO:	 Market.leave: Visitor left session: 7512471454573177372
+03/06/2023 12:07:14 INFO:	 Session: 5879838894807549911 has been initialized
+03/06/2023 12:07:14 INFO:	 Visitor.register: 'usr1' is registered!
+03/06/2023 12:07:15 INFO:	 Visitor.register: 'usr5' is registered!
+03/06/2023 12:07:15 INFO:	 Visitor.register: 'usr2' is registered!
+03/06/2023 12:07:15 INFO:	 Visitor.register: 'usr3' is registered!
+03/06/2023 12:07:15 INFO:	 Visitor.login: Member 'usr1' is logged in.
+03/06/2023 12:07:15 INFO:	 Market.open_store: Member 'usr1' opened store 'bakery'.
+03/06/2023 12:07:15 INFO:	 Market.add_product: 'usr1' add 15 units of Product 'bread', Category: '1', Price: 10, Rate: Not rated yet to store 'bakery'
+03/06/2023 12:07:15 INFO:	 Market.add_product: 'usr1' add 20 units of Product 'pita', Category: '1', Price: 5, Rate: Not rated yet to store 'bakery'
+03/06/2023 12:07:15 INFO:	 Member.logout: Member 'usr1' is logged out
+03/06/2023 12:07:16 INFO:	 Visitor.login: Member 'usr5' is logged in.
+03/06/2023 12:07:16 INFO:	 Market.open_store: Member 'usr5' opened store 'market'.
+03/06/2023 12:07:16 INFO:	 Market.add_product: 'usr5' add 40 units of Product 'tuna', Category: '1', Price: 20, Rate: Not rated yet to store 'market'
+03/06/2023 12:07:16 INFO:	 Market.add_product: 'usr5' add 20 units of Product 'pita', Category: '1', Price: 10, Rate: Not rated yet to store 'market'
+03/06/2023 12:07:16 INFO:	 Member.logout: Member 'usr5' is logged out
+03/06/2023 12:07:16 INFO:	 Visitor.login: Member 'usr2' is logged in.
+03/06/2023 12:07:16 INFO:	 Visitor.add_to_cart: 5 units of Product 'bread' from store 'bakery' is added to Member 'usr2' cart
+03/06/2023 12:07:16 INFO:	 Visitor.add_to_cart: 10 units of Product 'pita' from store 'market' is added to Member 'usr2' cart
+03/06/2023 12:07:16 INFO:	 Member.logout: Member 'usr2' is logged out
+03/06/2023 12:07:16 INFO:	 Market.leave: Visitor left session: 5879838894807549911
+03/06/2023 12:07:16 INFO:	 Session: 4993682054478464603 has been initialized
+03/06/2023 12:07:16 INFO:	 Visitor.register: 'usr1' is registered!
+03/06/2023 12:07:16 INFO:	 Visitor.register: 'usr5' is registered!
+03/06/2023 12:07:17 INFO:	 Visitor.register: 'usr2' is registered!
+03/06/2023 12:07:17 INFO:	 Visitor.register: 'usr3' is registered!
+03/06/2023 12:07:17 INFO:	 Visitor.login: Member 'usr1' is logged in.
+03/06/2023 12:07:17 INFO:	 Market.open_store: Member 'usr1' opened store 'bakery'.
+03/06/2023 12:07:17 INFO:	 Market.add_product: 'usr1' add 15 units of Product 'bread', Category: '1', Price: 10, Rate: Not rated yet to store 'bakery'
+03/06/2023 12:07:17 INFO:	 Market.add_product: 'usr1' add 20 units of Product 'pita', Category: '1', Price: 5, Rate: Not rated yet to store 'bakery'
+03/06/2023 12:07:17 INFO:	 Member.logout: Member 'usr1' is logged out
+03/06/2023 12:07:17 INFO:	 Visitor.login: Member 'usr5' is logged in.
+03/06/2023 12:07:17 INFO:	 Market.open_store: Member 'usr5' opened store 'market'.
+03/06/2023 12:07:17 INFO:	 Market.add_product: 'usr5' add 40 units of Product 'tuna', Category: '1', Price: 20, Rate: Not rated yet to store 'market'
+03/06/2023 12:07:17 INFO:	 Market.add_product: 'usr5' add 20 units of Product 'pita', Category: '1', Price: 10, Rate: Not rated yet to store 'market'
+03/06/2023 12:07:17 INFO:	 Member.logout: Member 'usr5' is logged out
+03/06/2023 12:07:17 INFO:	 Visitor.login: Member 'usr2' is logged in.
+03/06/2023 12:07:17 INFO:	 Visitor.add_to_cart: 5 units of Product 'bread' from store 'bakery' is added to Member 'usr2' cart
+03/06/2023 12:07:17 INFO:	 Visitor.add_to_cart: 10 units of Product 'pita' from store 'market' is added to Member 'usr2' cart
+03/06/2023 12:07:17 INFO:	 Member.logout: Member 'usr2' is logged out
+03/06/2023 12:07:17 INFO:	 Market.leave: Visitor left session: 4993682054478464603
+03/06/2023 12:07:17 INFO:	 Session: 8155792285860159517 has been initialized
+03/06/2023 12:07:17 ERROR:	 Admin.login: Admin 'Kfir' enter an incorrect password.
+03/06/2023 12:07:17 WARNING:	 Market is closed!
+03/06/2023 12:07:17 WARNING:	 Logger thread exits!
+03/06/2023 12:09:31 INFO:	 Session: 1464751699291509952 has been initialized
+03/06/2023 12:09:31 INFO:	 Visitor.register: 'usr1' is registered!
+03/06/2023 12:09:32 INFO:	 Visitor.register: 'usr5' is registered!
+03/06/2023 12:09:32 INFO:	 Visitor.register: 'usr2' is registered!
+03/06/2023 12:09:32 INFO:	 Visitor.register: 'usr3' is registered!
+03/06/2023 12:09:32 INFO:	 Visitor.login: Member 'usr1' is logged in.
+03/06/2023 12:09:32 INFO:	 Market.open_store: Member 'usr1' opened store 'bakery'.
+03/06/2023 12:09:32 INFO:	 Market.add_product: 'usr1' add 15 units of Product 'bread', Category: '1', Price: 10, Rate: Not rated yet to store 'bakery'
+03/06/2023 12:09:32 INFO:	 Market.add_product: 'usr1' add 20 units of Product 'pita', Category: '1', Price: 5, Rate: Not rated yet to store 'bakery'
+03/06/2023 12:09:32 INFO:	 Member.logout: Member 'usr1' is logged out
+03/06/2023 12:09:33 INFO:	 Visitor.login: Member 'usr5' is logged in.
+03/06/2023 12:09:33 INFO:	 Market.open_store: Member 'usr5' opened store 'market'.
+03/06/2023 12:09:33 INFO:	 Market.add_product: 'usr5' add 40 units of Product 'tuna', Category: '1', Price: 20, Rate: Not rated yet to store 'market'
+03/06/2023 12:09:33 INFO:	 Market.add_product: 'usr5' add 20 units of Product 'pita', Category: '1', Price: 10, Rate: Not rated yet to store 'market'
+03/06/2023 12:09:33 INFO:	 Member.logout: Member 'usr5' is logged out
+03/06/2023 12:09:33 INFO:	 Visitor.login: Member 'usr2' is logged in.
+03/06/2023 12:09:33 INFO:	 Visitor.add_to_cart: 10 units of Product 'tuna' from store 'market' is added to Member 'usr2' cart
+03/06/2023 12:09:33 ERROR:	 Market.add_to_cart: Store 'bakery' does not contains Product 'bread'
+03/06/2023 12:09:33 INFO:	 Market.show_cart: Cart of Member 'usr2':
+Store 'market'
+Product: 'tuna', Quantity: 10, Price: 20, Discount-Price: 20
+
+03/06/2023 12:09:33 INFO:	 Member.logout: Member 'usr2' is logged out
+03/06/2023 12:09:33 INFO:	 Market.leave: Visitor left session: 1464751699291509952
+03/06/2023 12:09:33 INFO:	 Session: 6674767326346438090 has been initialized
+03/06/2023 12:09:33 INFO:	 Visitor.register: 'usr1' is registered!
+03/06/2023 12:09:33 INFO:	 Visitor.register: 'usr5' is registered!
+03/06/2023 12:09:34 INFO:	 Visitor.register: 'usr2' is registered!
+03/06/2023 12:09:34 INFO:	 Visitor.register: 'usr3' is registered!
+03/06/2023 12:09:34 INFO:	 Visitor.login: Member 'usr1' is logged in.
+03/06/2023 12:09:34 INFO:	 Market.open_store: Member 'usr1' opened store 'bakery'.
+03/06/2023 12:09:34 INFO:	 Market.add_product: 'usr1' add 15 units of Product 'bread', Category: '1', Price: 10, Rate: Not rated yet to store 'bakery'
+03/06/2023 12:09:34 INFO:	 Market.add_product: 'usr1' add 20 units of Product 'pita', Category: '1', Price: 5, Rate: Not rated yet to store 'bakery'
+03/06/2023 12:09:34 INFO:	 Member.logout: Member 'usr1' is logged out
+03/06/2023 12:09:34 INFO:	 Visitor.login: Member 'usr5' is logged in.
+03/06/2023 12:09:34 INFO:	 Market.open_store: Member 'usr5' opened store 'market'.
+03/06/2023 12:09:34 INFO:	 Market.add_product: 'usr5' add 40 units of Product 'tuna', Category: '1', Price: 20, Rate: Not rated yet to store 'market'
+03/06/2023 12:09:34 INFO:	 Market.add_product: 'usr5' add 20 units of Product 'pita', Category: '1', Price: 10, Rate: Not rated yet to store 'market'
+03/06/2023 12:09:34 INFO:	 Member.logout: Member 'usr5' is logged out
+03/06/2023 12:09:34 INFO:	 Visitor.login: Member 'usr2' is logged in.
+03/06/2023 12:09:34 INFO:	 Visitor.add_to_cart: 10 units of Product 'tuna' from store 'market' is added to Member 'usr2' cart
+03/06/2023 12:09:34 ERROR:	 Market.add_to_cart: Store 'market' does not contains Product 'xxx'
+03/06/2023 12:09:34 INFO:	 Market.show_cart: Cart of Member 'usr2':
+Store 'market'
+Product: 'tuna', Quantity: 10, Price: 20, Discount-Price: 20
+
+03/06/2023 12:09:34 INFO:	 Member.logout: Member 'usr2' is logged out
+03/06/2023 12:09:34 ERROR:	 Visitor.logout: Visitor attempted to logout.
+03/06/2023 12:09:34 INFO:	 Market.leave: Visitor left session: 6674767326346438090
+03/06/2023 12:09:34 INFO:	 Session: 1327709102924238557 has been initialized
+03/06/2023 12:09:35 INFO:	 Visitor.register: 'usr1' is registered!
+03/06/2023 12:09:35 INFO:	 Visitor.register: 'usr5' is registered!
+03/06/2023 12:09:35 INFO:	 Visitor.register: 'usr2' is registered!
+03/06/2023 12:09:35 INFO:	 Visitor.register: 'usr3' is registered!
+03/06/2023 12:09:36 INFO:	 Visitor.login: Member 'usr1' is logged in.
+03/06/2023 12:09:36 INFO:	 Market.open_store: Member 'usr1' opened store 'bakery'.
+03/06/2023 12:09:36 INFO:	 Market.add_product: 'usr1' add 15 units of Product 'bread', Category: '1', Price: 10, Rate: Not rated yet to store 'bakery'
+03/06/2023 12:09:36 INFO:	 Market.add_product: 'usr1' add 20 units of Product 'pita', Category: '1', Price: 5, Rate: Not rated yet to store 'bakery'
+03/06/2023 12:09:36 INFO:	 Member.logout: Member 'usr1' is logged out
+03/06/2023 12:09:36 INFO:	 Visitor.login: Member 'usr5' is logged in.
+03/06/2023 12:09:36 INFO:	 Market.open_store: Member 'usr5' opened store 'market'.
+03/06/2023 12:09:36 INFO:	 Market.add_product: 'usr5' add 40 units of Product 'tuna', Category: '1', Price: 20, Rate: Not rated yet to store 'market'
+03/06/2023 12:09:36 INFO:	 Market.add_product: 'usr5' add 20 units of Product 'pita', Category: '1', Price: 10, Rate: Not rated yet to store 'market'
+03/06/2023 12:09:36 INFO:	 Member.logout: Member 'usr5' is logged out
+03/06/2023 12:09:36 INFO:	 Visitor.login: Member 'usr2' is logged in.
+03/06/2023 12:09:36 INFO:	 Visitor.add_to_cart: 10 units of Product 'tuna' from store 'market' is added to Member 'usr2' cart
+03/06/2023 12:09:36 ERROR:	 Market.add_to_cart: Store 'xxx' is not registered to the market.
+03/06/2023 12:09:36 INFO:	 Market.show_cart: Cart of Member 'usr2':
+Store 'market'
+Product: 'tuna', Quantity: 10, Price: 20, Discount-Price: 20
+
+03/06/2023 12:09:36 INFO:	 Member.logout: Member 'usr2' is logged out
+03/06/2023 12:09:36 ERROR:	 Visitor.logout: Visitor attempted to logout.
+03/06/2023 12:09:36 INFO:	 Market.leave: Visitor left session: 1327709102924238557
+03/06/2023 12:09:36 INFO:	 Session: 3121844548750106446 has been initialized
+03/06/2023 12:09:36 INFO:	 Visitor.register: 'usr1' is registered!
+03/06/2023 12:09:37 INFO:	 Visitor.register: 'usr5' is registered!
+03/06/2023 12:09:37 INFO:	 Visitor.register: 'usr2' is registered!
+03/06/2023 12:09:37 INFO:	 Visitor.register: 'usr3' is registered!
+03/06/2023 12:09:37 INFO:	 Visitor.login: Member 'usr1' is logged in.
+03/06/2023 12:09:37 INFO:	 Market.open_store: Member 'usr1' opened store 'bakery'.
+03/06/2023 12:09:37 INFO:	 Market.add_product: 'usr1' add 15 units of Product 'bread', Category: '1', Price: 10, Rate: Not rated yet to store 'bakery'
+03/06/2023 12:09:37 INFO:	 Market.add_product: 'usr1' add 20 units of Product 'pita', Category: '1', Price: 5, Rate: Not rated yet to store 'bakery'
+03/06/2023 12:09:37 INFO:	 Member.logout: Member 'usr1' is logged out
+03/06/2023 12:09:37 INFO:	 Visitor.login: Member 'usr5' is logged in.
+03/06/2023 12:09:37 INFO:	 Market.open_store: Member 'usr5' opened store 'market'.
+03/06/2023 12:09:37 INFO:	 Market.add_product: 'usr5' add 40 units of Product 'tuna', Category: '1', Price: 20, Rate: Not rated yet to store 'market'
+03/06/2023 12:09:37 INFO:	 Market.add_product: 'usr5' add 20 units of Product 'pita', Category: '1', Price: 10, Rate: Not rated yet to store 'market'
+03/06/2023 12:09:37 INFO:	 Member.logout: Member 'usr5' is logged out
+03/06/2023 12:09:38 INFO:	 Visitor.login: Member 'usr2' is logged in.
+03/06/2023 12:09:38 ERROR:	 Market.add_to_cart: Store 'market' does not contains Product 'tuna'
+03/06/2023 12:09:38 ERROR:	 Market.add_to_cart: Store 'bakery' does not contains Product 'bread'
+03/06/2023 12:09:38 INFO:	 Market.show_cart: Cart of Member 'usr2':
+
+03/06/2023 12:09:38 INFO:	 Member.logout: Member 'usr2' is logged out
+03/06/2023 12:09:38 ERROR:	 Visitor.logout: Visitor attempted to logout.
+03/06/2023 12:09:38 INFO:	 Market.leave: Visitor left session: 3121844548750106446
+03/06/2023 12:09:38 INFO:	 Session: 275337313800106862 has been initialized
+03/06/2023 12:09:38 INFO:	 Visitor.register: 'usr1' is registered!
+03/06/2023 12:09:38 INFO:	 Visitor.register: 'usr5' is registered!
+03/06/2023 12:09:38 INFO:	 Visitor.register: 'usr2' is registered!
+03/06/2023 12:09:39 INFO:	 Visitor.register: 'usr3' is registered!
+03/06/2023 12:09:39 INFO:	 Visitor.login: Member 'usr1' is logged in.
+03/06/2023 12:09:39 INFO:	 Market.open_store: Member 'usr1' opened store 'bakery'.
+03/06/2023 12:09:39 INFO:	 Market.add_product: 'usr1' add 15 units of Product 'bread', Category: '1', Price: 10, Rate: Not rated yet to store 'bakery'
+03/06/2023 12:09:39 INFO:	 Market.add_product: 'usr1' add 20 units of Product 'pita', Category: '1', Price: 5, Rate: Not rated yet to store 'bakery'
+03/06/2023 12:09:39 INFO:	 Member.logout: Member 'usr1' is logged out
+03/06/2023 12:09:39 INFO:	 Visitor.login: Member 'usr5' is logged in.
+03/06/2023 12:09:39 INFO:	 Market.open_store: Member 'usr5' opened store 'market'.
+03/06/2023 12:09:39 INFO:	 Market.add_product: 'usr5' add 40 units of Product 'tuna', Category: '1', Price: 20, Rate: Not rated yet to store 'market'
+03/06/2023 12:09:39 INFO:	 Market.add_product: 'usr5' add 20 units of Product 'pita', Category: '1', Price: 10, Rate: Not rated yet to store 'market'
+03/06/2023 12:09:39 INFO:	 Member.logout: Member 'usr5' is logged out
+03/06/2023 12:09:39 INFO:	 Visitor.add_to_cart: 5 units of Product 'bread' from store 'bakery' is added to Visitor cart
+03/06/2023 12:09:39 INFO:	 Visitor.add_to_cart: 10 units of Product 'tuna' from store 'market' is added to Visitor cart
+03/06/2023 12:09:39 INFO:	 Market.show_cart: Cart of Visitor:
+Store 'bakery'
+Product: 'bread', Quantity: 5, Price: 10, Discount-Price: 10
+Store 'market'
+Product: 'tuna', Quantity: 10, Price: 20, Discount-Price: 20
+
+03/06/2023 12:09:39 ERROR:	 Visitor.logout: Visitor attempted to logout.
+03/06/2023 12:09:39 INFO:	 Market.leave: Visitor left session: 275337313800106862
+03/06/2023 12:09:39 INFO:	 Session: 6080828840306008807 has been initialized
+03/06/2023 12:09:39 INFO:	 Visitor.register: 'usr1' is registered!
+03/06/2023 12:09:39 INFO:	 Visitor.register: 'usr5' is registered!
+03/06/2023 12:09:40 INFO:	 Visitor.register: 'usr2' is registered!
+03/06/2023 12:09:40 INFO:	 Visitor.register: 'usr3' is registered!
+03/06/2023 12:09:40 INFO:	 Visitor.login: Member 'usr1' is logged in.
+03/06/2023 12:09:40 INFO:	 Market.open_store: Member 'usr1' opened store 'bakery'.
+03/06/2023 12:09:40 INFO:	 Market.add_product: 'usr1' add 15 units of Product 'bread', Category: '1', Price: 10, Rate: Not rated yet to store 'bakery'
+03/06/2023 12:09:40 INFO:	 Market.add_product: 'usr1' add 20 units of Product 'pita', Category: '1', Price: 5, Rate: Not rated yet to store 'bakery'
+03/06/2023 12:09:40 INFO:	 Member.logout: Member 'usr1' is logged out
+03/06/2023 12:09:40 INFO:	 Visitor.login: Member 'usr5' is logged in.
+03/06/2023 12:09:40 INFO:	 Market.open_store: Member 'usr5' opened store 'market'.
+03/06/2023 12:09:40 INFO:	 Market.add_product: 'usr5' add 40 units of Product 'tuna', Category: '1', Price: 20, Rate: Not rated yet to store 'market'
+03/06/2023 12:09:40 INFO:	 Market.add_product: 'usr5' add 20 units of Product 'pita', Category: '1', Price: 10, Rate: Not rated yet to store 'market'
+03/06/2023 12:09:40 INFO:	 Member.logout: Member 'usr5' is logged out
+03/06/2023 12:09:41 INFO:	 Visitor.login: Member 'usr2' is logged in.
+03/06/2023 12:09:41 INFO:	 Visitor.add_to_cart: 5 units of Product 'bread' from store 'bakery' is added to Member 'usr2' cart
+03/06/2023 12:09:41 INFO:	 Visitor.add_to_cart: 10 units of Product 'pita' from store 'bakery' is added to Member 'usr2' cart
+03/06/2023 12:09:41 INFO:	 Visitor.add_to_cart: 10 units of Product 'pita' from store 'market' is added to Member 'usr2' cart
+03/06/2023 12:09:41 INFO:	 Visitor.add_to_cart: 20 units of Product 'tuna' from store 'market' is added to Member 'usr2' cart
+03/06/2023 12:09:41 INFO:	 Market.show_cart: Cart of Member 'usr2':
+Store 'bakery'
+Product: 'bread', Quantity: 5, Price: 10, Discount-Price: 10
+Product: 'pita', Quantity: 10, Price: 5, Discount-Price: 5
+Store 'market'
+Product: 'pita', Quantity: 10, Price: 10, Discount-Price: 10
+Product: 'tuna', Quantity: 20, Price: 20, Discount-Price: 20
+
+03/06/2023 12:09:41 INFO:	 Member.logout: Member 'usr2' is logged out
+03/06/2023 12:09:41 ERROR:	 Visitor.logout: Visitor attempted to logout.
+03/06/2023 12:09:41 INFO:	 Market.leave: Visitor left session: 6080828840306008807
+03/06/2023 12:09:41 INFO:	 Session: 6970669669967490568 has been initialized
+03/06/2023 12:09:41 INFO:	 Visitor.register: 'usr1' is registered!
+03/06/2023 12:09:41 INFO:	 Visitor.register: 'usr5' is registered!
+03/06/2023 12:09:41 INFO:	 Visitor.register: 'usr2' is registered!
+03/06/2023 12:09:41 INFO:	 Visitor.register: 'usr3' is registered!
+03/06/2023 12:09:42 INFO:	 Visitor.login: Member 'usr1' is logged in.
+03/06/2023 12:09:42 INFO:	 Market.open_store: Member 'usr1' opened store 'bakery'.
+03/06/2023 12:09:42 INFO:	 Market.add_product: 'usr1' add 15 units of Product 'bread', Category: '1', Price: 10, Rate: Not rated yet to store 'bakery'
+03/06/2023 12:09:42 INFO:	 Market.add_product: 'usr1' add 20 units of Product 'pita', Category: '1', Price: 5, Rate: Not rated yet to store 'bakery'
+03/06/2023 12:09:42 INFO:	 Member.logout: Member 'usr1' is logged out
+03/06/2023 12:09:42 INFO:	 Visitor.login: Member 'usr5' is logged in.
+03/06/2023 12:09:42 INFO:	 Market.open_store: Member 'usr5' opened store 'market'.
+03/06/2023 12:09:42 INFO:	 Market.add_product: 'usr5' add 40 units of Product 'tuna', Category: '1', Price: 20, Rate: Not rated yet to store 'market'
+03/06/2023 12:09:42 INFO:	 Market.add_product: 'usr5' add 20 units of Product 'pita', Category: '1', Price: 10, Rate: Not rated yet to store 'market'
+03/06/2023 12:09:42 INFO:	 Member.logout: Member 'usr5' is logged out
+03/06/2023 12:09:42 INFO:	 Visitor.login: Member 'usr2' is logged in.
+03/06/2023 12:09:42 INFO:	 Visitor.add_to_cart: 5 units of Product 'bread' from store 'bakery' is added to Member 'usr2' cart
+03/06/2023 12:09:42 INFO:	 Visitor.add_to_cart: 10 units of Product 'pita' from store 'market' is added to Member 'usr2' cart
+03/06/2023 12:09:42 INFO:	 Visitor.remove_product_from_cart: Product 'bread' is removed from Member 'usr2' cart
+03/06/2023 12:09:42 INFO:	 Market.show_cart: Cart of Member 'usr2':
+Store 'bakery'
+Product: 'bread', Quantity: 5, Price: 10, Discount-Price: 10
+Store 'market'
+Product: 'pita', Quantity: 10, Price: 10, Discount-Price: 10
+
+03/06/2023 12:09:42 INFO:	 Member.logout: Member 'usr2' is logged out
+03/06/2023 12:09:42 INFO:	 Market.leave: Visitor left session: 6970669669967490568
+03/06/2023 12:09:42 INFO:	 Session: 7369207245307195136 has been initialized
+03/06/2023 12:09:42 INFO:	 Visitor.register: 'usr1' is registered!
+03/06/2023 12:09:43 INFO:	 Visitor.register: 'usr5' is registered!
+03/06/2023 12:09:43 INFO:	 Visitor.register: 'usr2' is registered!
+03/06/2023 12:09:43 INFO:	 Visitor.register: 'usr3' is registered!
+03/06/2023 12:09:43 INFO:	 Visitor.login: Member 'usr1' is logged in.
+03/06/2023 12:09:43 INFO:	 Market.open_store: Member 'usr1' opened store 'bakery'.
+03/06/2023 12:09:43 INFO:	 Market.add_product: 'usr1' add 15 units of Product 'bread', Category: '1', Price: 10, Rate: Not rated yet to store 'bakery'
+03/06/2023 12:09:43 INFO:	 Market.add_product: 'usr1' add 20 units of Product 'pita', Category: '1', Price: 5, Rate: Not rated yet to store 'bakery'
+03/06/2023 12:09:43 INFO:	 Member.logout: Member 'usr1' is logged out
+03/06/2023 12:09:44 INFO:	 Visitor.login: Member 'usr5' is logged in.
+03/06/2023 12:09:44 INFO:	 Market.open_store: Member 'usr5' opened store 'market'.
+03/06/2023 12:09:44 INFO:	 Market.add_product: 'usr5' add 40 units of Product 'tuna', Category: '1', Price: 20, Rate: Not rated yet to store 'market'
+03/06/2023 12:09:44 INFO:	 Market.add_product: 'usr5' add 20 units of Product 'pita', Category: '1', Price: 10, Rate: Not rated yet to store 'market'
+03/06/2023 12:09:44 INFO:	 Member.logout: Member 'usr5' is logged out
+03/06/2023 12:09:44 INFO:	 Visitor.login: Member 'usr2' is logged in.
+03/06/2023 12:09:44 INFO:	 Visitor.add_to_cart: 5 units of Product 'bread' from store 'bakery' is added to Member 'usr2' cart
+03/06/2023 12:09:44 INFO:	 Visitor.add_to_cart: 10 units of Product 'tuna' from store 'market' is added to Member 'usr2' cart
+03/06/2023 12:09:44 ERROR:	 Market.remove_product_from_cart: Store 'bakery' does not contains Product 'xxx'
+03/06/2023 12:09:44 INFO:	 Market.show_cart: Cart of Member 'usr2':
+Store 'bakery'
+Product: 'bread', Quantity: 5, Price: 10, Discount-Price: 10
+Store 'market'
+Product: 'tuna', Quantity: 10, Price: 20, Discount-Price: 20
+
+03/06/2023 12:09:44 INFO:	 Member.logout: Member 'usr2' is logged out
+03/06/2023 12:09:44 ERROR:	 Visitor.logout: Visitor attempted to logout.
+03/06/2023 12:09:44 INFO:	 Market.leave: Visitor left session: 7369207245307195136
+03/06/2023 12:09:44 INFO:	 Session: 6725169607539533496 has been initialized
+03/06/2023 12:09:44 INFO:	 Visitor.register: 'usr1' is registered!
+03/06/2023 12:09:44 INFO:	 Visitor.register: 'usr5' is registered!
+03/06/2023 12:09:44 INFO:	 Visitor.register: 'usr2' is registered!
+03/06/2023 12:09:45 INFO:	 Visitor.register: 'usr3' is registered!
+03/06/2023 12:09:45 INFO:	 Visitor.login: Member 'usr1' is logged in.
+03/06/2023 12:09:45 INFO:	 Market.open_store: Member 'usr1' opened store 'bakery'.
+03/06/2023 12:09:45 INFO:	 Market.add_product: 'usr1' add 15 units of Product 'bread', Category: '1', Price: 10, Rate: Not rated yet to store 'bakery'
+03/06/2023 12:09:45 INFO:	 Market.add_product: 'usr1' add 20 units of Product 'pita', Category: '1', Price: 5, Rate: Not rated yet to store 'bakery'
+03/06/2023 12:09:45 INFO:	 Member.logout: Member 'usr1' is logged out
+03/06/2023 12:09:45 INFO:	 Visitor.login: Member 'usr5' is logged in.
+03/06/2023 12:09:45 INFO:	 Market.open_store: Member 'usr5' opened store 'market'.
+03/06/2023 12:09:45 INFO:	 Market.add_product: 'usr5' add 40 units of Product 'tuna', Category: '1', Price: 20, Rate: Not rated yet to store 'market'
+03/06/2023 12:09:45 INFO:	 Market.add_product: 'usr5' add 20 units of Product 'pita', Category: '1', Price: 10, Rate: Not rated yet to store 'market'
+03/06/2023 12:09:45 INFO:	 Member.logout: Member 'usr5' is logged out
+03/06/2023 12:09:45 INFO:	 Visitor.login: Member 'usr2' is logged in.
+03/06/2023 12:09:45 INFO:	 Visitor.add_to_cart: 5 units of Product 'bread' from store 'bakery' is added to Member 'usr2' cart
+03/06/2023 12:09:45 INFO:	 Visitor.add_to_cart: 10 units of Product 'tuna' from store 'market' is added to Member 'usr2' cart
+03/06/2023 12:09:45 ERROR:	 Market.remove_product_from_cart: Store 'xxx' is not registered to the market.
+03/06/2023 12:09:45 INFO:	 Market.show_cart: Cart of Member 'usr2':
+Store 'bakery'
+Product: 'bread', Quantity: 5, Price: 10, Discount-Price: 10
+Store 'market'
+Product: 'tuna', Quantity: 10, Price: 20, Discount-Price: 20
+
+03/06/2023 12:09:45 INFO:	 Member.logout: Member 'usr2' is logged out
+03/06/2023 12:09:45 ERROR:	 Visitor.logout: Visitor attempted to logout.
+03/06/2023 12:09:45 INFO:	 Market.leave: Visitor left session: 6725169607539533496
+03/06/2023 12:09:45 INFO:	 Session: 507976008945452341 has been initialized
+03/06/2023 12:09:46 INFO:	 Visitor.register: 'usr1' is registered!
+03/06/2023 12:09:46 INFO:	 Visitor.register: 'usr5' is registered!
+03/06/2023 12:09:46 INFO:	 Visitor.register: 'usr2' is registered!
+03/06/2023 12:09:46 INFO:	 Visitor.register: 'usr3' is registered!
+03/06/2023 12:09:47 INFO:	 Visitor.login: Member 'usr1' is logged in.
+03/06/2023 12:09:47 INFO:	 Market.open_store: Member 'usr1' opened store 'bakery'.
+03/06/2023 12:09:47 INFO:	 Market.add_product: 'usr1' add 15 units of Product 'bread', Category: '1', Price: 10, Rate: Not rated yet to store 'bakery'
+03/06/2023 12:09:47 INFO:	 Market.add_product: 'usr1' add 20 units of Product 'pita', Category: '1', Price: 5, Rate: Not rated yet to store 'bakery'
+03/06/2023 12:09:47 INFO:	 Member.logout: Member 'usr1' is logged out
+03/06/2023 12:09:47 INFO:	 Visitor.login: Member 'usr5' is logged in.
+03/06/2023 12:09:47 INFO:	 Market.open_store: Member 'usr5' opened store 'market'.
+03/06/2023 12:09:47 INFO:	 Market.add_product: 'usr5' add 40 units of Product 'tuna', Category: '1', Price: 20, Rate: Not rated yet to store 'market'
+03/06/2023 12:09:47 INFO:	 Market.add_product: 'usr5' add 20 units of Product 'pita', Category: '1', Price: 10, Rate: Not rated yet to store 'market'
+03/06/2023 12:09:47 INFO:	 Member.logout: Member 'usr5' is logged out
+03/06/2023 12:09:47 INFO:	 Visitor.login: Member 'usr2' is logged in.
+03/06/2023 12:09:47 INFO:	 Visitor.add_to_cart: 5 units of Product 'bread' from store 'bakery' is added to Member 'usr2' cart
+03/06/2023 12:09:47 INFO:	 Visitor.add_to_cart: 10 units of Product 'pita' from store 'market' is added to Member 'usr2' cart
+03/06/2023 12:09:47 INFO:	 Visitor.update_cart_product_quantity: Product 'bread', of Member 'usr2' cart is set to None.
+03/06/2023 12:09:47 INFO:	 Market.show_cart: Cart of Member 'usr2':
+Store 'bakery'
+Product: 'bread', Quantity: 15, Price: 10, Discount-Price: 10
+Store 'market'
+Product: 'pita', Quantity: 10, Price: 10, Discount-Price: 10
+
+03/06/2023 12:09:47 INFO:	 Member.logout: Member 'usr2' is logged out
+03/06/2023 12:09:47 INFO:	 Market.leave: Visitor left session: 507976008945452341
+03/06/2023 12:09:47 INFO:	 Session: 4911446235408652758 has been initialized
+03/06/2023 12:09:47 INFO:	 Visitor.register: 'usr1' is registered!
+03/06/2023 12:09:47 INFO:	 Visitor.register: 'usr5' is registered!
+03/06/2023 12:09:48 INFO:	 Visitor.register: 'usr2' is registered!
+03/06/2023 12:09:48 INFO:	 Visitor.register: 'usr3' is registered!
+03/06/2023 12:09:48 INFO:	 Visitor.login: Member 'usr1' is logged in.
+03/06/2023 12:09:48 INFO:	 Market.open_store: Member 'usr1' opened store 'bakery'.
+03/06/2023 12:09:48 INFO:	 Market.add_product: 'usr1' add 15 units of Product 'bread', Category: '1', Price: 10, Rate: Not rated yet to store 'bakery'
+03/06/2023 12:09:48 INFO:	 Market.add_product: 'usr1' add 20 units of Product 'pita', Category: '1', Price: 5, Rate: Not rated yet to store 'bakery'
+03/06/2023 12:09:48 INFO:	 Member.logout: Member 'usr1' is logged out
+03/06/2023 12:09:48 INFO:	 Visitor.login: Member 'usr5' is logged in.
+03/06/2023 12:09:48 INFO:	 Market.open_store: Member 'usr5' opened store 'market'.
+03/06/2023 12:09:48 INFO:	 Market.add_product: 'usr5' add 40 units of Product 'tuna', Category: '1', Price: 20, Rate: Not rated yet to store 'market'
+03/06/2023 12:09:48 INFO:	 Market.add_product: 'usr5' add 20 units of Product 'pita', Category: '1', Price: 10, Rate: Not rated yet to store 'market'
+03/06/2023 12:09:48 INFO:	 Member.logout: Member 'usr5' is logged out
+03/06/2023 12:09:49 INFO:	 Visitor.login: Member 'usr2' is logged in.
+03/06/2023 12:09:49 INFO:	 Visitor.add_to_cart: 5 units of Product 'bread' from store 'bakery' is added to Member 'usr2' cart
+03/06/2023 12:09:49 INFO:	 Visitor.add_to_cart: 10 units of Product 'pita' from store 'market' is added to Member 'usr2' cart
+03/06/2023 12:09:49 INFO:	 Visitor.update_cart_product_quantity: Product 'bread', of Member 'usr2' cart is set to None.
+03/06/2023 12:09:49 INFO:	 Member.logout: Member 'usr2' is logged out
+03/06/2023 12:09:49 INFO:	 Market.leave: Visitor left session: 4911446235408652758
+03/06/2023 12:09:49 INFO:	 Session: 7249139205635368053 has been initialized
+03/06/2023 12:09:49 ERROR:	 Admin.login: Admin 'Kfir' enter an incorrect password.
+03/06/2023 12:09:49 WARNING:	 Market is closed!
+03/06/2023 12:09:49 WARNING:	 Logger thread exits!
