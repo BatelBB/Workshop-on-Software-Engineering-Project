@@ -19,8 +19,8 @@ class Visitor(IRole, ABC):
     def register(self) -> Response[bool]:
         return report_info(self.register.__qualname__, f'\'{self.context.username}\' is registered!')
 
-    def login(self, input_password: bytes) -> Response[bool]:
-        if not bcrypt.checkpw(input_password, self.context.encrypted_password):
+    def login(self, input_password: str) -> Response[bool]:
+        if not bcrypt.checkpw(bytes(input_password, 'utf8'), self.context.encrypted_password):
             return report_error(self.login.__qualname__, f'{self} enter an incorrect password.')
         from src.domain.main.User.Role.Member import Member
         self.context.role = Member(self.context)

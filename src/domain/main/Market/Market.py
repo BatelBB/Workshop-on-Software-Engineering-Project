@@ -210,8 +210,7 @@ class Market(IService):
         return report_info(self.leave.__qualname__, f'{leaving_user} left session: {session_identifier}')
 
     def register(self, session_identifier: int, username: str, encrypted_password: str) -> Response[bool]:
-        password_hash = bcrypt.hashpw(encrypted_password.encode('utf8'), bcrypt.gensalt())
-        new_user = User(self, username, password_hash)
+        new_user = User(self, username, encrypted_password)
         registered_user_with_param_username = self.users.insert(username, new_user)
         if registered_user_with_param_username is None:
             return new_user.register()
@@ -225,7 +224,7 @@ class Market(IService):
         next_user = self.users.get(username)
         if next_user is None:
             return report_error(self.login.__qualname__, f'Username: \'{username}\' is not registered')
-        response = next_user.login(encrypted_password.encode('utf8'))
+        response = next_user.login(encrypted_password)
         current_user = self.get_active_user(session_identifier)
         if current_user.is_logged_in and current_user != next_user:
             current_user.logout()
