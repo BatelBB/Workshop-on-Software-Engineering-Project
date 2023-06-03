@@ -111,4 +111,4 @@ class PurchaseTest(unittest.TestCase):
         self.assertFalse(response.result)
         # Make sure that the refund method was called
         mock_refund.assert_called_once()
-        mock_refund.assert_called_once_with(19.9)
+        mock_refund.assert_called_once_with(39.8)

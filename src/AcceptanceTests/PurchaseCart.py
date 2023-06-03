@@ -222,7 +222,7 @@ class PurchaseCart(unittest.TestCase):
             self.app.logout()
 
             payment_mock.assert_called_once_with(560)
-            delivery_mock.assert_not_called()
+            delivery_mock.assert_called()
             refund_mock.assert_called_once_with(560)
 
     def set_stores(self):

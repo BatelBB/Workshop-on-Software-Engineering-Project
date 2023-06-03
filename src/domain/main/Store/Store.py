@@ -21,7 +21,7 @@ class ProductQuantity:
 
     def reserve(self, desired_quantity: int) -> bool:
         with self.lock:
-            if self.quantity > desired_quantity:
+            if self.quantity >= desired_quantity:
                 self.quantity -= desired_quantity
                 return True
             else:
@@ -231,7 +231,7 @@ class Store:
             price = 0
             # only call from right after reserve
             for item in basket.items:
-                price += self.get_product_price(item.product_name)
+                price += (self.get_product_price(item.product_name) * item.quantity)
             return price
         else:
             self.discounts.calculate_price(basket, self.products)
