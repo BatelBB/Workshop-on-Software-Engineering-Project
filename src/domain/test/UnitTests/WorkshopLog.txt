@@ -398,3 +398,137 @@ Description: set_information in paywithcard: invalid payment parameters, excpect
 03/06/2023 12:51:05 ERROR:	 Admin.login: Admin 'Kfir' enter an incorrect password.
 03/06/2023 12:51:05 WARNING:	 Market is closed!
 03/06/2023 12:51:05 WARNING:	 Logger thread exits!
+03/06/2023 14:24:09 INFO:	 Session: 173206292114114391 has been initialized
+03/06/2023 14:24:09 ERROR:	 Admin.login: Admin 'Kfir' enter an incorrect password.
+03/06/2023 14:24:09 INFO:	 Visitor.register: 'test' is registered!
+03/06/2023 14:24:10 INFO:	 Visitor.login: Member 'test' is logged in.
+03/06/2023 14:24:10 INFO:	 Market.open_store: Member 'test' opened store 'IHerb'.
+03/06/2023 14:24:10 INFO:	 Market.add_product: 'test' add 20 units of Product 'Vitamin A', Category: 'Vitamins', Price: 19.9, Rate: Not rated yet to store 'IHerb'
+03/06/2023 14:24:10 INFO:	 Market.add_product: 'test' add 25 units of Product 'Toothpaste', Category: 'Hygiene', Price: 21.2, Rate: Not rated yet to store 'IHerb'
+03/06/2023 14:24:10 ERROR:	 Market.add_to_cart: Store 'IHerb' does not contains Product 'Vitamin A'
+03/06/2023 14:24:10 ERROR:	 Visitor.verify_cart_not_empty: Member 'test' cart's IS empty!
+03/06/2023 14:24:10 INFO:	 Session: 4536882016397386226 has been initialized
+03/06/2023 14:24:10 ERROR:	 Admin.login: Admin 'Kfir' enter an incorrect password.
+03/06/2023 14:24:10 WARNING:	 Market is closed!
+03/06/2023 14:24:10 WARNING:	 Logger thread exits!
+03/06/2023 14:24:31 INFO:	 Session: 7772345832492419011 has been initialized
+03/06/2023 14:24:31 ERROR:	 Admin.login: Admin 'Kfir' enter an incorrect password.
+03/06/2023 14:24:31 INFO:	 Visitor.register: 'A' is registered!
+03/06/2023 14:24:32 INFO:	 Visitor.login: Member 'A' is logged in.
+03/06/2023 14:24:32 INFO:	 Market.open_store: Member 'A' opened store 'Amazon'.
+03/06/2023 14:24:32 INFO:	 Visitor.register: 'B' is registered!
+03/06/2023 14:24:32 INFO:	 Market.appoint_manager: Member 'A' appointed 'B' to a Store Manager.
+03/06/2023 14:24:32 INFO:	 Visitor.register: 'Mayer' is registered!
+03/06/2023 14:24:32 INFO:	 Market.appoint_manager: Member 'A' appointed 'Mayer' to a Store Manager.
+03/06/2023 14:24:32 INFO:	 Visitor.register: 'foo()' is registered!
+03/06/2023 14:24:32 INFO:	 Market.appoint_manager: Member 'A' appointed 'foo()' to a Store Manager.
+03/06/2023 14:24:33 INFO:	 Visitor.register: 'boo()' is registered!
+03/06/2023 14:24:33 INFO:	 Market.appoint_manager: Member 'A' appointed 'boo()' to a Store Manager.
+03/06/2023 14:24:33 INFO:	 Market.close_store: Founder 'A' CLOSED store 'Amazon'
+03/06/2023 14:24:33 INFO:	 Visitor.login: Member 'B' is logged in.
+03/06/2023 14:24:33 INFO:	 Member.logout: Member 'A' is logged out
+03/06/2023 14:24:33 ERROR:	 Market.add_product: 'B' has no permission to 'Add a Product' at store 'Amazon'
+03/06/2023 14:24:33 ERROR:	 Market.add_product: 'B' has no permission to 'Add a Product' at store 'Amazon'
+03/06/2023 14:24:33 ERROR:	 Market.add_product: 'B' has no permission to 'Add a Product' at store 'Amazon'
+03/06/2023 14:24:33 ERROR:	 Market.add_product: 'B' has no permission to 'Add a Product' at store 'Amazon'
+03/06/2023 14:24:33 ERROR:	 Market.add_product: 'B' has no permission to 'Add a Product' at store 'Amazon'
+03/06/2023 14:24:33 ERROR:	 Market.add_product: 'B' has no permission to 'Add a Product' at store 'Amazon'
+03/06/2023 14:24:33 ERROR:	 Market.add_product: 'B' has no permission to 'Add a Product' at store 'Amazon'
+03/06/2023 14:24:33 INFO:	 Visitor.login: Member 'Mayer' is logged in.
+03/06/2023 14:24:33 INFO:	 Member.logout: Member 'B' is logged out
+03/06/2023 14:24:33 ERROR:	 Market.add_product: 'Mayer' has no permission to 'Add a Product' at store 'Amazon'
+03/06/2023 14:24:33 ERROR:	 Market.add_product: 'Mayer' has no permission to 'Add a Product' at store 'Amazon'
+03/06/2023 14:24:33 ERROR:	 Market.add_product: 'Mayer' has no permission to 'Add a Product' at store 'Amazon'
+03/06/2023 14:24:33 ERROR:	 Market.add_product: 'Mayer' has no permission to 'Add a Product' at store 'Amazon'
+03/06/2023 14:24:33 ERROR:	 Market.add_product: 'Mayer' has no permission to 'Add a Product' at store 'Amazon'
+03/06/2023 14:24:33 ERROR:	 Market.add_product: 'Mayer' has no permission to 'Add a Product' at store 'Amazon'
+03/06/2023 14:24:33 ERROR:	 Market.add_product: 'Mayer' has no permission to 'Add a Product' at store 'Amazon'
+03/06/2023 14:24:34 INFO:	 Visitor.login: Member 'foo()' is logged in.
+03/06/2023 14:24:34 INFO:	 Member.logout: Member 'Mayer' is logged out
+03/06/2023 14:24:34 ERROR:	 Market.add_product: 'foo()' has no permission to 'Add a Product' at store 'Amazon'
+03/06/2023 14:24:34 ERROR:	 Market.add_product: 'foo()' has no permission to 'Add a Product' at store 'Amazon'
+03/06/2023 14:24:34 ERROR:	 Market.add_product: 'foo()' has no permission to 'Add a Product' at store 'Amazon'
+03/06/2023 14:24:34 ERROR:	 Market.add_product: 'foo()' has no permission to 'Add a Product' at store 'Amazon'
+03/06/2023 14:24:34 ERROR:	 Market.add_product: 'foo()' has no permission to 'Add a Product' at store 'Amazon'
+03/06/2023 14:24:34 ERROR:	 Market.add_product: 'foo()' has no permission to 'Add a Product' at store 'Amazon'
+03/06/2023 14:24:34 ERROR:	 Market.add_product: 'foo()' has no permission to 'Add a Product' at store 'Amazon'
+03/06/2023 14:24:34 INFO:	 Visitor.login: Member 'boo()' is logged in.
+03/06/2023 14:24:34 INFO:	 Member.logout: Member 'foo()' is logged out
+03/06/2023 14:24:34 ERROR:	 Market.add_product: 'boo()' has no permission to 'Add a Product' at store 'Amazon'
+03/06/2023 14:24:34 ERROR:	 Market.add_product: 'boo()' has no permission to 'Add a Product' at store 'Amazon'
+03/06/2023 14:24:34 ERROR:	 Market.add_product: 'boo()' has no permission to 'Add a Product' at store 'Amazon'
+03/06/2023 14:24:34 ERROR:	 Market.add_product: 'boo()' has no permission to 'Add a Product' at store 'Amazon'
+03/06/2023 14:24:34 ERROR:	 Market.add_product: 'boo()' has no permission to 'Add a Product' at store 'Amazon'
+03/06/2023 14:24:34 ERROR:	 Market.add_product: 'boo()' has no permission to 'Add a Product' at store 'Amazon'
+03/06/2023 14:24:34 ERROR:	 Market.add_product: 'boo()' has no permission to 'Add a Product' at store 'Amazon'
+03/06/2023 14:24:34 INFO:	 Session: 3993039404195601572 has been initialized
+03/06/2023 14:24:34 ERROR:	 Admin.login: Admin 'Kfir' enter an incorrect password.
+03/06/2023 14:24:34 WARNING:	 Market is closed!
+03/06/2023 14:24:34 WARNING:	 Logger thread exits!
+03/06/2023 15:32:20 INFO:	 Session: 4750603228899073551 has been initialized
+03/06/2023 15:32:20 ERROR:	 Admin.login: Admin 'Kfir' enter an incorrect password.
+03/06/2023 15:32:20 INFO:	 Visitor.register: 'test' is registered!
+03/06/2023 15:32:20 INFO:	 Visitor.login: Member 'test' is logged in.
+03/06/2023 15:32:20 INFO:	 Market.open_store: Member 'test' opened store 'IHerb'.
+03/06/2023 15:32:20 INFO:	 Market.add_product: 'test' add 20 units of Product 'Vitamin A', Category: 'Vitamins', Price: 19.9, Rate: Not rated yet to store 'IHerb'
+03/06/2023 15:32:20 INFO:	 Market.add_product: 'test' add 25 units of Product 'Toothpaste', Category: 'Hygiene', Price: 21.2, Rate: Not rated yet to store 'IHerb'
+03/06/2023 15:32:20 ERROR:	 Market.add_to_cart: Store 'IHerb' does not contains Product 'Vitamin A'
+03/06/2023 15:32:20 ERROR:	 Visitor.verify_cart_not_empty: Member 'test' cart's IS empty!
+03/06/2023 15:32:20 INFO:	 Session: 816026549708309533 has been initialized
+03/06/2023 15:32:20 ERROR:	 Admin.login: Admin 'Kfir' enter an incorrect password.
+03/06/2023 15:32:20 WARNING:	 Market is closed!
+03/06/2023 15:32:20 WARNING:	 Logger thread exits!
+03/06/2023 15:32:37 INFO:	 Session: 5573300187971667882 has been initialized
+03/06/2023 15:32:37 ERROR:	 Admin.login: Admin 'Kfir' enter an incorrect password.
+03/06/2023 15:32:37 INFO:	 Visitor.register: 'A' is registered!
+03/06/2023 15:32:37 INFO:	 Visitor.login: Member 'A' is logged in.
+03/06/2023 15:32:37 INFO:	 Market.open_store: Member 'A' opened store 'Amazon'.
+03/06/2023 15:32:37 INFO:	 Visitor.register: 'B' is registered!
+03/06/2023 15:32:37 INFO:	 Market.appoint_manager: Member 'A' appointed 'B' to a Store Manager.
+03/06/2023 15:32:38 INFO:	 Visitor.register: 'Mayer' is registered!
+03/06/2023 15:32:38 INFO:	 Market.appoint_manager: Member 'A' appointed 'Mayer' to a Store Manager.
+03/06/2023 15:32:38 INFO:	 Visitor.register: 'foo()' is registered!
+03/06/2023 15:32:38 INFO:	 Market.appoint_manager: Member 'A' appointed 'foo()' to a Store Manager.
+03/06/2023 15:32:38 INFO:	 Visitor.register: 'boo()' is registered!
+03/06/2023 15:32:38 INFO:	 Market.appoint_manager: Member 'A' appointed 'boo()' to a Store Manager.
+03/06/2023 15:32:38 INFO:	 Market.close_store: Founder 'A' CLOSED store 'Amazon'
+03/06/2023 15:32:38 INFO:	 Visitor.login: Member 'B' is logged in.
+03/06/2023 15:32:38 INFO:	 Member.logout: Member 'A' is logged out
+03/06/2023 15:32:38 ERROR:	 Market.add_product: 'B' has no permission to 'Add a Product' at store 'Amazon'
+03/06/2023 15:32:38 ERROR:	 Market.add_product: 'B' has no permission to 'Add a Product' at store 'Amazon'
+03/06/2023 15:32:38 ERROR:	 Market.add_product: 'B' has no permission to 'Add a Product' at store 'Amazon'
+03/06/2023 15:32:38 ERROR:	 Market.add_product: 'B' has no permission to 'Add a Product' at store 'Amazon'
+03/06/2023 15:32:38 ERROR:	 Market.add_product: 'B' has no permission to 'Add a Product' at store 'Amazon'
+03/06/2023 15:32:38 ERROR:	 Market.add_product: 'B' has no permission to 'Add a Product' at store 'Amazon'
+03/06/2023 15:32:38 ERROR:	 Market.add_product: 'B' has no permission to 'Add a Product' at store 'Amazon'
+03/06/2023 15:32:39 INFO:	 Visitor.login: Member 'Mayer' is logged in.
+03/06/2023 15:32:39 INFO:	 Member.logout: Member 'B' is logged out
+03/06/2023 15:32:39 ERROR:	 Market.add_product: 'Mayer' has no permission to 'Add a Product' at store 'Amazon'
+03/06/2023 15:32:39 ERROR:	 Market.add_product: 'Mayer' has no permission to 'Add a Product' at store 'Amazon'
+03/06/2023 15:32:39 ERROR:	 Market.add_product: 'Mayer' has no permission to 'Add a Product' at store 'Amazon'
+03/06/2023 15:32:39 ERROR:	 Market.add_product: 'Mayer' has no permission to 'Add a Product' at store 'Amazon'
+03/06/2023 15:32:39 ERROR:	 Market.add_product: 'Mayer' has no permission to 'Add a Product' at store 'Amazon'
+03/06/2023 15:32:39 ERROR:	 Market.add_product: 'Mayer' has no permission to 'Add a Product' at store 'Amazon'
+03/06/2023 15:32:39 ERROR:	 Market.add_product: 'Mayer' has no permission to 'Add a Product' at store 'Amazon'
+03/06/2023 15:32:39 INFO:	 Visitor.login: Member 'foo()' is logged in.
+03/06/2023 15:32:39 INFO:	 Member.logout: Member 'Mayer' is logged out
+03/06/2023 15:32:39 ERROR:	 Market.add_product: 'foo()' has no permission to 'Add a Product' at store 'Amazon'
+03/06/2023 15:32:39 ERROR:	 Market.add_product: 'foo()' has no permission to 'Add a Product' at store 'Amazon'
+03/06/2023 15:32:39 ERROR:	 Market.add_product: 'foo()' has no permission to 'Add a Product' at store 'Amazon'
+03/06/2023 15:32:39 ERROR:	 Market.add_product: 'foo()' has no permission to 'Add a Product' at store 'Amazon'
+03/06/2023 15:32:39 ERROR:	 Market.add_product: 'foo()' has no permission to 'Add a Product' at store 'Amazon'
+03/06/2023 15:32:39 ERROR:	 Market.add_product: 'foo()' has no permission to 'Add a Product' at store 'Amazon'
+03/06/2023 15:32:39 ERROR:	 Market.add_product: 'foo()' has no permission to 'Add a Product' at store 'Amazon'
+03/06/2023 15:32:39 INFO:	 Visitor.login: Member 'boo()' is logged in.
+03/06/2023 15:32:39 INFO:	 Member.logout: Member 'foo()' is logged out
+03/06/2023 15:32:39 ERROR:	 Market.add_product: 'boo()' has no permission to 'Add a Product' at store 'Amazon'
+03/06/2023 15:32:39 ERROR:	 Market.add_product: 'boo()' has no permission to 'Add a Product' at store 'Amazon'
+03/06/2023 15:32:39 ERROR:	 Market.add_product: 'boo()' has no permission to 'Add a Product' at store 'Amazon'
+03/06/2023 15:32:39 ERROR:	 Market.add_product: 'boo()' has no permission to 'Add a Product' at store 'Amazon'
+03/06/2023 15:32:39 ERROR:	 Market.add_product: 'boo()' has no permission to 'Add a Product' at store 'Amazon'
+03/06/2023 15:32:39 ERROR:	 Market.add_product: 'boo()' has no permission to 'Add a Product' at store 'Amazon'
+03/06/2023 15:32:39 ERROR:	 Market.add_product: 'boo()' has no permission to 'Add a Product' at store 'Amazon'
+03/06/2023 15:32:39 INFO:	 Session: 8967683872377961139 has been initialized
+03/06/2023 15:32:39 ERROR:	 Admin.login: Admin 'Kfir' enter an incorrect password.
+03/06/2023 15:32:39 WARNING:	 Market is closed!
+03/06/2023 15:32:39 WARNING:	 Logger thread exits!
