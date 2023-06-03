@@ -94,6 +94,33 @@ class SessionAdapter:
             r = self._session.change_product_name(store_name, old_product_name, new_product_name)
         return r
 
+    def get_basket(self, store_name: str) -> Response[BasketDto]:
+        r_cart = self._session.get_cart()
+        if not r_cart.success:
+            return r_cart
+        cart = r_cart.result
+        if not cart.has_basket(store_name):
+            return Response(BasketDto(store_name, dict()))
+        basket = cart.get_or_create_basket(store_name)
+        return Response(BasketDto(store_name, {
+            x.product_name: x.quantity
+            for x in basket.items
+        }))
+
+    def get_product(self, store_name, product_name) -> Response[ProductDto]:
+        store = self.get_store(store_name)
+        if not store.success:
+            return store
+        return next(
+            (Response(product)
+             for product in store.result
+             if product.name == product_name),
+            Response("no such product") # \← default if not found
+        )
+
+    def update_cart_product_quantity(self, store_name, product_name, qty) -> Response[None]:
+        return self._session.update_cart_product_quantity(store_name, product_name, qty)
+
     def edit_product_name(self, store_name: str, old_product_name: str, new_product_name: str):
         return self._session.change_product_name(store_name, old_product_name, new_product_name)
 
