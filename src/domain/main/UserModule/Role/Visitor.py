@@ -1,14 +1,18 @@
+import threading
 from abc import ABC
+
 import bcrypt
+
 from domain.main.Utils.Base_db import session_DB
-from src.domain.main.Store.Product import Product
 from src.domain.main.Store.Store import Store
 from src.domain.main.UserModule.Role.IRole import IRole
-from src.domain.main.Utils.Logger import report, report_error, report_info
+from src.domain.main.Utils.Logger import report_error, report_info
 from src.domain.main.Utils.Response import Response
 
 
 class Visitor(IRole, ABC):
+
+    register_lock = threading.Lock()
     def __init__(self, context):
         super().__init__(context)
 
@@ -16,19 +20,20 @@ class Visitor(IRole, ABC):
         return f'Visitor'
 
     def register(self) -> Response[bool]:
-        if not self.context.is_registered(self.context.username):
-            session_DB.add(self.context)
-            session_DB.commit()
-            return report_info(self.register.__qualname__, f'\'{self.context.username}\' is registered!')
+        with Visitor.register_lock:
+            if not self.context.is_registered(self.context.username):
+                session_DB.add(self.context)
+                session_DB.commit()
+                return report_info(self.register.__qualname__, f'\'{self.context.username}\' is registered!')
         return report_error(self.register.__qualname__, f'Username: \'{self.context.username}\' is occupied')
 
-    def login(self, input_password: str) -> Response[bool]:
-        if not bcrypt.checkpw(bytes(input_password, 'utf8'), self.context.encrypted_password):
-            return report_error(self.login.__qualname__, f'{self} enter an incorrect password.')
-        from src.domain.main.UserModule.Role.Member import Member
-        self.context.role = Member(self.context)
-        self.context.is_logged_in = True
-        return report_info(self.login.__qualname__, f'{self.context} is logged in.')
+    def login(self, input_password: str) -> bool:
+        is_password_matched = bcrypt.checkpw(bytes(input_password, 'utf8'), self.context.encrypted_password)
+        if is_password_matched:
+            from src.domain.main.UserModule.Role.Member import Member
+            self.context.role = Member(self.context)
+            self.context.is_logged_in = True
+        return is_password_matched
 
     def logout(self) -> Response[bool]:
         return report_error(self.logout.__qualname__, f'{self} attempted to logout.')

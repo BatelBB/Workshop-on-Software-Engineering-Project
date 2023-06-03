@@ -55,29 +55,30 @@ class Market(IService):
         self.payment_factory: PaymentFactory = PaymentFactory()
         self.package_counter = 0
         self.appointments_lock = threading.RLock()
+        self.init_db()
         self.init_admin()
-        self.init_data_base()
 
-    def init_data_base(self):
+    def init_db(self):
         Base.metadata.reflect(engine)
         classes_for_db = (User, )
         tables_to_create = []
 
         for cls in classes_for_db:
-            if not self.verify_table_in_db(cls.__tablename__):
+            if not self.is_table_exsits(cls.__tablename__):
                 tables_to_create.append(cls.__table__)
 
         Base.metadata.create_all(engine, checkfirst=True, tables=tables_to_create)
 
-    def verify_table_in_db(self, table_name: str):
+    def is_table_exsits(self, table_name: str):
         inspector = inspect(engine)
         return inspector.has_table(table_name)
 
     def init_admin(self):
         admin_credentials = ('Kfir', 'Kfir')
-        admin_user = User(*admin_credentials)
-        admin_user.role = Admin(admin_user)
-        self.users.insert(admin_credentials[0], admin_user)
+        self.register_admin(0, *admin_credentials)
+        # admin_user = User(*admin_credentials)
+        # admin_user.role = Admin(admin_user)
+        # self.users.insert(admin_credentials[0], admin_user)
 
     def generate_session_identifier(self):
         min: int = 1
@@ -185,8 +186,16 @@ class Market(IService):
         return Response(store) if store is not None \
             else report_error(calling_method_name, f'Store \'{store_name}\' is not registered to the market.')
 
+    def get_user(self, username) -> User | None:
+        user = self.users.get(username)
+        if user is None:
+            user = User.load_user(username)
+            if user is not None:
+                self.users.insert(username, user)
+        return user
+
     def verify_registered_user(self, calling_method_name: str, username: str) -> Response[User] | Response[bool]:
-        user: User = self.users.get(username)
+        user: User = self.get_user(username)
         return Response(user) if user is not None \
             else report_error(calling_method_name, f'User \'{username}\' is not registered to the market.')
 
@@ -227,28 +236,27 @@ class Market(IService):
         new_user = User(username, encrypted_password)
         return new_user.register()
 
+    def register_admin(self, session_identifier: int, username: str, encrypted_password: str) -> Response[bool]:
+        admin = User(username, encrypted_password, is_admin=True)
+        response = admin.register()
+        if response.success:
+            admin.role = Admin(admin)
+        return response
+
     def is_registered(self, username: str) -> bool:
         return User.is_registered(username)
 
-    def find_user(self, username: str):
-        next_user = self.users.get(username)
+    def login(self, session_identifier: int, username: str, encrypted_password: str) -> Response[bool]:
+        next_user = self.get_user(username)
         if next_user is None:
             return report_error(self.login.__qualname__, f'Username: \'{username}\' is not registered')
-
-    def login(self, session_identifier: int, username: str, encrypted_password: str) -> Response[bool]:
-        next_user = self.users.get(username)
-        if next_user is None:
-            next_user = User.load_user(username)
-            if next_user is None:
-                return report_error(self.login.__qualname__, f'Username: \'{username}\' is not registered')
-            self.users.insert(username, next_user)
-        response = next_user.login(encrypted_password)
-        if next_user.is_logged_in:
+        if next_user.login(encrypted_password):
             current_user = self.get_active_user(session_identifier)
             if current_user.is_logged_in and current_user != next_user:
                 current_user.logout()
             self.sessions.update(session_identifier, next_user)
-        return response
+            return report_info(self.login.__qualname__, f'{next_user} is logged in')
+        return report_error(self.login.__qualname__, f'{username} failed to login')
 
     def is_logged_in(self, username: str) -> bool:
         return self.is_registered(username) and self.users.get(username).is_logged_in
@@ -629,7 +637,7 @@ class Market(IService):
 
     def cancel_membership_of(self, session_identifier: int, member_name: str) -> Response[bool]:
         actor = self.get_active_user(session_identifier)
-        if actor.is_admin():
+        if actor.is_admin:
             response = self.verify_registered_user(self.cancel_membership_of.__qualname__, member_name)
             if response.success:
                 member = response.result

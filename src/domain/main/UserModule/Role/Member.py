@@ -6,18 +6,11 @@ from src.domain.main.Utils.Response import Response
 
 
 class Member(Visitor, ABC):
-    from src.domain.main.UserModule.User import User
-    def __init__(self, context: User):
+    def __init__(self, context):
         super().__init__(context)
 
     def __str__(self):
         return f'Member \'{self.context.username}\''
-
-    def login(self, encrypted_password: str) -> Response[bool]:
-        return report_error(self.login.__qualname__, f'{self} is already logged in.')
-
-    # def register(self) -> Response[bool]:
-    #     return report_error(self.register.__qualname__, f'{self} is already registered.')
 
     def logout(self) -> Response[bool]:
         if self.context.is_canceled:

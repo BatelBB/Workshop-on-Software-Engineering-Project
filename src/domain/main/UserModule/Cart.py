@@ -1,6 +1,5 @@
 from functools import reduce
 
-from src.domain.main.Store.Product import Product
 from src.domain.main.UserModule.Basket import Basket, Item
 
 

@@ -14,7 +14,7 @@ class IRole(ABC):
         ...
 
     @abstractmethod
-    def login(self, encrypted_password: str) -> Response[bool]:
+    def login(self, encrypted_password: str) -> bool:
         ...
 
     @abstractmethod

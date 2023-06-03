@@ -29,6 +29,10 @@ class IService(metaclass=IAbsractConcurrentSingleton):
         ...
 
     @abstractmethod
+    def register_admin(self, session_identifier: int, username: str, encrypted_password: str) -> Response[bool]:
+        ...
+
+    @abstractmethod
     def is_registered(self, username: str) -> bool:
         ...
 
