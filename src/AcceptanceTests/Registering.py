@@ -12,7 +12,7 @@ class Registering(unittest.TestCase):
         cls.happy_user1 = ("usr1", "password")
         cls.happy_user2 = ("usr2", "password")
         cls.empty_password = ("user3", "")
-        cls.taken_username = ("usr1", "45sdfgs#$%1")
+        cls.taken_username = ("usr1", "45sdfcgs#$%1")
         cls.admin_username = ("Kfir", "45sdfgs#$%1")
         cls.service_admin = ('Kfir', 'Kfir')
 

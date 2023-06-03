@@ -10,7 +10,7 @@ class Logout(unittest.TestCase):
     def setUpClass(cls) -> None:
         cls.app = Proxy()
         cls.registered_user1 = ("usr1", "password")
-        cls.registered_user2 = ("usr2", "password")
+        cls.registered_user2 = ("usr22", "password")
         cls.not_registered_user = ("usr3", "password")
         cls.service_admin = ('Kfir', 'Kfir')
 

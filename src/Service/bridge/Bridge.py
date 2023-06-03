@@ -50,8 +50,8 @@ class Bridge(ABC):
         ...
 
     @abstractmethod
-    def purchase_shopping_cart(self, payment_method: str, payment_details: list, address: str, postal_code: str) \
-            -> Response[bool]:
+    def purchase_shopping_cart(self, payment_method: str, payment_details: list, address: str, postal_code: str,
+                               city: str, country: str) -> Response[bool]:
         ...
 
     @abstractmethod

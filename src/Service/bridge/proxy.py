@@ -45,9 +45,9 @@ class Proxy(Bridge):
     def show_cart(self) -> Response[dict | bool]:
         return self.real.show_cart()
 
-    def purchase_shopping_cart(self, payment_method: str, payment_details: list, address: str, postal_code: str) \
-            -> Response[bool]:
-        return self.real.purchase_shopping_cart(payment_method, payment_details, address, postal_code)
+    def purchase_shopping_cart(self, payment_method: str, payment_details: list, address: str, postal_code: str,
+                               city: str, country: str) -> Response[bool]:
+        return self.real.purchase_shopping_cart(payment_method, payment_details, address, postal_code, city, country)
 
     def purchase_with_non_immediate_policy(self, store_name: str, product_name: str,
                                            payment_method: str, payment_details: list[str], address: str,

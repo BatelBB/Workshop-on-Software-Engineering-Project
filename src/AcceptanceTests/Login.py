@@ -10,7 +10,7 @@ class Login(unittest.TestCase):
     def setUpClass(cls) -> None:
         cls.app = Proxy()
         cls.happy_user1 = ("usr1", "password")
-        cls.happy_user2 = ("usr2", "password")
+        cls.happy_user2 = ("usr22", "password")
         cls.happy_user3 = ("usr3", "45sdfgs#$%1")
         cls.not_registered_user = ("usr4", "45sdfgs#$%1")
         cls.service_admin = ('Kfir', 'Kfir')

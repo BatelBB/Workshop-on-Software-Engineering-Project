@@ -37,13 +37,21 @@ class AddingToCart(unittest.TestCase):
         self.app.login(*self.registered_buyer1)
         r = self.app.add_to_cart("bakery", "bread", 5)
         self.assertTrue(r.success and r.result, "error: add to cart failed")
+        r = self.app.add_to_cart("bakery", "pita", 10)
+        self.assertTrue(r.success and r.result, "error: add to cart failed")
         r = self.app.add_to_cart("market", "pita", 10)
+        self.assertTrue(r.success and r.result, "error: add to cart failed")
+        r = self.app.add_to_cart("market", "tuna", 20)
         self.assertTrue(r.success and r.result, "error: add to cart failed")
         cart = self.app.show_cart().result
         self.assertIn("bread", cart["bakery"], "error: bread not in cart")
         self.assertEqual(5, cart["bakery"]["bread"]["Quantity"], "error: bread quantity doesn't match")
+        self.assertIn("pita", cart["bakery"], "error: pita not in cart")
+        self.assertEqual(10, cart["bakery"]["pita"]["Quantity"], "error: pita quantity doesn't match")
         self.assertIn("pita", cart["market"], "error: pita not in cart")
         self.assertEqual(10, cart["market"]["pita"]["Quantity"], "error: pita quantity doesn't match")
+        self.assertIn("tuna", cart["market"], "error: pita not in cart")
+        self.assertEqual(20, cart["market"]["tuna"]["Quantity"], "error: tuna quantity doesn't match")
         self.app.logout()
 
     def test_guest_adding_to_cart(self):
@@ -84,7 +92,7 @@ class AddingToCart(unittest.TestCase):
         self.assertEqual(10, cart["market"]["tuna"]["Quantity"], "error: tuna quantity doesn't match")
         self.app.logout()
 
-    def test_adding_exceeding_product_quantity_(self):
+    def test_adding_exceeding_product_quantity(self):
         self.set_stores()
         self.app.login(*self.registered_buyer1)
         self.app.add_to_cart("market", "tuna", 10)
@@ -118,8 +126,9 @@ class AddingToCart(unittest.TestCase):
         r = self.app.add_to_cart("bakery", "bread", -5)
         self.assertFalse(r.success, "error: add to cart action not failed!")
         cart = self.app.show_cart().result
-        self.assertNotIn("bread", cart, "error: bread in cart after add to cart action with 0 amount")
-        self.assertNotIn("tuna", cart, "error: tuna in cart after add to cart action with negative amount")
+        print(cart)
+        self.assertNotIn("market", cart, "error: bread in cart after add to cart action with 0 amount")
+        self.assertNotIn("bakery", cart, "error: tuna in cart after add to cart action with negative amount")
         self.app.logout()
 
     def test_adding_invalid_product(self):

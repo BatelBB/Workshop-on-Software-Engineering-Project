@@ -1,5 +1,6 @@
 from Service.bridge.proxy import Proxy
 import unittest
+from unittest.mock import patch
 
 
 class PurchaseCart(unittest.TestCase):
@@ -33,154 +34,196 @@ class PurchaseCart(unittest.TestCase):
         cls.app.shutdown()
 
     def test_member_purchase_cart_happy(self):
-        self.set_stores()
-        self.set_cart()
-        self.app.login(*self.registered_buyer1)
-        r = self.app.purchase_shopping_cart("card", ["123", "123", "12345"], "01/01/2025", "zambabir")
-        self.assertTrue(r.success and r.result, "error: cart payment with card failed")
-        cart = self.app.show_cart().result
-        self.assertEqual({}, cart, "error: cart not empty after purchase!")
-        self.app.logout()
+        with patch('src.domain.main.ExternalServices.Provision.ProvisionServiceAdapter.provisionService.getDelivery',
+                   return_value=True) as delivery_mock, \
+                patch('src.domain.main.ExternalServices.Payment.PaymentServices.PayWithCard.pay',
+                      return_value=True) as payment_mock:
+
+            self.set_stores()
+            self.set_cart()
+            self.app.login(*self.registered_buyer1)
+            r = self.app.purchase_shopping_cart("card", ["123", "123", "12/6588"],
+                                                "ben-gurion", "1234", "beer sheva", "israel")
+            self.assertTrue(r.success and r.result, "error: cart payment with card failed")
+            cart = self.app.show_cart().result
+            self.assertEqual({}, cart, "error: cart not empty after purchase!")
+            self.app.logout()
+
+            payment_mock.assert_called_once_with(560)
+            delivery_mock.assert_called_once()
 
     def test_purchase_empty_cart(self):
         self.app.login(*self.registered_buyer1)
-        r = self.app.purchase_shopping_cart("card", ["123", "123", "12345"], "01/01/2025", "zambabir")
+        r = self.app.purchase_shopping_cart("card", ["123", "123", "12/6588"],
+                                            "ben-gurion", "1234", "beer sheva", "israel")
         self.assertFalse(r.success, "error: purchased with empty cart")
         self.app.logout()
 
     def test_purchase_while_product_quantity_in_store_is_insufficient_due_to_owner(self):
-        self.set_stores()
-        self.set_cart()
-        self.app.login(*self.store_owner2)
-        self.app.update_product_quantity("market", "pita", 10)
-        self.app.logout()
-        self.app.login(*self.registered_buyer1)
-        r = self.app.purchase_shopping_cart("card", ["123", "123", "12345"], "01/01/2025", "zambabir")
-        self.assertFalse(r.success, "error: purchased pita with quantity 20 while in store only 10")
-        cart = self.app.show_cart().result
-        self.assertIn("bread", cart["bakery"], "error: bread not in cart")
-        self.assertEqual(5, cart["bakery"]["bread"]["Quantity"], "error: bread quantity doesn't match")
-        self.assertEqual(10, cart["bakery"]["bread"]["Price"], "error: bread price doesn't match")
-        self.assertIn("pita", cart["bakery"], "error: pita not in cart")
-        self.assertEqual(10, cart["bakery"]["pita"]["Quantity"], "error: pita quantity doesn't match")
-        self.assertEqual(5, cart["bakery"]["pita"]["Price"], "error: pita price doesn't match")
-        self.assertIn("tuna", cart["market"], "error: tuna not in cart")
-        self.assertEqual(15, cart["market"]["tuna"]["Quantity"], "error: tuna quantity doesn't match")
-        self.assertEqual(20, cart["market"]["tuna"]["Price"], "error: tuna price doesn't match")
-        self.assertIn("pita", cart["market"], "error: pita not in cart")
-        self.assertEqual(20, cart["market"]["pita"]["Quantity"], "error: pita quantity doesn't match the buyer added "
-                                                                 "quantity after the quantity was lowered by the owner")
-        self.assertEqual(8, cart["market"]["pita"]["Price"], "error: pita price doesn't match")
-        self.app.logout()
+        with patch('src.domain.main.ExternalServices.Provision.ProvisionServiceAdapter.provisionService.getDelivery',
+                   return_value=True) as delivery_mock, \
+                patch('src.domain.main.ExternalServices.Payment.PaymentServices.PayWithCard.pay',
+                      return_value=True) as payment_mock:
+
+            self.set_stores()
+            self.set_cart()
+            self.app.login(*self.store_owner2)
+            self.app.update_product_quantity("market", "pita", 10)
+            self.app.logout()
+            self.app.login(*self.registered_buyer1)
+            r = self.app.purchase_shopping_cart("card", ["123", "123", "12/6588"],
+                                                "ben-gurion", "1234", "beer sheva", "israel")
+            self.assertFalse(r.success, "error: purchased pita with quantity 20 while in store only 10")
+            cart = self.app.show_cart().result
+            self.assertIn("bread", cart["bakery"], "error: bread not in cart")
+            self.assertEqual(5, cart["bakery"]["bread"]["Quantity"], "error: bread quantity doesn't match")
+            self.assertEqual(10, cart["bakery"]["bread"]["Price"], "error: bread price doesn't match")
+            self.assertIn("pita", cart["bakery"], "error: pita not in cart")
+            self.assertEqual(10, cart["bakery"]["pita"]["Quantity"], "error: pita quantity doesn't match")
+            self.assertEqual(5, cart["bakery"]["pita"]["Price"], "error: pita price doesn't match")
+            self.assertIn("tuna", cart["market"], "error: tuna not in cart")
+            self.assertEqual(15, cart["market"]["tuna"]["Quantity"], "error: tuna quantity doesn't match")
+            self.assertEqual(20, cart["market"]["tuna"]["Price"], "error: tuna price doesn't match")
+            self.assertIn("pita", cart["market"], "error: pita not in cart")
+            self.assertEqual(20, cart["market"]["pita"]["Quantity"], "error: pita quantity doesn't match the buyer "
+                                                                     "added quantity after it lowered by the owner")
+            self.assertEqual(8, cart["market"]["pita"]["Price"], "error: pita price doesn't match")
+            self.app.logout()
+
+            payment_mock.assert_not_called()
+            delivery_mock.assert_not_called()
 
     def test_purchase_while_product_quantity_in_store_is_insufficient_due_to_another_purchase(self):
         # first to pay first to take policy test
-        self.set_stores()
-        self.set_cart()
-        self.app.login(*self.registered_buyer2)
-        self.app.add_to_cart("market", "pita", 10)
-        r = self.app.purchase_shopping_cart("card", ["123", "123", "12345"], "01/01/2025", "zambabir")
-        self.assertTrue(r.success and r.result, "error: cart payment with card failed")
-        self.app.logout()
-        self.app.login(*self.registered_buyer1)
-        r = self.app.purchase_shopping_cart("card", ["123", "123", "12345"], "01/01/2025", "zambabir")
-        self.assertFalse(r.success, "error: purchased pita after another purchase made the quantity insufficient")
-        cart = self.app.show_cart().result
-        self.assertIn("bread", cart["bakery"], "error: bread not in cart")
-        self.assertEqual(5, cart["bakery"]["bread"]["Quantity"], "error: bread quantity doesn't match")
-        self.assertEqual(10, cart["bakery"]["bread"]["Price"], "error: bread price doesn't match")
-        self.assertIn("pita", cart["bakery"], "error: pita not in cart")
-        self.assertEqual(10, cart["bakery"]["pita"]["Quantity"], "error: pita quantity doesn't match")
-        self.assertEqual(5, cart["bakery"]["pita"]["Price"], "error: pita price doesn't match")
-        self.assertIn("tuna", cart["market"], "error: tuna not in cart")
-        self.assertEqual(15, cart["market"]["tuna"]["Quantity"], "error: tuna quantity doesn't match")
-        self.assertEqual(20, cart["market"]["tuna"]["Price"], "error: tuna price doesn't match")
-        self.assertIn("pita", cart["market"], "error: pita not in cart")
-        self.assertEqual(20, cart["market"]["pita"]["Quantity"], "error: pita quantity doesn't match the buyer added "
-                                                                 "quantity after the quantity was lowered by the owner")
-        self.assertEqual(8, cart["market"]["pita"]["Price"], "error: pita price doesn't match")
-        self.app.logout()
+        with patch('src.domain.main.ExternalServices.Provision.ProvisionServiceAdapter.provisionService.getDelivery',
+                   return_value=True) as delivery_mock, \
+                patch('src.domain.main.ExternalServices.Payment.PaymentServices.PayWithCard.pay',
+                      return_value=True) as payment_mock:
+
+            self.set_stores()
+            self.set_cart()
+            self.app.login(*self.registered_buyer2)
+            self.app.add_to_cart("market", "pita", 10)
+            r = self.app.purchase_shopping_cart("card", ["123", "123", "12/6588"],
+                                                "ben-gurion", "1234", "beer sheva", "israel")
+            self.assertTrue(r.success and r.result, "error: cart payment with card failed")
+            self.app.logout()
+            self.app.login(*self.registered_buyer1)
+            r = self.app.purchase_shopping_cart("card", ["123", "123", "12/6588"],
+                                                "ben-gurion", "1234", "beer sheva", "israel")
+            self.assertFalse(r.success, "error: purchased pita after another purchase made the quantity insufficient")
+            cart = self.app.show_cart().result
+            self.assertIn("bread", cart["bakery"], "error: bread not in cart")
+            self.assertEqual(5, cart["bakery"]["bread"]["Quantity"], "error: bread quantity doesn't match")
+            self.assertEqual(10, cart["bakery"]["bread"]["Price"], "error: bread price doesn't match")
+            self.assertIn("pita", cart["bakery"], "error: pita not in cart")
+            self.assertEqual(10, cart["bakery"]["pita"]["Quantity"], "error: pita quantity doesn't match")
+            self.assertEqual(5, cart["bakery"]["pita"]["Price"], "error: pita price doesn't match")
+            self.assertIn("tuna", cart["market"], "error: tuna not in cart")
+            self.assertEqual(15, cart["market"]["tuna"]["Quantity"], "error: tuna quantity doesn't match")
+            self.assertEqual(20, cart["market"]["tuna"]["Price"], "error: tuna price doesn't match")
+            self.assertIn("pita", cart["market"], "error: pita not in cart")
+            self.assertEqual(20, cart["market"]["pita"]["Quantity"], "error: pita quantity doesn't match the buyer "
+                                                                     "added quantity after it lowered by another "
+                                                                     "purchase")
+            self.assertEqual(8, cart["market"]["pita"]["Price"], "error: pita price doesn't match")
+            self.app.logout()
+
+            payment_mock.assert_called_once_with(80)
+            delivery_mock.assert_called_once()
 
     def test_purchase_with_invalid_card(self):
-        self.set_stores()
-        self.set_cart()
-        self.app.login(*self.registered_buyer1)
-        r = self.app.purchase_shopping_cart("card", ["123", "123", "12345"], "01/01/1800", "zambabir")
-        self.assertFalse(r.success, "error: cart payment with outdated card not failed")
-        cart = self.app.show_cart().result
-        self.assertIn("bread", cart["bakery"], "error: bread not in cart")
-        self.assertEqual(5, cart["bakery"]["bread"]["Quantity"], "error: bread quantity doesn't match")
-        self.assertEqual(10, cart["bakery"]["bread"]["Price"], "error: bread price doesn't match")
-        self.assertIn("pita", cart["bakery"], "error: pita not in cart")
-        self.assertEqual(10, cart["bakery"]["pita"]["Quantity"], "error: pita quantity doesn't match")
-        self.assertEqual(5, cart["bakery"]["pita"]["Price"], "error: pita price doesn't match")
-        self.assertIn("tuna", cart["market"], "error: tuna not in cart")
-        self.assertEqual(15, cart["market"]["tuna"]["Quantity"], "error: tuna quantity doesn't match")
-        self.assertEqual(20, cart["market"]["tuna"]["Price"], "error: tuna price doesn't match")
-        self.assertIn("pita", cart["market"], "error: pita not in cart")
-        self.assertEqual(20, cart["market"]["pita"]["Quantity"], "error: pita quantity doesn't match the buyer added "
-                                                                 "quantity after the quantity was lowered by the owner")
-        self.assertEqual(8, cart["market"]["pita"]["Price"], "error: pita price doesn't match")
-        self.app.logout()
+        with patch('src.domain.main.ExternalServices.Provision.ProvisionServiceAdapter.provisionService.getDelivery',
+                   return_value=True) as delivery_mock, \
+                patch('src.domain.main.ExternalServices.Payment.PaymentServices.PayWithCard.pay',
+                      return_value=False) as payment_mock:
+
+            self.set_stores()
+            self.set_cart()
+            self.app.login(*self.registered_buyer1)
+            r = self.app.purchase_shopping_cart("card", ["xxx", "xxx", "xx/xxxx"],
+                                                "ben-gurion", "1234", "beer sheva", "israel")
+            self.assertFalse(r.success, "error: cart payment with outdated card not failed")
+            cart = self.app.show_cart().result
+            self.assertIn("bread", cart["bakery"], "error: bread not in cart")
+            self.assertEqual(5, cart["bakery"]["bread"]["Quantity"], "error: bread quantity doesn't match")
+            self.assertEqual(10, cart["bakery"]["bread"]["Price"], "error: bread price doesn't match")
+            self.assertIn("pita", cart["bakery"], "error: pita not in cart")
+            self.assertEqual(10, cart["bakery"]["pita"]["Quantity"], "error: pita quantity doesn't match")
+            self.assertEqual(5, cart["bakery"]["pita"]["Price"], "error: pita price doesn't match")
+            self.assertIn("tuna", cart["market"], "error: tuna not in cart")
+            self.assertEqual(15, cart["market"]["tuna"]["Quantity"], "error: tuna quantity doesn't match")
+            self.assertEqual(20, cart["market"]["tuna"]["Price"], "error: tuna price doesn't match")
+            self.assertIn("pita", cart["market"], "error: pita not in cart")
+            self.assertEqual(20, cart["market"]["pita"]["Quantity"], "error: tuna price doesn't match")
+            self.assertEqual(8, cart["market"]["pita"]["Price"], "error: pita price doesn't match")
+            self.app.logout()
+
+            payment_mock.assert_called_once_with(560)
+            delivery_mock.assert_not_called()
 
     def test_purchase_when_payment_fails(self):
-        self.set_stores()
-        self.set_cart()
-        self.app.login(*self.registered_buyer1)
-        # todo make payment fail
-        r = self.app.purchase_shopping_cart("card", ["123", "123", "12345"], "01/01/2025", "zambabir")
-        self.assertFalse(r.success, "error: cart payment with outdated card not failed")
-        cart = self.app.show_cart().result
-        self.assertIn("bread", cart["bakery"], "error: bread not in cart")
-        self.assertEqual(5, cart["bakery"]["bread"]["Quantity"], "error: bread quantity doesn't match")
-        self.assertEqual(10, cart["bakery"]["bread"]["Price"], "error: bread price doesn't match")
-        self.assertIn("pita", cart["bakery"], "error: pita not in cart")
-        self.assertEqual(10, cart["bakery"]["pita"]["Quantity"], "error: pita quantity doesn't match")
-        self.assertEqual(5, cart["bakery"]["pita"]["Price"], "error: pita price doesn't match")
-        self.assertIn("tuna", cart["market"], "error: tuna not in cart")
-        self.assertEqual(15, cart["market"]["tuna"]["Quantity"], "error: tuna quantity doesn't match")
-        self.assertEqual(20, cart["market"]["tuna"]["Price"], "error: tuna price doesn't match")
-        self.assertIn("pita", cart["market"], "error: pita not in cart")
-        self.assertEqual(20, cart["market"]["pita"]["Quantity"], "error: pita quantity doesn't match the buyer added"
-                                                                 "quantity after the quantity was lowered by the owner")
-        self.assertEqual(8, cart["market"]["pita"]["Price"], "error: pita price doesn't match")
-        self.app.logout()
+        with patch('src.domain.main.ExternalServices.Provision.ProvisionServiceAdapter.provisionService.getDelivery',
+                   return_value=True) as delivery_mock, \
+                patch('src.domain.main.ExternalServices.Payment.PaymentServices.PayWithCard.pay',
+                      return_value=False) as payment_mock:
+
+            self.set_stores()
+            self.set_cart()
+            self.app.login(*self.registered_buyer1)
+            r = self.app.purchase_shopping_cart("card", ["123", "123", "12/6588"],
+                                                "ben-gurion", "1234", "beer sheva", "israel")
+            self.assertFalse(r.success, "error: cart payment with outdated card not failed")
+            cart = self.app.show_cart().result
+            self.assertIn("bread", cart["bakery"], "error: bread not in cart")
+            self.assertEqual(5, cart["bakery"]["bread"]["Quantity"], "error: bread quantity doesn't match")
+            self.assertEqual(10, cart["bakery"]["bread"]["Price"], "error: bread price doesn't match")
+            self.assertIn("pita", cart["bakery"], "error: pita not in cart")
+            self.assertEqual(10, cart["bakery"]["pita"]["Quantity"], "error: pita quantity doesn't match")
+            self.assertEqual(5, cart["bakery"]["pita"]["Price"], "error: pita price doesn't match")
+            self.assertIn("tuna", cart["market"], "error: tuna not in cart")
+            self.assertEqual(15, cart["market"]["tuna"]["Quantity"], "error: tuna quantity doesn't match")
+            self.assertEqual(20, cart["market"]["tuna"]["Price"], "error: tuna price doesn't match")
+            self.assertIn("pita", cart["market"], "error: pita not in cart")
+            self.assertEqual(20, cart["market"]["pita"]["Quantity"], "error: tuna price doesn't match")
+            self.assertEqual(8, cart["market"]["pita"]["Price"], "error: pita price doesn't match")
+            self.app.logout()
+
+            payment_mock.assert_called_once_with(560)
+            delivery_mock.assert_not_called()
 
     def test_purchase_when_shipping_fails(self):
-        self.set_stores()
-        self.set_cart()
-        self.app.login(*self.registered_buyer1)
-        # todo make shipping fail
-        # with patch(
-        #         'src.domain.main.ExternalServices.Provision.ProvisionServiceAdapter.provisionService.getDelivery',
-        #         return_value=False), \
-        #         patch('src.domain.main.ExternalServices.Payment.PaymentServices.PayWithCard.refund',
-        #               return_value=True) as mock_refund:
-        #     response: Response[bool] = self.session.purchase_shopping_cart("card", ["123", "123", "12345"],
-        #                                                                    "ben-gurion", "1234")
-        # # Make sure that the purchase failed
-        # self.assertFalse(response.result)
-        # # Make sure that the refund method was called
-        # mock_refund.assert_called_once()
-        # mock_refund.assert_called_once_with(19.9)
-        #
-        r = self.app.purchase_shopping_cart("card", ["123", "123", "12345"], "01/01/2025", "zambabir")
-        self.assertFalse(r.success, "error: cart payment with outdated card not failed")
-        cart = self.app.show_cart().result
-        self.assertIn("bread", cart["bakery"], "error: bread not in cart")
-        self.assertEqual(5, cart["bakery"]["bread"]["Quantity"], "error: bread quantity doesn't match")
-        self.assertEqual(10, cart["bakery"]["bread"]["Price"], "error: bread price doesn't match")
-        self.assertIn("pita", cart["bakery"], "error: pita not in cart")
-        self.assertEqual(10, cart["bakery"]["pita"]["Quantity"], "error: pita quantity doesn't match")
-        self.assertEqual(5, cart["bakery"]["pita"]["Price"], "error: pita price doesn't match")
-        self.assertIn("tuna", cart["market"], "error: tuna not in cart")
-        self.assertEqual(15, cart["market"]["tuna"]["Quantity"], "error: tuna quantity doesn't match")
-        self.assertEqual(20, cart["market"]["tuna"]["Price"], "error: tuna price doesn't match")
-        self.assertIn("pita", cart["market"], "error: pita not in cart")
-        self.assertEqual(20, cart["market"]["pita"]["Quantity"], "error: pita quantity doesn't match the buyer added"
-                                                                 "quantity after the quantity was lowered by the owner")
-        self.assertEqual(8, cart["market"]["pita"]["Price"], "error: pita price doesn't match")
-        self.app.logout()
+        with patch('src.domain.main.ExternalServices.Provision.ProvisionServiceAdapter.provisionService.getDelivery',
+                   return_value=False) as delivery_mock, \
+                patch('src.domain.main.ExternalServices.Payment.PaymentServices.PayWithCard.pay',
+                      return_value=True) as payment_mock, \
+                patch('src.domain.main.ExternalServices.Payment.PaymentServices.PayWithCard.refund',
+                      return_value=True) as refund_mock:
+
+            self.set_stores()
+            self.set_cart()
+            self.app.login(*self.registered_buyer1)
+            r = self.app.purchase_shopping_cart("card", ["123", "123", "12/6588"],
+                                                "ben-gurion", "1234", "beer sheva", "israel")
+            self.assertFalse(r.success, "error: cart payment with outdated card not failed")
+            cart = self.app.show_cart().result
+            self.assertIn("bread", cart["bakery"], "error: bread not in cart")
+            self.assertEqual(5, cart["bakery"]["bread"]["Quantity"], "error: bread quantity doesn't match")
+            self.assertEqual(10, cart["bakery"]["bread"]["Price"], "error: bread price doesn't match")
+            self.assertIn("pita", cart["bakery"], "error: pita not in cart")
+            self.assertEqual(10, cart["bakery"]["pita"]["Quantity"], "error: pita quantity doesn't match")
+            self.assertEqual(5, cart["bakery"]["pita"]["Price"], "error: pita price doesn't match")
+            self.assertIn("tuna", cart["market"], "error: tuna not in cart")
+            self.assertEqual(15, cart["market"]["tuna"]["Quantity"], "error: tuna quantity doesn't match")
+            self.assertEqual(20, cart["market"]["tuna"]["Price"], "error: tuna price doesn't match")
+            self.assertIn("pita", cart["market"], "error: pita not in cart")
+            self.assertEqual(20, cart["market"]["pita"]["Quantity"], "error: tuna price doesn't match")
+            self.assertEqual(8, cart["market"]["pita"]["Price"], "error: pita price doesn't match")
+            self.app.logout()
+
+            payment_mock.assert_called_once_with(560)
+            delivery_mock.assert_not_called()
+            refund_mock.assert_called_once_with(560)
 
     def set_stores(self):
         self.app.login(*self.store_owner1)
@@ -201,4 +244,3 @@ class PurchaseCart(unittest.TestCase):
         self.app.add_to_cart("market", "tuna", 15)
         self.app.add_to_cart("market", "pita", 20)
         self.app.logout()
-
