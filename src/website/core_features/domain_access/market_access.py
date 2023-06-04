@@ -5,7 +5,6 @@ from flask import session, flash
 
 from domain.main.Market.Market import Market
 from domain.main.Utils.ConcurrentDictionary import ConcurrentDictionary
-from domain.main.Utils.Session import Session
 from website.core_features.domain_access.session_adapter import SessionAdapter
 from website.core_features.seed import seed
 

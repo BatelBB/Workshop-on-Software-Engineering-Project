@@ -2,7 +2,7 @@ import unittest
 from unittest.mock import patch
 
 from src.domain.main.Utils.Response import Response
-from src.domain.main.Service.IService import IService
+from Service.IService.IService import IService
 
 from src.domain.main.Market.Market import Market
 

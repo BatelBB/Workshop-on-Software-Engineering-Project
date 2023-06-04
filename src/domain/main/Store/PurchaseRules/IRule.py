@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from domain.main.User.Basket import Basket
+from domain.main.UserModule.Basket import Basket
 from src.domain.main.Utils.Response import Response
 
 

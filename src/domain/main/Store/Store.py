@@ -9,7 +9,7 @@ from src.domain.main.Store.Product import Product
 from src.domain.main.Store.PurchasePolicy.BidPolicy import BidPolicy
 from src.domain.main.Store.PurchasePolicy.IPurchasePolicy import IPurchasePolicy
 from src.domain.main.Store.PurchaseRules.IRule import IRule
-from src.domain.main.User.Basket import Basket
+from src.domain.main.UserModule.Basket import Basket
 from src.domain.main.Utils.Logger import report_error, report
 from src.domain.main.Utils.Response import Response
 
@@ -302,21 +302,24 @@ class Store:
         return policy.apply_policy(payment_service, delivery_service, how_much)
 
     def new_day(self):
+        list_to_remove = []
         for p in self.products_with_special_purchase_policy.keys():
             self.products_with_special_purchase_policy[p].new_day()
+            if self.products_with_special_purchase_policy[p].is_active == 0:
+                list_to_remove.append(p)
+
+        for p in list_to_remove:
+            self.products_with_special_purchase_policy.pop(p)
+
 
     def set_to_approve_for_bid(self, product_name: str, staff: list[str]):
         self.products_with_bid_purchase_policy[product_name].set_approval_dict_in_bid_policy(staff)
 
-    def approve_bid(self, person: str, product_name: str, is_approve: bool, staff: list[str]):
+    def approve_bid(self, person: str, product_name: str, is_approve: bool):
         if product_name not in self.products_with_bid_purchase_policy.keys():
             return report_error("approve_bid", f"{product_name} not in bidding policy")
 
-        if not is_approve:
-            self.set_to_approve_for_bid(product_name, staff)
-            return report(f"bid for product {product_name} disapproved", True)
-        else:
-            return self.products_with_bid_purchase_policy[product_name].approve(person)
+        return self.products_with_bid_purchase_policy[product_name].approve(person)
 
     def add_purchase_rule(self, rule: IRule) -> Response:
         with self.purchase_rule_lock:
@@ -361,3 +364,8 @@ class Store:
 
         res = self.discounts.delete_discount(index - 1)
         return res
+
+    def add_owner(self, name:str):
+        for key in self.products_with_bid_purchase_policy.keys():
+            policy = self.products_with_bid_purchase_policy[key]
+            policy.add_to_approval_dict_in_bid_policy(name)

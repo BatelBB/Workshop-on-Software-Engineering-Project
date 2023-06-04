@@ -14,7 +14,7 @@ bp = Blueprint("staff", __name__)
 
 # appoint manager
 class AppointmentForm(FlaskForm):
-    appointee = SelectField('Select User', validators=[validation.DataRequired()], choices=[])
+    appointee = SelectField('Select UserModule', validators=[validation.DataRequired()], choices=[])
     submit = SubmitField()
 
 

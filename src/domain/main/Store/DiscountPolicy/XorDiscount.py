@@ -1,7 +1,7 @@
 from domain.main.Store.DiscountPolicy.IDiscountPolicy import IDiscountPolicy
 from domain.main.Store.Product import Product
 from domain.main.Store.PurchaseRules.IRule import IRule
-from domain.main.User.Basket import Basket, Item
+from domain.main.UserModule.Basket import Basket, Item
 
 
 class XorDiscount(IDiscountPolicy):
