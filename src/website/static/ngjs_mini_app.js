@@ -16,30 +16,106 @@ app.service('auth', function() {
 
 app.service('ws', function() {
     var socket = io.io();
-    window.socket = socket;
-    socket.on('connect', function(s) {
-        socket.emit('data', {'payload': []});
-        beep();
-    });
-    socket.onAny(function(event, ...args) {
-        console.log('onAny', event, args);
-        
-        beep();
-    });
-    
+    window.socket = socket; // good for debugging
     return socket;
 });
 
+app.service('chat', ['ws', 'auth', function(ws, auth) {
+    var listeners = [];
+    var chatService = {
+        chats: {},
+        subscribe: function(listener) {
+            listeners.push(listener);
+        },
+        unsubscribe: function(listener) {
+            var index = listeners.indexOf(listener);
+            delete listeners[index];
+        }
+    };
+    ws.on('message', function(message) {
+        recipient = message.recipient_username;
+        if(!recipient) { return; }
+        sender = message.sender_username;
+        content = message.content;
+        username = auth.username == sender ? recipient : sender;
+        var message = {
+            recipient: recipient,
+            sender: sender,
+            content: content
+        }
+        if(!chatService.chats[username]) {
+            chatService.chats[username] = [];
+        }
+        chatService.chats[username].push(message);
+        for(var i = 0; i < listeners.length; i++) {
+            listeners[i](chatService.chats);
+        }
+    });
+    return chatService;
+}])
+
+app.component('chatName', {
+   bindings: {
+    username: '='
+   },
+   controller: [ function() {
+   }],
+   template: `<span class="chatName">
+   <img src="https://api.dicebear.com/6.x/bottts/png?seed={{$ctrl.username | uppercase}}"
+   style="height: 2em;"/>
+   <span>{{ $ctrl.username }}</span>
+   </span>`
+});
+
+app.component('chatSummary', {
+    bindings: {
+        chat: '=',
+        username: '='
+    },
+    controller: [function() {
+
+    }],
+    template: `
+    <a href="/chat/{{ $ctrl.username }}">
+    <div>
+    <p>
+    <chat-name username="$ctrl.username" chat="$ctrl.chat"></chat-name>
+    </p>
+    <p>
+        {{ $ctrl.chat[$ctrl.chat.length - 1].content }}
+    </p>
+    </div>
+    </a>
+    `
+})
 
 
-app.controller('main', ['$scope', 'ws', 'auth', function($scope, ws, auth) {
+
+app.component('chatInbox', {
+    controller: ['chat', '$scope', function ChatInboxController(chat, $scope) {
+        var vm = this;
+        this.chats = chat.chats;
+        chat.subscribe(function(chats) {
+            $scope.$apply(function() { vm.chats = chats; console.log(chats); });
+        });
+    }],
+    template: `
+        <div><a href="/start_chat">Start chat with someone</a></div>
+        <div ng-repeat="(username, chat) in $ctrl.chats">
+            <chat-summary username="username" chat="chat"></chat-summary>
+        </div>
+    `
+});
+
+app.controller('main', ['$scope', 'auth', function($scope, auth) {
+
     $scope.msg_count = 0;
     $scope.inbox = auth.isLoggedIn ? `${$scope.msg_count} messages` : '';
-    ws.onAny((x) => {
-        console.log('onAny', x);
-        $scope.$apply(function() {
-            $scope.msg_count++;
-            $scope.inbox = auth.isLoggedIn ? `${$scope.msg_count} messages` : '';
-        });
-    });
+    
 }]);
+
+
+angular.element(document).ready(function onDocumentReady() {
+    var nav = document.getElementsByClassName('divNav').item(0);
+    angular.bootstrap(nav, ['myApp']);
+});

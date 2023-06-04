@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+
+{% block title %}Inbox{% endblock %}
+
+{% block page %}
+
+<h1 style="text-align:center; color:blue; font-size: 2em;">Inbox</h1>
+
+<div ng-app="myApp">
+    {{ inbox }}
+    <chat-inbox></chat-inbox> {# AngularJS will do its magic here. #}
+</div>
+
+{% endblock %}

@@ -61,9 +61,12 @@ def init_batel_store(market):
     batel.leave()
 
 
-def init_chat():
-    pass
-
+def init_chat(market: Market):
+    users = ["batel", "yuval", "hagai", "nir_m.", "mendi", "Kfir"]
+    for (i, sender) in enumerate(users):
+        for recipient in users[i+1:]:
+            market.chat.send(sender, recipient, f"Hello, {recipient}")
+            market.chat.send(recipient, sender, f"Hi there, {sender}")
 
 def seed(market: Market):
     market.init_admin()
@@ -71,4 +74,4 @@ def seed(market: Market):
         market.register(0, username, "123456")
     init_yuvals_store(market)
     init_batel_store(market)
-    init_chat()
+    init_chat(market)

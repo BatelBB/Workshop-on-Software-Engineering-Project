@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+
+{% block title %}Inbox{% endblock %}
+
+{% block page %}
+
+<h1 style="text-align:center; color:blue; font-size: 2em;">Start chat</h1>
+
+
+<form method="post">
+
+  {{ form.hidden_tag() }}
+    <table>
+        {% for field in (form.username, form.submit) %}
+            <tr>
+                <td>{{field.name}}&nbsp;</td>
+                <td>{{ field }}</td>
+                <td>
+                    {% for error in field.errors %}
+                        {{ error }}
+                    {% endfor %}
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+</form>
+
+
+{% endblock %}

@@ -1,0 +1,12 @@
+{% extends "layout.html" %}
+
+{% block title %}Chat with {{ username }}{% endblock %}
+
+{% block page %}
+
+<h1 style="text-align:center; color:blue; font-size: 2em;">Your chat with {{ username }}</h1>
+<div ng-app="myApp" ng-controller="main">
+<chat-chat with="{{ username }}"></chat-chat> {# AngularJS will do its magic here. #}
+</div>
+
+{% endblock %}

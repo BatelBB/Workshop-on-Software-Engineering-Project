@@ -155,6 +155,10 @@ class Market(IService):
         succeed = appointment is not None
         if succeed:
             appointment.permissions.add(permission) if action == 'ADD' else appointment.permissions.remove(permission)
+            self.chat.send_noreply(appointment.appointee,
+                   f"Hello, {appointment.appointee}! {appointment.appointed_by}"
+                   f" has {('granted you' if action == 'ADD' else 'removed your')} permission to {permission}. "
+                   f"in {store}")
         return succeed
 
     def is_founder_of(self, username: str, store_name: str) -> bool:
@@ -254,6 +258,10 @@ class Market(IService):
         if registered_store_with_same_name is None:
             if actor.is_member():
                 self.add_appointment(store_name, Appointment(actor.username))
+                self.chat.send_noreply(actor.username, f"Hello, {actor.username}."
+                                       f"You have succesfully opened a store named {store_name}."
+                                       f" Good luck with bussiness!")
+
                 return report_info(self.open_store.__qualname__, f'{actor} opened store \'{store_name}\'.')
             else:
                 self.stores.delete(store_name)
@@ -357,6 +365,9 @@ class Market(IService):
                 return report_error(calling_method, f'{appointee} is not allowed to {required_permission.value}.')
             if self.has_permission_at(store_name, actor, required_permission):
                 if self.add_appointment(store_name, Appointment(appointee_name, actor.username, permissions)):
+                    self.chat.send_noreply(appointee_name,
+                                           f"Hello, {appointee_name}! {actor.username} has appointed you to {store_name}. "
+                                           f"Your permissions are: {', '.join(map(str, permissions))}")
                     return report_info(calling_method, f'{actor} appointed \'{appointee.username}\' to a {role}.')
                 else:
                     return report_error(calling_method,
@@ -463,6 +474,10 @@ class Market(IService):
             if self.is_founder_of(actor.username, store_name):
                 for appointment in self.get_store_appointments(store_name):
                     appointment.is_store_active = is_active  # TODO: notify appointee
+                    self.chat.send_noreply(appointment.appointee,
+                               f"Hello, {appointment.appointee}. Notifying you that"
+                               f"{actor.username} has {('reopened' if action == 'REPOPEN' else 'closed')}"
+                               f" {store_name}")
                 return report_info(calling_method, f'Founder \'{actor.username}\' {action} store \'{store_name}\'')
             return report_error(calling_method, f'\'{actor.username}\' is not the founder of store \'{store_name}\'')
         return report_error(calling_method, f'Visitor attempted to {action} store \'{store_name}\'')
@@ -646,7 +661,7 @@ class Market(IService):
                         successful_store_purchases.append(store_name)
                         cart_price += store.calculate_basket_price(basket)
                 else:
-                    return response2.success
+                    return response2
             payment_succeeded = self.pay(cart_price, payment_method, payment_details, holder, user_id)
             if payment_succeeded:
                 # order delivery
