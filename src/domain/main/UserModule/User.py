@@ -1,7 +1,7 @@
 import random
 
 import bcrypt
-from sqlalchemy import Column, String, Boolean
+from sqlalchemy import Column, String, Boolean, Integer
 
 from domain.main.Utils import Base_db
 from domain.main.Utils.Base_db import session_DB
@@ -15,16 +15,16 @@ class User(Base_db.Base):
     __tablename__ = 'users'
     username = Column("username", String, primary_key=True)
     encrypted_password = Column("encrypted_password", String)
-    is_admin = Column("is_admin", Boolean, unique=False, default=False)
+    is_admin = Column("is_admin", Integer)
 
-    def __init__(self, username: str = "Visitor", encrypted_password: str = "Visitor", is_admin=False):
+    def __init__(self, username: str = "Visitor", password: str = "Visitor", is_admin=0):
         self.user_id = None
         self.username = username
-        self.encrypted_password = bcrypt.hashpw(bytes(encrypted_password, 'utf8'), bcrypt.gensalt())
+        self.encrypted_password = bcrypt.hashpw(bytes(password, 'utf8'), bcrypt.gensalt())
         self.is_canceled = False
         self.is_admin = is_admin
-        self.role = Admin(self) if is_admin else Visitor(self)
-        self.cart = Cart()
+        self.role = Admin(self) if is_admin == 1 else Visitor(self)
+        self.cart = Cart(username)
         self.is_logged_in = False
 
     def __repr__(self):
@@ -95,7 +95,8 @@ class User(Base_db.Base):
         exist = len(q) > 0
         if exist:
             row = q[0]
-            user = User(username=row.username, encrypted_password="whatever", is_admin=row.is_admin)
+            user = User(username=row.username, password="whatever", is_admin=row.is_admin)
             user.encrypted_password = row.encrypted_password
+            user.cart = Cart.load_card(username)
             return user
         return None

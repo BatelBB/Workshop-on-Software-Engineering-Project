@@ -6,6 +6,7 @@ from typing import Any
 from multipledispatch import dispatch
 from sqlalchemy import inspect
 
+from domain.main.UserModule.Basket import Item
 from domain.main.Utils.Base_db import Base, engine
 from domain.main.Store.DiscountPolicy.DIscountsFor.CategoryDiscount import CategoryDiscount
 from domain.main.Store.DiscountPolicy.DIscountsFor.IDiscountFor import IDiscountFor
@@ -60,7 +61,7 @@ class Market(IService):
 
     def init_db(self):
         Base.metadata.reflect(engine)
-        classes_for_db = (User, )
+        classes_for_db = (User, Item)
         tables_to_create = []
 
         for cls in classes_for_db:
@@ -76,9 +77,6 @@ class Market(IService):
     def init_admin(self):
         admin_credentials = ('Kfir', 'Kfir')
         self.register_admin(0, *admin_credentials)
-        # admin_user = User(*admin_credentials)
-        # admin_user.role = Admin(admin_user)
-        # self.users.insert(admin_credentials[0], admin_user)
 
     def generate_session_identifier(self):
         min: int = 1

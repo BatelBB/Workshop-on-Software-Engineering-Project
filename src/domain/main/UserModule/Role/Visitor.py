@@ -22,7 +22,7 @@ class Visitor(IRole, ABC):
     def register(self) -> Response[bool]:
         with Visitor.register_lock:
             if not self.context.is_registered(self.context.username):
-                session_DB.add(self.context)
+                session_DB.merge(self.context)
                 session_DB.commit()
                 return report_info(self.register.__qualname__, f'\'{self.context.username}\' is registered!')
         return report_error(self.register.__qualname__, f'Username: \'{self.context.username}\' is occupied')

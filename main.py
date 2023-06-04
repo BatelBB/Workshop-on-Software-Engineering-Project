@@ -38,6 +38,9 @@ def basic_interaction_with_market():
     r = session.get_products_by_name("marry had a little lambda")
     r = session.add_to_cart("Amazon", "Razer Blackwidow V3", 123)
     r = session.add_to_cart("Yahoo", "Razer Blackwidow V3", 555)
+    r = session.add_to_cart("Amazon", "Razer Blackwidow V3", 7) # should increase the quantity to 130
+    r = session.show_cart()
+    r = session.remove_product_from_cart("Yahoo", "Razer Blackwidow V3")
     r = session.show_cart()
     r = session.get_cart()
     r = session.get_store("Amazon")
@@ -49,6 +52,6 @@ def basic_interaction_with_market():
 
 
 if __name__ == '__main__':
-    # basic_interaction_with_market()
-    run_external_scenario('Scenarios/scenario1.json')
+    basic_interaction_with_market()
+    # run_external_scenario('Scenarios/scenario1.json')
     # run_external_scenario('Scenarios/scenario2.json')
