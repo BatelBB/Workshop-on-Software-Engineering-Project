@@ -300,15 +300,11 @@ class Store:
     def set_to_approve_for_bid(self, product_name: str, staff: list[str]):
         self.products_with_bid_purchase_policy[product_name].set_approval_dict_in_bid_policy(staff)
 
-    def approve_bid(self, person: str, product_name: str, is_approve: bool, staff: list[str]):
+    def approve_bid(self, person: str, product_name: str, is_approve: bool):
         if product_name not in self.products_with_bid_purchase_policy.keys():
             return report_error("approve_bid", f"{product_name} not in bidding policy")
 
-        if not is_approve:
-            self.set_to_approve_for_bid(product_name, staff)
-            return report(f"bid for product {product_name} disapproved", True)
-        else:
-            return self.products_with_bid_purchase_policy[product_name].approve(person)
+        return self.products_with_bid_purchase_policy[product_name].approve(person)
 
     def add_purchase_rule(self, rule: IRule) -> Response:
         with self.purchase_rule_lock:
@@ -353,3 +349,8 @@ class Store:
 
         res = self.discounts.delete_discount(index-1)
         return res
+
+    def add_owner(self, name:str):
+        for key in self.products_with_bid_purchase_policy.keys():
+            policy = self.products_with_bid_purchase_policy[key]
+            policy.add_to_approval_dict_in_bid_policy(name)

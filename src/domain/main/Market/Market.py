@@ -417,8 +417,17 @@ class Market(IService):
                             Permission.AppointManager, get_default_manager_permissions(), role='Store Manager')
 
     def appoint_owner(self, session_identifier: int, appointee_name: str, store_name: str) -> Response[bool]:
-        return self.appoint(session_identifier, self.appoint_owner.__qualname__, store_name, appointee_name,
+        res = self.appoint(session_identifier, self.appoint_owner.__qualname__, store_name, appointee_name,
                             Permission.AppointOwner, get_default_owner_permissions(), role='Store Owner')
+        if res.success:
+            store_res = self.verify_registered_store(self.delete_discount.__qualname__, store_name)
+            if not store_res.success:
+                return report_error(self.delete_discount.__qualname__, "invalid store")
+            store = store_res.result
+            store.add_owner(appointee_name)
+        return res
+
+
 
     def set_permission(self, session_identifier: int, calling_method: str, store: str, appointee: str,
                        permission: Permission, action: {'ADD', 'REMOVE'}) -> Response[bool]:
@@ -748,7 +757,7 @@ class Market(IService):
             actor = self.get_active_user(session_id)
             if self.has_permission_at(store_name, actor, Permission.StartBid):
                 policy = BidPolicy()
-                return store.add_product_to_bid_purchase_policy(product_name, policy, self.get_store_staff(store_name))
+                return store.add_product_to_bid_purchase_policy(product_name, policy, self.get_store_owners(session_id, store_name).result)
             return self.report_no_permission(self.start_bid.__qualname__, actor, store_name, Permission.StartBid)
         return response
 
@@ -758,7 +767,7 @@ class Market(IService):
             store = response.result
             actor = self.get_active_user(session_id)
             if self.has_permission_at(store_name, actor, Permission.ApproveBid):
-                return store.approve_bid(actor.username, product_name, is_approve, self.get_store_staff(store_name))
+                return store.approve_bid(actor.username, product_name, is_approve)
             return self.report_no_permission(self.approve_bid.__qualname__, actor, store_name, Permission.StartBid)
         return response
 
@@ -979,3 +988,21 @@ class Market(IService):
                                 f"{actor.username} has no permission to manage discounts")
 
         return store.delete_discount(index)
+
+    def get_store_owners(self, session_id: int, store_name: str):
+        actor = self.get_active_user(session_id)
+        res = self.get_store_staff(session_id, store_name)
+        if not res.success:
+            return res
+        staff = res.result
+        owners = []
+        for appoitment in staff:
+            p = appoitment.appointee
+            perms = self.permissions_of(session_id, store_name, actor.username)
+            if not perms.success:
+                return report_error(self.delete_discount.__qualname__, "failed to retrieve permissions")
+            perms = perms.result
+            if Permission.AppointOwner in perms:
+                owners.append(p)
+
+        return Response(owners, "list of owners")
