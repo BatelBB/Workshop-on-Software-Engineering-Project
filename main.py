@@ -49,5 +49,6 @@ def basic_interaction_with_market():
 
 
 if __name__ == '__main__':
-    run_external_scenario('Scenarios/scenario2.json')
-    run_external_scenario('Scenarios/scenario2.json')
+    # basic_interaction_with_market()
+    run_external_scenario('Scenarios/scenario1.json')
+    # run_external_scenario('Scenarios/scenario2.json')

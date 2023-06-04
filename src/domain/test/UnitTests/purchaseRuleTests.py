@@ -7,7 +7,6 @@ from src.domain.main.Store.PurchaseRules.RuleCombiner.OrRule import OrRule
 from src.domain.main.Store.PurchaseRules.SimpleRule import SimpleRule
 from src.domain.main.UserModule.Basket import Basket, Item
 from src.domain.main.Market.Market import Market
-from src.domain.main.Service.IService import IService
 
 
 class purchaseRuleTests(unittest.TestCase):

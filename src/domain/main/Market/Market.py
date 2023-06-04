@@ -6,7 +6,7 @@ from typing import Any
 from multipledispatch import dispatch
 from sqlalchemy import inspect
 
-from domain.main.Utils.Base_db import Base, engine, session_DB
+from domain.main.Utils.Base_db import Base, engine
 from domain.main.Store.DiscountPolicy.DIscountsFor.CategoryDiscount import CategoryDiscount
 from domain.main.Store.DiscountPolicy.DIscountsFor.IDiscountFor import IDiscountFor
 from domain.main.Store.DiscountPolicy.DIscountsFor.ProductDiscount import ProductDiscount
@@ -22,7 +22,7 @@ from src.domain.main.Market.Appointment import Appointment
 from src.domain.main.Market.Permissions import Permission, get_default_manager_permissions, \
     get_default_owner_permissions, \
     get_permission_description
-from src.domain.main.Service.IService import IService
+from Service.IService.IService import IService
 from src.domain.main.Store.Product import Product
 from src.domain.main.Store.PurchasePolicy.AuctionPolicy import AuctionPolicy
 from src.domain.main.Store.PurchasePolicy.BidPolicy import BidPolicy
@@ -36,7 +36,7 @@ from src.domain.main.UserModule.User import User
 from src.domain.main.Utils.ConcurrentDictionary import ConcurrentDictionary
 from src.domain.main.Utils.Logger import Logger, report_error, report_info
 from src.domain.main.Utils.Response import Response
-from src.domain.main.Utils.Session import Session
+from Service.Session.Session import Session
 from src.domain.main.Store.DiscountPolicy.CondDiscount import CondDiscount
 
 

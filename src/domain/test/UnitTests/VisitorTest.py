@@ -2,7 +2,7 @@ import unittest
 from threading import Thread
 
 from src.domain.main.Market.Market import Market
-from src.domain.main.Service.IService import IService
+from Service.IService.IService import IService
 from parameterized import parameterized
 from src.domain.test.UnitTests.RandomInputGenerator import get_random_user
 from src.domain.main.Utils.Response import Response

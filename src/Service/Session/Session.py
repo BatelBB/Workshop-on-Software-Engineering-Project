@@ -1,10 +1,9 @@
 from typing import Any
 
-from domain.main.Market import Permissions
 from domain.main.Store.PurchaseRules.IRule import IRule
 from src.domain.main.Market.Appointment import Appointment
 from src.domain.main.Market.Permissions import Permission
-from src.domain.main.Service import IService
+from Service.IService import IService
 from src.domain.main.Store.Product import Product
 from src.domain.main.Store.Store import Store
 from src.domain.main.UserModule.Cart import Cart

@@ -1,4 +1,4 @@
-from abc import ABC, abstractmethod
+from abc import abstractmethod
 
 from domain.main.Store.PurchaseRules.IRule import IRule
 from src.domain.main.Market.Appointment import Appointment
@@ -8,7 +8,7 @@ from src.domain.main.Store.Store import Store
 from src.domain.main.UserModule.Cart import Cart
 from src.domain.main.Utils.IConcurrentSingelton import IAbsractConcurrentSingleton
 from src.domain.main.Utils.Response import Response
-from src.domain.main.Utils.Session import Session
+from Service.Session.Session import Session
 
 
 class IService(metaclass=IAbsractConcurrentSingleton):
