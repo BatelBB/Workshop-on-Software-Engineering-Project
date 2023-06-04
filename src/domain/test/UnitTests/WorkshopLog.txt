@@ -1,0 +1,8 @@
+04/06/2023 12:13:49 ERROR:	 Visitor.register: Username: 'Kfir' is occupied
+04/06/2023 12:13:49 INFO:	 Session: 5051170481952213723 has been initialized
+04/06/2023 12:13:49 ERROR:	 Visitor.logout: Visitor attempted to logout.
+04/06/2023 12:13:49 INFO:	 Market.leave: Visitor left session: 5051170481952213723
+04/06/2023 12:13:50 INFO:	 Session: 8803087358078966661 has been initialized
+04/06/2023 12:13:51 INFO:	 Market.login: Admin 'Kfir' is logged in
+04/06/2023 12:13:51 WARNING:	 Market is closed!
+04/06/2023 12:13:51 WARNING:	 Logger thread exits!
