@@ -1,0 +1,40 @@
+{% extends "layout.html" %}
+{% block title %}Create store{% endblock %}
+
+{% block page %}
+
+<h1>{{ product.name }}</h1>
+<h2>from <a href="{{ url_for('buying.view_store', name=store_name) }}">{{ store_name }}</a></h2>
+<div>
+    <p><span class="price">{{ product.price }}</span></p>
+    <p><span class="qty-avail">{{ product.quantity }} in stock.</span></p>
+    {% if amount %}
+        You have {{ amount }} of those in your basket.
+    {% else %}
+        You don't have this product in your basket.
+    {% endif %}
+
+
+<form method="post">
+
+  {{ form.hidden_tag() }}
+    <table>
+        {% for field in (form.amount, form.submit) %}
+            <tr>
+                <td>{{field.label}}&nbsp;</td>
+                <td>{{ field }}</td>
+                <td>
+                    {% for error in field.errors %}
+                        {{ error }}
+                    {% endfor %}
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+
+</form>
+
+<p>Go back to store <a href="{{ url_for('buying.view_store', name=store_name) }}">{{ store_name }}</a></p>
+</div>
+
+{% endblock %}

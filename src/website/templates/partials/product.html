@@ -4,9 +4,21 @@
      data-category="{{ product.category }}"
      data-rate="{{ product.rate }}"
 >
-    <h3>{{ product.name }}</h3>
+    <h3>
+        <img src="{{ dicebear_product(product.name) }}" style="height: 3em;"/>
+        {{ product.name }}
+    </h3>
     <p><span class="price">{{ product.price }}</span></p>
+    <p><span class="qty-avail">{{ product.quantity }} in stock.</span></p>
+    {% if basket and (product.name in basket.amounts) %}
+        You have {{ basket.amounts[product.name] }} of those in your cart.
+        <a href="{{ url_for('buying.buy_product', store_name=product.store_name, product_name=product.name) }}">Change amount or remove</a>
+    {% else %}
+        <a href="{{ url_for('buying.buy_product', store_name=product.store_name, product_name=product.name) }}">Buy</a>
+    {% endif %}
+    <div>
     {% if permissions and 'Update' in permissions %}
         can edit
     {% endif %}
+    </div>
 </div>
