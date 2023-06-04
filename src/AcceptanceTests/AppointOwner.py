@@ -30,3 +30,30 @@ class Login(unittest.TestCase):
         cls.app.enter_market()
         cls.app.login(*cls.service_admin)
         cls.app.shutdown()
+
+    def test_retrieve_purchase_history(self):
+    def test_retrieve_staff_details(self):
+
+    def test_interact_with_customer(self):
+    def test_(self):
+
+        RetrievePurchaseHistory = 'Retrieve store purchase history'
+        RetrieveStaffDetails = 'Retrieve store staff details'
+        InteractWithCustomer = 'Get and answer customer questions'
+        Add = 'Add a Product'
+        AddRule = 'Add a Store-Role'
+        Update = 'Update product details'
+        Remove = 'Remove product'
+        ChangeDiscountPolicy = 'Change discount policy'
+        ChangePurchasePolicy = 'Change purchase policy'
+        AppointManager = 'Appoint another manager'
+        AppointOwner = 'Appoint another owner'
+        CancelManagerAppointment = 'Cancel appointment of another manager'
+        CancelOwnerAppointment = 'Cancel appointment of another owner'
+        CloseStore = 'Close store'
+        ReopenStore = 'Reopen store'
+        OpenStore = 'Open store'
+        OpenAuction = 'Open Auction'
+        OpenLottery = 'Open Lottery'
+        StartBid = 'Start a bid'
+        ApproveBid = 'Approve a bid'
