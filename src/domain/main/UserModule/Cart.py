@@ -1,7 +1,6 @@
 from functools import reduce
 
-from src.domain.main.Store.Product import Product
-from src.domain.main.User.Basket import Basket, Item
+from src.domain.main.UserModule.Basket import Basket, Item
 
 
 class Cart:

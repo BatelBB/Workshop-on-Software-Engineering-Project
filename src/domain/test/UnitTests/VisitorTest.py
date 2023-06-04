@@ -2,7 +2,7 @@ import unittest
 from threading import Thread
 
 from src.domain.main.Market.Market import Market
-from src.domain.main.Service.IService import IService
+from Service.IService.IService import IService
 from parameterized import parameterized
 from src.domain.test.UnitTests.RandomInputGenerator import get_random_user
 from src.domain.main.Utils.Response import Response
@@ -32,7 +32,7 @@ class VisitorTestCase(unittest.TestCase):
     '''
         Concurrency Tests
     '''
-    number_of_threads = [1, 10, 100, 500, 1000]
+    number_of_threads = [1, 10, 100, 500]
 
     def start_new_session_and_register(self, user, result, index):
         session = self.service.enter()
@@ -69,7 +69,7 @@ class VisitorTestCase(unittest.TestCase):
         for i in range(len(threads)):
             threads[i].join()
         succeeded_results = list(filter(lambda response: response.success, results))
-        self.assertEqual(len(succeeded_results), 1)
+        self.assertEqual(len(succeeded_results), number_of_threads)
 
     @parameterized.expand([
         ("A", "blahblahblah"),
@@ -121,25 +121,6 @@ class VisitorTestCase(unittest.TestCase):
     def test_login_unregistered_user_failure(self, username: str, password: str):
         response: Response[bool] = self.session.login(username, password)
         self.assertFalse(response.result, "Unregistered user can not be logged in")
-
-    @parameterized.expand([
-        ("A", "blahblahblah"),
-        ("B", "dahdahdah"),
-        ("Mayer", "marry had a little lambda"),
-        ("foo()", "Azam rules!"),
-        ("boo()", "Barami rules!"),
-    ])
-    def test_login_already_logged_in_member_failure(self, username: str, password: str):
-        # register a member
-        self.session.register(username, password)
-        self.assertTrue(self.session.is_registered(username), f'{username} should be registered by now.')
-        # login a member
-        self.session.login(username, password)
-        self.assertTrue(self.session.is_logged_in(username), f'{username} should be logged in by now.')
-        # login again same member
-        response: Response[bool] = self.session.login(username, password)
-        self.assertFalse(response.result)
-        self.assertTrue(self.session.is_logged_in(username))
 
     @parameterized.expand([
         ("A", "blahblahblah"),

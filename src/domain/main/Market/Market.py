@@ -3,11 +3,10 @@ import sys
 import threading
 from functools import reduce
 from typing import Any
-import bcrypt
-import os
 from multipledispatch import dispatch
+from sqlalchemy import inspect
 
-from domain.main.ExternalServices.Payment.PaymentServices import IPaymentService
+from domain.main.Utils.Base_db import Base, engine
 from domain.main.Store.DiscountPolicy.DIscountsFor.CategoryDiscount import CategoryDiscount
 from domain.main.Store.DiscountPolicy.DIscountsFor.IDiscountFor import IDiscountFor
 from domain.main.Store.DiscountPolicy.DIscountsFor.ProductDiscount import ProductDiscount
@@ -16,7 +15,6 @@ from domain.main.Store.DiscountPolicy.IDiscountPolicy import IDiscountPolicy
 from domain.main.Store.DiscountPolicy.OpenDiscount import OpenDiscount
 from domain.main.Store.DiscountPolicy.XorDiscount import XorDiscount
 from domain.main.Store.PurchaseRules.IRule import IRule
-from domain.main.Utils.Response import Response
 from src.domain.main.ExternalServices.Payment.PaymentFactory import PaymentFactory
 from src.domain.main.ExternalServices.Payment.PaymentServices import IPaymentService
 from src.domain.main.ExternalServices.Provision.ProvisionServiceAdapter import provisionService, IProvisionService
@@ -24,7 +22,7 @@ from src.domain.main.Market.Appointment import Appointment
 from src.domain.main.Market.Permissions import Permission, get_default_manager_permissions, \
     get_default_owner_permissions, \
     get_permission_description
-from src.domain.main.Service.IService import IService
+from Service.IService.IService import IService
 from src.domain.main.Store.Product import Product
 from src.domain.main.Store.PurchasePolicy.AuctionPolicy import AuctionPolicy
 from src.domain.main.Store.PurchasePolicy.BidPolicy import BidPolicy
@@ -32,13 +30,13 @@ from src.domain.main.Store.PurchasePolicy.LotteryPolicy import LotteryPolicy
 from src.domain.main.Store.PurchasePolicy.PurchasePolicyFactory import PurchasePolicyFactory
 from src.domain.main.Store.PurchaseRules import PurchaseRulesFactory
 from src.domain.main.Store.Store import Store
-from src.domain.main.User.Cart import Cart
-from src.domain.main.User.Role.Admin import Admin
-from src.domain.main.User.User import User
+from src.domain.main.UserModule.Cart import Cart
+from src.domain.main.UserModule.Role.Admin import Admin
+from src.domain.main.UserModule.User import User
 from src.domain.main.Utils.ConcurrentDictionary import ConcurrentDictionary
 from src.domain.main.Utils.Logger import Logger, report_error, report_info
 from src.domain.main.Utils.Response import Response
-from src.domain.main.Utils.Session import Session
+from Service.Session.Session import Session
 from src.domain.main.Store.DiscountPolicy.CondDiscount import CondDiscount
 
 
@@ -57,13 +55,30 @@ class Market(IService):
         self.payment_factory: PaymentFactory = PaymentFactory()
         self.package_counter = 0
         self.appointments_lock = threading.RLock()
+        self.init_db()
         self.init_admin()
+
+    def init_db(self):
+        Base.metadata.reflect(engine)
+        classes_for_db = (User, )
+        tables_to_create = []
+
+        for cls in classes_for_db:
+            if not self.is_table_exsits(cls.__tablename__):
+                tables_to_create.append(cls.__table__)
+
+        Base.metadata.create_all(engine, checkfirst=True, tables=tables_to_create)
+
+    def is_table_exsits(self, table_name: str):
+        inspector = inspect(engine)
+        return inspector.has_table(table_name)
 
     def init_admin(self):
         admin_credentials = ('Kfir', 'Kfir')
-        admin_user = User(self, *admin_credentials)
-        admin_user.role = Admin(admin_user)
-        self.users.insert(admin_credentials[0], admin_user)
+        self.register_admin(0, *admin_credentials)
+        # admin_user = User(*admin_credentials)
+        # admin_user.role = Admin(admin_user)
+        # self.users.insert(admin_credentials[0], admin_user)
 
     def generate_session_identifier(self):
         min: int = 1
@@ -75,7 +90,7 @@ class Market(IService):
 
     def enter(self) -> Session:
         session_identifier = self.generate_session_identifier()
-        self.sessions.insert(session_identifier, User(self))
+        self.sessions.insert(session_identifier, User())
         session = Session(session_identifier, self)
         Logger().post(f'{session} has been initialized')
         return session
@@ -171,8 +186,16 @@ class Market(IService):
         return Response(store) if store is not None \
             else report_error(calling_method_name, f'Store \'{store_name}\' is not registered to the market.')
 
+    def get_user(self, username) -> User | None:
+        user = self.users.get(username)
+        if user is None:
+            user = User.load_user(username)
+            if user is not None:
+                self.users.insert(username, user)
+        return user
+
     def verify_registered_user(self, calling_method_name: str, username: str) -> Response[User] | Response[bool]:
-        user: User = self.users.get(username)
+        user: User = self.get_user(username)
         return Response(user) if user is not None \
             else report_error(calling_method_name, f'User \'{username}\' is not registered to the market.')
 
@@ -210,34 +233,37 @@ class Market(IService):
         return report_info(self.leave.__qualname__, f'{leaving_user} left session: {session_identifier}')
 
     def register(self, session_identifier: int, username: str, encrypted_password: str) -> Response[bool]:
-        password_hash = bcrypt.hashpw(encrypted_password.encode('utf8'), bcrypt.gensalt())
-        new_user = User(self, username, password_hash)
-        registered_user_with_param_username = self.users.insert(username, new_user)
-        if registered_user_with_param_username is None:
-            return new_user.register()
-        else:
-            return report_error(self.register.__qualname__, f'Username: \'{username}\' is occupied')
+        new_user = User(username, encrypted_password)
+        return new_user.register()
+
+    def register_admin(self, session_identifier: int, username: str, encrypted_password: str) -> Response[bool]:
+        admin = User(username, encrypted_password, is_admin=True)
+        response = admin.register()
+        if response.success:
+            admin.role = Admin(admin)
+        return response
 
     def is_registered(self, username: str) -> bool:
-        return self.users.get(username) is not None
+        return User.is_registered(username)
 
     def login(self, session_identifier: int, username: str, encrypted_password: str) -> Response[bool]:
-        next_user = self.users.get(username)
+        next_user = self.get_user(username)
         if next_user is None:
             return report_error(self.login.__qualname__, f'Username: \'{username}\' is not registered')
-        response = next_user.login(encrypted_password.encode('utf8'))
-        current_user = self.get_active_user(session_identifier)
-        if current_user.is_logged_in and current_user != next_user:
-            current_user.logout()
-        self.sessions.update(session_identifier, next_user)
-        return response
+        if next_user.login(encrypted_password):
+            current_user = self.get_active_user(session_identifier)
+            if current_user.is_logged_in and current_user != next_user:
+                current_user.logout()
+            self.sessions.update(session_identifier, next_user)
+            return report_info(self.login.__qualname__, f'{next_user} is logged in')
+        return report_error(self.login.__qualname__, f'{username} failed to login')
 
     def is_logged_in(self, username: str) -> bool:
         return self.is_registered(username) and self.users.get(username).is_logged_in
 
     def logout(self, session_identifier: int) -> Response[bool]:
         actor = self.get_active_user(session_identifier)
-        self.sessions.insert(session_identifier, User(self))
+        self.sessions.insert(session_identifier, User())
         return actor.logout()
 
     def open_store(self, session_identifier: int, store_name: str) -> Response[bool]:
@@ -620,7 +646,7 @@ class Market(IService):
 
     def cancel_membership_of(self, session_identifier: int, member_name: str) -> Response[bool]:
         actor = self.get_active_user(session_identifier)
-        if actor.is_admin():
+        if actor.is_admin:
             response = self.verify_registered_user(self.cancel_membership_of.__qualname__, member_name)
             if response.success:
                 member = response.result
@@ -634,6 +660,7 @@ class Market(IService):
         return report_error(self.cancel_membership_of.__qualname__, f'\'{actor}\' is not an admin')
 
     def clear(self) -> None:
+        User.clear_db()
         self.__init__()
 
     def pay(self, price: int, payment_type: str, payment_details: list[str], holder: str, user_id: int):

@@ -9,7 +9,7 @@ from src.domain.main.Store.Product import Product
 from src.domain.main.Store.PurchasePolicy.BidPolicy import BidPolicy
 from src.domain.main.Store.PurchasePolicy.IPurchasePolicy import IPurchasePolicy
 from src.domain.main.Store.PurchaseRules.IRule import IRule
-from src.domain.main.User.Basket import Basket
+from src.domain.main.UserModule.Basket import Basket
 from src.domain.main.Utils.Logger import report_error, report
 from src.domain.main.Utils.Response import Response
 

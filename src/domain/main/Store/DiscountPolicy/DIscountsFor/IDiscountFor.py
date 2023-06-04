@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
 from domain.main.Store.Product import Product
-from domain.main.User.Basket import Basket
+from domain.main.UserModule.Basket import Basket
 
 
 class IDiscountFor(ABC):

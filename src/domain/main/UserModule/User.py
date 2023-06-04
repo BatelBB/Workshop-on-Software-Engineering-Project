@@ -1,22 +1,34 @@
 import random
 
-from src.domain.main.Service.IService import IService
-from src.domain.main.Store.Product import Product
-from src.domain.main.User.Cart import Cart
-from src.domain.main.User.Role.Visitor import Visitor
+import bcrypt
+from sqlalchemy import Column, String, Boolean
+
+from domain.main.Utils import Base_db
+from domain.main.Utils.Base_db import session_DB
+from src.domain.main.UserModule.Cart import Cart
+from src.domain.main.UserModule.Role.Admin import Admin
+from src.domain.main.UserModule.Role.Visitor import Visitor
 from src.domain.main.Utils.Response import Response
 
 
-class User:
-    def __init__(self, mediator: IService, username: str = "Visitor", encrypted_password: bytes = "Visitor"):
+class User(Base_db.Base):
+    __tablename__ = 'users'
+    username = Column("username", String, primary_key=True)
+    encrypted_password = Column("encrypted_password", String)
+    is_admin = Column("is_admin", Boolean, unique=False, default=False)
+
+    def __init__(self, username: str = "Visitor", encrypted_password: str = "Visitor", is_admin=False):
         self.user_id = None
-        self.mediator = mediator
         self.username = username
-        self.encrypted_password = encrypted_password
+        self.encrypted_password = bcrypt.hashpw(bytes(encrypted_password, 'utf8'), bcrypt.gensalt())
         self.is_canceled = False
-        self.role = Visitor(self)
+        self.is_admin = is_admin
+        self.role = Admin(self) if is_admin else Visitor(self)
         self.cart = Cart()
         self.is_logged_in = False
+
+    def __repr__(self):
+        return f"<User(name='{self.username}', email='{self.password}')>"
 
     def __str__(self):
         return self.role.__str__()
@@ -31,7 +43,7 @@ class User:
         self.user_id = random.randint(100000000, 999999999)
         return self.role.register()
 
-    def login(self, encrypted_password: bytes) -> Response[bool]:
+    def login(self, encrypted_password: str) -> bool:
         return self.role.login(encrypted_password)
 
     def logout(self) -> Response[bool]:
@@ -66,3 +78,24 @@ class User:
 
     def get_user_id(self) -> int:
         return self.user_id
+
+    @staticmethod
+    def is_registered(username: str) -> bool:
+        q = session_DB.query(User.username).filter(User.username == username)
+        return session_DB.query(q.exists()).scalar()
+
+    @staticmethod
+    def clear_db():
+        session_DB.query(User).delete()
+        session_DB.commit()
+
+    @staticmethod
+    def load_user(username: str):
+        q = session_DB.query(User).filter(User.username == username).all()
+        exist = len(q) > 0
+        if exist:
+            row = q[0]
+            user = User(username=row.username, encrypted_password="whatever", is_admin=row.is_admin)
+            user.encrypted_password = row.encrypted_password
+            return user
+        return None
