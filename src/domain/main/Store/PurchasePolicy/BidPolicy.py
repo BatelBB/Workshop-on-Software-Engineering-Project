@@ -37,14 +37,14 @@ class BidPolicy(IPurchasePolicy):
     def approve(self, person: str) -> Response:
         self.to_approve[person] = True
         res = self.is_approved()
-        if res.success:
+        if res.result:
             return res
         return report(f"{person} approved bid", True)
 
     def is_approved(self) -> Response[bool]:
         for p in self.to_approve:
             if not self.to_approve[p]:
-                return report(f"is_approved {p} not approved bid yet", True)
+                return report(f"is_approved {p} not approved bid yet", False)
 
         self.payment_service.pay(self.highest_bid)
         self.delivery_service.getDelivery()

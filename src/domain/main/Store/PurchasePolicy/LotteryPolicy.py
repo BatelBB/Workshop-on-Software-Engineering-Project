@@ -30,9 +30,10 @@ class LotteryPolicy(IPurchasePolicy):
 
         self.price -= amount_to_pay
         if self.price == 0:
-            self.pick_winner()
+            return self.pick_winner()
 
     def pick_winner(self):
+        self.is_active = 0
         rnd = random.random()
         cur = 0
         for i in self.lottery_participants.keys():

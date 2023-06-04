@@ -176,7 +176,7 @@ class Session:
                                            payment_method: str, payment_details: list[str], address: str,
                                            postal_code: str, how_much: float, city: str, country: str) -> Response[
         bool]:
-        return self.apply(self.service.purchase_with_non_immediate_policy, store_name, product_name, payment_method,
+        return self.apply(self.service.purchase_with_non_immediate_policy, self.identifier, store_name, product_name, payment_method,
                           payment_details, address, postal_code, how_much, city, country)
 
     def start_auction(self, store_name: str, product_name: str, initial_price: float, duration: int) -> Response[bool]:

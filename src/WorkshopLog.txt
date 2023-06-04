@@ -1,0 +1,56 @@
+04/06/2023 10:19:33 INFO:	 Visitor.register: 'batel' is registered!
+04/06/2023 10:19:34 INFO:	 Visitor.register: 'yuval' is registered!
+04/06/2023 10:19:34 INFO:	 Visitor.register: 'hagai' is registered!
+04/06/2023 10:19:35 INFO:	 Visitor.register: 'nir_m.' is registered!
+04/06/2023 10:19:35 INFO:	 Visitor.register: 'mendi' is registered!
+04/06/2023 10:19:35 INFO:	 Session: 5997805412319424982 has been initialized
+04/06/2023 10:19:35 INFO:	 Visitor.login: Member 'yuval' is logged in.
+04/06/2023 10:19:35 INFO:	 Market.open_store: Member 'yuval' opened store 'מרתפי אלקטרוניקה'.
+04/06/2023 10:19:35 INFO:	 Market.add_product: 'yuval' add 100 units of Product 'נורית כיבוי', Category: 'electronics', Price: 66, Rate: Not rated yet to store 'מרתפי אלקטרוניקה'
+04/06/2023 10:19:35 INFO:	 Market.add_product: 'yuval' add 100 units of Product 'לחצנים', Category: 'electronics', Price: 64, Rate: Not rated yet to store 'מרתפי אלקטרוניקה'
+04/06/2023 10:19:35 INFO:	 Market.add_product: 'yuval' add 100 units of Product 'טוסטר משולשים', Category: 'electronics', Price: 87, Rate: Not rated yet to store 'מרתפי אלקטרוניקה'
+04/06/2023 10:19:35 INFO:	 Market.add_product: 'yuval' add 100 units of Product 'פיורדים', Category: 'electronics', Price: 71, Rate: Not rated yet to store 'מרתפי אלקטרוניקה'
+04/06/2023 10:19:35 INFO:	 Market.add_product: 'yuval' add 100 units of Product 'משחת שיניים חשמלית', Category: 'electronics', Price: 95, Rate: Not rated yet to store 'מרתפי אלקטרוניקה'
+04/06/2023 10:19:35 INFO:	 Market.add_product: 'yuval' add 100 units of Product 'כיסא תאורה', Category: 'electronics', Price: 90, Rate: Not rated yet to store 'מרתפי אלקטרוניקה'
+04/06/2023 10:19:35 INFO:	 Market.add_product: 'yuval' add 100 units of Product 'מד לחץ פסיכולוגי', Category: 'electronics', Price: 92, Rate: Not rated yet to store 'מרתפי אלקטרוניקה'
+04/06/2023 10:19:35 INFO:	 Market.add_product: 'yuval' add 100 units of Product 'וילון חשמלי', Category: 'electronics', Price: 96, Rate: Not rated yet to store 'מרתפי אלקטרוניקה'
+04/06/2023 10:19:35 INFO:	 Market.add_product: 'yuval' add 100 units of Product 'טוסטר מקבילים', Category: 'electronics', Price: 140, Rate: Not rated yet to store 'מרתפי אלקטרוניקה'
+04/06/2023 10:19:35 INFO:	 Market.add_product: 'yuval' add 100 units of Product 'עין אלקטרונית', Category: 'electronics', Price: 23, Rate: Not rated yet to store 'מרתפי אלקטרוניקה'
+04/06/2023 10:19:35 INFO:	 Market.add_product: 'yuval' add 100 units of Product 'טוסטר מצולעים', Category: 'electronics', Price: 121, Rate: Not rated yet to store 'מרתפי אלקטרוניקה'
+04/06/2023 10:19:35 INFO:	 Market.add_product: 'yuval' add 100 units of Product 'כיסא חשמלי', Category: 'electronics', Price: 22, Rate: Not rated yet to store 'מרתפי אלקטרוניקה'
+04/06/2023 10:19:35 INFO:	 Market.add_product: 'yuval' add 100 units of Product 'חיבור בננה', Category: 'electronics', Price: 140, Rate: Not rated yet to store 'מרתפי אלקטרוניקה'
+04/06/2023 10:19:35 INFO:	 Market.add_product: 'yuval' add 100 units of Product 'סאב וופרים', Category: 'electronics', Price: 45, Rate: Not rated yet to store 'מרתפי אלקטרוניקה'
+04/06/2023 10:19:35 INFO:	 Market.add_product: 'yuval' add 100 units of Product 'מנורת לבה עם לבה אורגנית', Category: 'electronics', Price: 131, Rate: Not rated yet to store 'מרתפי אלקטרוניקה'
+04/06/2023 10:19:35 INFO:	 Market.add_product: 'yuval' add 100 units of Product 'תנור מקרר', Category: 'electronics', Price: 95, Rate: Not rated yet to store 'מרתפי אלקטרוניקה'
+04/06/2023 10:19:35 INFO:	 Market.add_product: 'yuval' add 100 units of Product 'חתול חשמלי', Category: 'electronics', Price: 109, Rate: Not rated yet to store 'מרתפי אלקטרוניקה'
+04/06/2023 10:19:35 INFO:	 Market.add_product: 'yuval' add 100 units of Product 'חוט להט', Category: 'electronics', Price: 34, Rate: Not rated yet to store 'מרתפי אלקטרוניקה'
+04/06/2023 10:19:35 INFO:	 Market.add_product: 'yuval' add 100 units of Product 'חוט רהט', Category: 'electronics', Price: 96, Rate: Not rated yet to store 'מרתפי אלקטרוניקה'
+04/06/2023 10:19:35 INFO:	 Market.add_product: 'yuval' add 100 units of Product 'מנורת נחת', Category: 'electronics', Price: 54, Rate: Not rated yet to store 'מרתפי אלקטרוניקה'
+04/06/2023 10:19:35 INFO:	 Member.logout: Member 'yuval' is logged out
+04/06/2023 10:19:35 ERROR:	 Visitor.logout: Visitor attempted to logout.
+04/06/2023 10:19:35 INFO:	 Market.leave: Visitor left session: 5997805412319424982
+04/06/2023 10:19:35 INFO:	 Session: 783409058745532974 has been initialized
+04/06/2023 10:19:36 INFO:	 Visitor.login: Member 'batel' is logged in.
+04/06/2023 10:19:36 INFO:	 Market.open_store: Member 'batel' opened store 'Selling the stars'.
+04/06/2023 10:19:36 INFO:	 Market.add_product: 'batel' add 10 units of Product 'Meteorite Necklace', Category: 'Jewelry', Price: 59.99, Rate: Not rated yet to store 'Selling the stars'
+04/06/2023 10:19:36 INFO:	 Market.add_product: 'batel' add 20 units of Product 'Galaxy Backpack', Category: 'Accessories', Price: 34.99, Rate: Not rated yet to store 'Selling the stars'
+04/06/2023 10:19:36 INFO:	 Market.add_product: 'batel' add 5 units of Product 'Constellation Map', Category: 'Home Decor', Price: 19.99, Rate: Not rated yet to store 'Selling the stars'
+04/06/2023 10:19:36 INFO:	 Market.add_product: 'batel' add 15 units of Product 'Moon Lamp', Category: 'Home Decor', Price: 39.99, Rate: Not rated yet to store 'Selling the stars'
+04/06/2023 10:19:36 INFO:	 Market.add_product: 'batel' add 30 units of Product 'Sun Hat', Category: 'Apparel', Price: 24.99, Rate: Not rated yet to store 'Selling the stars'
+04/06/2023 10:19:36 INFO:	 Market.add_product: 'batel' add 7 units of Product 'Nebula Blanket', Category: 'Home Decor', Price: 79.99, Rate: Not rated yet to store 'Selling the stars'
+04/06/2023 10:19:36 INFO:	 Market.add_product: 'batel' add 50 units of Product 'Planet Earrings', Category: 'Jewelry', Price: 14.99, Rate: Not rated yet to store 'Selling the stars'
+04/06/2023 10:19:36 INFO:	 Market.add_product: 'batel' add 100 units of Product 'Astronaut Ice Cream', Category: 'Food & Drink', Price: 4.99, Rate: Not rated yet to store 'Selling the stars'
+04/06/2023 10:19:36 INFO:	 Market.add_product: 'batel' add 8 units of Product 'Star Projector', Category: 'Electronics', Price: 89.99, Rate: Not rated yet to store 'Selling the stars'
+04/06/2023 10:19:36 INFO:	 Market.add_product: 'batel' add 25 units of Product 'Saturn Backpack', Category: 'Accessories', Price: 39.99, Rate: Not rated yet to store 'Selling the stars'
+04/06/2023 10:19:36 INFO:	 Market.add_product: 'batel' add 40 units of Product 'Rocket Mug', Category: 'Home Decor', Price: 12.99, Rate: Not rated yet to store 'Selling the stars'
+04/06/2023 10:19:36 INFO:	 Market.add_product: 'batel' add 50 units of Product 'Asteroid Stress Ball', Category: 'Toys & Games', Price: 6.99, Rate: Not rated yet to store 'Selling the stars'
+04/06/2023 10:19:36 INFO:	 Market.add_product: 'batel' add 12 units of Product 'Solar System Puzzle', Category: 'Toys & Games', Price: 29.99, Rate: Not rated yet to store 'Selling the stars'
+04/06/2023 10:19:36 INFO:	 Market.add_product: 'batel' add 75 units of Product 'Alien Keychain', Category: 'Accessories', Price: 8.99, Rate: Not rated yet to store 'Selling the stars'
+04/06/2023 10:19:36 INFO:	 Member.logout: Member 'batel' is logged out
+04/06/2023 10:19:36 ERROR:	 Visitor.logout: Visitor attempted to logout.
+04/06/2023 10:19:36 INFO:	 Market.leave: Visitor left session: 783409058745532974
+04/06/2023 10:19:36 INFO:	 Session: 3193522308597878694 has been initialized
+04/06/2023 10:19:36 INFO:	 Visitor.login: Member 'hagai' is logged in.
+04/06/2023 10:19:36 INFO:	 Market.open_store: Member 'hagai' opened store 'Hagai's Store'.
+04/06/2023 10:19:36 INFO:	 Market.add_product: 'hagai' add 10 units of Product 'Blue T-Shirt', Category: 'Apparel', Price: 19.99, Rate: Not rated yet to store 'Hagai's Store'
+04/06/2023 10:19:36 INFO:	 Market.add_product: 'hagai' add 5 units of Product 'Leather Wallet', Category: 'Accessories', Price: 49.99, Rate: Not rated yet to store 'Hagai's Store'
