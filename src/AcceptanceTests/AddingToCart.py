@@ -88,7 +88,7 @@ class AddingToCart(unittest.TestCase):
         cart = self.app.show_cart().result
         self.assertIn("bread", cart["bakery"], "error: bread not in cart")
         self.assertEqual(10, cart["bakery"]["bread"]["Quantity"], "error: bread quantity doesn't match after updated")
-        self.assertIn("pita", cart["market"], "error: tuna not in cart")
+        self.assertIn("pita", cart["market"], "error: pita not in cart")
         self.assertEqual(10, cart["market"]["pita"]["Quantity"], "error: pita quantity doesn't match")
         self.app.logout()
 
@@ -114,8 +114,8 @@ class AddingToCart(unittest.TestCase):
         cart = self.app.show_cart().result
         self.assertIn("bread", cart["bakery"], "error: bread not in cart")
         self.assertEqual(5, cart["bakery"]["bread"]["Quantity"], "error: bread quantity doesn't match after updated")
-        self.assertIn("tuna", cart["market"], "error: tuna not in cart")
-        self.assertEqual(10, cart["market"]["tuna"]["Quantity"], "error: tuna quantity doesn't match")
+        self.assertIn("pita", cart["market"], "error: pita not in cart")
+        self.assertEqual(10, cart["market"]["pita"]["Quantity"], "error: tuna quantity doesn't match")
         self.app.logout()
 
     def test_adding_to_cart_with_non_positive_quantity(self):

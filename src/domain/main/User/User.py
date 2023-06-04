@@ -1,5 +1,7 @@
 import random
 
+import bcrypt
+
 from src.domain.main.Service.IService import IService
 from src.domain.main.Store.Product import Product
 from src.domain.main.User.Cart import Cart
@@ -8,11 +10,11 @@ from src.domain.main.Utils.Response import Response
 
 
 class User:
-    def __init__(self, mediator: IService, username: str = "Visitor", encrypted_password: bytes = "Visitor"):
+    def __init__(self, mediator: IService, username: str = "Visitor", encrypted_password: str = "Visitor"):
         self.user_id = None
         self.mediator = mediator
         self.username = username
-        self.encrypted_password = encrypted_password
+        self.encrypted_password = bcrypt.hashpw(bytes(encrypted_password, 'utf8'), bcrypt.gensalt())
         self.is_canceled = False
         self.role = Visitor(self)
         self.cart = Cart()
@@ -31,7 +33,7 @@ class User:
         self.user_id = random.randint(100000000, 999999999)
         return self.role.register()
 
-    def login(self, encrypted_password: bytes) -> Response[bool]:
+    def login(self, encrypted_password: str) -> Response[bool]:
         return self.role.login(encrypted_password)
 
     def logout(self) -> Response[bool]:
