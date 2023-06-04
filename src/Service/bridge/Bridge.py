@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from domain.main.Market.Permissions import Permission
+from src.domain.main.Market.Permissions import Permission
 from src.domain.main.Utils.Response import Response
 
 

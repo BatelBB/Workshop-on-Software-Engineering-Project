@@ -1,4 +1,3 @@
-import validation
 from flask import Blueprint, flash, redirect, url_for, render_template
 from flask_wtf import FlaskForm
 from wtforms import SelectField, SubmitField, StringField, IntegerField, FloatField

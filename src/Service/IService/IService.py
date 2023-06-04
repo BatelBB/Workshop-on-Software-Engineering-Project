@@ -1,6 +1,6 @@
 from abc import abstractmethod
 
-from domain.main.Store.PurchaseRules.IRule import IRule
+from src.domain.main.Store.PurchaseRules.IRule import IRule
 from src.domain.main.Market.Appointment import Appointment
 from src.domain.main.Market.Permissions import Permission
 from src.domain.main.Store.Product import Product

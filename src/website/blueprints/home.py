@@ -4,7 +4,7 @@ import wtforms as wtf
 from flask import Flask, render_template
 from flask_bootstrap import Bootstrap
 
-from domain.main.Utils.Response import Response
+from src.domain.main.Utils.Response import Response
 from website.blueprints.auth import bp as auth
 #from website.blueprints.selling import bp as selling
 from website.blueprints.buying import bp as buying

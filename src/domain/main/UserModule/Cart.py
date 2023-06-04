@@ -1,6 +1,6 @@
 from functools import reduce
 
-from domain.main.Utils.Base_db import session_DB
+from src.domain.main.Utils.Base_db import session_DB
 from src.domain.main.UserModule.Basket import Basket, Item
 
 

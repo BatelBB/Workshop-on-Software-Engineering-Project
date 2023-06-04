@@ -1,6 +1,6 @@
 from typing import Any
 
-from domain.main.Store.PurchaseRules.IRule import IRule
+from src.domain.main.Store.PurchaseRules.IRule import IRule
 from src.domain.main.Market.Appointment import Appointment
 from src.domain.main.Market.Permissions import Permission
 from Service.IService import IService

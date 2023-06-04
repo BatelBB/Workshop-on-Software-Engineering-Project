@@ -1,7 +1,7 @@
 import unittest
 
-from domain.main.Market.Market import Market
-from domain.main.UserModule.Basket import Basket, Item
+from src.domain.main.Market.Market import Market
+from src.domain.main.UserModule.Basket import Basket, Item
 
 
 class xor_discount_tests(unittest.TestCase):

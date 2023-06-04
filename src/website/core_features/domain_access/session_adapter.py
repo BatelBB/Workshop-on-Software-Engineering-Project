@@ -1,9 +1,9 @@
 import threading
 from typing import Optional, List, Dict, Any, Set
 
-from domain.main.Market.Permissions import Permission
-from domain.main.Store.Store import Store
-from domain.main.Utils.Response import Response
+from src.domain.main.Market.Permissions import Permission
+from src.domain.main.Store.Store import Store
+from src.domain.main.Utils.Response import Response
 from Service.Session.Session import Session
 from website.core_features.domain_access.session_adapter_dto import ProductDto
 

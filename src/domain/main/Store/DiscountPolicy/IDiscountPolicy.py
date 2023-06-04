@@ -1,10 +1,10 @@
 from abc import ABC, abstractmethod
 
-from domain.main.Store.DiscountPolicy.DIscountsFor.IDiscountFor import IDiscountFor
-from domain.main.Store.Product import Product
-from domain.main.UserModule.Basket import Basket
-from domain.main.Utils.Logger import report_error, report
-from domain.main.Utils.Response import Response
+from src.domain.main.Store.DiscountPolicy.DIscountsFor.IDiscountFor import IDiscountFor
+from src.domain.main.Store.Product import Product
+from src.domain.main.UserModule.Basket import Basket
+from src.domain.main.Utils.Logger import report_error, report
+from src.domain.main.Utils.Response import Response
 
 
 class IDiscountPolicy(ABC):

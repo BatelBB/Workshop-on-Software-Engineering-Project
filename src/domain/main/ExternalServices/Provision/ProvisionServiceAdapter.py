@@ -1,7 +1,7 @@
 import string
 from abc import ABC, abstractmethod
 
-from domain.main.ExternalServices.Provision.IProvisionService import IExternalProvisionService, provisionReal
+from src.domain.main.ExternalServices.Provision.IProvisionService import IExternalProvisionService, provisionReal
 from src.domain.main.Utils.Logger import report, Logger, report_error, report_info
 
 

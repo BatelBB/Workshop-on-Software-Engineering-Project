@@ -1,6 +1,6 @@
-from domain.main.Store.DiscountPolicy.DIscountsFor.IDiscountFor import IDiscountFor
-from domain.main.Store.Product import Product
-from domain.main.UserModule.Basket import Basket
+from src.domain.main.Store.DiscountPolicy.DIscountsFor.IDiscountFor import IDiscountFor
+from src.domain.main.Store.Product import Product
+from src.domain.main.UserModule.Basket import Basket
 
 
 class StoreDiscount(IDiscountFor):

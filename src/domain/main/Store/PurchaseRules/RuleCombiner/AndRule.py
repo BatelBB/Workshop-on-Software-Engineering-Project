@@ -1,6 +1,6 @@
 from src.domain.main.Store.PurchaseRules.RuleCombiner.IRuleCombiner import IRuleCombiner
 from src.domain.main.Store.PurchaseRules.SimpleRule import SimpleRule
-from domain.main.UserModule.Basket import Basket
+from src.domain.main.UserModule.Basket import Basket
 from src.domain.main.Utils.Logger import report
 from src.domain.main.Utils.Response import Response
 

@@ -2,7 +2,7 @@ import threading
 
 from multipledispatch import dispatch
 
-from domain.main.Store.DiscountPolicy.IDiscountPolicy import IDiscountPolicy
+from src.domain.main.Store.DiscountPolicy.IDiscountPolicy import IDiscountPolicy
 from src.domain.main.ExternalServices.Payment.PaymentServices import IPaymentService
 from src.domain.main.ExternalServices.Provision.ProvisionServiceAdapter import IProvisionService, provisionService
 from src.domain.main.Store.Product import Product

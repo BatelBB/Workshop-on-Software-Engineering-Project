@@ -1,4 +1,4 @@
-from domain.main.Market.Permissions import Permission
+from src.domain.main.Market.Permissions import Permission
 from Service.IService.IService import IService
 from Service.Session.Session import Session
 from src.domain.main.Utils.Response import Response

@@ -1,7 +1,7 @@
-from domain.main.Store.DiscountPolicy.IDiscountPolicy import IDiscountPolicy
-from domain.main.Store.Product import Product
-from domain.main.Store.PurchaseRules.IRule import IRule
-from domain.main.UserModule.Basket import Basket
+from src.domain.main.Store.DiscountPolicy.IDiscountPolicy import IDiscountPolicy
+from src.domain.main.Store.Product import Product
+from src.domain.main.Store.PurchaseRules.IRule import IRule
+from src.domain.main.UserModule.Basket import Basket
 
 
 class CondDiscount(IDiscountPolicy):

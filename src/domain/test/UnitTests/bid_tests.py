@@ -1,7 +1,7 @@
 import unittest
 
-from domain.main.Market.Market import Market
-from domain.main.Store.PurchasePolicy.BidPolicy import BidPolicy
+from src.domain.main.Market.Market import Market
+from src.domain.main.Store.PurchasePolicy.BidPolicy import BidPolicy
 
 
 class bid_tests(unittest.TestCase):

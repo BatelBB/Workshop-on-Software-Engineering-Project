@@ -2,8 +2,8 @@ from functools import reduce
 
 from sqlalchemy import Column, ForeignKey, String, Integer, Float
 
-from domain.main.Utils import Base_db
-from domain.main.Utils.Base_db import session_DB
+from src.domain.main.Utils import Base_db
+from src.domain.main.Utils.Base_db import session_DB
 
 
 class Item(Base_db.Base):
