@@ -70,7 +70,6 @@
 <table>
  {% for product in products %}
 <tr>
-    <td><img src="{{ dicebear_product(product.name) }}" style="height: 4em;"/></td>
     <td>
         {% with product=product %}
             {% include "partials/product.html"  %}

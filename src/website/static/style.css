@@ -12,3 +12,7 @@ span.price {
 span.price::after {
     content: "₪";
 }
+
+button.cool {
+background-color: #008CBA; color: white; padding: 10px 24px; margin: 8px 0; border: none; border-radius: 4px; cursor: pointer;
+}

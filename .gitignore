@@ -186,3 +186,5 @@ fabric.properties
 **/__pycache__/
 **/__pycache__/**/*
 /WorkshopLog.txt
+src/workshop.db
+src/WorkshopLog.txt

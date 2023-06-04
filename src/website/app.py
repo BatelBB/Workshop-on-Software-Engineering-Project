@@ -7,6 +7,8 @@ from flask_bootstrap import Bootstrap
 from src.domain.main.Utils.Response import Response
 from website.blueprints.discounts import bp as discounts
 from website.blueprints.rules import bp as rules
+from src.domain.main.Market.Permissions import Permission
+from src.domain.main.Utils.Response import Response
 from website.blueprints.auth import bp as auth
 from website.blueprints.buying import bp as buying
 from website.blueprints.home import bp as home
@@ -29,6 +31,7 @@ app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 nav.init_app(app)
 
 app.jinja_env.globals.update(**dicebear_methods)
+app.jinja_env.globals.update(Permission=Permission)
 
 app.register_blueprint(home)
 app.register_blueprint(auth)

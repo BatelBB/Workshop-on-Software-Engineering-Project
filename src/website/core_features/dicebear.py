@@ -19,3 +19,5 @@ dicebear_methods = {
     m.__qualname__: m
     for m in (dicebear, dicebear_user, dicebear_shop, dicebear_product, dicebear_shop)
 }
+
+dicebear_methods["dicebear_store"] = dicebear_shop
