@@ -94,3 +94,10 @@ class Basket:
         for i in self.items:
             if i.product_name == name:
                 return i
+
+    #only call from store
+    def calc_price(self) -> float:
+        price = 0
+        for item in self.items:
+            price += item.discount_price
+        return price
