@@ -98,9 +98,9 @@ def edit_product_one_field(store_name: str, product_name: str):
     if not store_response.success:
         flash(store_response.description)
         return redirect(url_for('home.home'))
-    mathching: List[ProductDto] = [p for p in store_response.result if p.name == old_product_name]
+    mathching: List[ProductDto] = [p for p in store_response.result if p.name == product_name]
     if len(mathching) == 0:
-        flash(f"no such product found: {store_name}/{old_product_name}")
+        flash(f"no such product found: {store_name}/{product_name}")
         return redirect(url_for("buying.view_store", name=store_name))
     product = mathching[0]
     form = EditProductForm()
@@ -115,10 +115,25 @@ def edit_product_one_field(store_name: str, product_name: str):
         category = form.category.data
         price = form.price.data
         qty = form.quantity.data
-        res = domain.edit_product(store_name, old_product_name, new_product_name, category, price, qty)
+        res = domain.edit_product(store_name, product_name, new_product_name, category, price, qty)
         if res.success:
             flash(f"You've added a product!", category="success")
             return redirect(url_for("buying.view_store", name=store_name))
         error = res.description
         flash(error, category="danger")
     return render_template("products/edit_product.html", form=form, error=error)
+
+
+@bp.route('/products/<store_name>/<product_name>', methods=['GET'])
+def product_page(store_name, product_name):
+    domain = get_domain_adapter()
+    store_response = domain.get_store(store_name)
+    if not store_response.success:
+        flash(store_response.description)
+        return redirect(url_for('home.home'))
+    mathching: List[ProductDto] = [p for p in store_response.result if p.name == product_name]
+    if len(mathching) == 0:
+        flash(f"no such product found: {store_name}/{product_name}")
+        return redirect(url_for("buying.view_store", name=store_name))
+    product = mathching[0]
+    return render_template('products/product_page.html', product=product, store_name=store_name)

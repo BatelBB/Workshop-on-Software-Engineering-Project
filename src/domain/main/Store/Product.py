@@ -3,7 +3,7 @@ from typing import Optional
 
 class Product:
     def __init__(self, name: str, category: str = "whatever", price: float = 0.0, keywords: Optional[list[str]] = None):
-        self.rate = None
+        self.rate = 5
         self.name = name
         self.category = category
         self.price = price

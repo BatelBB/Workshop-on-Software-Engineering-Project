@@ -246,6 +246,18 @@ class SessionAdapter:
         return self._session.purchase_shopping_cart('card', [str(number), f'{exp_month}/{exp_year}', ccv],
                                                     street, apt_number, city, country)
 
+
+    def get_all_products(self):
+        list_of_all_products = {}
+        # for all stores
+        store_response = self.get_stores()
+        # for all products in stores
+        for store in store_response.result:
+            set_of_products = store.get_all()
+            list_of_all_products[store.name] = set_of_products
+                # return a list with all the products
+        return list_of_all_products
+
     def get_all_store_owners(self, store_name: str):
         resp = self._session.get_store_owners(store_name)
         if resp.success:
