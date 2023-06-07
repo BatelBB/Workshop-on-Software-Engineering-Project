@@ -92,7 +92,7 @@ def remove_manager(store_name: str):
 @bp.route('/remove_owner/<store_name>', methods=('POST', 'GET'))
 def remove_owner(store_name: str):
     domain = get_domain_adapter()
-    all_users = domain.get_all_registered_users()
+    all_users = domain.get_all_store_owners(store_name)
     if not domain.is_logged_in:
         flash("You tried to remove an owner but you need to be logged in for that.")
         return redirect(url_for('home.home'))

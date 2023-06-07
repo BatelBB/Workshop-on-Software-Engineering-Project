@@ -273,3 +273,7 @@ class IService(metaclass=IAbsractConcurrentSingleton):
     @abstractmethod
     def delete_discount(self, session_id: int, store_name: str, index: int):
         ...
+
+    @abstractmethod
+    def get_store_owners(self, session_id: int, store_name: str):
+        ...

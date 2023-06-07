@@ -246,4 +246,8 @@ class SessionAdapter:
         return self._session.purchase_shopping_cart('card', [str(number), f'{exp_month}/{exp_year}', ccv],
                                                     street, apt_number, city, country)
 
-
+    def get_all_store_owners(self, store_name: str):
+        resp = self._session.get_store_owners(store_name)
+        if resp.success:
+            return resp.result
+        return resp

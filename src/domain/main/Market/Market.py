@@ -6,6 +6,7 @@ from typing import Any
 from multipledispatch import dispatch
 from sqlalchemy import inspect
 
+from src.domain.main.Utils.Response import Response
 from src.domain.main.UserModule.Basket import Item
 from src.domain.main.Utils.Base_db import Base, engine
 from src.domain.main.Store.DiscountPolicy.DIscountsFor.CategoryDiscount import CategoryDiscount
@@ -1014,7 +1015,7 @@ class Market(IService):
 
         return store.delete_discount(index)
 
-    def get_store_owners(self, session_id: int, store_name: str):
+    def get_store_owners(self, session_id: int, store_name: str) -> Response[bool] | Response[list[str]]:
         actor = self.get_active_user(session_id)
         res = self.get_store_staff(session_id, store_name)
         if not res.success:
