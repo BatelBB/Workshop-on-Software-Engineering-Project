@@ -1,0 +1,47 @@
+{% extends "layout.html" %}
+
+{% block page %}
+<h1>Search Results</h1>
+
+<form action="{{url_for('searching.search_product')}}" method="get">
+    <input type="hidden" name="query" value="{{ request.args.get('query') }}">
+
+    <label for="price_range">Price range:</label>
+    <select id="price_range" name="price_range">
+        <option value="" {% if request.args.get('price_range') == "" %} selected {% endif %}>All</option>
+        <option value="0-100" {% if request.args.get('price_range') == "0-100" %} selected {% endif %}>$0 - $100</option>
+        <option value="101-200" {% if request.args.get('price_range') == "101-200" %} selected {% endif %}>$101 - $200</option>
+        <option value="201-300" {% if request.args.get('price_range') == "201-300" %} selected {% endif %}>$201 - $300</option>
+    </select>
+
+    <label for="product_ranking">Product rating range:</label>
+    <select id="product_ranking" name="product_ranking">
+        <option value="" {% if request.args.get('product_ranking') == "" %} selected {% endif %}>All</option>
+        <option value="0-3" {% if request.args.get('product_ranking') == "0-3" %} selected {% endif %}>0 stars - 1 stars</option>
+        <option value="3-4" {% if request.args.get('product_ranking') == "3-4" %} selected {% endif %}>3 stars - 4 stars</option>
+        <option value="4-5" {% if request.args.get('product_ranking') == "4-5" %} selected {% endif %}>4 stars - 5 stars</option>
+    </select>
+
+    <label for="category">Category:</label>
+    <select id="category" name="category">
+        <option value="" {% if request.args.get('category') == "" %} selected {% endif %}>All</option>
+        {% for category in categories %}
+            <option value="{{category}}" {% if request.args.get('category') == category %} selected {% endif %}>{{category}}</option>
+        {% endfor %}
+    </select>
+
+    <input type="submit" value="Apply filters">
+</form>
+
+
+{% for store_name, product in products %}
+    <div>
+        <img src="{{ dicebear_product(product.name) }}" style="height: 3em;"/>
+        <form action="{{ url_for('products.product_page', store_name=store_name, product_name=product.name) }}">
+            <button type="submit" style="background-color: #019CBA; color: white; padding: 4px 10px; margin: 5px 0; border: none; border-radius: 4px; cursor: pointer;">{{ product.name }}</button>
+        </form>
+    </div>
+{% else %}
+    <p>No results found.</p>
+{% endfor %}
+{% endblock %}

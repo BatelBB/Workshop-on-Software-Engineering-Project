@@ -342,4 +342,3 @@ class Store:
         for key in self.products_with_bid_purchase_policy.keys():
             policy = self.products_with_bid_purchase_policy[key]
             policy.add_to_approval_dict_in_bid_policy(name)
-
