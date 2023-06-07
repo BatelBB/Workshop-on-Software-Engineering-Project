@@ -9,7 +9,8 @@ class SimpleDiscount(IDiscount):
     # discount_for_name: in case discount_type = product -> product_name |
     #                            discount_type = category -> category_name
     #
-    def __init__(self, percent: int, discount_type: str, rule: IRule = None, discount_for_name=None):
+    def __init__(self, id: int,  percent: int, discount_type: str, rule: IRule = None, discount_for_name=None):
+        super().__init__(id)
         self.percent = percent
         self.discount_type = discount_type
         self.rule = rule

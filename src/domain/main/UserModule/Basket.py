@@ -101,3 +101,11 @@ class Basket:
         for item in self.items:
             price += item.discount_price
         return price
+
+    def deep_copy(self):
+        new_basket = Basket()
+        for item in self.items:
+            new_item = Item(item.product_name, item.username, item.store_name, item.quantity, item.price)
+            new_item.discount_price = item.discount_price
+            new_basket.add_item(new_item)
+        return new_basket

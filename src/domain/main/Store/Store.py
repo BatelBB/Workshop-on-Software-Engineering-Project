@@ -2,7 +2,7 @@ import threading
 
 from multipledispatch import dispatch
 
-from src.domain.main.Store.DiscountPolicy.IDiscountPolicy import IDiscountPolicy
+from domain.main.Store.DIscounts.IDIscount import IDiscount
 from src.domain.main.ExternalServices.Payment.PaymentServices import IPaymentService
 from src.domain.main.ExternalServices.Provision.ProvisionServiceAdapter import IProvisionService, provisionService
 from src.domain.main.Store.Product import Product
@@ -50,7 +50,9 @@ class Store:
         self.purchase_rules: dict[int:IRule] = {}
         self.purchase_rule_ids = 0
         self.purchase_rule_lock = threading.RLock()
-        self.discounts: IDiscountPolicy = None
+        self.discounts: IDiscount = None
+        self.discount_counter = 0
+        self.discount_lock = threading.RLock()
 
     def __str__(self):
         output: str = f'Store: {self.name}\nProducts:\n'
@@ -119,7 +121,7 @@ class Store:
         return p.price if p is not None else 0.000
 
     def get_product_discounts_str(self, p_name: str) -> str:
-        return self.discounts.get_discount_for_product(p_name, self.get_product_price(p_name), self.products)
+        return "0"
 
     def refill(self, reserved: dict[str, int]) -> None:
         for product_name, reserved_quantity in reserved.items():
@@ -234,11 +236,8 @@ class Store:
                 price += self.get_product_price(item.product_name)
             return price
         else:
-            self.discounts.calculate_price(basket, self.products)
-            price = 0
-            for i in basket.items:
-                price += (i.discount_price*i.quantity)
-            return price
+            # TODO: discounts
+            return 0
 
     def add_to_purchase_history(self, baskets: Basket):
         self.purchase_history.append(baskets.__str__())
@@ -319,11 +318,10 @@ class Store:
         self.purchase_rules.pop(rule_id)
 
     def add_discount_policy(self, discount_policy) -> Response[bool]:
+        with self.discount_lock:
+            self.discount_lock += 1
         if self.discounts is None:
             self.discounts = discount_policy
-        else:
-            self.discounts.add_discount(discount_policy)
-        return Response(True, "disount added")
 
     def get_product_obj(self, p_name):
         p_names = [p.name for p in self.products]
@@ -333,24 +331,15 @@ class Store:
             return report_error("get_product_obj", "product doesnt exsist")
 
     def get_products_with_discounts(self) -> dict[Product:str]:
-        dict = {}
-        for product in self.products:
-            dict[product] = self.get_product_discounts_str(product.name)
-        return dict
+        return report_error("delete_discount", "no implemented")
 
     def get_discounts(self):
-        return self.discounts
+        return report_error("delete_discount", "no implemented")
 
     def delete_discount(self, index: int) -> Response:
-        if index == 1:
-            to_remove = self.discounts
-            self.discounts = to_remove.next
-            return report(f"deleted: {to_remove.__str__()}", True)
-
-        res = self.discounts.delete_discount(index-1)
-        return res
-
+        return report_error("delete_discount", "no implemented")
     def add_owner(self, name:str):
         for key in self.products_with_bid_purchase_policy.keys():
             policy = self.products_with_bid_purchase_policy[key]
             policy.add_to_approval_dict_in_bid_policy(name)
+
