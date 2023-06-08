@@ -9,13 +9,6 @@ from sqlalchemy import inspect
 from src.domain.main.Utils.Response import Response
 from src.domain.main.UserModule.Basket import Item
 from src.domain.main.Utils.Base_db import Base, engine
-from src.domain.main.Store.DiscountPolicy.DIscountsFor.CategoryDiscount import CategoryDiscount
-from src.domain.main.Store.DiscountPolicy.DIscountsFor.IDiscountFor import IDiscountFor
-from src.domain.main.Store.DiscountPolicy.DIscountsFor.ProductDiscount import ProductDiscount
-from src.domain.main.Store.DiscountPolicy.DIscountsFor.StoreDiscount import StoreDiscount
-from src.domain.main.Store.DiscountPolicy.IDiscountPolicy import IDiscountPolicy
-from src.domain.main.Store.DiscountPolicy.OpenDiscount import OpenDiscount
-from src.domain.main.Store.DiscountPolicy.XorDiscount import XorDiscount
 from src.domain.main.Store.PurchaseRules.IRule import IRule
 from src.domain.main.ExternalServices.Payment.PaymentFactory import PaymentFactory
 from src.domain.main.ExternalServices.Payment.PaymentServices import IPaymentService
@@ -39,7 +32,6 @@ from src.domain.main.Utils.ConcurrentDictionary import ConcurrentDictionary
 from src.domain.main.Utils.Logger import Logger, report_error, report_info
 from src.domain.main.Utils.Response import Response
 from Service.Session.Session import Session
-from src.domain.main.Store.DiscountPolicy.CondDiscount import CondDiscount
 
 
 class Market(IService):
@@ -295,7 +287,8 @@ class Market(IService):
                     self.removed_products_quantity.insert(product, store.amount_of(product.name))
                 return report_info(self.remove_store.__qualname__, f'{actor} removed store {store_name}')
             else:
-                return report_error(self.remove_store.__qualname__, f'{actor} is not allowed to remove store {store_name}')
+                return report_error(self.remove_store.__qualname__,
+                                    f'{actor} is not allowed to remove store {store_name}')
         return report_error(self.remove_store.__qualname__, f'store {store_name} doesn\'t exist and can\'t be removed')
 
     def get_all_stores(self, session_identifier: int) -> Response[list[Store] | bool]:
@@ -846,75 +839,61 @@ class Market(IService):
             return store.apply_purchase_policy(payment_service, product_name, delivery_service, how_much)
         return response
 
-    def discount_for_factory(self, discount_for_type: str, store, discount_for_name: str = None):
-        if discount_for_type == "product":
-            return Response(ProductDiscount(store.get_product_obj(discount_for_name).result),
-                            f"discount_for {discount_for_type} is made")
-        elif discount_for_type == "category":
-            return Response(CategoryDiscount(discount_for_name), f"discount_for {discount_for_type} is made")
-        elif discount_for_type == "store":
-            return Response(StoreDiscount(), f"discount_for {discount_for_type} is made")
 
-        report_error(self.discount_for_factory.__qualname__, f"{discount_for_type} is invalid discount for type")
-
-    def make_simple_discount(self, discount_percent: int, discount_durations: int,
-                             discount_for: IDiscountFor, rule: IRule = None) -> Response[IDiscountPolicy]:
-        discount = OpenDiscount(discount_percent, discount_for, discount_durations)
-        return Response(discount, "made discount")
-
-    ### discount_type = open | cond
-    ### discount_for type: product | category | store
-    ### cond_type: simple | and | or | basket
-    ###
-    def add_discount(self, session_id: int, store_name: str, discount_type: str, discount_percent: int,
-                     discount_duration: int, discount_for_type: str, discount_for_name: str = None,
-                     rule_type=None,
-                     discount2_percent=None, discount2_for_type=None, discount2_for_name=None, min_price: float = None,
-                     p1_name=None, gle1=None, amount1=None, p2_name=None, gle2=None, amount2=None):
+    def add_simple_discount(self, session_id: int, store_name: str, discount_type: str, discount_percent: int,
+                            discount_for_name: str = None,
+                            rule_type=None, min_price: float = None,
+                            p1_name=None, gle1=None, amount1=None, p2_name=None, gle2=None, amount2=None) -> Response:
         actor = self.get_active_user(session_id)
-        store_res = self.verify_registered_store(self.add_discount.__qualname__, store_name)
+        store_res = self.verify_registered_store(self.add_simple_discount.__qualname__, store_name)
         if not store_res.success:
-            return report_error(self.add_discount.__qualname__, "invalid store")
+            return report_error(self.add_simple_discount.__qualname__, "invalid store")
         store = store_res.result
 
         perms = self.permissions_of(session_id, store_name, actor.username)
         if not perms.success:
-            return report_error(self.add_discount.__qualname__, "failed to retrieve permissions")
+            return report_error(self.add_simple_discount.__qualname__, "failed to retrieve permissions")
         perms = perms.result
 
         if Permission.ChangeDiscountPolicy not in perms:
-            return report_error(self.add_discount.__qualname__, f"{actor.username} has no permission to add discount")
+            return report_error(self.add_simple_discount.__qualname__,
+                                f"{actor.username} has no permission to add discount")
 
-        dis_res = self.discount_for_factory(discount_for_type, store, discount_for_name)
-        if not dis_res.success:
-            return dis_res
+        rule = None
+        if rule_type is not None and rule_type != 'None':
+            rule = self.rule_maker(rule_type, p1_name, gle1, amount1, p2_name, gle2, amount2, min_price)
+            if not rule.success:
+                return rule
+            rule = rule.result
 
-        discount: IDiscountPolicy
-        dis_for = dis_res.result
-        dis_res = self.make_simple_discount(discount_percent, discount_duration, dis_for)
-        if not dis_res.success:
-            return dis_res
-        simple_discount1 = dis_res.result
-        discount = simple_discount1
+        return store.add_simple_discount(discount_percent, discount_type, rule, discount_for_name)
 
-        if discount_type == "cond" or discount_type == "xor":
-            res = self.rule_maker(rule_type, p1_name, gle1, amount1, p2_name, gle2, amount2, min_price)
-            if not res.success:
-                return res
-            rule: IRule = res.result
+    def connect_discounts(self, session_id: int, store_name, id1, id2, connection_type, rule_type=None,
+                          min_price: float = None,
+                          p1_name=None, gle1=None, amount1=None, p2_name=None, gle2=None, amount2=None):
+        actor = self.get_active_user(session_id)
+        store_res = self.verify_registered_store(self.add_simple_discount.__qualname__, store_name)
+        if not store_res.success:
+            return report_error(self.connect_discounts.__qualname__, "invalid store")
+        store = store_res.result
 
-        if discount_type == "cond":
-            cond_discount = CondDiscount(simple_discount1, rule)
-            discount = cond_discount
+        perms = self.permissions_of(session_id, store_name, actor.username)
+        if not perms.success:
+            return report_error(self.connect_discounts.__qualname__, "failed to retrieve permissions")
+        perms = perms.result
 
-        if discount_type == "xor":
-            dis_res2 = self.discount_for_factory(discount2_for_type, store, discount2_for_name)
-            if not dis_res2.success:
-                return dis_res2
-            simple_discount2 = self.make_simple_discount(discount2_percent, discount_duration, dis_res2.result).result
-            discount = XorDiscount(simple_discount1, simple_discount2, rule, discount_duration)
+        if Permission.ChangeDiscountPolicy not in perms:
+            return report_error(self.connect_discounts.__qualname__,
+                                f"{actor.username} has no permission to add discount")
 
-        return store.add_discount_policy(discount)
+        rule = None
+        if rule_type is not None and rule_type != "None":
+            rule = self.rule_maker(rule_type, p1_name, gle1, amount1, p2_name, gle2, amount2, min_price)
+            if not rule.success:
+                return rule
+            rule = rule.result
+
+        return store.connect_discounts(id1, id2, connection_type, rule)
 
     def get_store_products_with_discounts(self, session_id: int, store_name: str) -> dict[Product:str]:
         store_res = self.verify_registered_store(self.get_store_products_with_discounts.__qualname__, store_name)
@@ -979,7 +958,7 @@ class Market(IService):
         rule = self.rule_maker("basket", min_price=min_price)
         return store.add_purchase_rule(rule.result)
 
-    def get_discounts(self, session_id: int, store_name: str) -> Response[bool] | Response[Any]:
+    def get_discounts(self, session_id: int, store_name: str) -> Response:
         actor = self.get_active_user(session_id)
         store_res = self.verify_registered_store(self.get_discounts.__qualname__, store_name)
         if not store_res.success:

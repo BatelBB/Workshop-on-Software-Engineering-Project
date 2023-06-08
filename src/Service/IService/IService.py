@@ -243,11 +243,16 @@ class IService(metaclass=IAbsractConcurrentSingleton):
         ...
 
     @abstractmethod
-    def add_discount(self, session_id: int, store_name: str, discount_type: str, discount_percent: int,
-                     discount_duration: int, discount_for_type: str, discount_for_name: str = None,
-                     rule_type=None,
-                     discount2_percent=None, discount2_for_type=None, discount2_for_name=None, min_price: float = None,
-                     p1_name=None, gle1=None, amount1=None, p2_name=None, gle2=None, amount2=None):
+    def add_simple_discount(self, session_id: int, store_name: str, discount_type: str, discount_percent: int,
+                            discount_for_name: str = None,
+                            rule_type=None, min_price: float = None,
+                            p1_name=None, gle1=None, amount1=None, p2_name=None, gle2=None, amount2=None):
+        ...
+
+    @abstractmethod
+    def connect_discounts(self, session_id: int, store_name, id1, id2, connection_type, rule_type=None,
+                          min_price: float = None,
+                          p1_name=None, gle1=None, amount1=None, p2_name=None, gle2=None, amount2=None):
         ...
 
     @abstractmethod
@@ -267,7 +272,7 @@ class IService(metaclass=IAbsractConcurrentSingleton):
         ...
 
     @abstractmethod
-    def get_discounts(self, session_id: int, store_name: str):
+    def get_discounts(self, session_id: int, store_name: str) -> Response:
         ...
 
     @abstractmethod
