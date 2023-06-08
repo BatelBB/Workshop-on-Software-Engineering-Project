@@ -373,7 +373,7 @@ class Store:
         return report_error("delete_discount", "no implemented")
 
     def get_discounts(self):
-        return report_error("delete_discount", "no implemented")
+        return self.discounts
 
     def delete_discount(self, id: int) -> Response:
         if self.discounts.remove_discount(id):

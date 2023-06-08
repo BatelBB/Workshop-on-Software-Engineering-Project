@@ -31,3 +31,7 @@ class IDiscount(ABC):
     @abstractmethod
     def get_parents_id(self, id) -> int:
         ...
+
+    @abstractmethod
+    def __str__(self, indent) -> str:
+        ...

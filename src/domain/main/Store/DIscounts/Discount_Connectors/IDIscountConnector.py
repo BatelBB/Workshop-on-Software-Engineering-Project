@@ -51,3 +51,12 @@ class IDiscountConnector(IDiscount, ABC):
                 return ret
         return -1
 
+    def __str__(self, indent):
+        s = ""
+        next_indent = f"{indent}\t"
+        for d in self.children:
+            s += f"{indent}child: {d.__str__(next_indent)} \n"
+        return s
+
+
+

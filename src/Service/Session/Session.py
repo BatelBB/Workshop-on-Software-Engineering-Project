@@ -234,7 +234,7 @@ class Session:
     def add_basket_purchase_rule(self, store_name: str, min_price: float) -> Response:
         return self.apply(self.service.add_basket_purchase_rule, self.identifier, store_name, min_price)
 
-    def get_discounts(self, store_name: str):
+    def get_discounts(self, store_name: str) -> Response:
         return self.apply(self.service.get_discounts, self.identifier, store_name)
 
     def delete_discount(self, store_name: str, index: int):

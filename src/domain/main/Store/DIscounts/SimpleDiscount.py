@@ -51,3 +51,11 @@ class SimpleDiscount(IDiscount):
 
     def get_parents_id(self, id) -> int:
         return -1
+
+    def __str__(self, indent):
+        s = ""
+        if self.discount_type == "store":
+            s = "store"
+        else:
+            s = self.discount_for_name
+        return f"{indent}simple discount: {self.percent}% for {s}"

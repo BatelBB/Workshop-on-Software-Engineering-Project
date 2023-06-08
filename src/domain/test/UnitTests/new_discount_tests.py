@@ -197,3 +197,4 @@ class new_discount_tests(unittest.TestCase):
         price = store.calculate_basket_price(basket)
 
         self.assertTrue(price == 10, f"price should be 10 but is {price}")
+        print(store.discounts.__str__(""))

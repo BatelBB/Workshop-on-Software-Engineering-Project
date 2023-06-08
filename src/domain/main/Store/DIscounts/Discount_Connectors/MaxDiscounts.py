@@ -19,3 +19,6 @@ class MaxDiscounts(IDiscountConnector):
                 basket_save = next_basket.deep_copy()
 
         return basket_save
+
+    def __str__(self, indent):
+        return f"{indent}Max connector:  \n{super().__str__(indent)} \n"

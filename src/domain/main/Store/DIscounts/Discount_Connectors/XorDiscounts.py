@@ -20,3 +20,6 @@ class XorDiscounts(IDiscountConnector):
 
     def add_discount_to_connector(self, discount):
         return report_error("add_discount_to_connector", "cannot add discount to xor")
+
+    def __str__(self, indent):
+        return f"{indent}Xor connector:  \n{super().__str__(indent)} \n"

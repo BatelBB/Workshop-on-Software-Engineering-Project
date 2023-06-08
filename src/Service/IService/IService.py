@@ -272,7 +272,7 @@ class IService(metaclass=IAbsractConcurrentSingleton):
         ...
 
     @abstractmethod
-    def get_discounts(self, session_id: int, store_name: str):
+    def get_discounts(self, session_id: int, store_name: str) -> Response:
         ...
 
     @abstractmethod

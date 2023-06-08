@@ -982,7 +982,7 @@ class Market(IService):
         rule = self.rule_maker("basket", min_price=min_price)
         return store.add_purchase_rule(rule.result)
 
-    def get_discounts(self, session_id: int, store_name: str) -> Response[bool] | Response[Any]:
+    def get_discounts(self, session_id: int, store_name: str) -> Response:
         actor = self.get_active_user(session_id)
         store_res = self.verify_registered_store(self.get_discounts.__qualname__, store_name)
         if not store_res.success:

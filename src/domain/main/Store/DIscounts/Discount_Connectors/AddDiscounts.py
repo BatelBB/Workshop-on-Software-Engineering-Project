@@ -18,3 +18,6 @@ class AddDiscounts(IDiscountConnector):
             if discount.check_id(id):
                 return True
         return False
+
+    def __str__(self, indent):
+        return f"{indent}Add connector:  \n{super().__str__(indent)} \n"
