@@ -8,13 +8,6 @@ from sqlalchemy import inspect
 
 from src.domain.main.UserModule.Basket import Item
 from src.domain.main.Utils.Base_db import Base, engine
-from src.domain.main.Store.DiscountPolicy.DIscountsFor.CategoryDiscount import CategoryDiscount
-from src.domain.main.Store.DiscountPolicy.DIscountsFor.IDiscountFor import IDiscountFor
-from src.domain.main.Store.DiscountPolicy.DIscountsFor.ProductDiscount import ProductDiscount
-from src.domain.main.Store.DiscountPolicy.DIscountsFor.StoreDiscount import StoreDiscount
-from src.domain.main.Store.DiscountPolicy.IDiscountPolicy import IDiscountPolicy
-from src.domain.main.Store.DiscountPolicy.OpenDiscount import OpenDiscount
-from src.domain.main.Store.DiscountPolicy.XorDiscount import XorDiscount
 from src.domain.main.Store.PurchaseRules.IRule import IRule
 from src.domain.main.ExternalServices.Payment.PaymentFactory import PaymentFactory
 from src.domain.main.ExternalServices.Payment.PaymentServices import IPaymentService
@@ -38,7 +31,6 @@ from src.domain.main.Utils.ConcurrentDictionary import ConcurrentDictionary
 from src.domain.main.Utils.Logger import Logger, report_error, report_info
 from src.domain.main.Utils.Response import Response
 from Service.Session.Session import Session
-from src.domain.main.Store.DiscountPolicy.CondDiscount import CondDiscount
 
 
 class Market(IService):
@@ -845,26 +837,7 @@ class Market(IService):
             return store.apply_purchase_policy(payment_service, product_name, delivery_service, how_much)
         return response
 
-    def discount_for_factory(self, discount_for_type: str, store, discount_for_name: str = None):
-        if discount_for_type == "product":
-            return Response(ProductDiscount(store.get_product_obj(discount_for_name).result),
-                            f"discount_for {discount_for_type} is made")
-        elif discount_for_type == "category":
-            return Response(CategoryDiscount(discount_for_name), f"discount_for {discount_for_type} is made")
-        elif discount_for_type == "store":
-            return Response(StoreDiscount(), f"discount_for {discount_for_type} is made")
 
-        report_error(self.discount_for_factory.__qualname__, f"{discount_for_type} is invalid discount for type")
-
-    def make_simple_discount(self, discount_percent: int, discount_durations: int,
-                             discount_for: IDiscountFor, rule: IRule = None) -> Response[IDiscountPolicy]:
-        discount = OpenDiscount(discount_percent, discount_for, discount_durations)
-        return Response(discount, "made discount")
-
-    ### discount_type = open | cond
-    ### discount_for type: product | category | store
-    ### cond_type: simple | and | or | basket
-    ###
     def add_simple_discount(self, session_id: int, store_name: str, discount_type: str, discount_percent: int,
                             discount_for_name: str = None,
                             rule_type=None, min_price: float = None,
