@@ -24,4 +24,4 @@ class MaxDiscounts(IDiscountConnector):
         return f"{indent}Max connector:  \n{super().__str__(indent)} \n"
 
     def __repr__(self):
-        return f"Add connector: {super().__repr__()}"
+        return f"Max connector: {super().__repr__()}"

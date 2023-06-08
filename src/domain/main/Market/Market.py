@@ -912,7 +912,7 @@ class Market(IService):
                                 f"{actor.username} has no permission to add discount")
 
         rule = None
-        if rule_type is not None:
+        if rule_type is not None and rule_type != "None":
             rule = self.rule_maker(rule_type, p1_name, gle1, amount1, p2_name, gle2, amount2, min_price)
             if not rule.success:
                 return rule

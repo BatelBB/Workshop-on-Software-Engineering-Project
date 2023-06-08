@@ -25,4 +25,4 @@ class XorDiscounts(IDiscountConnector):
         return f"{indent}Xor connector:  \n{super().__str__(indent)} \n"
 
     def __repr__(self):
-        return f"Add connector: {super().__repr__()}"
+        return f"Xor connector: {super().__repr__()}"

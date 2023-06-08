@@ -16,7 +16,7 @@ class IDiscount(ABC):
         return self.id == id
 
     def find_discount(self, id: int):
-        if self.check_id(id):
+        if self.id == id:
             return self
         return None
 

@@ -127,6 +127,7 @@ class Store:
         return p.price if p is not None else 0.000
 
     def get_product_discounts_str(self, p_name: str) -> str:
+        # TODO:
         return "0"
 
     def refill(self, reserved: dict[str, int]) -> None:

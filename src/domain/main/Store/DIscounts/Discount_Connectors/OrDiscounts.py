@@ -25,4 +25,4 @@ class OrDiscounts(IDiscountConnector):
         return f"{indent}Or connector:  \n{super().__str__(indent)} \n"
 
     def __repr__(self):
-        return f"Add connector: {super().__repr__()}"
+        return f"Or connector: {super().__repr__()}"

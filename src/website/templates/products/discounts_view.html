@@ -2,6 +2,10 @@
 <form action="{{ url_for('discounts.add_discount', store_name=store_name) }}" method="get">
     <button type="submit">AddDiscount</button>
 </form>
+<form action="{{ url_for('discounts.connect_discounts', store_name=store_name) }}" method="get">
+    <button type="submit">ConnectDiscounts</button>
+</form>
+
 
 <style>
     table {

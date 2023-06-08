@@ -229,7 +229,13 @@ class SessionAdapter:
                                                 p1_name, gle1, amount1, p2_name, gle2, amount2)
         return res.description
 
-
+    def connect_discounts(self, store_name: str, id1: int, id2: int, connection_type: str,
+                          rule_type=None, min_price: float = None,
+                          p1_name=None, gle1=None, amount1=None, p2_name=None, gle2=None, amount2=None):
+        res = self._session.connect_discounts(store_name, id1, id2, connection_type,
+                                              rule_type, min_price,
+                                              p1_name, gle1, amount1, p2_name, gle2, amount2)
+        return res.description
 
     def get_cart(self) -> Response[Mapping[str, BasketDto]]:
         cart = self._session.get_cart()
