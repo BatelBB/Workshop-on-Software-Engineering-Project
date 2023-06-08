@@ -334,8 +334,6 @@ class Store:
             if d1 is None or d2 is None:
                 return report_error("connecet_discounts", "discount not found")
 
-
-
             # create new connector
             self.discount_counter += 1
             new_id = self.discount_counter
@@ -377,8 +375,10 @@ class Store:
     def get_discounts(self):
         return report_error("delete_discount", "no implemented")
 
-    def delete_discount(self, index: int) -> Response:
-        return report_error("delete_discount", "no implemented")
+    def delete_discount(self, id: int) -> Response:
+        if self.discounts.remove_discount(id):
+            return report(f"discount {id} has been removeed", True)
+        return report_error("delete_discount", f"discount {id} has been removeed")
 
     def add_owner(self, name: str):
         for key in self.products_with_bid_purchase_policy.keys():
