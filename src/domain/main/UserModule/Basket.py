@@ -99,7 +99,7 @@ class Basket:
     def calc_price(self) -> float:
         price = 0
         for item in self.items:
-            price += item.discount_price
+            price += item.discount_price * item.quantity
         return price
 
     def deep_copy(self):

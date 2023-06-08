@@ -5,18 +5,17 @@ from domain.main.UserModule.Basket import Basket
 
 
 class MaxDiscounts(IDiscountConnector):
-    def __init__(self, discount1: IDiscount, discount2: IDiscount):
-        super().__init__()
+    def __init__(self, id: int):
+        super().__init__(id)
 
     def apply_discount(self, basket: Basket, products: set[Product]):
         basket_save = basket.deep_copy()
         best_price = basket.calc_price()
 
         for discount in self.children:
-            next_basket = discount.apply_discount(basket_save, products)
+            next_basket = discount.apply_discount(basket.deep_copy(), products)
             if next_basket.calc_price() < best_price:
-                basket = basket_save
-            else:
-                basket_save = basket.deep_copy()
+                best_price = next_basket.calc_price()
+                basket_save = next_basket.deep_copy()
 
-        return basket
+        return basket_save

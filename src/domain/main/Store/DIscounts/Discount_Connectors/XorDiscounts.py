@@ -6,11 +6,11 @@ from domain.main.UserModule.Basket import Basket
 from domain.main.Utils.Logger import report_error
 
 
-class MaxDiscounts(IDiscountConnector):
+class XorDiscounts(IDiscountConnector):
     def __init__(self, id: int, discount1: IDiscount, discount2: IDiscount, rule: IRule):
         super().__init__(id)
-        self.add_discount_to_connector(discount1)
-        self.add_discount_to_connector(discount2)
+        self.children.append(discount1)
+        self.children.append(discount2)
         self.rule = rule
 
     def apply_discount(self, basket: Basket, products: set[Product]):

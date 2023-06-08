@@ -20,9 +20,9 @@ class SimpleDiscount(IDiscount):
         if (self.discount_type == "category" and product.category == self.discount_for_name) \
                 or (self.discount_type == "product" and product.name == self.discount_for_name) \
                 or (self.discount_type == "store"):
-            return item.discount_price * self.percent * 0.01
+            return item.price * (self.percent) * 0.01
 
-        return product.price
+        return item.discount_price
 
     def find(self, product_name: str, products: set[Product]) -> Product | None:
         filtered = list(filter(lambda p: p.name == product_name, products))
@@ -40,6 +40,14 @@ class SimpleDiscount(IDiscount):
             if p is None:
                 basket.remove_item(i)
             else:
-                i.discount_price = self.apply_for_product(p)
+                i.discount_price -= self.apply_for_product(i, p)
         return basket
 
+    def remove_discount(self, id) -> bool:
+        return False
+
+    def replace(self, id, discount) -> bool:
+        return False
+
+    def get_parents_id(self, id) -> int:
+        return -1
