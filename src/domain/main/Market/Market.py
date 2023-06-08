@@ -1024,11 +1024,31 @@ class Market(IService):
         owners = []
         for appoitment in staff:
             p = appoitment.appointee
-            perms = self.permissions_of(session_id, store_name, actor.username)
+            perms = self.permissions_of(session_id, store_name, p)
             if not perms.success:
-                return report_error(self.delete_discount.__qualname__, "failed to retrieve permissions")
+                return report_error(self.get_store_owners.__qualname__, "failed to retrieve permissions")
             perms = perms.result
             if Permission.AppointOwner in perms:
                 owners.append(p)
 
         return Response(owners, "list of owners")
+
+    def get_store_managers(self, session_id: int, store_name: str) -> Response[bool] | Response[list[str]]:
+        actor = self.get_active_user(session_id)
+        res = self.get_store_staff(session_id, store_name)
+        if not res.success:
+            return res
+        staff = res.result
+        managers = []
+        default_manager_permissions = get_default_manager_permissions()
+        for appoitment in staff:
+            p = appoitment.appointee
+            perms_res = self.permissions_of(session_id, store_name, p)
+            if not perms_res.success:
+                return report_error(self.get_store_managers.__qualname__, "failed to retrieve permissions")
+            perms = perms_res.result
+
+            if perms == default_manager_permissions:
+                managers.append(p)
+
+        return Response(managers, "list of managers")

@@ -263,3 +263,9 @@ class SessionAdapter:
         if resp.success:
             return resp.result
         return resp
+
+    def get_all_store_managers(self, store_name: str):
+       resp =  self._session.get_store_managers(store_name)
+       if resp.success:
+           return resp.result
+       return resp

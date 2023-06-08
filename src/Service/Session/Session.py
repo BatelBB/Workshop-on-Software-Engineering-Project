@@ -246,3 +246,6 @@ class Session:
 
     def get_store_owners(self, store_name: str):
         return self.apply(self.service.get_store_owners, self.identifier, store_name)
+
+    def get_store_managers(self, store_name: str):
+        return self.apply(self.service.get_store_managers, self.identifier, store_name)

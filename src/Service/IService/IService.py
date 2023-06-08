@@ -277,3 +277,7 @@ class IService(metaclass=IAbsractConcurrentSingleton):
     @abstractmethod
     def get_store_owners(self, session_id: int, store_name: str):
         ...
+
+    @abstractmethod
+    def get_store_managers(self, session_id: int, store_name: str):
+        ...
