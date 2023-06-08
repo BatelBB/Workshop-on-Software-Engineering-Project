@@ -243,3 +243,9 @@ class Session:
 
         return actions[action_name](*args) if action_name in actions \
             else report_error(self.dispatch.__qualname__, f'Invalid action. Given: {action_name}.')
+
+    def get_store_owners(self, store_name: str):
+        return self.apply(self.service.get_store_owners, self.identifier, store_name)
+
+    def get_store_managers(self, store_name: str):
+        return self.apply(self.service.get_store_managers, self.identifier, store_name)

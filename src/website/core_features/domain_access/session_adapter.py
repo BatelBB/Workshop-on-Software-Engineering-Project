@@ -257,3 +257,15 @@ class SessionAdapter:
             list_of_all_products[store.name] = set_of_products
                 # return a list with all the products
         return list_of_all_products
+
+    def get_all_store_owners(self, store_name: str):
+        resp = self._session.get_store_owners(store_name)
+        if resp.success:
+            return resp.result
+        return resp
+
+    def get_all_store_managers(self, store_name: str):
+       resp =  self._session.get_store_managers(store_name)
+       if resp.success:
+           return resp.result
+       return resp
