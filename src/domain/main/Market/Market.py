@@ -294,7 +294,8 @@ class Market(IService):
                     self.removed_products_quantity.insert(product, store.amount_of(product.name))
                 return report_info(self.remove_store.__qualname__, f'{actor} removed store {store_name}')
             else:
-                return report_error(self.remove_store.__qualname__, f'{actor} is not allowed to remove store {store_name}')
+                return report_error(self.remove_store.__qualname__,
+                                    f'{actor} is not allowed to remove store {store_name}')
         return report_error(self.remove_store.__qualname__, f'store {store_name} doesn\'t exist and can\'t be removed')
 
     def get_all_stores(self, session_identifier: int) -> Response[list[Store] | bool]:
@@ -442,7 +443,7 @@ class Market(IService):
 
     def appoint_owner(self, session_identifier: int, appointee_name: str, store_name: str) -> Response[bool]:
         res = self.appoint(session_identifier, self.appoint_owner.__qualname__, store_name, appointee_name,
-                            Permission.AppointOwner, get_default_owner_permissions(), role='Store Owner')
+                           Permission.AppointOwner, get_default_owner_permissions(), role='Store Owner')
         if res.success:
             store_res = self.verify_registered_store(self.delete_discount.__qualname__, store_name)
             if not store_res.success:
@@ -450,8 +451,6 @@ class Market(IService):
             store = store_res.result
             store.add_owner(appointee_name)
         return res
-
-
 
     def set_permission(self, session_identifier: int, calling_method: str, store: str, appointee: str,
                        permission: Permission, action: {'ADD', 'REMOVE'}) -> Response[bool]:
@@ -618,7 +617,7 @@ class Market(IService):
         return response
 
     def change_product_category(self, session_identifier: int, store_name: str, product_name: str, category: str) -> \
-    Response[bool]:
+            Response[bool]:
         response = self.verify_registered_store(self.change_product_category.__qualname__, store_name)
         if response.success:
             store = response.result
@@ -782,7 +781,8 @@ class Market(IService):
             actor = self.get_active_user(session_id)
             if self.has_permission_at(store_name, actor, Permission.StartBid):
                 policy = BidPolicy()
-                return store.add_product_to_bid_purchase_policy(product_name, policy, self.get_store_owners(session_id, store_name).result)
+                return store.add_product_to_bid_purchase_policy(product_name, policy,
+                                                                self.get_store_owners(session_id, store_name).result)
             return self.report_no_permission(self.start_bid.__qualname__, actor, store_name, Permission.StartBid)
         return response
 
@@ -866,9 +866,9 @@ class Market(IService):
     ### cond_type: simple | and | or | basket
     ###
     def add_simple_discount(self, session_id: int, store_name: str, discount_type: str, discount_percent: int,
-                     discount_for_name: str = None,
-                     rule_type=None, min_price: float = None,
-                     p1_name=None, gle1=None, amount1=None, p2_name=None, gle2=None, amount2=None):
+                            discount_for_name: str = None,
+                            rule_type=None, min_price: float = None,
+                            p1_name=None, gle1=None, amount1=None, p2_name=None, gle2=None, amount2=None) -> Response:
         actor = self.get_active_user(session_id)
         store_res = self.verify_registered_store(self.add_simple_discount.__qualname__, store_name)
         if not store_res.success:
@@ -881,20 +881,21 @@ class Market(IService):
         perms = perms.result
 
         if Permission.ChangeDiscountPolicy not in perms:
-            return report_error(self.add_simple_discount.__qualname__, f"{actor.username} has no permission to add discount")
+            return report_error(self.add_simple_discount.__qualname__,
+                                f"{actor.username} has no permission to add discount")
 
         rule = None
-        if rule_type is not None:
+        if rule_type is not None and rule_type != 'None':
             rule = self.rule_maker(rule_type, p1_name, gle1, amount1, p2_name, gle2, amount2, min_price)
             if not rule.success:
                 return rule
             rule = rule.result
 
-
         return store.add_simple_discount(discount_percent, discount_type, rule, discount_for_name)
 
-    def connect_discounts(self, session_id: int, store_name, id1, id2, connection_type, rule_type=None, min_price: float = None,
-                     p1_name=None, gle1=None, amount1=None, p2_name=None, gle2=None, amount2=None):
+    def connect_discounts(self, session_id: int, store_name, id1, id2, connection_type, rule_type=None,
+                          min_price: float = None,
+                          p1_name=None, gle1=None, amount1=None, p2_name=None, gle2=None, amount2=None):
         actor = self.get_active_user(session_id)
         store_res = self.verify_registered_store(self.add_simple_discount.__qualname__, store_name)
         if not store_res.success:
@@ -941,7 +942,8 @@ class Market(IService):
         perms = perms.result
 
         if Permission.ChangePurchasePolicy not in perms:
-            return report_error(self.get_purchase_rules.__qualname__, f"{actor.username} has no permission to manage purchase rules")
+            return report_error(self.get_purchase_rules.__qualname__,
+                                f"{actor.username} has no permission to manage purchase rules")
 
         return Response(store.get_purchase_rules(), "purchase rules")
 

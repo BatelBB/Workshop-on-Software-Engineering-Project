@@ -8,7 +8,7 @@
 
   {{ form.hidden_tag() }}
     <table>
-        {% for field in (form.discount_type, form.percent, form.duration, form.discount_for, form.discount_for_name, form.rule_type, form.percent2, form.discount_for2, form.discount_for_name2, form.min_price, form.product1_name, form.gle1, form.amount1, form.product2_name, form.gle2, form.amount2, form.submit) %}
+        {% for field in (form.discount_type, form.percent, form.discount_for_name, form.rule_type, form.min_price, form.product1_name, form.gle1, form.amount1, form.product2_name, form.gle2, form.amount2, form.submit) %}
             <tr>
                 <td>{{ field.label }}</td>
                 <td>{{ field }}</td>

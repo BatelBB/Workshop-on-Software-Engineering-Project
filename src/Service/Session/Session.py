@@ -211,7 +211,7 @@ class Session:
     def add_simple_discount(self, store_name: str, discount_type: str, discount_percent: int,
                             discount_for_name: str = None,
                             rule_type=None, min_price: float = None,
-                            p1_name=None, gle1=None, amount1=None, p2_name=None, gle2=None, amount2=None):
+                            p1_name=None, gle1=None, amount1=None, p2_name=None, gle2=None, amount2=None) -> Response:
         return self.apply(self.service.add_simple_discount, self.identifier, store_name, discount_type,
                           discount_percent, discount_for_name, rule_type, min_price, p1_name, gle1,
                           amount1, p2_name, gle2, amount2)

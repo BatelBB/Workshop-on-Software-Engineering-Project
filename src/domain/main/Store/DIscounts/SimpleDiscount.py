@@ -9,7 +9,7 @@ class SimpleDiscount(IDiscount):
     # discount_for_name: in case discount_type = product -> product_name |
     #                            discount_type = category -> category_name
     #
-    def __init__(self, id: int,  percent: int, discount_type: str, rule: IRule = None, discount_for_name=None):
+    def __init__(self, id: int, percent: int, discount_type: str, rule: IRule = None, discount_for_name=None):
         super().__init__(id)
         self.percent = percent
         self.discount_type = discount_type
@@ -59,3 +59,18 @@ class SimpleDiscount(IDiscount):
         else:
             s = self.discount_for_name
         return f"{indent}simple discount: {self.percent}% for {s}"
+
+    def __repr__(self):
+        s = ""
+        if self.discount_type == "store":
+            s = "store"
+        else:
+            s = self.discount_for_name
+        return f"simple discount: {self.percent}% for {s}"
+
+    def get_all_simple_discounts(self, d) -> dict:
+        d[self.id] = self.__repr__()
+        return d
+
+    def get_all_connectors(self, d):
+        return d

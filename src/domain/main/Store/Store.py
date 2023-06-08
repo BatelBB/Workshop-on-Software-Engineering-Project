@@ -324,7 +324,7 @@ class Store:
         with self.discount_lock:
             self.discount_counter += 1
             discount = SimpleDiscount(self.discount_counter, percent, discount_type, rule, discount_for_name)
-            self.discounts.add_discount_to_connector(discount)
+            return self.discounts.add_discount_to_connector(discount)
 
     def connect_discounts(self, id1, id2, connection_type, rule=None) -> Response:
         with self.discount_lock:
@@ -372,8 +372,12 @@ class Store:
     def get_products_with_discounts(self) -> dict[Product:str]:
         return report_error("delete_discount", "no implemented")
 
-    def get_discounts(self):
-        return self.discounts
+    def get_discounts(self) -> list[dict[int:str]]:
+        # returns 2 lists: [0]: simple discounts
+        #                   [1]: connectors
+        d1 = self.discounts.get_all_simple_discounts({})
+        d2 = self.discounts.get_all_connectors({})
+        return [d1, d2]
 
     def delete_discount(self, id: int) -> Response:
         if self.discounts.remove_discount(id):
@@ -384,3 +388,4 @@ class Store:
         for key in self.products_with_bid_purchase_policy.keys():
             policy = self.products_with_bid_purchase_policy[key]
             policy.add_to_approval_dict_in_bid_policy(name)
+

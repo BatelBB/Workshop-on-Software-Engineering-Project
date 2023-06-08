@@ -127,7 +127,7 @@ class SessionAdapter:
                                       x.product_name: x
                                       for x in basket.items
                                   }
-                          ))
+                                  ))
 
     def get_product(self, store_name, product_name) -> Response[ProductDto]:
         store = self.get_store(store_name)
@@ -194,7 +194,8 @@ class SessionAdapter:
         return res.description
 
     def add_complex_purchase_rule(self, store_name, p1_name, gle1, amount1, p2_name, gle2, amount2, rule_type):
-        res = self._session.add_purchase_complex_rule(store_name, p1_name, gle1, amount1, p2_name, gle2, amount2, rule_type)
+        res = self._session.add_purchase_complex_rule(store_name, p1_name, gle1, amount1, p2_name, gle2, amount2,
+                                                      rule_type)
         if res.success:
             return 'successfuly added rule'
         return res.description
@@ -209,29 +210,26 @@ class SessionAdapter:
         res = self._session.get_discounts(store_name)
         if not res.success:
             return None
-        with self.lock:
-            d = {}
-            counter = 1
-            next = res.result
-            while next is not None:
-                d[counter] = next.__str__()
-                next = next.next
-                counter += 1
+        l = res.result
+        d = l[0]
+        d.update(l[1])
         return d
 
     def delete_discount(self, store_name, index):
         res = self._session.delete_discount(store_name, index)
         return res.description
 
-    def add_discount(self, store_name: str, discount_type: str, discount_percent: int,
-                     discount_duration: int, discount_for_type: str, discount_for_name: str = None,
-                     rule_type=None,
-                     discount2_percent=None, discount2_for_type=None, discount2_for_name=None, min_price: float = None,
-                     p1_name=None, gle1=None, amount1=None, p2_name=None, gle2=None, amount2=None):
-        res = self._session.add_discount(store_name, discount_type, discount_percent, discount_duration, discount_for_type,
-                                         discount_for_name, rule_type, discount2_percent, discount2_for_type,
-                                         discount2_for_name, min_price, p1_name, gle1, amount1, p2_name, gle2, amount2)
+    def add_simple_discount(self, store_name: str, discount_type: str, discount_percent: int,
+                            discount_for_name: str = None,
+                            rule_type=None, min_price: float = None,
+                            p1_name=None, gle1=None, amount1=None, p2_name=None, gle2=None, amount2=None):
+        res = self._session.add_simple_discount(store_name, discount_type, discount_percent,
+                                                discount_for_name,
+                                                rule_type, min_price,
+                                                p1_name, gle1, amount1, p2_name, gle2, amount2)
         return res.description
+
+
 
     def get_cart(self) -> Response[Mapping[str, BasketDto]]:
         cart = self._session.get_cart()
@@ -246,7 +244,6 @@ class SessionAdapter:
         return self._session.purchase_shopping_cart('card', [str(number), f'{exp_month}/{exp_year}', ccv],
                                                     street, apt_number, city, country)
 
-
     def get_all_products(self):
         list_of_all_products = {}
         # for all stores
@@ -255,5 +252,5 @@ class SessionAdapter:
         for store in store_response.result:
             set_of_products = store.get_all()
             list_of_all_products[store.name] = set_of_products
-                # return a list with all the products
+            # return a list with all the products
         return list_of_all_products

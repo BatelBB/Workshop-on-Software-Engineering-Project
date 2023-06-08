@@ -35,3 +35,11 @@ class IDiscount(ABC):
     @abstractmethod
     def __str__(self, indent) -> str:
         ...
+
+    @abstractmethod
+    def get_all_simple_discounts(self, l) -> dict:
+        ...
+
+    @abstractmethod
+    def get_all_connectors(self, l):
+        ...

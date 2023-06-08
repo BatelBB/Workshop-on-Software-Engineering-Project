@@ -58,5 +58,19 @@ class IDiscountConnector(IDiscount, ABC):
             s += f"{indent}child: {d.__str__(next_indent)} \n"
         return s
 
+    def __repr__(self):
+        s = ""
+        for dis in self.children:
+            s += f"id: {dis.id}     "
+        return s
 
+    def get_all_simple_discounts(self, d) -> dict:
+        for dis in self.children:
+            d = dis.get_all_simple_discounts(d)
+        return d
 
+    def get_all_connectors(self, d) -> dict:
+        for dis in self.children:
+            d = dis.get_all_connectors(d)
+        d[self.id] = self.__repr__()
+        return d
