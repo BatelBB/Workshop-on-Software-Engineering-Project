@@ -185,7 +185,7 @@ class Store:
 
     def enforce_purchase_rules(self, basket: Basket) -> Response[bool]:
         for rule in self.purchase_rules:
-            res = self.purchase_rules[rule].result.enforce_rule(basket)
+            res = self.purchase_rules[rule].enforce_rule(basket)
             if not res.success:
                 return res
         return report("all rules are kept: Kfir is happy!", True)
