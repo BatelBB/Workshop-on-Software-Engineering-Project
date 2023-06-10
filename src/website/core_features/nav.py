@@ -21,5 +21,6 @@ def mynavbar():
     return Navbar(
         f'Logo here',
         View('Home', 'home.home'),
-        *login_part
+        *login_part,
+        View('Your cart', 'buying.view_cart')
     )

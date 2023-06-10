@@ -1,6 +1,6 @@
 from abc import abstractmethod
 
-from domain.main.Store.PurchaseRules.IRule import IRule
+from src.domain.main.Store.PurchaseRules.IRule import IRule
 from src.domain.main.Market.Appointment import Appointment
 from src.domain.main.Market.Permissions import Permission
 from src.domain.main.Store.Product import Product
@@ -133,8 +133,8 @@ class IService(metaclass=IAbsractConcurrentSingleton):
         ...
 
     @abstractmethod
-    def purchase_shopping_cart(self, session_identifier: int, payment_method: str, payment_details: list, address: str,
-                               postal_code: str) -> Response[bool]:
+    def purchase_shopping_cart(self, session_identifier: int, payment_method: str, payment_details: list[str],
+                               address: str, postal_code: str, city: str, country: str) -> Response[bool]:
         ...
 
     @abstractmethod
@@ -243,11 +243,16 @@ class IService(metaclass=IAbsractConcurrentSingleton):
         ...
 
     @abstractmethod
-    def add_discount(self, session_id: int, store_name: str, discount_type: str, discount_percent: int,
-                     discount_duration: int, discount_for_type: str, discount_for_name: str = None,
-                     rule_type=None,
-                     discount2_percent=None, discount2_for_type=None, discount2_for_name=None, min_price: float = None,
-                     p1_name=None, gle1=None, amount1=None, p2_name=None, gle2=None, amount2=None):
+    def add_simple_discount(self, session_id: int, store_name: str, discount_type: str, discount_percent: int,
+                            discount_for_name: str = None,
+                            rule_type=None, min_price: float = None,
+                            p1_name=None, gle1=None, amount1=None, p2_name=None, gle2=None, amount2=None):
+        ...
+
+    @abstractmethod
+    def connect_discounts(self, session_id: int, store_name, id1, id2, connection_type, rule_type=None,
+                          min_price: float = None,
+                          p1_name=None, gle1=None, amount1=None, p2_name=None, gle2=None, amount2=None):
         ...
 
     @abstractmethod
@@ -267,9 +272,17 @@ class IService(metaclass=IAbsractConcurrentSingleton):
         ...
 
     @abstractmethod
-    def get_discounts(self, session_id: int, store_name: str):
+    def get_discounts(self, session_id: int, store_name: str) -> Response:
         ...
 
     @abstractmethod
     def delete_discount(self, session_id: int, store_name: str, index: int):
+        ...
+
+    @abstractmethod
+    def get_store_owners(self, session_id: int, store_name: str):
+        ...
+
+    @abstractmethod
+    def get_store_managers(self, session_id: int, store_name: str):
         ...

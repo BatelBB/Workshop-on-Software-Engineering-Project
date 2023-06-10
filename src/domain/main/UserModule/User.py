@@ -3,8 +3,8 @@ import random
 import bcrypt
 from sqlalchemy import Column, String, Boolean, Integer
 
-from domain.main.Utils import Base_db
-from domain.main.Utils.Base_db import session_DB
+from src.domain.main.Utils import Base_db
+from src.domain.main.Utils.Base_db import session_DB
 from src.domain.main.UserModule.Cart import Cart
 from src.domain.main.UserModule.Role.Admin import Admin
 from src.domain.main.UserModule.Role.Visitor import Visitor

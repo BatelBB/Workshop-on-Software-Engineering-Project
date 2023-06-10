@@ -2,8 +2,8 @@ from functools import reduce
 
 from sqlalchemy import Column, ForeignKey, String, Integer, Float
 
-from domain.main.Utils import Base_db
-from domain.main.Utils.Base_db import session_DB
+from src.domain.main.Utils import Base_db
+from src.domain.main.Utils.Base_db import session_DB
 
 
 class Item(Base_db.Base):
@@ -94,3 +94,18 @@ class Basket:
         for i in self.items:
             if i.product_name == name:
                 return i
+
+    #only call from store
+    def calc_price(self) -> float:
+        price = 0
+        for item in self.items:
+            price += item.discount_price * item.quantity
+        return price
+
+    def deep_copy(self):
+        new_basket = Basket()
+        for item in self.items:
+            new_item = Item(item.product_name, item.username, item.store_name, item.quantity, item.price)
+            new_item.discount_price = item.discount_price
+            new_basket.add_item(new_item)
+        return new_basket

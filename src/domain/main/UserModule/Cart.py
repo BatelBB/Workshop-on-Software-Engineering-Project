@@ -1,6 +1,6 @@
 from functools import reduce
 
-from domain.main.Utils.Base_db import session_DB
+from src.domain.main.Utils.Base_db import session_DB
 from src.domain.main.UserModule.Basket import Basket, Item
 
 
@@ -17,6 +17,9 @@ class Cart:
         for store_name, basket in self.baskets.items():
             output[store_name] = basket.__dic__()
         return output
+
+    def has_basket(self, store_name: str) -> bool:
+        return store_name in self.baskets
 
     def get_or_create_basket(self, store_name: str) -> Basket:
         if store_name not in self.baskets:

@@ -25,6 +25,10 @@ var/
 *.egg-info/
 .installed.cfg
 *.egg
+src/workshop.db
+src/WorkshopLog.txt
+src/domain/test/UnitTests/workshop.db
+src/domain/test/UnitTests/WorkshopLog.txt
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
@@ -186,3 +190,5 @@ fabric.properties
 **/__pycache__/
 **/__pycache__/**/*
 /WorkshopLog.txt
+src/workshop.db
+src/WorkshopLog.txt

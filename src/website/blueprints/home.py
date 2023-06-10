@@ -4,14 +4,11 @@ import wtforms as wtf
 from flask import Flask, render_template
 from flask_bootstrap import Bootstrap
 
-from domain.main.Utils.Response import Response
+from src.domain.main.Utils.Response import Response
 from website.blueprints.auth import bp as auth
 #from website.blueprints.selling import bp as selling
 from website.blueprints.buying import bp as buying
 from website.core_features.domain_access.market_access import get_domain_adapter
-
-from website.core_features.nav import nav
-from website.core_features.dicebear import dicebear_methods
 
 bp = Blueprint("home", __name__)
 

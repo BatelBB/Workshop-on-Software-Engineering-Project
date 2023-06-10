@@ -1,6 +1,6 @@
 from typing import Any
 
-from domain.main.Store.PurchaseRules.IRule import IRule
+from src.domain.main.Store.PurchaseRules.IRule import IRule
 from src.domain.main.Market.Appointment import Appointment
 from src.domain.main.Market.Permissions import Permission
 from Service.IService import IService
@@ -162,7 +162,8 @@ class Session:
         return self.apply(self.service.change_product_name, self.identifier, store_name, product_old_name,
                           product_new_name)
 
-    def change_product_price(self, store_name: str, product_old_price: float, product_new_price: float) -> Response[bool]:
+    def change_product_price(self, store_name: str, product_old_price: float, product_new_price: float) -> Response[
+        bool]:
         return self.apply(self.service.change_product_price, self.identifier, store_name, product_old_price,
                           product_new_price)
 
@@ -176,7 +177,8 @@ class Session:
                                            payment_method: str, payment_details: list[str], address: str,
                                            postal_code: str, how_much: float, city: str, country: str) -> Response[
         bool]:
-        return self.apply(self.service.purchase_with_non_immediate_policy, self.identifier, store_name, product_name, payment_method,
+        return self.apply(self.service.purchase_with_non_immediate_policy, self.identifier, store_name, product_name,
+                          payment_method,
                           payment_details, address, postal_code, how_much, city, country)
 
     def start_auction(self, store_name: str, product_name: str, initial_price: float, duration: int) -> Response[bool]:
@@ -206,16 +208,19 @@ class Session:
     def get_all_registered_users(self) -> list[str]:
         return self.apply(self.service.get_all_registered_users)
 
-    def add_discount(self, store_name: str, discount_type: str, discount_percent: int,
-                     discount_duration: int, discount_for_type: str, discount_for_name: str = None,
-                     rule_type=None,
-                     discount2_percent=None, discount2_for_type=None, discount2_for_name=None,
-                      min_price: float = None,
-                     p1_name=None, gle1=None, amount1=None, p2_name=None, gle2=None, amount2=None):
-        return self.apply(self.service.add_discount, self.identifier, store_name, discount_type, discount_percent,
-                          discount_duration, discount_for_type, discount_for_name, rule_type, discount2_percent,
-                          discount2_for_type, discount2_for_name, min_price,
-                          p1_name, gle1, amount1, p2_name, gle2, amount2)
+    def add_simple_discount(self, store_name: str, discount_type: str, discount_percent: int,
+                            discount_for_name: str = None,
+                            rule_type=None, min_price: float = None,
+                            p1_name=None, gle1=None, amount1=None, p2_name=None, gle2=None, amount2=None) -> Response:
+        return self.apply(self.service.add_simple_discount, self.identifier, store_name, discount_type,
+                          discount_percent, discount_for_name, rule_type, min_price, p1_name, gle1,
+                          amount1, p2_name, gle2, amount2)
+
+    def connect_discounts(self, store_name, id1, id2, connection_type, rule_type=None,
+                          min_price: float = None,
+                          p1_name=None, gle1=None, amount1=None, p2_name=None, gle2=None, amount2=None):
+        return self.apply(self.service.connect_discounts, self.identifier, store_name, id1, id2, connection_type,
+                          rule_type, min_price, p1_name, gle1, amount1, p2_name, gle2, amount2)
 
     def get_store_products_with_discounts(self, store_name: str) -> dict[Product:str]:
         self.apply(self.service.get_store_products_with_discounts, self.identifier, store_name)
@@ -229,7 +234,7 @@ class Session:
     def add_basket_purchase_rule(self, store_name: str, min_price: float) -> Response:
         return self.apply(self.service.add_basket_purchase_rule, self.identifier, store_name, min_price)
 
-    def get_discounts(self, store_name: str):
+    def get_discounts(self, store_name: str) -> Response:
         return self.apply(self.service.get_discounts, self.identifier, store_name)
 
     def delete_discount(self, store_name: str, index: int):
@@ -243,3 +248,9 @@ class Session:
 
         return actions[action_name](*args) if action_name in actions \
             else report_error(self.dispatch.__qualname__, f'Invalid action. Given: {action_name}.')
+
+    def get_store_owners(self, store_name: str):
+        return self.apply(self.service.get_store_owners, self.identifier, store_name)
+
+    def get_store_managers(self, store_name: str):
+        return self.apply(self.service.get_store_managers, self.identifier, store_name)

@@ -1,4 +1,3 @@
-import validation
 from flask import Blueprint, flash, redirect, url_for, render_template
 from flask_wtf import FlaskForm
 from wtforms import SelectField, SubmitField, StringField, IntegerField, FloatField
@@ -16,7 +15,7 @@ def rules_view(store_name: str):
         return redirect(url_for('home.home'))
 
     purchase_rules = domain.get_purchase_rules(store_name)
-    return render_template("selling/rules_view.html", rule_dict=purchase_rules, store_name=store_name)
+    return render_template("products/rules_view.html", rule_dict=purchase_rules, store_name=store_name)
 
 
 @bp.route('/delete_rule/<store_name>/<int:index>', methods=['POST'])
@@ -51,7 +50,7 @@ def add_simple_rule(store_name: str):
         msg = domain.add_simple_purchase_rule(store_name, p_name, gle, amount)
         flash(msg)
         return redirect(url_for('rules.rules_view', store_name=store_name))
-    return render_template("selling/add_simple_rule.html", form=form)
+    return render_template("products/add_simple_rule.html", form=form)
 
 class AddComplexRuleForm(FlaskForm):
     product1_name = StringField(validators=[Length(min=3, max=100)])
@@ -81,7 +80,7 @@ def add_complex_rule(store_name: str):
         msg = domain.add_complex_purchase_rule(store_name, p1_name, gle1, amount1, p2_name, gle2, amount2, rule_type)
         flash(msg)
         return redirect(url_for('rules.rules_view', store_name=store_name))
-    return render_template("selling/add_complex_rule.html", form=form)
+    return render_template("products/add_complex_rule.html", form=form)
 
 class AddBasketRuleForm(FlaskForm):
     min_price = FloatField(validators=[NumberRange(min=0)])
@@ -99,4 +98,4 @@ def add_basket_rule(store_name: str):
         msg = domain.add_basket_purchase_rule(store_name, min_price)
         flash(msg)
         return redirect(url_for('rules.rules_view', store_name=store_name))
-    return render_template("selling/add_basket_rule.html", form=form)
+    return render_template("products/add_basket_rule.html", form=form)

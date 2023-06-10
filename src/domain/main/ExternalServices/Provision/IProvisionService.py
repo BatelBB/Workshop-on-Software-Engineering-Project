@@ -1,8 +1,8 @@
 import string
 from abc import ABC, abstractmethod
 
-from domain.main.ExternalServices.REST_API.RestAPI_Service import RestAPI
-from domain.main.Utils.Logger import report_error, report_info
+from src.domain.main.ExternalServices.REST_API.RestAPI_Service import RestAPI
+from src.domain.main.Utils.Logger import report_error, report_info
 
 
 class IExternalProvisionService(ABC):

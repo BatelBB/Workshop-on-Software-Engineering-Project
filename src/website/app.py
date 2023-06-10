@@ -4,9 +4,12 @@ import wtforms as wtf
 from flask import Flask, render_template
 from flask_bootstrap import Bootstrap
 
-from domain.main.Utils.Response import Response
+from src.domain.main.Utils.Response import Response
+from website.blueprints.searching import bp as searching
 from website.blueprints.discounts import bp as discounts
 from website.blueprints.rules import bp as rules
+from src.domain.main.Market.Permissions import Permission
+from src.domain.main.Utils.Response import Response
 from website.blueprints.auth import bp as auth
 from website.blueprints.buying import bp as buying
 from website.blueprints.home import bp as home
@@ -29,6 +32,7 @@ app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 nav.init_app(app)
 
 app.jinja_env.globals.update(**dicebear_methods)
+app.jinja_env.globals.update(Permission=Permission)
 
 app.register_blueprint(home)
 app.register_blueprint(auth)
@@ -38,6 +42,7 @@ app.register_blueprint(products)
 app.register_blueprint(buying)
 app.register_blueprint(rules)
 app.register_blueprint(discounts)
+app.register_blueprint(searching)
 
 
 @app.errorhandler(500)

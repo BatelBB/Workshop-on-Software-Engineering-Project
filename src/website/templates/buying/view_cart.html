@@ -1,0 +1,69 @@
+{% extends "layout.html" %}
+{% block title %}Create store{% endblock %}
+
+{% block page %}
+
+<h1 style="text-align:center; color:blue; font-size: 2em;">{{ name }}</h1>
+
+{% if not cart.success %}
+<p style="color:red;">Error: {{ cart.description }}</p>
+{% else %}
+
+<div style="display:flex; justify-content:space-around; flex-wrap:wrap; margin-bottom:1em;">
+
+    <div class="container">
+      <div class="row">  <h1>Your cart</h1> </div>
+    {% if cart.result %}
+        <div class="row">
+    <h2>
+        Looks good?
+        <a href="{{ url_for('buying.checkout_cart') }}">
+            Proceed to checkout
+        </a>
+    </h2>
+        </div>
+    {% endif %}
+    {% for (store_name, basket) in cart.result.items() %}
+        <div class="row">
+                <h2>
+                    <img src="{{ dicebear_store(store_name) }}" style="height: 1em;" />
+                    {{ store_name }}
+                </h2>
+            <div>
+                    {% for (product_name, amount) in basket.amounts.items() %}
+                <div >
+                    <div >
+                        <div >
+                            {% with product=basket.products[product_name] %}
+                            <h4>
+                            <img src="{{ dicebear_product(product_name) }}" style="height: 3em;"/>
+                            {{ product_name }}
+                            </h4>
+                            <p><span class="price">{{ product.price }}</span></p>
+                            You have {{ amount }} of those in your cart.
+                            <a href="{{ url_for('buying.buy_product',
+                            store_name=store_name, product_name=product_name) }}">
+                                Change amount or remove
+                            </a>
+                            {% endwith %}
+                            <div>
+                        </div>
+                    </div>
+                </div>
+                    {% endfor %}
+            </div>
+        </div>
+    {% else %}
+        <p>
+            There's nothing in your cart right now. You should
+            <a href="{{ url_for('home.home') }}">
+                go and buy some stuff. Capitalism is fun
+            </a>.
+        </p>
+    {% endfor %}
+    </div>
+</div>
+
+{% endif %}
+
+{% endblock %}
