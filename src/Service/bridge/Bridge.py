@@ -1,5 +1,7 @@
 from abc import ABC, abstractmethod
 from src.domain.main.Market.Permissions import Permission
+from domain.main.Store.Product import Product
+from domain.main.Store.Store import Store
 from src.domain.main.Utils.Response import Response
 
 
@@ -7,13 +9,17 @@ class Bridge(ABC):
     ###################
     # general services
     @abstractmethod
-    def enter_market(self):
+    def enter_market(self) -> None:
         ...
 
     @abstractmethod
     def exit_market(self) -> Response[bool]:
         ...
-    
+
+    @abstractmethod
+    def clear_data(self) -> None:
+        ...
+
     @abstractmethod
     def register(self, username: str, password: str) -> Response[bool]:
         ...
@@ -46,8 +52,8 @@ class Bridge(ABC):
         ...
 
     @abstractmethod
-    def purchase_shopping_cart(self, payment_method: str, payment_details: list, address: str, postal_code: str) \
-            -> Response[bool]:
+    def purchase_shopping_cart(self, payment_method: str, payment_details: list, address: str, postal_code: str,
+                               city: str, country: str) -> Response[bool]:
         ...
 
     @abstractmethod
@@ -156,7 +162,7 @@ class Bridge(ABC):
     #######################
     # user search services
     @abstractmethod
-    def get_all_stores(self) -> Response[list[dict] | bool]:
+    def get_all_stores(self) -> Response[list[Store] | bool]:
         ...
 
     @abstractmethod
@@ -164,7 +170,7 @@ class Bridge(ABC):
         ...
 
     @abstractmethod
-    def get_store_products(self, store_name: str) -> Response[dict | bool]:
+    def get_store_products(self, store_name: str) -> Response[set[Product] | bool]:
         ...
 
     @abstractmethod

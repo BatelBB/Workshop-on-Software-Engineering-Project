@@ -26,7 +26,7 @@ class ProductQuantity:
 
     def reserve(self, desired_quantity: int) -> bool:
         with self.lock:
-            if self.quantity > desired_quantity:
+            if self.quantity >= desired_quantity:
                 self.quantity -= desired_quantity
                 return True
             else:
@@ -89,12 +89,25 @@ class Store:
     def contains(self, product_name: str) -> bool:
         return self.find(product_name) is not None
 
-    def add(self, product: Product, quantity: int) -> None:
+    def add(self, product: Product, quantity: int):
         if product not in self.products:
-            self.products.add(product)
-            self.products_quantities.update({product.name: ProductQuantity(quantity)})
+            if quantity > 0:
+                self.products.add(product)
+                self.products_quantities.update({product.name: ProductQuantity(quantity)})
+                return Response(True)
+            else:
+                return report_error(self.add.__qualname__, "Can't create a product with zero or negative quantity")
         else:
-            self.products_quantities[product.name].refill(quantity)
+            if quantity < 0:
+                if self.products_quantities.get(product.name).quantity + quantity >= 0:
+                    self.products_quantities[product.name].refill(quantity)
+                    return Response(True)
+                else:
+                    return report_error(self.add.__qualname__,
+                                        "Cannot update negative quantity-it will result in negative quantity")
+            else:
+                self.products_quantities[product.name].refill(quantity)
+                return Response(True)
 
     def update(self, product_name: str, quantity: int) -> bool:
         p = Product(product_name)
