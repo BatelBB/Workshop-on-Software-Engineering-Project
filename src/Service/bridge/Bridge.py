@@ -75,6 +75,9 @@ class Bridge(ABC):
     def reopen_store(self, store_name: str) -> Response[bool]:
         ...
 
+    def remove_store(self, store_name: str) -> Response[bool]:
+        ...
+
     @abstractmethod
     def add_product(self, store_name: str, product_name: str, category: str,
                     price: float, quantity: int, keywords: list[str] = None) -> Response[bool]:
@@ -127,7 +130,7 @@ class Bridge(ABC):
         ...
 
     @abstractmethod
-    def get_store_personal(self, store_name: str) -> Response[dict | bool]:
+    def get_store_staff(self, store_name: str) -> Response[dict | bool]:
         ...
 
     @abstractmethod

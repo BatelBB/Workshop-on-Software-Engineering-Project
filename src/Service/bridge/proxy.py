@@ -1,4 +1,4 @@
-from domain.main.Market.Permissions import Permission
+from domain.main.Market.Permissions import Permission, get_permission_name, get_permission_description
 from src.domain.main.Utils.Response import Response
 from Service.bridge.Bridge import Bridge
 from Service.bridge.real import Real
@@ -67,6 +67,9 @@ class Proxy(Bridge):
     def reopen_store(self, store_name: str) -> Response[bool]:
         return self.real.reopen_store(store_name)
 
+    def remove_store(self, store_name: str) -> Response[bool]:
+        return Response(False)
+
     def add_product(self, store_name: str, product_name: str, category: str,
                     price: float, quantity: int, keywords: list[str] = None) -> Response[bool]:
         return self.real.add_product(store_name, product_name, category, price, quantity, keywords)
@@ -98,7 +101,7 @@ class Proxy(Bridge):
         return self.real.remove_appointment(fired_appointee, store_name)
 
     def add_permission(self, store: str, appointee: str, permission: Permission) -> Response[bool]:
-        return self.real.add_permission(store, appointee, permission)
+        return self.real.add_permission(store, appointee, permission.name)
 
     def remove_permission(self, store: str, appointee: str, permission: Permission) -> Response[bool]:
         return self.real.remove_permission(store, appointee, permission)
@@ -106,8 +109,16 @@ class Proxy(Bridge):
     def permissions_of(self, store: str, subject: str) -> Response[set[Permission] | bool]:
         return self.real.permissions_of(store, subject)
 
-    def get_store_personal(self, store_name: str) -> Response[dict | bool]:
-        return self.real.get_store_personal(store_name)
+    def get_store_staff(self, store_name: str) -> Response[dict | bool]:
+        result = self.real.get_store_staff(store_name)
+        if result.success:
+            dic = {}
+            for appointment in result.result:
+                dic[appointment.appointee] = {"Appointed by": appointment.appointed_by,
+                                              "Permissions": {p.value for p in appointment.permissions}}
+            return Response(dic)
+        else:
+            return Response(False)
 
     def get_store_purchase_history(self, store_name: str) -> Response[dict]:
         return self.real.get_store_purchase_history(store_name)

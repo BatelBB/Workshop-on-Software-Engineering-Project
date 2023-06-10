@@ -35,8 +35,10 @@ class CloseStore(unittest.TestCase):
         self.app.login(*self.store_owner1)
         r = self.app.close_store("bakery")
         self.assertTrue(r.success, "error: close store action failed")
-        products = self.app.get_products_by_name("bread").result
-        self.assertEqual(0, len(products), "error: bakery product found after the store closed")
+        r = self.app.add_to_cart("bakery", "bread", 10)
+        self.assertFalse(r.success, "error: add to cart action succeeded")
+        cart = self.app.show_cart().result
+        self.assertDictEqual({}, cart, "error: product of closed store added to cart!")
         self.app.logout()
 
     def test_close_store_products_not_found_in_search(self):

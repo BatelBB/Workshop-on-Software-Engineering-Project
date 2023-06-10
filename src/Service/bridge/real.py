@@ -1,8 +1,8 @@
+from Service.IService.IService import IService
+from Service.Session.Session import Session
 from domain.main.Market.Permissions import Permission
-from domain.main.Service.IService import IService
 from domain.main.Store.Product import Product
 from domain.main.Store.Store import Store
-from domain.main.Utils.Session import Session
 from src.domain.main.Utils.Response import Response
 from Service.bridge.Bridge import Bridge
 from src.domain.main.Market.Market import Market
@@ -112,8 +112,8 @@ class Real(Bridge):
     def permissions_of(self, store: str, subject: str) -> Response[set[Permission] | bool]:
         return self.session.permissions_of(store, subject)
 
-    def get_store_personal(self, store_name: str) -> Response[dict | bool]:
-        return self.session.get_store_personal(store_name)
+    def get_store_staff(self, store_name: str) -> Response[dict | bool]:
+        return self.session.get_store_staff(store_name)
 
     def get_store_purchase_history(self, store_name: str) -> Response[dict]:
         return self.session.get_store_purchase_history(store_name)
