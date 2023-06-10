@@ -14,3 +14,41 @@
 08/06/2023 17:07:41 INFO:	 Market.login: Member 'Kfir' is logged in
 08/06/2023 17:07:41 WARNING:	 Market is closed!
 08/06/2023 17:07:41 WARNING:	 Logger thread exits!
+10/06/2023 12:09:53 ERROR:	 Visitor.register: Username: 'Kfir' is occupied
+10/06/2023 12:09:54 INFO:	 Session: 118523880057246876 has been initialized
+10/06/2023 12:09:54 INFO:	 Market.login: Member 'Kfir' is logged in
+10/06/2023 12:09:54 INFO:	 Visitor.register: 'test' is registered!
+10/06/2023 12:09:55 INFO:	 Member.logout: Member 'Kfir' is logged out
+10/06/2023 12:09:55 INFO:	 Market.login: Member 'test' is logged in
+10/06/2023 12:09:55 INFO:	 Market.open_store: Member 'test' opened store 'IHerb'.
+10/06/2023 12:09:55 INFO:	 Market.add_product: 'test' add 20 units of Product 'Vitamin A', Category: 'Vitamins', Price: 19.9, Rate: 5 to store 'IHerb'
+10/06/2023 12:09:55 INFO:	 Market.add_product: 'test' add 25 units of Product 'Toothpaste', Category: 'Hygiene', Price: 21.2, Rate: 5 to store 'IHerb'
+10/06/2023 12:09:55 INFO:	 Visitor.add_to_cart: 2 units of Product 'Vitamin A' from store 'IHerb' is added to Member 'test' cart
+10/06/2023 12:09:55 INFO:	 Visitor.verify_cart_not_empty: Member 'test' cart's is NOT empty!
+10/06/2023 12:09:55 INFO:	 all rules are kept: Kfir is happy!
+10/06/2023 12:09:56 INFO:	 ExternalPaymentServiceReal.payWIthCard: post request for paying with card success!
+10/06/2023 12:09:56 INFO:	 set_info
+10/06/2023 12:09:56 ERROR:	 Market.purchase_shopping_cart: failed delivery
+10/06/2023 12:09:56 INFO:	 Session: 5468925688792167005 has been initialized
+10/06/2023 12:09:57 INFO:	 Market.login: Member 'Kfir' is logged in
+10/06/2023 12:09:57 WARNING:	 Market is closed!
+10/06/2023 12:09:57 WARNING:	 Logger thread exits!
+10/06/2023 12:10:26 INFO:	 Visitor.register: 'Kfir' is registered!
+10/06/2023 12:10:26 INFO:	 Session: 9134685869232325870 has been initialized
+10/06/2023 12:10:27 INFO:	 Market.login: Member 'Kfir' is logged in
+10/06/2023 12:10:27 INFO:	 Visitor.register: 'test' is registered!
+10/06/2023 12:10:28 INFO:	 Member.logout: Member 'Kfir' is logged out
+10/06/2023 12:10:28 INFO:	 Market.login: Member 'test' is logged in
+10/06/2023 12:10:28 INFO:	 Market.open_store: Member 'test' opened store 'IHerb'.
+10/06/2023 12:10:28 INFO:	 Market.add_product: 'test' add 20 units of Product 'Vitamin A', Category: 'Vitamins', Price: 19.9, Rate: 5 to store 'IHerb'
+10/06/2023 12:10:28 INFO:	 Market.add_product: 'test' add 25 units of Product 'Toothpaste', Category: 'Hygiene', Price: 21.2, Rate: 5 to store 'IHerb'
+10/06/2023 12:10:28 INFO:	 Visitor.add_to_cart: 2 units of Product 'Vitamin A' from store 'IHerb' is added to Member 'test' cart
+10/06/2023 12:10:28 INFO:	 Visitor.verify_cart_not_empty: Member 'test' cart's is NOT empty!
+10/06/2023 12:10:28 INFO:	 all rules are kept: Kfir is happy!
+10/06/2023 12:10:29 INFO:	 ExternalPaymentServiceReal.payWIthCard: post request for paying with card success!
+10/06/2023 12:10:29 INFO:	 set_info
+10/06/2023 12:10:29 ERROR:	 Market.purchase_shopping_cart: failed delivery
+10/06/2023 12:10:29 INFO:	 Session: 2581009795895431392 has been initialized
+10/06/2023 12:10:29 INFO:	 Market.login: Member 'Kfir' is logged in
+10/06/2023 12:10:29 WARNING:	 Market is closed!
+10/06/2023 12:10:29 WARNING:	 Logger thread exits!
