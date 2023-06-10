@@ -133,8 +133,8 @@ class IService(metaclass=IAbsractConcurrentSingleton):
         ...
 
     @abstractmethod
-    def purchase_shopping_cart(self, session_identifier: int, payment_method: str, payment_details: list, address: str,
-                               postal_code: str) -> Response[bool]:
+    def purchase_shopping_cart(self, session_identifier: int, payment_method: str, payment_details: list[str],
+                               address: str, postal_code: str, city: str, country: str) -> Response[bool]:
         ...
 
     @abstractmethod
