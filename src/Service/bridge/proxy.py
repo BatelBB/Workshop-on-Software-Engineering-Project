@@ -18,6 +18,9 @@ class Proxy(Bridge):
     def exit_market(self) -> Response[bool]:
         return self.real.exit_market()
 
+    def clear_data(self) -> None:
+        self.real.clear_data()
+
     def register(self, username: str, password: str) -> Response[bool]:
         return self.real.register(username, password)
 
@@ -42,15 +45,16 @@ class Proxy(Bridge):
     def show_cart(self) -> Response[dict | bool]:
         return self.real.show_cart()
 
-    def purchase_shopping_cart(self, payment_method: str, payment_details: list, address: str, postal_code: str) \
-            -> Response[bool]:
-        return self.real.purchase_shopping_cart(payment_method, payment_details, address, postal_code)
+    def purchase_shopping_cart(self, payment_method: str, payment_details: list, address: str, postal_code: str,
+                               city: str, country: str) -> Response[bool]:
+        return self.real.purchase_shopping_cart(payment_method, payment_details, address, postal_code, city, country)
 
     def purchase_with_non_immediate_policy(self, store_name: str, product_name: str,
                                            payment_method: str, payment_details: list[str], address: str,
                                            postal_code: str, how_much: float, city: str, country: str) -> Response[bool]:
         return self.real.purchase_with_non_immediate_policy(store_name, product_name, payment_method,
-                                                            payment_details, address, postal_code, how_much, city, country)
+                                                            payment_details, address, postal_code, how_much, city,
+                                                            country)
 
     ##############################
     # store management services
@@ -108,8 +112,7 @@ class Proxy(Bridge):
     def get_store_purchase_history(self, store_name: str) -> Response[dict]:
         return self.real.get_store_purchase_history(store_name)
 
-    def start_auction(self, store_name: str, product_name: str, initial_price: float, duration: int) -> Response[
-        bool]:
+    def start_auction(self, store_name: str, product_name: str, initial_price: float, duration: int) -> Response[bool]:
         return self.real.start_auction(store_name, product_name, initial_price, duration)
 
     def start_lottery(self, store_name: str, product_name: str) -> Response:
@@ -132,27 +135,79 @@ class Proxy(Bridge):
 
     #######################
     # user search services
-    def get_all_stores(self) -> Response[list[dict] | bool]:
-        return self.real.get_all_stores()
+    def get_all_stores(self) -> Response[dict | bool]:
+        res = self.real.get_all_stores()
+        if not res.success:
+            return res
+        else:
+            dic = {}
+            for store in res.result:
+                products = {}
+                for product in store.products:
+                    products[product.name] = {"Price": product.price, "Keywords": product.keywords,
+                                              "Category": product.category, "Rate": product.rate,
+                                              "Quantity": store.products_quantities[product.name].quantity}
+                dic[store.name] = products
+            return Response(dic)
 
     def get_store(self, store_name: str) -> Response[dict | bool]:
         return self.real.get_store(store_name)
 
     def get_store_products(self, store_name: str) -> Response[dict | bool]:
-        return self.real.get_store_products(store_name)
+        res = self.real.get_store_products(store_name)
+        if not res.success:
+            return res
+        else:
+            products = {}
+            for product in res.result:
+                products[product.name] = {"Price": product.price, "Keywords": product.keywords,
+                                          "Category": product.category, "Rate": product.rate}
+            return Response(products)
 
     def get_products_by_name(self, name: str) -> Response[list[dict[str, dict]] | bool]:
-        return self.real.get_products_by_name(name)
+        res = self.real.get_products_by_name(name)
+        if not res.success:
+            return res
+        else:
+            products = []
+            for product in res.result:
+                if not product.__eq__({}):
+                    products.append(product)
+            return Response(products)
 
     def get_products_by_category(self, name: str) -> Response[list[dict[str, dict]] | bool]:
-        return self.real.get_products_by_category(name)
+        res = self.real.get_products_by_category(name)
+        if not res.success:
+            return res
+        else:
+            products = []
+            for product in res.result:
+                if not product.__eq__({}):
+                    products.append(product)
+            return Response(products)
 
     def get_products_by_keywords(self, keywords: list[str]) -> \
             Response[list[dict[str, dict]] | bool]:
-        return self.real.get_products_by_keywords(keywords)
+        res = self.real.get_products_by_keywords(keywords)
+        if not res.success:
+            return res
+        else:
+            products = []
+            for product in res.result:
+                if not product.__eq__({}):
+                    products.append(product)
+            return Response(products)
 
     def get_products_in_price_range(self, _min: float, _max: float) -> Response[list[dict[str, dict]] | bool]:
-        return self.real.get_products_in_price_range(_min, _max)
+        res = self.real.get_products_in_price_range(_min, _max)
+        if not res.success:
+            return res
+        else:
+            products = []
+            for product in res.result:
+                if not product.__eq__({}):
+                    products.append(product)
+            return Response(products)
 
     # def filter_products_by_rating(self, low: int, high: int) -> Response[dict]:
     #     ...

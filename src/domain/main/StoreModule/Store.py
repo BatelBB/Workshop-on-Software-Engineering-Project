@@ -29,7 +29,7 @@ class ProductQuantity:
 
     def reserve(self, desired_quantity: int) -> bool:
         with self.lock:
-            if self.quantity > desired_quantity:
+            if self.quantity >= desired_quantity:
                 self.quantity -= desired_quantity
                 return True
             else:
@@ -132,22 +132,23 @@ class Store(Base_db.Base):
     def contains(self, product_name: str) -> bool:
         return self.find(product_name) is not None
 
-    def add(self, product: Product, quantity: int) -> None:
-        if product not in self.products:
-            self.products.add(product)
-            self.products_quantities.update({product.name: ProductQuantity(quantity)})
-            with Store.table_lock:
-                session_DB.merge(product)
-                session_DB.commit()
-        else:
-            new_quantity = self.products_quantities[product.name].refill(quantity)
-            if new_quantity > 0:
+    def add(self, product: Product, quantity: int):
+        if quantity > 0:
+            if product not in self.products:
+                self.products.add(product)
+                self.products_quantities.update({product.name: ProductQuantity(quantity)})
                 with Store.table_lock:
-                    r = session_DB.query(Product).filter(Product.name == product.name, Product.store_name == self.name).first()
-                    r.quantity = new_quantity
+                    session_DB.merge(product)
                     session_DB.commit()
             else:
-                self.remove(product.name)
+                new_quantity = self.products_quantities[product.name].refill(quantity)
+                if new_quantity > 0:
+                    with Store.table_lock:
+                        r = session_DB.query(Product).filter(Product.name == product.name, Product.store_name == self.name).first()
+                        r.quantity = new_quantity
+                        session_DB.commit()
+                else:
+                    self.remove(product.name)
 
     def update(self, product_name: str, quantity: int) -> bool:
         p = Product(product_name, self.name)
@@ -159,6 +160,13 @@ class Store(Base_db.Base):
                 r.quantity = quantity
                 session_DB.commit()
         return is_succeed
+
+    def update_db(self, basket):
+        with Store.table_lock:
+            for item in basket.items:
+                r = session_DB.query(Product).filter(Product.name == item.product_name, item.store_name == self.name).first()
+                r.quantity -= item.quantity
+                session_DB.commit()
 
     def remove(self, product_name: str) -> bool:
         p = Product(product_name, self.name)
