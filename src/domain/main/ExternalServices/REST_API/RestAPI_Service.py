@@ -2,7 +2,7 @@ import requests
 from requests import Response
 from requests.exceptions import RequestException
 
-from domain.main.Utils.Logger import report_error
+from src.domain.main.Utils.Logger import report_error
 
 
 class RestAPI:

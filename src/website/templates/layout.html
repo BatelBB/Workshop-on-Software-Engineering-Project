@@ -11,7 +11,10 @@
 {% block navbar %}
 {{nav.mynavbar.render()}}
 <br/>
-
+<form action="{{url_for('searching.search_product')}}" method="get">
+    <input type="text" name="query" placeholder="Search for products">
+    <input type="submit" value="Search">
+</form>
 {% endblock %}
 
 {% block content %}

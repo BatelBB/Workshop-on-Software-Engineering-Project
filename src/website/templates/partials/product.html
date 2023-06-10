@@ -3,10 +3,16 @@
      data-price="{{ product.price }}"
      data-category="{{ product.category }}"
      data-rate="{{ product.rate }}"
+     data-store_name="{{ product.store_name }}"
 >
-    <h3>{{ product.name }}</h3>
+    <h3>
+        <img src="{{ dicebear_product(product.name) }}" style="height: 3em;"/>
+        <a href="{{ url_for('products.product_page', store_name=product.store_name, product_name=product.name) }}" style="background-color: #019CBA; color: white; padding: 4px 10px; margin: 5px 0; border: none; border-radius: 4px; cursor: pointer;">{{ product.name }}</a>
+
+
+    </h3>
     <p><span class="price">{{ product.price }}</span></p>
-    {% if permissions and 'Update' in permissions %}
-        can edit
-    {% endif %}
+
+    <div>
+    </div>
 </div>

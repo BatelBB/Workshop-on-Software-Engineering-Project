@@ -1,5 +1,5 @@
-from domain.main.Market.Permissions import Permission
-from domain.main.Service.IService import IService
+from src.domain.main.Market.Permissions import Permission
+from Service.IService.IService import IService
 from domain.main.Store.Product import Product
 from domain.main.Store.Store import Store
 from domain.main.Utils.Session import Session

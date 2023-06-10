@@ -1,4 +1,4 @@
-from domain.main.Market.Permissions import Permission
+from src.domain.main.Market.Permissions import Permission
 from src.domain.main.Utils.Response import Response
 from Service.bridge.Bridge import Bridge
 from Service.bridge.real import Real
