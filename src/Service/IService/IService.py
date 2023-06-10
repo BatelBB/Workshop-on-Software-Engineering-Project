@@ -1,10 +1,10 @@
 from abc import abstractmethod
 
-from src.domain.main.Store.PurchaseRules.IRule import IRule
+from src.domain.main.StoreModule.PurchaseRules.IRule import IRule
 from src.domain.main.Market.Appointment import Appointment
 from src.domain.main.Market.Permissions import Permission
-from src.domain.main.Store.Product import Product
-from src.domain.main.Store.Store import Store
+from src.domain.main.StoreModule.Product import Product
+from src.domain.main.StoreModule.Store import Store
 from src.domain.main.UserModule.Cart import Cart
 from src.domain.main.Utils.IConcurrentSingelton import IAbsractConcurrentSingleton
 from src.domain.main.Utils.Response import Response

@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from domain.main.Store.DIscounts.IDIscount import IDiscount
+from domain.main.StoreModule.DIscounts.IDIscount import IDiscount
 from domain.main.Utils.Logger import report
 from domain.main.Utils.Response import Response
 

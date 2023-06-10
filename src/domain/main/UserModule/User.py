@@ -1,29 +1,31 @@
 import random
 
 import bcrypt
-from sqlalchemy import Column, String, Boolean, Integer
+from sqlalchemy import Column, String, Boolean
+from sqlalchemy.orm import relationship
 
-from src.domain.main.Utils import Base_db
-from src.domain.main.Utils.Base_db import session_DB
 from src.domain.main.UserModule.Cart import Cart
 from src.domain.main.UserModule.Role.Admin import Admin
 from src.domain.main.UserModule.Role.Visitor import Visitor
+from src.domain.main.Utils import Base_db
+from src.domain.main.Utils.Base_db import session_DB
 from src.domain.main.Utils.Response import Response
 
 
 class User(Base_db.Base):
     __tablename__ = 'users'
+    __table_args__ = {'extend_existing': True}
     username = Column("username", String, primary_key=True)
     encrypted_password = Column("encrypted_password", String)
-    is_admin = Column("is_admin", Integer)
+    is_admin = Column("is_admin", Boolean)
 
-    def __init__(self, username: str = "Visitor", password: str = "Visitor", is_admin=0):
+    def __init__(self, username: str = "Visitor", password: str = "Visitor", is_admin=False):
         self.user_id = None
         self.username = username
         self.encrypted_password = bcrypt.hashpw(bytes(password, 'utf8'), bcrypt.gensalt())
         self.is_canceled = False
         self.is_admin = is_admin
-        self.role = Admin(self) if is_admin == 1 else Visitor(self)
+        self.role = Admin(self) if is_admin else Visitor(self)
         self.cart = Cart(username)
         self.is_logged_in = False
 
@@ -51,9 +53,6 @@ class User(Base_db.Base):
 
     def is_member(self) -> bool:
         return self.role.is_member()
-
-    def is_admin(self) -> bool:
-        return self.role.is_admin()
 
     def add_to_cart(self, store_name: str, product_name: str, price: float, quantity: int = 1) -> Response[bool]:
         return self.role.add_to_cart(store_name, product_name, price, quantity)
@@ -86,6 +85,7 @@ class User(Base_db.Base):
 
     @staticmethod
     def clear_db():
+        Cart.clear_db()
         session_DB.query(User).delete()
         session_DB.commit()
 

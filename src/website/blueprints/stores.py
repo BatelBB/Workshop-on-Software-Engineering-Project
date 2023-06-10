@@ -22,12 +22,12 @@ class CreateStoreForm(FlaskForm):
 
 class RemoveStoreForm(FlaskForm):
     store = SelectField('Select a store to remove:', validators=[validation.DataRequired()])
-    submit = SubmitField('Remove Store')
+    submit = SubmitField('Remove StoreModule')
 
 
 class ReopenStoreForm(FlaskForm):
     store = SelectField('Select a store to reopen:', validators=[validation.DataRequired()])
-    submit = SubmitField('Reopen Store')
+    submit = SubmitField('Reopen StoreModule')
 
 
 @bp.route('/create_store', methods=('GET', 'POST'))

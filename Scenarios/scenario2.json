@@ -12,5 +12,6 @@
               {"action":  "add_permission", "args": ["s1", "u3", "Update"]},
               {"action":  "appoint_owner", "args": ["u4", "s1"]},
               {"action":  "appoint_owner", "args": ["u5", "s1"]},
+              {"action":  "get_store_staff", "args": ["s1"]},
               {"action":  "logout", "args": []}]
 }

@@ -2,7 +2,7 @@
 import unittest
 
 from src.domain.main.Market.Market import Market
-from src.domain.main.Store.PurchasePolicy.AuctionPolicy import AuctionPolicy
+from src.domain.main.StoreModule.PurchasePolicy.AuctionPolicy import AuctionPolicy
 
 
 class auction_tests(unittest.TestCase):

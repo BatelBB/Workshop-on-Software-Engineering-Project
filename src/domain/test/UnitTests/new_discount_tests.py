@@ -1,9 +1,9 @@
 import unittest
 
-from domain.main.Store.DIscounts.SimpleDiscount import SimpleDiscount
-from domain.main.Store.PurchaseRules.BasketRule import BasketRule
-from domain.main.Store.PurchaseRules.SimpleRule import SimpleRule
-from domain.main.Store.Store import Store
+from domain.main.StoreModule.DIscounts.SimpleDiscount import SimpleDiscount
+from domain.main.StoreModule.PurchaseRules.BasketRule import BasketRule
+from domain.main.StoreModule.PurchaseRules.SimpleRule import SimpleRule
+from domain.main.StoreModule.Store import Store
 from src.domain.main.Market.Market import Market
 from src.domain.main.UserModule.Basket import Basket, Item
 

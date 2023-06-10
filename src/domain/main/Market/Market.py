@@ -8,26 +8,26 @@ from sqlalchemy import inspect
 
 from src.domain.main.Utils.Response import Response
 from src.domain.main.UserModule.Basket import Item
-from src.domain.main.Utils.Base_db import Base, engine
-from src.domain.main.Store.PurchaseRules.IRule import IRule
+from src.domain.main.Utils.Base_db import Base, engine, session_DB
+from src.domain.main.StoreModule.PurchaseRules.IRule import IRule
 from src.domain.main.ExternalServices.Payment.PaymentFactory import PaymentFactory
 from src.domain.main.ExternalServices.Payment.PaymentServices import IPaymentService
 from src.domain.main.ExternalServices.Provision.ProvisionServiceAdapter import provisionService, IProvisionService
-from src.domain.main.Market.Appointment import Appointment
 from src.domain.main.Market.Permissions import Permission, get_default_manager_permissions, \
     get_default_owner_permissions, \
     get_permission_description
 from Service.IService.IService import IService
-from src.domain.main.Store.Product import Product
-from src.domain.main.Store.PurchasePolicy.AuctionPolicy import AuctionPolicy
-from src.domain.main.Store.PurchasePolicy.BidPolicy import BidPolicy
-from src.domain.main.Store.PurchasePolicy.LotteryPolicy import LotteryPolicy
-from src.domain.main.Store.PurchasePolicy.PurchasePolicyFactory import PurchasePolicyFactory
-from src.domain.main.Store.PurchaseRules import PurchaseRulesFactory
-from src.domain.main.Store.Store import Store
+from src.domain.main.StoreModule.Product import Product
+from src.domain.main.StoreModule.PurchasePolicy.AuctionPolicy import AuctionPolicy
+from src.domain.main.StoreModule.PurchasePolicy.BidPolicy import BidPolicy
+from src.domain.main.StoreModule.PurchasePolicy.LotteryPolicy import LotteryPolicy
+from src.domain.main.StoreModule.PurchasePolicy.PurchasePolicyFactory import PurchasePolicyFactory
+from src.domain.main.StoreModule.PurchaseRules import PurchaseRulesFactory
+from src.domain.main.UserModule.User import User
+from src.domain.main.StoreModule.Store import Store
 from src.domain.main.UserModule.Cart import Cart
 from src.domain.main.UserModule.Role.Admin import Admin
-from src.domain.main.UserModule.User import User
+from src.domain.main.Market.Appointment import Appointment
 from src.domain.main.Utils.ConcurrentDictionary import ConcurrentDictionary
 from src.domain.main.Utils.Logger import Logger, report_error, report_info
 from src.domain.main.Utils.Response import Response
@@ -54,7 +54,7 @@ class Market(IService):
 
     def init_db(self):
         Base.metadata.reflect(engine)
-        classes_for_db = (User, Item)
+        classes_for_db = (User, Item, Store, Product, Appointment)
         tables_to_create = []
 
         for cls in classes_for_db:
@@ -104,18 +104,18 @@ class Market(IService):
         appointments = self.get_store_appointments(store_name)
         if appointments is not None:
             try:
-                i = appointments.index(Appointment(username))
+                i = appointments.index(Appointment(username, store_name))
                 return appointments[i]
             except Exception:
                 return None
         return None
 
     def remove_appointment_of(self, fired_user: str, store_name: str) -> None:
-        self.appointments.get(store_name).remove(Appointment(fired_user))
+        Appointment.delete_record(fired_user, store_name)
+        self.appointments.get(store_name).remove(Appointment(fired_user, store_name))
 
     def get_appointees_of(self, fired_user: str, store_name: str) -> list[str]:
-        appointments = filter(lambda appointment: appointment.appointed_by == fired_user,
-                              self.appointments.get(store_name))
+        appointments = filter(lambda appointment: appointment.appointed_by == fired_user, self.appointments.get(store_name))
         return list(map(lambda appointment: appointment.appointee, appointments))
 
     def appointees_at(self, session_identifier: int, store_name: str) -> Response[list[str]]:
@@ -123,8 +123,7 @@ class Market(IService):
         appointees = self.bfs(actor.username, store_name)
         appointees.remove(actor.username)
         msg = ', '.join(appointees)
-        r = report_info(self.appointees_at.__qualname__,
-                        f'\'{actor.username}\' appointees at store \'{store_name}\': {msg}')
+        r = report_info(self.appointees_at.__qualname__, f'\'{actor.username}\' appointees at store \'{store_name}\': {msg}')
         return Response(appointees, r.description)
 
     def has_permission_at(self, store_name: str, actor: User, permission: Permission) -> bool:
@@ -140,10 +139,19 @@ class Market(IService):
         appointments: list[Appointment] = self.appointments.get(store_name)
         with self.appointments_lock:
             if self.is_not_appointed_yet(appointment.appointee, store_name):
-                self.appointments.insert(store_name, [appointment]) if appointments is None else appointments.append(
-                    appointment)
+                Appointment.add_record(appointment)
+                self.appointments.insert(store_name, [appointment]) if appointments is None else appointments.append(appointment)
                 return True
             return False
+
+    def add_store(self, store_name: str) -> Store | None:
+        store = Store(store_name)
+        registered_store_with_same_name = self.stores.insert(store_name, store)
+        if registered_store_with_same_name is None:
+            Store.add_record(store)
+            self.stores.insert(store_name, store)
+            return store
+        return None
 
     def is_appointed_by(self, appointee: str, appointed_by: str, store_name: str) -> bool:
         appointment = self.get_appointment_of(appointee, store_name)
@@ -153,14 +161,14 @@ class Market(IService):
         appointment = self.get_appointment_of(appointee, store)
         succeed = appointment is not None
         if succeed:
-            appointment.permissions.add(permission) if action == 'ADD' else appointment.permissions.remove(permission)
+            appointment.add(permission) if action == 'ADD' else appointment.remove(permission)
         return succeed
 
     def is_founder_of(self, username: str, store_name: str) -> bool:
         return self.get_appointment_of(username, store_name).appointed_by is None
 
     def is_store_registered(self, store_name: str) -> bool:
-        return self.stores.get(store_name) is not None
+        return self.find_store(store_name) is not None
 
     def shutdown(self, session_identifier: int) -> Response[bool]:
         actor = self.get_active_user(session_identifier)
@@ -173,25 +181,34 @@ class Market(IService):
         return report_error(self.shutdown.__qualname__, f'{actor} is not allowed to shutdown the market!')
 
     def verify_registered_store(self, calling_method_name: str, store_name: str) -> Response[Store] | Response[bool]:
-        store: Store = self.stores.get(store_name)
+        store: Store = self.find_store(store_name)
         return Response(store) if store is not None \
             else report_error(calling_method_name, f'Store \'{store_name}\' is not registered to the market.')
 
-    def get_user(self, username) -> User | None:
+    def find_user(self, username) -> User | None:
         user = self.users.get(username)
         if user is None:
             user = User.load_user(username)
             if user is not None:
-                self.users.insert(username, user)
+                if self.users.get(username) is None:
+                    self.users.insert(username, user)
         return user
+    
+    def find_store(self, store_name) -> Store | None:
+        store = self.stores.get(store_name)
+        if store is None:
+            store = Store.load_store(store_name)
+            if store is not None:
+                self.stores.insert(store_name, store)
+                self.appointments.insert(store_name, Appointment.load_appointments_of(store_name))
+        return store
 
     def verify_registered_user(self, calling_method_name: str, username: str) -> Response[User] | Response[bool]:
-        user: User = self.get_user(username)
+        user: User = self.find_user(username)
         return Response(user) if user is not None \
             else report_error(calling_method_name, f'User \'{username}\' is not registered to the market.')
 
-    def verify_registered_user_and_store(self, calling_method_name: str, username: str, store_name: str) -> Response[
-        tuple[User, Store] | bool]:
+    def verify_registered_user_and_store(self, calling_method_name: str, username: str, store_name: str) -> Response[tuple[User, Store] | bool]:
         response = self.verify_registered_user(calling_method_name, username)
         if response.success:
             user = response.result
@@ -205,8 +222,7 @@ class Market(IService):
     def get_all_registered_users(self) -> list[str]:
         return self.users.get_all_keys()
 
-    def verify_store_contains_product(self, calling_method_name: str, store_name: str, product_name: str) -> Response[
-        Store | bool]:
+    def verify_store_contains_product(self, calling_method_name: str, store_name: str, product_name: str) -> Response[Store | bool]:
         response = self.verify_registered_store(calling_method_name, store_name)
         if response.success:
             store = response.result
@@ -225,7 +241,10 @@ class Market(IService):
 
     def register(self, session_identifier: int, username: str, encrypted_password: str) -> Response[bool]:
         new_user = User(username, encrypted_password)
-        return new_user.register()
+        r = new_user.register()
+        if r.success:
+            self.users.insert(username, new_user)
+        return r
 
     def register_admin(self, session_identifier: int, username: str, encrypted_password: str) -> Response[bool]:
         admin = User(username, encrypted_password, is_admin=True)
@@ -238,7 +257,7 @@ class Market(IService):
         return User.is_registered(username)
 
     def login(self, session_identifier: int, username: str, encrypted_password: str) -> Response[bool]:
-        next_user = self.get_user(username)
+        next_user = self.find_user(username)
         if next_user is None:
             return report_error(self.login.__qualname__, f'Username: \'{username}\' is not registered')
         if next_user.login(encrypted_password):
@@ -247,7 +266,7 @@ class Market(IService):
                 current_user.logout()
             self.sessions.update(session_identifier, next_user)
             return report_info(self.login.__qualname__, f'{next_user} is logged in')
-        return report_error(self.login.__qualname__, f'{username} failed to login')
+        return report_error(self.login.__qualname__, f'{username} failed to login: Incorrect password.')
 
     def is_logged_in(self, username: str) -> bool:
         return self.is_registered(username) and self.users.get(username).is_logged_in
@@ -259,27 +278,27 @@ class Market(IService):
 
     def open_store(self, session_identifier: int, store_name: str) -> Response[bool]:
         actor = self.get_active_user(session_identifier)
-        store: Store = Store(store_name)
-        registered_store_with_same_name = self.stores.insert(store_name, store)
-        products_of_removed_store = self.removed_store_products.get(store)
-        if products_of_removed_store is not None:
-            for product in products_of_removed_store:
-                store.add(product, self.removed_products_quantity.get(product))
-        if registered_store_with_same_name is None:
+        store = self.find_store(store_name)
+        if store is None:
             if actor.is_member():
-                self.add_appointment(store_name, Appointment(actor.username))
+                store = self.add_store(store_name)
+                self.add_appointment(store_name, Appointment(actor.username, store_name))
+                products_of_removed_store = self.removed_store_products.get(store)
+                if products_of_removed_store is not None:
+                    for product in products_of_removed_store:
+                        store.add(product, self.removed_products_quantity.get(product))
                 return report_info(self.open_store.__qualname__, f'{actor} opened store \'{store_name}\'.')
             else:
-                self.stores.delete(store_name)
                 return report_error(self.open_store.__qualname__, f'{actor} is not allowed to open a store.')
         return report_error(self.open_store.__qualname__, f'Store name \'{store_name}\' is occupied.')
 
     def remove_store(self, session_identifier: int, store_name: str) -> Response[bool]:
         actor = self.get_active_user(session_identifier)
-        store: Store = self.stores.get(store_name)
+        store = self.find_store(store_name)
         if store is not None:
             if actor.is_member() and self.has_permission_at(store_name, actor, Permission.CloseStore):
                 products = store.get_all()
+                Store.delete_record(store_name)
                 self.stores.delete(store_name)
                 self.removed_stores.insert(store_name, store)
                 self.removed_store_products.insert(store, products)
@@ -338,7 +357,7 @@ class Market(IService):
         if store is not None:
             actor = self.get_active_user(session_identifier)
             if self.has_permission_at(store_name, actor, Permission.Add):
-                p = Product(product_name, category, price, keywords)
+                p = Product(product_name, store_name, quantity, category, price, keywords)
                 store.add(p, quantity)
                 return report_info(self.add_product.__qualname__,
                                    f'\'{actor.username}\' add {quantity} units of {p} to store \'{store_name}\'')
@@ -385,7 +404,7 @@ class Market(IService):
 
     def appoint(self, session_identifier: int, calling_method: str, store_name: str, appointee_name: str,
                 required_permission: Permission, permissions: set[Permission],
-                role: {'Store Manager', 'Store Owner'}) -> Response[bool]:
+                role: {'StoreManager', 'StoreOwner'}) -> Response[bool]:
         response = self.verify_registered_user_and_store(calling_method, appointee_name, store_name)
         if response.success:
             appointee, store = response.result
@@ -393,7 +412,7 @@ class Market(IService):
             if not actor.is_member():
                 return report_error(calling_method, f'{appointee} is not allowed to {required_permission.value}.')
             if self.has_permission_at(store_name, actor, required_permission):
-                if self.add_appointment(store_name, Appointment(appointee_name, actor.username, permissions)):
+                if self.add_appointment(store_name, Appointment(appointee_name, store_name, role, actor.username, permissions)):
                     return report_info(calling_method, f'{actor} appointed \'{appointee.username}\' to a {role}.')
                 else:
                     return report_error(calling_method,
@@ -432,11 +451,11 @@ class Market(IService):
 
     def appoint_manager(self, session_identifier: int, appointee_name: str, store_name: str) -> Response[bool]:
         return self.appoint(session_identifier, self.appoint_manager.__qualname__, store_name, appointee_name,
-                            Permission.AppointManager, get_default_manager_permissions(), role='Store Manager')
+                            Permission.AppointManager, get_default_manager_permissions(), role='StoreManager')
 
     def appoint_owner(self, session_identifier: int, appointee_name: str, store_name: str) -> Response[bool]:
         res = self.appoint(session_identifier, self.appoint_owner.__qualname__, store_name, appointee_name,
-                            Permission.AppointOwner, get_default_owner_permissions(), role='Store Owner')
+                            Permission.AppointOwner, get_default_owner_permissions(), role='StoreOwner')
         if res.success:
             store_res = self.verify_registered_store(self.delete_discount.__qualname__, store_name)
             if not store_res.success:
@@ -445,10 +464,7 @@ class Market(IService):
             store.add_owner(appointee_name)
         return res
 
-
-
-    def set_permission(self, session_identifier: int, calling_method: str, store: str, appointee: str,
-                       permission: Permission, action: {'ADD', 'REMOVE'}) -> Response[bool]:
+    def set_permission(self, session_identifier: int, calling_method: str, store: str, appointee: str, permission: Permission, action: {'ADD', 'REMOVE'}) -> Response[bool]:
         actor = self.get_active_user(session_identifier)
         if self.is_appointed_by(appointee, actor.username, store):
             self.set_permissions_of(appointee, store, permission, action)
@@ -653,6 +669,8 @@ class Market(IService):
 
     def clear(self) -> None:
         User.clear_db()
+        Store.clear_db()
+        Appointment.clear_db()
         self.__init__()
 
     def pay(self, price: int, payment_type: str, payment_details: list[str], holder: str, user_id: int):
@@ -673,7 +691,7 @@ class Market(IService):
 
     def add_to_purchase_history(self, baskets: dict[str, Any]) -> None:
         for store_name, basket in baskets.items():
-            self.stores.get(store_name).add_to_purchase_history(basket)
+            self.find_store(store_name).add_to_purchase_history(basket)
 
     def update_user_cart_after_purchase(self, user: User, store_names: list) -> None:
         for store_name in store_names:

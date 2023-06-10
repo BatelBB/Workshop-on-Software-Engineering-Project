@@ -91,7 +91,7 @@ class TestRegisteredUser(unittest.TestCase):
         cart = self.app.show_cart(self.session_id)
         self.assertTrue(not cart.success and cart.result is None, "error: showed cart after exiting the market!")
 
-    # Use Case: Opening a Store
+    # Use Case: Opening a StoreModule
     def test_open_store(self):
         if not self.store_was_set:
             self.set_stores()

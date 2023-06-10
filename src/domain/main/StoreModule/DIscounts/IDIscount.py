@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from domain.main.Store.Product import Product
+from domain.main.StoreModule.Product import Product
 from domain.main.UserModule.Basket import Basket
 
 

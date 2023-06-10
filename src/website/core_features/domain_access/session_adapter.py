@@ -4,7 +4,7 @@ from idlelib.multicall import r
 from typing import Optional, List, Dict, Any, Set, Mapping
 
 from src.domain.main.Market.Permissions import Permission
-from src.domain.main.Store.Store import Store
+from src.domain.main.StoreModule.Store import Store
 from src.domain.main.Utils.Response import Response
 from Service.Session.Session import Session
 from website.core_features.domain_access.session_adapter_dto import ProductDto, BasketDto

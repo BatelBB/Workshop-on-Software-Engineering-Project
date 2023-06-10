@@ -1,9 +1,9 @@
-from src.domain.main.Store.PurchaseRules.BasketRule import BasketRule
-from src.domain.main.Store.PurchaseRules.IRule import IRule
-from src.domain.main.Store.PurchaseRules.RuleCombiner.AndRule import AndRule
-from src.domain.main.Store.PurchaseRules.RuleCombiner.ConditioningRule import ConditioningRule
-from src.domain.main.Store.PurchaseRules.RuleCombiner.OrRule import OrRule
-from src.domain.main.Store.PurchaseRules.SimpleRule import SimpleRule
+from src.domain.main.StoreModule.PurchaseRules.BasketRule import BasketRule
+from src.domain.main.StoreModule.PurchaseRules.IRule import IRule
+from src.domain.main.StoreModule.PurchaseRules.RuleCombiner.AndRule import AndRule
+from src.domain.main.StoreModule.PurchaseRules.RuleCombiner.ConditioningRule import ConditioningRule
+from src.domain.main.StoreModule.PurchaseRules.RuleCombiner.OrRule import OrRule
+from src.domain.main.StoreModule.PurchaseRules.SimpleRule import SimpleRule
 from src.domain.main.Utils.Logger import report_error, report
 from src.domain.main.Utils.Response import Response
 

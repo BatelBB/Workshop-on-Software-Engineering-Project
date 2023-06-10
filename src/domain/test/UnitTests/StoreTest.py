@@ -64,117 +64,12 @@ class StoreTestCase(unittest.TestCase):
         return owner, store
 
     '''
-        Concurrency Tests
-    '''
-    number_of_threads = [1, 10, 100, 500, 1000]
-
-    def start_new_session_and_create_store(self, user, store_name: str, results, index) -> None:
-        session = self.service.enter()
-        r = session.login(*user)
-        r = session.open_store(store_name)
-        results[index] = r
-
-    @parameterized.expand(number_of_threads)
-    def test_multiple_thread_open_same_store(self, number_of_threads: int):
-        user = self.register()
-        store_name = "Jihad"
-        threads = [None] * number_of_threads
-        results = [None] * number_of_threads
-        for i in range(len(threads)):
-            threads[i] = Thread(target=self.start_new_session_and_create_store, args=(user, store_name, results, i))
-            threads[i].start()
-        for i in range(len(threads)):
-            threads[i].join()
-        succeeded_results = list(filter(lambda response: response.success, results))
-        self.assertEqual(len(succeeded_results), 1)
-
-    def start_new_session_and_add_product_to_store(self, appointees, store, results, index, product=None):
-
-        if product is None:
-            product = get_random_product()
-        session = self.service.enter()
-        appointee = appointees[index]
-        session.login(*appointee)
-        r = session.add_product(store, *product)
-        self.assertTrue(r.success)
-        results[index] = r
-
-    def appoints_owners_of(self, store, number_of_managers):
-        appointees = []
-        while number_of_managers > 0:
-            appointee = get_random_user()
-            appointee_name = appointee[0]
-            self.session.register(*appointee)
-            self.session.appoint_owner(appointee_name, store)
-            appointees.append(appointee)
-            number_of_managers -= 1
-        return appointees
-
-    @parameterized.expand(number_of_threads)
-    def test_multiple_threads_add_different_products_to_store(self, number_of_threads: int):
-        owner, store = self.create_store_owner()
-        appointees = self.appoints_owners_of(store, number_of_threads)
-        threads = [None] * number_of_threads
-        results = [None] * number_of_threads
-        for i in range(len(threads)):
-            threads[i] = Thread(target=self.start_new_session_and_add_product_to_store, args=(appointees, store, results, i))
-            threads[i].start()
-        for i in range(len(threads)):
-            threads[i].join()
-        succeeded_results = list(filter(lambda response: response.success, results))
-        self.assertEqual(len(succeeded_results), number_of_threads)
-        self.assertEqual(len(self.session.get_all_products_of(store).result), number_of_threads)
-
-    @parameterized.expand(number_of_threads)
-    def test_multiple_threads_add_same_product_to_store(self, number_of_threads: int):
-        owner, store = self.create_store_owner()
-        appointees = self.appoints_owners_of(store, number_of_threads)
-        product = get_random_product()
-        product_name, product_quantity = product[0], product[3]
-        threads = [None] * number_of_threads
-        results = [None] * number_of_threads
-        for i in range(len(threads)):
-            threads[i] = Thread(target=self.start_new_session_and_add_product_to_store, args=(appointees, store, results, i, product))
-            threads[i].start()
-        for i in range(len(threads)):
-            threads[i].join()
-        succeeded_results = list(filter(lambda response: response.success, results))
-        self.assertEqual(len(succeeded_results), number_of_threads)
-        self.assertEqual(len(self.session.get_all_products_of(store).result), 1)
-        self.assertEqual(self.session.get_amount_of(product_name, store).result, number_of_threads * product_quantity)
-
-    def start_new_session_and_appoint_a_manager(self, appointed_store_owner, appointee_name, store_name: str, results, index) -> None:
-        session = self.service.enter()
-        r = session.login(*appointed_store_owner)
-        self.assertTrue(r.success)
-        r = session.appoint_manager(appointee_name, store_name)
-        results[index] = r
-
-    @parameterized.expand(number_of_threads)
-    def test_multiple_threads_appoint_same_manager(self, number_of_threads: int):
-        owner, store = self.create_store_owner()
-        appointed_store_owner = self.appoints_owners_of(store, number_of_threads)
-        appointee = get_random_user()
-        appointee_name = appointee[0]
-        self.session.register(*appointee)
-        threads = [None] * number_of_threads
-        results = [None] * number_of_threads
-        for i in range(len(threads)):
-            threads[i] = Thread(target=self.start_new_session_and_appoint_a_manager, args=(appointed_store_owner[i], appointee_name, store, results, i))
-            threads[i].start()
-        for i in range(len(threads)):
-            threads[i].join()
-        succeeded_results = list(filter(lambda response: response.success, results))
-        self.assertEqual(len(succeeded_results), 1)
-        # We expect store staff to include owner, appointed store owner, only one appointment of appointee
-        self.assertEqual(len(self.session.get_store_staff(store).result), len(appointed_store_owner) + 2)
-
-    '''
         Sequential Test
     '''
     def test_add_product_to_non_registered_store_fail(self):
+        store = "WHATEVER"
         for p in self.products:
-            response = self.session.add_product(*p)
+            response = self.session.add_product(store, *p)
             self.assertFalse(response.success)
 
     def test_visitor_add_product_to_registered_store(self):

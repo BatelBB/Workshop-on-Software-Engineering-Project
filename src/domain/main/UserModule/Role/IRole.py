@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
-from src.domain.main.Store.Product import Product
-from src.domain.main.Store.Store import Store
+from src.domain.main.StoreModule.Product import Product
+from src.domain.main.StoreModule.Store import Store
 from src.domain.main.Utils.Response import Response
 
 
@@ -27,10 +27,6 @@ class IRole(ABC):
 
     @abstractmethod
     def is_member(self) -> bool:
-        ...
-
-    @abstractmethod
-    def is_admin(self) -> bool:
         ...
 
     @abstractmethod
