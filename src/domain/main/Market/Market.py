@@ -872,6 +872,7 @@ class Market(IService):
                 owners_list_res = self.get_store_owners(session_id, store_name)
                 if not owners_list_res.success:
                     return owners_list_res
+
                 approval = OwnersApproval(owners_list_res.result, actor.username)
                 policy = BidPolicy(approval)
                 return store.add_product_to_bid_purchase_policy(product_name, policy)
@@ -1095,7 +1096,6 @@ class Market(IService):
         return store.delete_discount(index)
 
     def get_store_owners(self, session_id: int, store_name: str) -> Response[bool] | Response[list[str]]:
-        #TODO: add founer also for Owner_Approval
         actor = self.get_active_user(session_id)
         res = self.get_store_staff(session_id, store_name)
         if not res.success:
