@@ -3,14 +3,14 @@ import threading
 from multipledispatch import dispatch
 from sqlalchemy import Column, String
 
-from domain.main.StoreModule.DIscounts.Discount_Connectors.AddDiscounts import AddDiscounts
-from domain.main.StoreModule.DIscounts.Discount_Connectors.MaxDiscounts import MaxDiscounts
-from domain.main.StoreModule.DIscounts.Discount_Connectors.OrDiscounts import OrDiscounts
-from domain.main.StoreModule.DIscounts.Discount_Connectors.XorDiscounts import XorDiscounts
-from domain.main.StoreModule.DIscounts.IDIscount import IDiscount
-from domain.main.StoreModule.DIscounts.SimpleDiscount import SimpleDiscount
-from domain.main.Utils import Base_db
-from domain.main.Utils.Base_db import session_DB
+from src.domain.main.StoreModule.DIscounts.Discount_Connectors.AddDiscounts import AddDiscounts
+from src.domain.main.StoreModule.DIscounts.Discount_Connectors.MaxDiscounts import MaxDiscounts
+from src.domain.main.StoreModule.DIscounts.Discount_Connectors.OrDiscounts import OrDiscounts
+from src.domain.main.StoreModule.DIscounts.Discount_Connectors.XorDiscounts import XorDiscounts
+from src.domain.main.StoreModule.DIscounts.IDIscount import IDiscount
+from src.domain.main.StoreModule.DIscounts.SimpleDiscount import SimpleDiscount
+from src.domain.main.Utils import Base_db
+from src.domain.main.Utils.Base_db import session_DB
 from src.domain.main.ExternalServices.Payment.PaymentServices import IPaymentService
 from src.domain.main.ExternalServices.Provision.ProvisionServiceAdapter import IProvisionService, provisionService
 from src.domain.main.StoreModule.Product import Product
@@ -323,11 +323,8 @@ class Store(Base_db.Base):
             r = session_DB.query(Store).filter(Store.name == self.name).first()
             r.purchase_history_str = '#'.join(self.purchase_history)
 
-    def get_purchase_history(self) -> str:
-        output = "Purchase history:\n"
-        for item in self.purchase_history:
-            output += f'{item}\n'
-        return output
+    def get_purchase_history(self) -> list[str]:
+        return self.purchase_history
 
     def add_product_to_special_purchase_policy(self, product_name: str, p_policy: IPurchasePolicy) -> Response[bool]:
         if not self.reserve(product_name, 1):

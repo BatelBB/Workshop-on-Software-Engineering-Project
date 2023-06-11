@@ -171,7 +171,7 @@ class Session:
         return self.apply(self.service.change_product_category, self.identifier, store_name, old_product_name, category)
 
     def get_store_purchase_history(self, store_name: str) -> Response[str]:
-        return self.apply(self.service.get_store_purchase_history, store_name)
+        return self.apply(self.service.get_store_purchase_history,self.identifier, store_name)
 
     def purchase_with_non_immediate_policy(self, store_name: str, product_name: str,
                                            payment_method: str, payment_details: list[str], address: str,

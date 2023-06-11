@@ -3,35 +3,35 @@ import sys
 import threading
 from functools import reduce
 from typing import Any
+
 from multipledispatch import dispatch
 from sqlalchemy import inspect
 
-from src.domain.main.Utils.Response import Response
-from src.domain.main.UserModule.Basket import Item
-from src.domain.main.Utils.Base_db import Base, engine, session_DB
-from src.domain.main.StoreModule.PurchaseRules.IRule import IRule
+from Service.IService.IService import IService
+from Service.Session.Session import Session
 from src.domain.main.ExternalServices.Payment.PaymentFactory import PaymentFactory
 from src.domain.main.ExternalServices.Payment.PaymentServices import IPaymentService
 from src.domain.main.ExternalServices.Provision.ProvisionServiceAdapter import provisionService, IProvisionService
+from src.domain.main.Market.Appointment import Appointment
 from src.domain.main.Market.Permissions import Permission, get_default_manager_permissions, \
     get_default_owner_permissions, \
     get_permission_description
-from Service.IService.IService import IService
 from src.domain.main.StoreModule.Product import Product
 from src.domain.main.StoreModule.PurchasePolicy.AuctionPolicy import AuctionPolicy
 from src.domain.main.StoreModule.PurchasePolicy.BidPolicy import BidPolicy
 from src.domain.main.StoreModule.PurchasePolicy.LotteryPolicy import LotteryPolicy
 from src.domain.main.StoreModule.PurchasePolicy.PurchasePolicyFactory import PurchasePolicyFactory
 from src.domain.main.StoreModule.PurchaseRules import PurchaseRulesFactory
-from src.domain.main.UserModule.User import User
+from src.domain.main.StoreModule.PurchaseRules.IRule import IRule
 from src.domain.main.StoreModule.Store import Store
+from src.domain.main.UserModule.Basket import Item
 from src.domain.main.UserModule.Cart import Cart
 from src.domain.main.UserModule.Role.Admin import Admin
-from src.domain.main.Market.Appointment import Appointment
+from src.domain.main.UserModule.User import User
+from src.domain.main.Utils.Base_db import Base, engine
 from src.domain.main.Utils.ConcurrentDictionary import ConcurrentDictionary
 from src.domain.main.Utils.Logger import Logger, report_error, report_info
 from src.domain.main.Utils.Response import Response
-from Service.Session.Session import Session
 
 
 class Market(IService):
@@ -758,17 +758,16 @@ class Market(IService):
         else:
             return response
 
-    def get_store_purchase_history(self, session_id: int, store_name: str = "") -> Response[bool]:
+    def get_store_purchase_history(self, session_id: int, store_name: str) -> list[str] | Response[bool]:
         response = self.verify_registered_store(self.get_store_purchase_history.__qualname__, store_name)
         if response.success:
             actor = self.get_active_user(session_id)
             store = response.result
             if self.has_permission_at(store_name, actor, Permission.RetrievePurchaseHistory):
-                return report_info(self.get_store_purchase_history.__qualname__,
-                                   f'{actor} retrieved store \'{store_name}\' purchase history:\n{store.get_purchase_history()}')
+                return store.get_purchase_history()
             return self.report_no_permission(self.get_store_purchase_history.__qualname__, actor, store_name,
                                              Permission.RetrievePurchaseHistory)
-        return response
+        return report_error(self.get_store_purchase_history.__qualname__, response.description)
 
     def purchase_with_non_immediate_policy(self, session_identifier: int, store_name: str, product_name: str,
                                            payment_method: str, payment_details: list[str], address: str,
