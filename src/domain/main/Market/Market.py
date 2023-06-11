@@ -6,6 +6,7 @@ from typing import Any
 from multipledispatch import dispatch
 from sqlalchemy import inspect
 
+from domain.main.Utils.OwnersApproval import OwnersApproval
 from src.domain.main.Utils.Response import Response
 from src.domain.main.UserModule.Basket import Item
 from src.domain.main.Utils.Base_db import Base, engine, session_DB
@@ -471,9 +472,9 @@ class Market(IService):
         res = self.appoint(session_identifier, self.appoint_owner.__qualname__, store_name, appointee_name,
                             Permission.AppointOwner, get_default_owner_permissions(), role='StoreOwner')
         if res.success:
-            store_res = self.verify_registered_store(self.delete_discount.__qualname__, store_name)
+            store_res = self.verify_registered_store(self.appoint_owner.__qualname__, store_name)
             if not store_res.success:
-                return report_error(self.delete_discount.__qualname__, "invalid store")
+                return report_error(self.appoint_owner.__qualname__, "invalid store")
             store = store_res.result
             store.add_owner(appointee_name)
         return res
@@ -827,8 +828,12 @@ class Market(IService):
             store = response.result
             actor = self.get_active_user(session_id)
             if self.has_permission_at(store_name, actor, Permission.StartBid):
-                policy = BidPolicy()
-                return store.add_product_to_bid_purchase_policy(product_name, policy, self.get_store_owners(session_id, store_name).result)
+                owners_list_res = self.get_store_owners(session_id, store_name)
+                if not owners_list_res.success:
+                    return owners_list_res
+                approval = OwnersApproval(owners_list_res.result, actor.username)
+                policy = BidPolicy(approval)
+                return store.add_product_to_bid_purchase_policy(product_name, policy)
             return self.report_no_permission(self.start_bid.__qualname__, actor, store_name, Permission.StartBid)
         return response
 
