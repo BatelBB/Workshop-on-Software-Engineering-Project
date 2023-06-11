@@ -31,7 +31,7 @@ class RobustnessTest(unittest.TestCase):
     def setUp(self) -> None:
         # Note: each test create a new, fresh market with a unique session identifier
         # self.market = Market()
-        self.service: Market = Market()
+        self.service: IService = Market()
         self.session = self.service.enter()
         self.service_admin = ('Kfir', 'Kfir')
         self.session.login(*self.service_admin)

@@ -51,6 +51,7 @@ class Market(IService):
         self.store_activity_status: ConcurrentDictionary[str, str] = ConcurrentDictionary()
         self.package_counter = 0
         self.appointments_lock = threading.RLock()
+        self.approval_lock = threading.RLock()
         self.approval_list: ConcurrentDictionary[str,ConcurrentDictionary[str, OwnersApproval]] = ConcurrentDictionary()
 
         self.init_db()
@@ -480,6 +481,10 @@ class Market(IService):
                 return report_error(self.add_owner.__qualname__, "invalid store")
             store = store_res.result
             store.add_owner(appointee_name)
+
+            store_dict = self.approval_list.get(store_name)
+            for name in store_dict.get_all_keys():
+                store_dict.get(name).add_owner(appointee_name)
         return res
 
     def approve_owner(self, session_identifier: int, appointee_name: str, store_name: str) -> Response[bool]:
@@ -569,6 +574,7 @@ class Market(IService):
         return successors
 
     def remove_appointment(self, session_identifier: int, fired_appointee: str, store_name: str) -> Response[bool]:
+        # TODO: add remove_owner() call from approval lists for relevat store
         actor = self.get_active_user(session_identifier)
         if self.is_appointed_by(fired_appointee, actor.username, store_name):
             fired_appointee_successors = self.bfs(fired_appointee, store_name)
