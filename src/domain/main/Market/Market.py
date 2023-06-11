@@ -631,8 +631,18 @@ class Market(IService):
         report_info(self.show_cart.__qualname__, r.description)
         return r
 
+    def update_item_prices(self, actor: User):
+        baskets = actor.get_baskets()
+        for store_name, basket in baskets.items():
+            response = self.verify_registered_store(self.purchase_shopping_cart.__qualname__, store_name)
+            if not response.success:
+                return response
+            store = response.result
+            store.calculate_basket_price(basket)
+
     def get_cart(self, session_identifier: int) -> Response[Cart]:
         actor = self.get_active_user(session_identifier)
+        self.update_item_prices(actor)
         r = report_info(self.get_cart.__qualname__, f'Cart of {actor}\n{actor.cart}')
         return Response(actor.cart, r.description)
 
