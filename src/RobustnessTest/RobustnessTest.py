@@ -30,7 +30,8 @@ class RobustnessTest(unittest.TestCase):
 
     def setUp(self) -> None:
         # Note: each test create a new, fresh market with a unique session identifier
-        self.service: IService = Market()
+        # self.market = Market()
+        self.service: Market = Market()
         self.session = self.service.enter()
         self.service_admin = ('Kfir', 'Kfir')
         self.session.login(*self.service_admin)
@@ -43,7 +44,7 @@ class RobustnessTest(unittest.TestCase):
 
     def register(self, i=0) -> tuple:
         user = self.users[i]
-        self.assertTrue(self.session.register(*user).success)
+        self.assertTrue(self.session.register(*user).success, f'{user[0]} failed register')
         return user
 
     def login(self, i=0) -> tuple:

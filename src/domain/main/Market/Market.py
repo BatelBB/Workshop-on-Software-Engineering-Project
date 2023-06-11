@@ -51,6 +51,8 @@ class Market(IService):
         self.store_activity_status: ConcurrentDictionary[str, str] = ConcurrentDictionary()
         self.package_counter = 0
         self.appointments_lock = threading.RLock()
+        self.approval_list: ConcurrentDictionary[str,ConcurrentDictionary[str, OwnersApproval]] = ConcurrentDictionary()
+
         self.init_db()
         self.init_admin()
 
@@ -468,16 +470,55 @@ class Market(IService):
         return self.appoint(session_identifier, self.appoint_manager.__qualname__, store_name, appointee_name,
                             Permission.AppointManager, get_default_manager_permissions(), role='StoreManager')
 
-    def appoint_owner(self, session_identifier: int, appointee_name: str, store_name: str) -> Response[bool]:
-        res = self.appoint(session_identifier, self.appoint_owner.__qualname__, store_name, appointee_name,
-                            Permission.AppointOwner, get_default_owner_permissions(), role='StoreOwner')
+    # only call from self.approve_owner or self.appoint_owner
+    def add_owner(self, session_identifier: int, appointee_name: str, store_name: str) -> Response:
+        res = self.appoint(session_identifier, self.add_owner.__qualname__, store_name, appointee_name,
+                           Permission.AppointOwner, get_default_owner_permissions(), role='StoreOwner')
         if res.success:
-            store_res = self.verify_registered_store(self.appoint_owner.__qualname__, store_name)
+            store_res = self.verify_registered_store(self.add_owner.__qualname__, store_name)
             if not store_res.success:
-                return report_error(self.appoint_owner.__qualname__, "invalid store")
+                return report_error(self.add_owner.__qualname__, "invalid store")
             store = store_res.result
             store.add_owner(appointee_name)
         return res
+
+    def approve_owner(self, session_identifier: int, appointee_name: str, store_name: str) -> Response[bool]:
+        actor = self.get_active_user(session_identifier)
+        store_dict = self.approval_list.get(store_name)
+        if store_dict is None:
+            return report_error(self.approve_owner.__qualname__, "approval doesnt exist")
+        approval = store_dict.get(appointee_name)
+        if approval is None:
+            return report_error(self.approve_owner.__qualname__, "approval doesnt exist")
+
+        approval_res = approval.approve(actor.username)
+        if not approval_res.result:
+            return report_info(self.approve_owner.__qualname__, f"{actor.username} approved")
+
+        store_dict.delete(appointee_name)
+        return self.add_owner(session_identifier, appointee_name, store_name)
+
+    def appoint_owner(self, session_identifier: int, appointee_name: str, store_name: str) -> Response[bool]:
+        actor = self.get_active_user(session_identifier)
+        perms = self.permissions_of(session_identifier, store_name, actor.username)
+
+        if Permission.AppointOwner not in perms:
+            return report_error(self.appoint_owner.__qualname__, f"{actor.username} does not have permissions to appoint owner")
+
+        store = self.verify_registered_store(self.appoint_owner.__qualname__, store_name)
+        if not store.success:
+            return store
+
+        self.approval_list.insert(store_name, ConcurrentDictionary())
+        approval = OwnersApproval(self.get_store_owners(session_identifier, store_name).result,
+                                                                 actor.username)
+        self.approval_list.get(store_name).insert(appointee_name, approval)
+
+        if approval.is_approved():
+            return self.add_owner(session_identifier, appointee_name, store_name)
+
+        return report_info(self.appoint_owner.__qualname__, f"approval process beggins for ownership for {appointee_name} of {store_name}")
+
 
     def set_permission(self, session_identifier: int, calling_method: str, store: str, appointee: str, permission: Permission, action: {'ADD', 'REMOVE'}) -> Response[bool]:
         actor = self.get_active_user(session_identifier)
@@ -673,7 +714,7 @@ class Market(IService):
     def update_item_prices(self, actor: User):
         baskets = actor.get_baskets()
         for store_name, basket in baskets.items():
-            response = self.verify_registered_store(self.purchase_shopping_cart.__qualname__, store_name)
+            response = self.verify_registered_store(self.update_item_prices.__qualname__, store_name)
             if not response.success:
                 return response
             store = response.result
@@ -896,6 +937,7 @@ class Market(IService):
             return store.apply_purchase_policy(payment_service, product_name, delivery_service, how_much)
         return response
 
+    "store" "product" "category"
 
     def add_simple_discount(self, session_id: int, store_name: str, discount_type: str, discount_percent: int,
                             discount_for_name: str = None,
@@ -1053,6 +1095,7 @@ class Market(IService):
         return store.delete_discount(index)
 
     def get_store_owners(self, session_id: int, store_name: str) -> Response[bool] | Response[list[str]]:
+        #TODO: add founer also for Owner_Approval
         actor = self.get_active_user(session_id)
         res = self.get_store_staff(session_id, store_name)
         if not res.success:
@@ -1089,3 +1132,18 @@ class Market(IService):
                 managers.append(p)
 
         return Response(managers, "list of managers")
+
+
+    ### only for testing purposes:
+    def approve_as_owner_immediatly(self, session_id, store_name, appointee_name):
+        store_dict = self.approval_list.get(store_name)
+        approval = store_dict.get(appointee_name)
+        for person in approval.to_approve.keys():
+            approval.approve(person)
+        self.add_owner(session_id, appointee_name, store_name)
+
+    def get_active_session_id(self, username):
+        for sess_id in self.sessions.get_all_keys():
+            if self.sessions.get(sess_id).username == username:
+                return sess_id
+        return None

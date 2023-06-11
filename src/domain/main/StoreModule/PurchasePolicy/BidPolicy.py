@@ -33,8 +33,13 @@ class BidPolicy(IPurchasePolicy):
         res = self.approval.approve(person)
         if not res.result:
             return res
-        self.payment_service.pay(self.highest_bid)
-        self.delivery_service.getDelivery()
+        # TODO: send notification to user in case of faliure
+        payment_succeeded = self.payment_service.pay(self.price)
+        if not payment_succeeded:
+            return report_error(self.approve.__qualname__, 'failed payment')
+        if not self.delivery_service.getDelivery():
+            self.payment_service.refund(self.price)
+            return report_error(self.approve.__qualname__, 'failed delivery')
 
         return report("bid ended", True)
 

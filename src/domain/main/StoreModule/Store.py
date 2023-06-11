@@ -384,7 +384,11 @@ class Store(Base_db.Base):
         if product_name not in self.products_with_bid_purchase_policy.keys():
             return report_error("approve_bid", f"{product_name} not in bidding policy")
 
-        return self.products_with_bid_purchase_policy[product_name].approve(person)
+        res = self.products_with_bid_purchase_policy[product_name].approve(person)
+        if res.success:
+            if res.result:
+                self.products_with_bid_purchase_policy.pop(product_name)
+        return res
 
     def add_purchase_rule(self, rule: IRule) -> Response:
         with self.purchase_rule_lock:

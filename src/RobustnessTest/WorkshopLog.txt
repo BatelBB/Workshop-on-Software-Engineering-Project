@@ -1,0 +1,182 @@
+11/06/2023 16:07:52 INFO:	 Visitor.register: 'Kfir' is registered!
+11/06/2023 16:07:52 INFO:	 Session: 1768373403835260946 has been initialized
+11/06/2023 16:07:53 INFO:	 Market.login: Admin 'Kfir' is logged in
+11/06/2023 16:07:53 INFO:	 Visitor.register: 'A' is registered!
+11/06/2023 16:07:54 INFO:	 Session: 7346841310794826098 has been initialized
+11/06/2023 16:07:54 INFO:	 Market.login: Member 'A' is logged in
+11/06/2023 16:07:54 INFO:	 Market.open_store: Member 'A' opened store 'Jihad'.
+11/06/2023 16:07:55 INFO:	 Session: 8030313152571609233 has been initialized
+11/06/2023 16:07:55 INFO:	 Market.login: Admin 'Kfir' is logged in
+11/06/2023 16:07:55 WARNING:	 Market is closed!
+11/06/2023 16:07:55 WARNING:	 Logger thread exits!
+11/06/2023 16:20:52 INFO:	 Visitor.register: 'Kfir' is registered!
+11/06/2023 16:20:53 INFO:	 Session: 1823595131551446664 has been initialized
+11/06/2023 16:20:53 INFO:	 Market.login: Admin 'Kfir' is logged in
+11/06/2023 16:20:54 INFO:	 Visitor.register: 'A' is registered!
+11/06/2023 16:20:54 INFO:	 Session: 5784543584299459368 has been initialized
+11/06/2023 16:20:55 INFO:	 Market.login: Member 'A' is logged in
+11/06/2023 16:20:55 INFO:	 Market.open_store: Member 'A' opened store 'Jihad'.
+11/06/2023 16:20:55 INFO:	 Session: 1634331681986140093 has been initialized
+11/06/2023 16:20:56 INFO:	 Market.login: Admin 'Kfir' is logged in
+11/06/2023 16:20:56 WARNING:	 Market is closed!
+11/06/2023 16:20:56 WARNING:	 Logger thread exits!
+11/06/2023 16:21:56 ERROR:	 Visitor.register: Username: 'Kfir' is occupied
+11/06/2023 16:21:57 INFO:	 Session: 1812910964993765543 has been initialized
+11/06/2023 16:21:58 INFO:	 Market.login: Admin 'Kfir' is logged in
+11/06/2023 16:21:58 ERROR:	 Visitor.register: Username: 'A' is occupied
+11/06/2023 16:21:59 INFO:	 Session: 7418173628677577503 has been initialized
+11/06/2023 16:21:59 INFO:	 Market.login: Admin 'Kfir' is logged in
+11/06/2023 16:21:59 WARNING:	 Market is closed!
+11/06/2023 16:21:59 WARNING:	 Logger thread exits!
+11/06/2023 16:23:16 ERROR:	 Visitor.register: Username: 'Kfir' is occupied
+11/06/2023 16:23:17 INFO:	 Session: 8390170102254523664 has been initialized
+11/06/2023 16:23:18 INFO:	 Market.login: Admin 'Kfir' is logged in
+11/06/2023 16:23:45 INFO:	 Visitor.register: 'A' is registered!
+11/06/2023 16:23:50 INFO:	 Session: 7809708314233011454 has been initialized
+11/06/2023 16:23:51 INFO:	 Market.login: Member 'A' is logged in
+11/06/2023 16:23:51 INFO:	 Market.open_store: Member 'A' opened store 'Jihad'.
+11/06/2023 16:23:51 INFO:	 Session: 5583642881031552443 has been initialized
+11/06/2023 16:23:52 INFO:	 Market.login: Admin 'Kfir' is logged in
+11/06/2023 16:23:52 WARNING:	 Market is closed!
+11/06/2023 16:23:52 WARNING:	 Logger thread exits!
+11/06/2023 16:24:28 ERROR:	 Visitor.register: Username: 'Kfir' is occupied
+11/06/2023 16:24:28 INFO:	 Session: 2356381555504924152 has been initialized
+11/06/2023 16:24:29 INFO:	 Market.login: Admin 'Kfir' is logged in
+11/06/2023 16:24:30 INFO:	 Visitor.register: 'A' is registered!
+11/06/2023 16:24:30 INFO:	 Session: 4083178237161595048 has been initialized
+11/06/2023 16:24:31 INFO:	 Market.login: Member 'A' is logged in
+11/06/2023 16:24:31 INFO:	 Market.open_store: Member 'A' opened store 'Jihad'.
+11/06/2023 16:24:31 INFO:	 Session: 1062281657857851698 has been initialized
+11/06/2023 16:24:32 INFO:	 Market.login: Admin 'Kfir' is logged in
+11/06/2023 16:24:32 WARNING:	 Market is closed!
+11/06/2023 16:24:32 WARNING:	 Logger thread exits!
+11/06/2023 16:29:22 ERROR:	 Visitor.register: Username: 'Kfir' is occupied
+11/06/2023 16:29:22 INFO:	 Session: 2743325901829373153 has been initialized
+11/06/2023 16:29:23 INFO:	 Market.login: Admin 'Kfir' is logged in
+11/06/2023 16:29:23 INFO:	 Visitor.register: 'A' is registered!
+11/06/2023 16:29:24 INFO:	 Session: 4025095664829545237 has been initialized
+11/06/2023 16:29:24 INFO:	 Market.login: Member 'A' is logged in
+11/06/2023 16:29:24 INFO:	 Market.open_store: Member 'A' opened store 'Jihad'.
+11/06/2023 16:29:25 INFO:	 Session: 5199590991364011042 has been initialized
+11/06/2023 16:29:25 INFO:	 Market.login: Admin 'Kfir' is logged in
+11/06/2023 16:29:25 WARNING:	 Market is closed!
+11/06/2023 16:29:25 WARNING:	 Logger thread exits!
+11/06/2023 16:31:48 ERROR:	 Visitor.register: Username: 'Kfir' is occupied
+11/06/2023 16:31:49 INFO:	 Session: 5260081096469173177 has been initialized
+11/06/2023 16:31:50 INFO:	 Market.login: Admin 'Kfir' is logged in
+11/06/2023 16:31:50 ERROR:	 Visitor.register: Username: 'A' is occupied
+11/06/2023 16:31:51 INFO:	 Session: 1032427213552550894 has been initialized
+11/06/2023 16:31:51 INFO:	 Market.login: Admin 'Kfir' is logged in
+11/06/2023 16:31:51 WARNING:	 Market is closed!
+11/06/2023 16:31:51 WARNING:	 Logger thread exits!
+11/06/2023 16:50:53 ERROR:	 Visitor.register: Username: 'Kfir' is occupied
+11/06/2023 16:50:54 INFO:	 Session: 2807792243555799563 has been initialized
+11/06/2023 16:50:54 INFO:	 Market.login: Admin 'Kfir' is logged in
+11/06/2023 16:50:55 ERROR:	 Visitor.register: Username: 'A' is occupied
+11/06/2023 16:50:55 INFO:	 Session: 1777588071786449062 has been initialized
+11/06/2023 16:50:56 INFO:	 Market.login: Admin 'Kfir' is logged in
+11/06/2023 16:50:56 WARNING:	 Market is closed!
+11/06/2023 16:50:56 WARNING:	 Logger thread exits!
+11/06/2023 17:00:13 ERROR:	 Visitor.register: Username: 'Kfir' is occupied
+11/06/2023 17:00:13 INFO:	 Session: 605501297659924584 has been initialized
+11/06/2023 17:00:14 INFO:	 Market.login: Admin 'Kfir' is logged in
+11/06/2023 17:00:14 ERROR:	 Visitor.register: Username: 'A' is occupied
+11/06/2023 17:00:15 INFO:	 Session: 6182648121679313273 has been initialized
+11/06/2023 17:00:15 INFO:	 Market.login: Admin 'Kfir' is logged in
+11/06/2023 17:00:15 WARNING:	 Market is closed!
+11/06/2023 17:00:15 WARNING:	 Logger thread exits!
+11/06/2023 17:01:03 INFO:	 Visitor.register: 'Kfir' is registered!
+11/06/2023 17:01:04 INFO:	 Session: 455883170720057741 has been initialized
+11/06/2023 17:01:05 INFO:	 Market.login: Admin 'Kfir' is logged in
+11/06/2023 17:01:05 INFO:	 Visitor.register: 'A' is registered!
+11/06/2023 17:01:06 INFO:	 Session: 4355094104017038008 has been initialized
+11/06/2023 17:01:06 INFO:	 Market.login: Member 'A' is logged in
+11/06/2023 17:01:06 INFO:	 Market.open_store: Member 'A' opened store 'Jihad'.
+11/06/2023 17:01:07 INFO:	 Session: 8582404041727752215 has been initialized
+11/06/2023 17:01:07 INFO:	 Market.login: Admin 'Kfir' is logged in
+11/06/2023 17:01:07 WARNING:	 Market is closed!
+11/06/2023 17:01:07 WARNING:	 Logger thread exits!
+11/06/2023 17:02:44 INFO:	 Visitor.register: 'Kfir' is registered!
+11/06/2023 17:02:44 INFO:	 Session: 8977310176852704013 has been initialized
+11/06/2023 17:02:45 INFO:	 Market.login: Admin 'Kfir' is logged in
+11/06/2023 17:02:46 ERROR:	 Visitor.register: Username: 'A' is occupied
+11/06/2023 17:02:46 INFO:	 Session: 6260266060795864361 has been initialized
+11/06/2023 17:02:46 INFO:	 Market.login: Admin 'Kfir' is logged in
+11/06/2023 17:02:46 WARNING:	 Market is closed!
+11/06/2023 17:02:46 WARNING:	 Logger thread exits!
+11/06/2023 17:04:35 ERROR:	 Visitor.register: Username: 'Kfir' is occupied
+11/06/2023 17:04:36 INFO:	 Session: 2872702493692642911 has been initialized
+11/06/2023 17:04:37 INFO:	 Market.login: Admin 'Kfir' is logged in
+11/06/2023 17:04:40 ERROR:	 Visitor.register: Username: 'A' is occupied
+11/06/2023 17:04:48 INFO:	 Session: 6946299242215933441 has been initialized
+11/06/2023 17:04:48 INFO:	 Market.login: Admin 'Kfir' is logged in
+11/06/2023 17:04:48 WARNING:	 Market is closed!
+11/06/2023 17:04:48 WARNING:	 Logger thread exits!
+11/06/2023 17:04:53 ERROR:	 Visitor.register: Username: 'Kfir' is occupied
+11/06/2023 17:04:54 INFO:	 Session: 897550495265998641 has been initialized
+11/06/2023 17:04:55 INFO:	 Market.login: Admin 'Kfir' is logged in
+11/06/2023 17:05:17 INFO:	 Visitor.register: 'A' is registered!
+11/06/2023 17:05:51 INFO:	 Session: 1229662432504088348 has been initialized
+11/06/2023 17:05:52 INFO:	 Market.login: Member 'A' is logged in
+11/06/2023 17:05:52 INFO:	 Market.open_store: Member 'A' opened store 'Jihad'.
+11/06/2023 17:05:52 INFO:	 Session: 6065416855689866775 has been initialized
+11/06/2023 17:05:53 INFO:	 Market.login: Admin 'Kfir' is logged in
+11/06/2023 17:05:53 WARNING:	 Market is closed!
+11/06/2023 17:05:53 WARNING:	 Logger thread exits!
+11/06/2023 17:07:45 ERROR:	 Visitor.register: Username: 'Kfir' is occupied
+11/06/2023 17:07:45 INFO:	 Session: 2125176154725108600 has been initialized
+11/06/2023 17:07:46 INFO:	 Market.login: Admin 'Kfir' is logged in
+11/06/2023 17:07:47 ERROR:	 Visitor.register: Username: 'A' is occupied
+11/06/2023 17:07:47 INFO:	 Session: 4261700974240912574 has been initialized
+11/06/2023 17:07:47 INFO:	 Market.login: Admin 'Kfir' is logged in
+11/06/2023 17:07:47 WARNING:	 Market is closed!
+11/06/2023 17:07:47 WARNING:	 Logger thread exits!
+11/06/2023 17:08:58 ERROR:	 Visitor.register: Username: 'Kfir' is occupied
+11/06/2023 17:08:59 INFO:	 Session: 7345445020179911785 has been initialized
+11/06/2023 17:09:00 INFO:	 Market.login: Admin 'Kfir' is logged in
+11/06/2023 17:09:00 INFO:	 Visitor.register: 'A' is registered!
+11/06/2023 17:09:01 INFO:	 Session: 1940153263407147484 has been initialized
+11/06/2023 17:09:01 INFO:	 Market.login: Member 'A' is logged in
+11/06/2023 17:09:01 INFO:	 Market.open_store: Member 'A' opened store 'Jihad'.
+11/06/2023 17:09:02 INFO:	 Session: 453215859133484041 has been initialized
+11/06/2023 17:09:02 INFO:	 Market.login: Admin 'Kfir' is logged in
+11/06/2023 17:09:02 WARNING:	 Market is closed!
+11/06/2023 17:09:02 WARNING:	 Logger thread exits!
+11/06/2023 17:10:05 ERROR:	 Visitor.register: Username: 'Kfir' is occupied
+11/06/2023 17:10:06 INFO:	 Session: 3034639002340663418 has been initialized
+11/06/2023 17:10:07 INFO:	 Market.login: Admin 'Kfir' is logged in
+11/06/2023 17:10:07 INFO:	 Visitor.register: 'A' is registered!
+11/06/2023 17:10:08 INFO:	 Session: 2414964621078739816 has been initialized
+11/06/2023 17:10:08 INFO:	 Market.login: Member 'A' is logged in
+11/06/2023 17:10:08 INFO:	 Market.open_store: Member 'A' opened store 'Jihad'.
+11/06/2023 17:10:09 INFO:	 Session: 6828347995726597628 has been initialized
+11/06/2023 17:10:09 INFO:	 Market.login: Admin 'Kfir' is logged in
+11/06/2023 17:10:09 WARNING:	 Market is closed!
+11/06/2023 17:10:09 WARNING:	 Logger thread exits!
+11/06/2023 17:13:38 ERROR:	 Visitor.register: Username: 'Kfir' is occupied
+11/06/2023 17:13:39 INFO:	 Session: 2787697843400716299 has been initialized
+11/06/2023 17:13:40 INFO:	 Market.login: Admin 'Kfir' is logged in
+11/06/2023 17:13:40 ERROR:	 Visitor.register: Username: 'A' is occupied
+11/06/2023 17:13:41 INFO:	 Session: 70581545972619654 has been initialized
+11/06/2023 17:13:41 INFO:	 Market.login: Admin 'Kfir' is logged in
+11/06/2023 17:13:41 WARNING:	 Market is closed!
+11/06/2023 17:13:41 WARNING:	 Logger thread exits!
+11/06/2023 17:30:55 ERROR:	 Visitor.register: Username: 'Kfir' is occupied
+11/06/2023 17:30:55 INFO:	 Session: 8004326334132899513 has been initialized
+11/06/2023 17:30:56 INFO:	 Market.login: Admin 'Kfir' is logged in
+11/06/2023 17:30:56 INFO:	 Visitor.register: 'A' is registered!
+11/06/2023 17:30:57 INFO:	 Session: 5183544169594698199 has been initialized
+11/06/2023 17:30:57 INFO:	 Market.login: Member 'A' is logged in
+11/06/2023 17:30:57 INFO:	 Market.open_store: Member 'A' opened store 'Jihad'.
+11/06/2023 17:30:58 INFO:	 Session: 3689424045755362054 has been initialized
+11/06/2023 17:30:58 INFO:	 Market.login: Admin 'Kfir' is logged in
+11/06/2023 17:30:58 WARNING:	 Market is closed!
+11/06/2023 17:30:58 WARNING:	 Logger thread exits!
+11/06/2023 17:31:34 ERROR:	 Visitor.register: Username: 'Kfir' is occupied
+11/06/2023 17:31:35 INFO:	 Session: 7825102600555107270 has been initialized
+11/06/2023 17:31:36 INFO:	 Market.login: Admin 'Kfir' is logged in
+11/06/2023 17:31:36 ERROR:	 Visitor.register: Username: 'A' is occupied
+11/06/2023 17:31:37 INFO:	 Session: 7882922323275737524 has been initialized
+11/06/2023 17:31:37 INFO:	 Market.login: Admin 'Kfir' is logged in
+11/06/2023 17:31:37 WARNING:	 Market is closed!
+11/06/2023 17:31:37 WARNING:	 Logger thread exits!
