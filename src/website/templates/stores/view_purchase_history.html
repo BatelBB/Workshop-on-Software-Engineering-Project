@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+{% block title %}View Store Purcahse History{% endblock %}
+
+{% block page %}
+
+{% if ('AppointOwner' in permissions) %}
+<div>
+    <h2>Purchase History:</h2>
+    <div style="width: max-content; max-width: 360px; height: 250px; overflow: auto; border: 1px solid #cccccc; padding: 10px; margin-top: 10px; white-space: normal; word-wrap: break-word;">
+        {% if purchase_history %}
+            <ul>
+            {% for history in purchase_history %}
+                <li>{{ history }}</li>
+            {% endfor %}
+            </ul>
+        {% else %}
+            <p>Your store sucks - purchase history is EMPTY</p>
+        {% endif %}
+    </div>
+</div>
+{% endif %}
+
+{% endblock %}

@@ -1,9 +1,9 @@
-from domain.main.StoreModule.DIscounts.IDIscount import IDiscount
-from domain.main.StoreModule.DIscounts.Discount_Connectors.IDIscountConnector import IDiscountConnector
-from domain.main.StoreModule.Product import Product
-from domain.main.StoreModule.PurchaseRules.IRule import IRule
-from domain.main.UserModule.Basket import Basket
-from domain.main.Utils.Logger import report_error
+from src.domain.main.StoreModule.DIscounts.IDIscount import IDiscount
+from src.domain.main.StoreModule.DIscounts.Discount_Connectors.IDIscountConnector import IDiscountConnector
+from src.domain.main.StoreModule.Product import Product
+from src.domain.main.StoreModule.PurchaseRules.IRule import IRule
+from src.domain.main.UserModule.Basket import Basket
+from src.domain.main.Utils.Logger import report_error
 
 
 class XorDiscounts(IDiscountConnector):

@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from src.domain.main.Market.Permissions import Permission
-from domain.main.Store.Product import Product
-from domain.main.Store.Store import Store
+from src.domain.main.Store.Product import Product
+from src.domain.main.Store.Store import Store
 from src.domain.main.Utils.Response import Response
 
 
