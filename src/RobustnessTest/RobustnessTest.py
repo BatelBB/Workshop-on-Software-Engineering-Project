@@ -127,7 +127,7 @@ class RobustnessTest(unittest.TestCase):
     @parameterized.expand(number_of_threads)
     def test_multiple_threads_add_same_product_to_store(self, number_of_threads: int):
         owner, store = self.create_store_owner()
-        appointees = self.appoints_owners_of(store, number_of_threads)
+        appointees = self.appoints_owners_of(store, number_of_threads, self.service.get_active_session_id(owner[0]))
         product = get_random_product()
         product_name, product_quantity = product[0], product[3]
         threads = [None] * number_of_threads
@@ -152,7 +152,7 @@ class RobustnessTest(unittest.TestCase):
     @parameterized.expand(number_of_threads)
     def test_multiple_threads_appoint_same_manager(self, number_of_threads: int):
         owner, store = self.create_store_owner()
-        appointed_store_owner = self.appoints_owners_of(store, number_of_threads)
+        appointed_store_owner = self.appoints_owners_of(store, number_of_threads, self.service.get_active_session_id(owner[0]))
         appointee = get_random_user()
         appointee_name = appointee[0]
         self.session.register(*appointee)

@@ -508,7 +508,7 @@ class Market(IService):
         actor = self.get_active_user(session_identifier)
         perms = self.permissions_of(session_identifier, store_name, actor.username)
 
-        if Permission.AppointOwner not in perms:
+        if Permission.AppointOwner not in perms.result:
             return report_error(self.appoint_owner.__qualname__, f"{actor.username} does not have permissions to appoint owner")
 
         store = self.verify_registered_store(self.appoint_owner.__qualname__, store_name)
