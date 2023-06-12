@@ -31,7 +31,7 @@ class RobustnessTest(unittest.TestCase):
     def setUp(self) -> None:
         # Note: each test create a new, fresh market with a unique session identifier
         # self.market = Market()
-        self.service: IService = Market()
+        self.service: Market = Market()
         self.session = self.service.enter()
         self.service_admin = ('Kfir', 'Kfir')
         self.session.login(*self.service_admin)
@@ -44,7 +44,10 @@ class RobustnessTest(unittest.TestCase):
 
     def register(self, i=0) -> tuple:
         user = self.users[i]
-        self.assertTrue(self.session.register(*user).success, f'{user[0]} failed register')
+        res = self.session.register(*user)
+        if not res.success:
+            print("awd")
+        self.assertTrue(res.success, f'{user[0]} failed register')
         return user
 
     def login(self, i=0) -> tuple:
@@ -94,13 +97,14 @@ class RobustnessTest(unittest.TestCase):
         self.assertTrue(r.success)
         results[index] = r
 
-    def appoints_owners_of(self, store, number_of_managers):
+    def appoints_owners_of(self, store, number_of_managers, session_id=1):
         appointees = []
         while number_of_managers > 0:
             appointee = get_random_user()
             appointee_name = appointee[0]
             self.session.register(*appointee)
             self.session.appoint_owner(appointee_name, store)
+            self.service.approve_as_owner_immediatly(session_id, store, appointee_name)
             appointees.append(appointee)
             number_of_managers -= 1
         return appointees
@@ -108,7 +112,7 @@ class RobustnessTest(unittest.TestCase):
     @parameterized.expand(number_of_threads)
     def test_multiple_threads_add_different_products_to_store(self, number_of_threads: int):
         owner, store = self.create_store_owner()
-        appointees = self.appoints_owners_of(store, number_of_threads)
+        appointees = self.appoints_owners_of(store, number_of_threads, self.service.get_active_session_id(owner[0]))
         threads = [None] * number_of_threads
         results = [None] * number_of_threads
         for i in range(len(threads)):

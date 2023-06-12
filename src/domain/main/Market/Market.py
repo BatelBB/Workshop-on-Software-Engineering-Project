@@ -488,20 +488,21 @@ class Market(IService):
         return res
 
     def approve_owner(self, session_identifier: int, appointee_name: str, store_name: str) -> Response[bool]:
-        actor = self.get_active_user(session_identifier)
-        store_dict = self.approval_list.get(store_name)
-        if store_dict is None:
-            return report_error(self.approve_owner.__qualname__, "approval doesnt exist")
-        approval = store_dict.get(appointee_name)
-        if approval is None:
-            return report_error(self.approve_owner.__qualname__, "approval doesnt exist")
+        with self.approval_lock:
+            actor = self.get_active_user(session_identifier)
+            store_dict = self.approval_list.get(store_name)
+            if store_dict is None:
+                return report_error(self.approve_owner.__qualname__, "approval doesnt exist")
+            approval = store_dict.get(appointee_name)
+            if approval is None:
+                return report_error(self.approve_owner.__qualname__, "approval doesnt exist")
 
-        approval_res = approval.approve(actor.username)
-        if not approval_res.result:
-            return report_info(self.approve_owner.__qualname__, f"{actor.username} approved")
+            approval_res = approval.approve(actor.username)
+            if not approval_res.result:
+                return report_info(self.approve_owner.__qualname__, f"{actor.username} approved")
 
-        store_dict.delete(appointee_name)
-        return self.add_owner(session_identifier, appointee_name, store_name)
+            store_dict.delete(appointee_name)
+            return self.add_owner(session_identifier, appointee_name, store_name)
 
     def appoint_owner(self, session_identifier: int, appointee_name: str, store_name: str) -> Response[bool]:
         actor = self.get_active_user(session_identifier)
