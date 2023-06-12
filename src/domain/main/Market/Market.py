@@ -719,6 +719,22 @@ class Market(IService):
         for store_name in store_names:
             user.empty_basket(store_name)
 
+    def get_cart_price(self, baskets):
+        cart_price = 0
+        successful_store_purchases = []
+
+        for store_name, basket in baskets.items():
+            response2 = self.verify_registered_store(self.purchase_shopping_cart.__qualname__, store_name)
+            if response2.success:
+                store = response2.result
+                res = store.reserve_products(basket)
+                if res:
+                    successful_store_purchases.append(store_name)
+                    cart_price += store.calculate_basket_price(basket)
+            else:
+                return response2.success
+        return cart_price
+
     def purchase_shopping_cart(self, session_identifier: int, payment_method: str, payment_details: list[str],
                                address: str, postal_code: str, city: str, country: str) -> Response[bool]:
         actor = self.get_active_user(session_identifier)
@@ -727,19 +743,7 @@ class Market(IService):
         response = actor.verify_cart_not_empty()
         if response.success:
             baskets = actor.get_baskets()
-            cart_price = 0
-            successful_store_purchases = []
-
-            for store_name, basket in baskets.items():
-                response2 = self.verify_registered_store(self.purchase_shopping_cart.__qualname__, store_name)
-                if response2.success:
-                    store = response2.result
-                    res = store.reserve_products(basket)
-                    if res:
-                        successful_store_purchases.append(store_name)
-                        cart_price += store.calculate_basket_price(basket)
-                else:
-                    return response2.success
+            cart_price = self.get_cart_price(baskets)
             payment_succeeded = self.pay(cart_price, payment_method, payment_details, holder, user_id)
             if payment_succeeded:
                 # order delivery

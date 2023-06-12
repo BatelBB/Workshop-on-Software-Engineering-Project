@@ -39,7 +39,7 @@
                             <img src="{{ dicebear_product(product_name) }}" style="height: 3em;"/>
                             {{ product_name }}
                             </h4>
-                            <p><span class="price">{{ product.price }}</span></p>
+                            <p><span class="price">{{ cart_price }}</span></p>
                             You have {{ amount }} of those in your cart.
                             <a href="{{ url_for('buying.buy_product',
                             store_name=store_name, product_name=product_name) }}">

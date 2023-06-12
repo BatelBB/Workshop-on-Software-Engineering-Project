@@ -246,6 +246,12 @@ class SessionAdapter:
             for store_name in cart.result.baskets.keys()
         })
 
+    def get_cart_price(self):
+        cart = self._session.get_cart()
+        if not cart.success:
+            return cart
+        return self._session.get_cart_price(cart.result.baskets)
+
     def purchase_by_card(self, number, exp_month, exp_year, ccv, street, apt_number, city, country):
         return self._session.purchase_shopping_cart('card', [str(number), f'{exp_month}/{exp_year}', ccv],
                                                     street, apt_number, city, country)

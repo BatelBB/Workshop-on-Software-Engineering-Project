@@ -255,3 +255,6 @@ class Session:
 
     def get_store_managers(self, store_name: str):
         return self.apply(self.service.get_store_managers, self.identifier, store_name)
+
+    def get_cart_price(self, baskets):
+        return self.apply(self.service.get_cart_price, baskets)
