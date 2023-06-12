@@ -93,17 +93,17 @@ def init_batel_store(market):
 def init_hagais_store(market):
     hagai = market.enter()
     hagai.login('hagai', '123456')
-    hagais_store_name = 'Hagai\'s Store'
+    hagais_store_name = 'Hagai\'s StoreModule'
     hagai.open_store(hagais_store_name)
     hagai.add_product(hagais_store_name, "Blue T-Shirt", "Apparel", 19.99, 10, ["Blue", "T-Shirt", "Casual"])
     hagai.add_product(hagais_store_name, "Leather Wallet", "Accessories", 49.99, 5, ["Leather", "Wallet", "Classic"])
     hagai.add_product(hagais_store_name, "Wireless Earbuds", "Electronics", 59.99, 8, ["Wireless", "Earbuds", "Bluetooth"])
     hagai.add_product(hagais_store_name, "Sports Watch", "Fitness", 39.99, 15, ["Sports", "Watch", "Waterproof"])
 
-    hagai.add_purchase_simple_rule('Hagai\'s Store', "Blue T-Shirt", "<", 3)
-    hagai.add_purchase_complex_rule('Hagai\'s Store', "Sports Watcht", "=", 2, "Wireless Earbuds", ">", 0, "and")
+    hagai.add_purchase_simple_rule('Hagai\'s StoreModule', "Blue T-Shirt", "<", 3)
+    hagai.add_purchase_complex_rule('Hagai\'s StoreModule', "Sports Watcht", "=", 2, "Wireless Earbuds", ">", 0, "and")
 
-    hagai.add_simple_discount('Hagai\'s Store', "store", 50)
+    hagai.add_simple_discount('Hagai\'s StoreModule', "store", 50)
 
     hagai.logout()
     hagai.leave()

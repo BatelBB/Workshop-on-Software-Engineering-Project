@@ -57,3 +57,8 @@ class Cart:
         for r in records:
             cart.add_item(r.store_name, r.product_name, r.price, r.quantity)
         return cart
+
+    @staticmethod
+    def clear_db():
+        session_DB.query(Item).delete()
+        session_DB.commit()

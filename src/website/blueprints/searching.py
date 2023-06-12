@@ -1,6 +1,6 @@
 from flask import Blueprint, request, render_template, flash, redirect, url_for
 
-from src.domain.main.Store.Product import Product
+from src.domain.main.StoreModule.Product import Product
 from website.core_features.domain_access.market_access import get_domain_adapter
 
 bp = Blueprint("searching", __name__)

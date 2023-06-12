@@ -46,7 +46,7 @@ def create_store():
             return redirect(url_for("home.home"))
         error = res.description
         flash(error, category="danger")
-    return render_template("selling/create_store.html", form=form, error=error)
+    return render_template("stores/create_store.html", form=form, error=error)
 
 
 # remove store
@@ -68,7 +68,7 @@ def remove_store():
             return redirect(url_for("home.home"))
         error = res.description
         flash(error, category="danger")
-    return render_template("selling/remove_store.html", form=form, error=error)
+    return render_template("stores/remove_store.html", form=form, error=error)
 
 
 # reopen store
@@ -90,4 +90,14 @@ def reopen_store():
             return redirect(url_for("home.home"))
         error = res.description
         flash(error, category="danger")
-    return render_template("selling/remove_store.html", form=form, error=error)
+    return render_template("stores/remove_store.html", form=form, error=error)
+
+@bp.route('/view_purchase_history/<store_name>', methods=('GET', 'POST'))
+def view_purchase_history_owner(store_name: str):
+    domain = get_domain_adapter()
+    permissions = {p.name for p in domain.permissions_of(store_name)}
+    if not domain.is_logged_in:
+        flash("You tried to view purchase_history, but you need to be logged in for that.")
+        return redirect(url_for('home.home'))
+    purchase_history = domain.get_purchase_history_owner(store_name)
+    return render_template("stores/view_purchase_history.html", purchase_history=purchase_history, permissions=permissions)

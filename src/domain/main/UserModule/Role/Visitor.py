@@ -4,7 +4,7 @@ from abc import ABC
 import bcrypt
 
 from src.domain.main.Utils.Base_db import session_DB
-from src.domain.main.Store.Store import Store
+from src.domain.main.StoreModule.Store import Store
 from src.domain.main.UserModule.Role.IRole import IRole
 from src.domain.main.Utils.Logger import report_error, report_info
 from src.domain.main.Utils.Response import Response
@@ -13,6 +13,7 @@ from src.domain.main.Utils.Response import Response
 class Visitor(IRole, ABC):
 
     register_lock = threading.Lock()
+
     def __init__(self, context):
         super().__init__(context)
 
@@ -22,7 +23,7 @@ class Visitor(IRole, ABC):
     def register(self) -> Response[bool]:
         with Visitor.register_lock:
             if not self.context.is_registered(self.context.username):
-                session_DB.merge(self.context)
+                session_DB.add(self.context)
                 session_DB.commit()
                 return report_info(self.register.__qualname__, f'\'{self.context.username}\' is registered!')
         return report_error(self.register.__qualname__, f'Username: \'{self.context.username}\' is occupied')
@@ -59,7 +60,7 @@ class Visitor(IRole, ABC):
 
     def remove_product_from_cart(self, store_name: str, product_name: str) -> Response[bool]:
         self.context.cart.remove_item(store_name, product_name)
-        return report_info(self.remove_product_from_cart.__qualname__, f'Product \'{product_name}\' is removed from {self} cart')
+        return report_info(self.remove_product_from_cart.__qualname__, f'Product \'{product_name}\' of store \'{store_name}\' is removed from {self} cart')
 
     def update_cart_product_quantity(self, store_name: str, product_name: str, quantity: int) -> Response[bool]:
         new_quantity = self.context.cart.update_item_quantity(store_name, product_name, quantity)

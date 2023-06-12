@@ -1,4 +1,4 @@
-from src.domain.main.Store.PurchasePolicy.AuctionPolicy import AuctionPolicy
+from src.domain.main.StoreModule.PurchasePolicy.AuctionPolicy import AuctionPolicy
 
 
 class PurchasePolicyFactory:

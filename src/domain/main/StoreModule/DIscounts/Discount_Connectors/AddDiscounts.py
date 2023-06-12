@@ -1,7 +1,7 @@
-from domain.main.Store.DIscounts.IDIscount import IDiscount
-from domain.main.Store.DIscounts.Discount_Connectors.IDIscountConnector import IDiscountConnector
-from domain.main.Store.Product import Product
-from domain.main.UserModule.Basket import Basket
+from src.domain.main.StoreModule.DIscounts.IDIscount import IDiscount
+from src.domain.main.StoreModule.DIscounts.Discount_Connectors.IDIscountConnector import IDiscountConnector
+from src.domain.main.StoreModule.Product import Product
+from src.domain.main.UserModule.Basket import Basket
 
 
 class AddDiscounts(IDiscountConnector):

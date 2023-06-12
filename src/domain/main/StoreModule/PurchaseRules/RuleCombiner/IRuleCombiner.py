@@ -1,7 +1,7 @@
 from abc import ABC
 
-from src.domain.main.Store.PurchaseRules.IRule import IRule
-from src.domain.main.Store.PurchaseRules.SimpleRule import SimpleRule
+from src.domain.main.StoreModule.PurchaseRules.IRule import IRule
+from src.domain.main.StoreModule.PurchaseRules.SimpleRule import SimpleRule
 
 
 class IRuleCombiner(IRule, ABC):

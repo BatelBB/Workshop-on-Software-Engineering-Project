@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
-from domain.main.Store.Product import Product
-from domain.main.UserModule.Basket import Basket
+from src.domain.main.StoreModule.Product import Product
+from src.domain.main.UserModule.Basket import Basket
 
 
 class IDiscount(ABC):

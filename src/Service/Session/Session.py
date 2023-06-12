@@ -1,11 +1,11 @@
 from typing import Any
 
-from src.domain.main.Store.PurchaseRules.IRule import IRule
+from src.domain.main.StoreModule.PurchaseRules.IRule import IRule
 from src.domain.main.Market.Appointment import Appointment
 from src.domain.main.Market.Permissions import Permission
 from Service.IService import IService
-from src.domain.main.Store.Product import Product
-from src.domain.main.Store.Store import Store
+from src.domain.main.StoreModule.Product import Product
+from src.domain.main.StoreModule.Store import Store
 from src.domain.main.UserModule.Cart import Cart
 from src.domain.main.Utils.Logger import report, Logger, report_error
 from src.domain.main.Utils.Response import Response
@@ -87,8 +87,8 @@ class Session:
 
     def add_product(self, store_name: str, product_name: str, category: str, price: float, quantity: int,
                     keywords: list[str] = None) -> Response[bool]:
-        return self.apply(self.service.add_product, self.identifier, store_name, product_name, category, price,
-                          quantity, keywords)
+        return self.apply(self.service.add_product, self.identifier, store_name, product_name, category, float(price),
+                          int(quantity), keywords)
 
     def update_product_quantity(self, store_name: str, product_name: str, quantity: int) -> Response[bool]:
         return self.apply(self.service.update_product_quantity, self.identifier, store_name, product_name, quantity)
@@ -171,7 +171,7 @@ class Session:
         return self.apply(self.service.change_product_category, self.identifier, store_name, old_product_name, category)
 
     def get_store_purchase_history(self, store_name: str) -> Response[str]:
-        return self.apply(self.service.get_store_purchase_history, store_name)
+        return self.apply(self.service.get_store_purchase_history,self.identifier, store_name)
 
     def purchase_with_non_immediate_policy(self, store_name: str, product_name: str,
                                            payment_method: str, payment_details: list[str], address: str,
@@ -244,7 +244,8 @@ class Session:
         actions = {"register": self.register, "login": self.login, "open_store": self.open_store,
                    "appoint_owner": self.appoint_owner, "logout": self.logout,
                    "add_product": self.add_product, "appoint_manager": self.appoint_manager,
-                   "add_permission": self.add_permission, "register_admin": self.register_admin}
+                   "add_permission": self.add_permission, "register_admin": self.register_admin,
+                   "get_store_staff": self.get_store_staff}
 
         return actions[action_name](*args) if action_name in actions \
             else report_error(self.dispatch.__qualname__, f'Invalid action. Given: {action_name}.')
@@ -254,3 +255,6 @@ class Session:
 
     def get_store_managers(self, store_name: str):
         return self.apply(self.service.get_store_managers, self.identifier, store_name)
+
+    def get_cart_price(self, baskets):
+        return self.apply(self.service.get_cart_price, baskets)

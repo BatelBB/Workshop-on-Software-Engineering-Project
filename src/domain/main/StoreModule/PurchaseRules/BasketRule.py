@@ -1,4 +1,4 @@
-from src.domain.main.Store.PurchaseRules.IRule import IRule
+from src.domain.main.StoreModule.PurchaseRules.IRule import IRule
 from src.domain.main.UserModule.Basket import Basket
 from src.domain.main.Utils.Logger import report_error, report
 from src.domain.main.Utils.Response import Response

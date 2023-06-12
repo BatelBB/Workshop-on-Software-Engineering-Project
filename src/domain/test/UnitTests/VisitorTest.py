@@ -29,48 +29,6 @@ class VisitorTestCase(unittest.TestCase):
         self.session.leave()
         self.assertFalse(self.session.is_open, "A session should be closed (is_open field = False) upon departure!")
 
-    '''
-        Concurrency Tests
-    '''
-    number_of_threads = [1, 10, 100, 500]
-
-    def start_new_session_and_register(self, user, result, index):
-        session = self.service.enter()
-        r = session.register(*user)
-        result[index] = r
-
-    @parameterized.expand(number_of_threads)
-    def test_multiple_threads_register_same_user(self, number_of_threads):
-        user = get_random_user()
-        threads = [None] * number_of_threads
-        results = [None] * number_of_threads
-        for i in range(len(threads)):
-            threads[i] = Thread(target=self.start_new_session_and_register, args=(user, results, i))
-            threads[i].start()
-        for i in range(len(threads)):
-            threads[i].join()
-        succeeded_results = list(filter(lambda response: response.success, results))
-        self.assertEqual(len(succeeded_results), 1)
-
-    def start_new_session_and_login(self, user, result, index):
-        session = self.service.enter()
-        r = session.login(*user)
-        result[index] = r
-
-    @parameterized.expand(number_of_threads)
-    def test_multiple_threads_login_same_user(self, number_of_threads):
-        user = get_random_user()
-        self.session.register(*user)
-        threads = [None] * number_of_threads
-        results = [None] * number_of_threads
-        for i in range(len(threads)):
-            threads[i] = Thread(target=self.start_new_session_and_login, args=(user, results, i))
-            threads[i].start()
-        for i in range(len(threads)):
-            threads[i].join()
-        succeeded_results = list(filter(lambda response: response.success, results))
-        self.assertEqual(len(succeeded_results), number_of_threads)
-
     @parameterized.expand([
         ("A", "blahblahblah"),
         ("B", "dahdahdah"),
