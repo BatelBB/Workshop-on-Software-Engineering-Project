@@ -1,0 +1,7 @@
+# def test_retrieve_purchase_history_happy
+# def test_retrieve_purchase_history_removed_product
+#
+# def test_retrieve_purchase_history_changed_product_name
+#
+# def test_retrieve_purchase_history_changed_product_price
+# def test_retrieve_purchase_history_removed_store

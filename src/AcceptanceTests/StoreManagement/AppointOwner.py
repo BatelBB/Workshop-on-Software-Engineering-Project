@@ -1,8 +1,6 @@
 from unittest.mock import patch
-
 from Service.bridge.proxy import Proxy
 import unittest
-
 from domain.main.Market import Permissions
 from domain.main.Market.Permissions import Permission
 
@@ -173,7 +171,8 @@ class AppointOwner(unittest.TestCase):
             self.assertIn(p.value, appointment[self.store_founder1[0]]["Permissions"], f"error: permission '{p.value}' "
                                                                                        "not found for an appointed "
                                                                                        "owner")
-
+    def test_circular_appointments2(self):
+        ...
     def test_circular_appointments(self):
         self.app.login(*self.store_founder1)
         r = self.app.appoint_owner(self.store_owner1[0], "bakery")
@@ -213,9 +212,9 @@ class AppointOwner(unittest.TestCase):
     # permissions tests #
     def test_retrieve_purchase_history(self):
         with patch('src.domain.main.ExternalServices.Provision.ProvisionServiceAdapter.provisionService.getDelivery',
-                   return_value=True) as delivery_mock, \
+                   return_value=True), \
                 patch('src.domain.main.ExternalServices.Payment.PaymentServices.PayWithCard.pay',
-                      return_value=True) as payment_mock:
+                      return_value=True):
             self.set_owner_appointments()
             self.app.add_to_cart("bakery", "bread", 10)
             self.app.purchase_shopping_cart("card", ["123", "123", "12/6588"],
@@ -333,9 +332,10 @@ class AppointOwner(unittest.TestCase):
         self.assertIn(self.registered_user[0], appointment)
         self.assertEqual(self.store_owner1[0], appointment[self.registered_user[0]]["Appointed by"])
         for p in Permission:
-            self.assertIn(p.value, appointment[self.registered_user[0]]["Permissions"], f"error: permission '{p.value}' "
-                                                                                     "not found for an appointed "
-                                                                                     "owner")
+            self.assertIn(p.value, appointment[self.registered_user[0]]["Permissions"],
+                          f"error: permission '{p.value}' "
+                          "not found for an appointed "
+                          "owner")
 
     def test_cancel_appointment_of_another_manager(self):
         self.set_owner_appointments()

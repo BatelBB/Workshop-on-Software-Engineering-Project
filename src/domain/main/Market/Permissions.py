@@ -20,7 +20,7 @@ class Permission(Enum):
     OpenAuction = 'Open Auction'
     OpenLottery = 'Open Lottery'
     StartBid = 'Start a bid'
-    ApproveBid = 'Approve a bid'
+#   ApproveBid = 'Approve a bid'
 
 
 

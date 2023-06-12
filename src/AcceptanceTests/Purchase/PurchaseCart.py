@@ -270,6 +270,9 @@ class PurchaseCart(unittest.TestCase):
             payment_mock.assert_called_once_with(560)
             delivery_mock.assert_not_called()
 
+    def test_purchase_with_complex_rules_and_discount(self):
+    def test_purchase_with_bid(self):
+
     def set_stores(self):
         self.app.login(*self.store_owner1)
         self.app.open_store("bakery")

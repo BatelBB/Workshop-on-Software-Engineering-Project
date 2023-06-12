@@ -30,3 +30,8 @@ class Login(unittest.TestCase):
         cls.app.enter_market()
         cls.app.login(*cls.service_admin)
         cls.app.shutdown()
+
+
+    ChangeDiscountPolicy = 'Change discount policy'
+
+    test_depth_3_discount
