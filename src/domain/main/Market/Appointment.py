@@ -5,8 +5,8 @@ from sqlalchemy.orm import relationship
 
 from sqlalchemy import Column, String, ForeignKey
 
-from domain.main.Utils import Base_db
-from domain.main.Utils.Base_db import session_DB
+from src.domain.main.Utils import Base_db
+from src.domain.main.Utils.Base_db import session_DB
 from src.domain.main.Market.Permissions import Permission, get_default_owner_permissions, get_permission_description, \
     serialize_permissions, deserialize_permissions
 

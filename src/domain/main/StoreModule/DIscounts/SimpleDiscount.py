@@ -1,7 +1,7 @@
-from domain.main.StoreModule.DIscounts.IDIscount import IDiscount
-from domain.main.StoreModule.Product import Product
-from domain.main.StoreModule.PurchaseRules.IRule import IRule
-from domain.main.UserModule.Basket import Basket, Item
+from src.domain.main.StoreModule.DIscounts.IDIscount import IDiscount
+from src.domain.main.StoreModule.Product import Product
+from src.domain.main.StoreModule.PurchaseRules.IRule import IRule
+from src.domain.main.UserModule.Basket import Basket, Item
 
 
 class SimpleDiscount(IDiscount):

@@ -67,8 +67,15 @@
         <button type="submit" style="background-color: #008CBA; color: white; padding: 10px 24px; margin: 8px 0; border: none; border-radius: 4px; cursor: pointer;">Remove Owner</button>
     </form>
 {% endif %}
-
 </div>
+
+{% if ('AppointOwner' in permissions) %}
+    <form action="{{ url_for('stores.view_purchase_history_owner', store_name=name) }}">
+        <button type="submit" style="background-color: #008CBA; color: white; padding: 10px 24px; margin: 8px 0; border: none; border-radius: 4px; cursor: pointer;">View Purchase History</button>
+    </form>
+{% endif %}
+</div>
+
 
 <table>
  {% for product in products %}
