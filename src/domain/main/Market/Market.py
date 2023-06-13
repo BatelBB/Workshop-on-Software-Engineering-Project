@@ -156,8 +156,6 @@ class Market(IService):
                     appointments.append(appointment)
                 self.notifications.send_from_store(store_name, appointment.appointee,
                            f"The store {store_name} appointed you with permissions {appointment.permissions}")
-                # self.appointments.insert(store_name, [appointment]) if appointments is None else appointments.append(
-                #     appointment)
                 return True
             return False
 
