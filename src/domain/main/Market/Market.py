@@ -6,9 +6,9 @@ from typing import Any
 from multipledispatch import dispatch
 from sqlalchemy import inspect
 
-from src.domain.main.Utils.OwnersApproval import OwnersApproval
-
 from Service.IService.IService import IService
+from Service.Session.Session import Session
+from domain.main.Notifications.notification_controller import NotificationController
 from src.domain.main.Utils.Response import Response
 from src.domain.main.UserModule.Basket import Item
 from src.domain.main.Utils.Base_db import Base, engine, session_DB
@@ -45,6 +45,7 @@ class Market(IService):
         self.sessions: ConcurrentDictionary[int, User] = ConcurrentDictionary()
         self.users: ConcurrentDictionary[str, User] = ConcurrentDictionary()
         self.stores: ConcurrentDictionary[str, Store] = ConcurrentDictionary()
+        self.notifications = NotificationController()
         self.removed_stores: ConcurrentDictionary[str, Store] = ConcurrentDictionary()
         self.removed_store_products: ConcurrentDictionary[Store, set[Product]] = ConcurrentDictionary()
         self.removed_products_quantity: ConcurrentDictionary[Product, int] = ConcurrentDictionary()
@@ -123,6 +124,8 @@ class Market(IService):
     def remove_appointment_of(self, fired_user: str, store_name: str) -> None:
         Appointment.delete_record(fired_user, store_name)
         self.appointments.get(store_name).remove(Appointment(fired_user, store_name))
+        self.notifications.send_from_store(store_name, fired_user,
+                                           f"The store {store_name} no longer requires your service. Sorry.")
 
     def get_appointees_of(self, fired_user: str, store_name: str) -> list[str]:
         appointments = filter(lambda appointment: appointment.appointed_by == fired_user,
@@ -152,6 +155,10 @@ class Market(IService):
         with self.appointments_lock:
             if self.is_not_appointed_yet(appointment.appointee, store_name):
                 Appointment.add_record(appointment)
+                self.appointments.insert(store_name, [appointment]) if appointments is None else \
+                    appointments.append(appointment)
+                self.notifications.send_from_store(store_name, appointment.appointee,
+                           f"The store {store_name} appointed you with permissions {appointment.permissions}")
                 self.appointments.insert(store_name, [appointment]) if appointments is None else appointments.append(
                     appointment)
                 return True
@@ -209,7 +216,7 @@ class Market(IService):
                 if self.users.get(username) is None:
                     self.users.insert(username, user)
         return user
-
+    
     def find_store(self, store_name) -> Store | None:
         store = self.stores.get(store_name)
         if store is None:
@@ -327,6 +334,9 @@ class Market(IService):
                 self.removed_store_products.insert(store, products)
                 for product in products:
                     self.removed_products_quantity.insert(product, store.amount_of(product.name))
+
+                self.notifications.send_from_store(store_name, actor.username,
+                                           f"You have closed store {store_name}.")
                 return report_info(self.remove_store.__qualname__, f'{actor} removed store {store_name}')
             else:
                 return report_error(self.remove_store.__qualname__,
@@ -572,12 +582,11 @@ class Market(IService):
                         f'Display permission of admin')
         return Response(get_default_owner_permissions(), r.description)
 
-    '''
+    def bfs(self, root: str, store_name: str) -> list[str]:
+        """
         Store appointments creates a tree
         We iterate over the subtree of root in a breath-first-manner to aggregate all its successive appointees
-    '''
-
-    def bfs(self, root: str, store_name: str) -> list[str]:
+        """
         successors: list[str] = list()
         queue: list[str] = list()
         queue.append(root)
@@ -702,7 +711,7 @@ class Market(IService):
         if response.success:
             store = response.result
             actor = self.get_active_user(session_identifier)
-            if product_new_price > 0:
+            if product_new_price > 0 :
                 if self.has_permission_at(store_name, actor, Permission.Update):
                     store.change_product_price(product_old_price, product_new_price)
                     return report_info(self.change_product_price.__qualname__,
@@ -735,7 +744,7 @@ class Market(IService):
     def update_item_prices(self, actor: User):
         baskets = actor.get_baskets()
         for store_name, basket in baskets.items():
-            response = self.verify_registered_store(self.update_item_prices.__qualname__, store_name)
+            response = self.verify_registered_store(self.purchase_shopping_cart.__qualname__, store_name)
             if not response.success:
                 return response
             store = response.result
@@ -962,6 +971,7 @@ class Market(IService):
             return store.apply_purchase_policy(payment_service, product_name, delivery_service, how_much)
         return response
 
+
     def add_simple_discount(self, session_id: int, store_name: str, discount_type: str, discount_percent: int,
                             discount_for_name: str = None,
                             rule_type=None, min_price: float = None,
@@ -1168,3 +1178,33 @@ class Market(IService):
             if self.sessions.get(sess_id).username == username:
                 return sess_id
         return None
+
+
+    def send_user_message(self, session_id: int, recipient: str, content: str):
+        actor = self.get_active_user(session_id)
+        if not actor.is_logged_in:
+            return report_error(self.send_user_message.__qualname__, "Can't send message: not logged in")
+        if recipient not in self.users.get_all_keys():
+            return report_error(self.send_user_message.__qualname__, "no such user")
+        self.notifications.send_from_user(actor.username, recipient, content)
+        return report_info(self.send_user_message.__qualname__,
+                   f"send message succesful: {actor.username} -> {recipient}: {content}")
+
+    def get_user_unread_observable(self, session_id: int):
+        actor = self.get_active_user(session_id)
+        if not actor.is_logged_in:
+            return report_error(self.send_user_message.__qualname__, "Can't get unread observable: not logged in")
+        return Response(self.notifications.get_unread_observable(actor.username))
+
+    def get_inbox(self, session_id: int):
+        actor = self.get_active_user(session_id)
+        if not actor.is_logged_in:
+            return report_error(self.send_user_message.__qualname__, "Can't get inbox: not logged in")
+        return Response(self.notifications.get_notifications_for(actor.username))
+
+    def mark_read(self, session_id: int, msg_id: int):
+        actor = self.get_active_user(session_id)
+        if not actor.is_logged_in:
+            return report_error('mark_read', "mark_read: not logged in")
+        msg = self.notifications.mark_read(actor.username, msg_id)
+        return msg

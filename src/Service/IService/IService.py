@@ -1,5 +1,10 @@
 from abc import abstractmethod
+from typing import List
 
+from reactivex import Observable
+
+from domain.main.Notifications.notification import Notification
+from domain.main.Utils.Logger import report_error
 from src.domain.main.StoreModule.PurchaseRules.IRule import IRule
 from src.domain.main.Market.Appointment import Appointment
 from src.domain.main.Market.Permissions import Permission
@@ -289,4 +294,20 @@ class IService(metaclass=IAbsractConcurrentSingleton):
 
     @abstractmethod
     def get_store_managers(self, session_id: int, store_name: str):
+        ...
+
+    @abstractmethod
+    def send_user_message(self, session_id: int, recipient: str, content: str) -> Response[None]:
+        ...
+
+    @abstractmethod
+    def get_user_unread_observable(self, session_id: int) -> Response[Observable[Notification]]:
+        ...
+
+    @abstractmethod
+    def get_inbox(self, session_id: int) -> Response[List[Notification]]:
+        ...
+
+    @abstractmethod
+    def mark_read(self, session_id: int, msg_id: int):
         ...

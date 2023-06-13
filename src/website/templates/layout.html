@@ -8,9 +8,23 @@
 
 {% endblock %}
 
+{% block scripts %}
+<script type="text/data" id="data_username">{{ get_username() }}</script>
+<script type="text/data" id="data_is_logged_in">{{ is_logged_in() }}</script><script
+      src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"
+      integrity="sha512-qTXRIMyZIFb8iQcfjXWCO8+M5Tbc38Qi5WzdPOYZHIlZpzBHG3L3by84BBBOiRGiEb7KKtAOAs5qYdUiZiQNNQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+<script src="{{ url_for('static', filename='bower_components/socket.io-client/dist/socket.io.js')}}"></script>
+<script src="{{ url_for('static', filename='bower_components/angular/angular.js')}}"></script>
+<script src="{{ url_for('static', filename='ngjs_mini_app.js') }}"></script>
+{% endblock %}
+
 {% block navbar %}
+<div ng-app="myApp" ng-controller="main">
 {{nav.mynavbar.render()}}
-<br/>
+<br/></div>
 <form action="{{url_for('searching.search_product')}}" method="get">
     <input type="text" name="query" placeholder="Search for products">
     <input type="submit" value="Search">

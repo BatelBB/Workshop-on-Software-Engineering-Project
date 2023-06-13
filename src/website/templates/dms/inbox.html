@@ -1,0 +1,39 @@
+{% extends "layout.html" %}
+{% block title %}Inbox{% endblock %}
+
+{% block page %}
+
+<h1>Your inbox</h1>
+<h2>{{ unread }} unread messages out of {{ unread + read }} messages overall.</h2>
+
+{% for msg in inbox %}
+
+<div class="{{ 'msg-read' if msg.seen else 'msg-unread' }} msg container">
+    <div class="row sender">
+        {% if msg.is_from_store %}
+            <a href="{{url_for('buying.view_store', name=msg.sender)}}">
+                <img src="{{ dicebear_store(msg.sender) }}" style="height: 1em;"/>
+                <span>{{ msg.sender }}</span>
+            </a>
+        {% else %}
+            <img src="{{ dicebear_user(msg.sender) }}" style="height: 1em;"/>
+            <span>{{ msg.sender }}</span>
+        {% endif %}
+    </div>
+    <div class="row msg-content">
+            {{ msg.content }}
+    </div>
+    {% if not msg.seen %}
+    <div class="row mark-read">
+        <a href="{{ url_for('dms.mark_read', msg_id=msg.msg_id) }}">Mark as read</a>
+    </div>
+    {%endif%}
+</div>
+
+{% else %}
+
+<p>You currently have no messages.</p>
+
+{% endfor %}
+
+{% endblock %}
