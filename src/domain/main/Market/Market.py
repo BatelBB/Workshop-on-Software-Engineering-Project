@@ -1059,7 +1059,6 @@ class Market(IService):
         return Response(owners, "list of owners")
 
     def get_store_managers(self, session_id: int, store_name: str) -> Response[bool] | Response[list[str]]:
-        actor = self.get_active_user(session_id)
         res = self.get_store_staff(session_id, store_name)
         if not res.success:
             return res
@@ -1077,3 +1076,5 @@ class Market(IService):
                 managers.append(p)
 
         return Response(managers, "list of managers")
+
+    def get_store_staff_wit_permissions(self, store_name: str):

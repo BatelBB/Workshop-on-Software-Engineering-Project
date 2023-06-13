@@ -110,3 +110,11 @@ def remove_owner(store_name: str):
         else:
             flash("Couldn't remove owner")
     return render_template("products/staff.html", form=form, get_all_registered_users=all_users, headline="Remove Owner")
+
+
+@bp.route('/view_staff_info', methods=('GET', 'POST'))
+def view_staff_info():
+    domain = get_domain_adapter()
+    if not domain.is_logged_in:
+        flash("You tried to view staff info but you need to be logged in for that.")
+        return redirect(url_for('home.home'))
