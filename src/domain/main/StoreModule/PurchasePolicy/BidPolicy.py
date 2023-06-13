@@ -1,4 +1,4 @@
-from domain.main.Utils.OwnersApproval import OwnersApproval
+from src.domain.main.Utils.OwnersApproval import OwnersApproval
 from src.domain.main.ExternalServices.Payment.PaymentServices import IPaymentService
 from src.domain.main.ExternalServices.Provision.ProvisionServiceAdapter import IProvisionService
 from src.domain.main.StoreModule.PurchasePolicy.IPurchasePolicy import IPurchasePolicy

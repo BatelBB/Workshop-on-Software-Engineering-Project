@@ -3,8 +3,8 @@ from typing import List
 
 from reactivex import Observable
 
-from domain.main.Notifications.notification import Notification
-from domain.main.Utils.Logger import report_error
+from src.domain.main.Notifications.notification import Notification
+from src.domain.main.Utils.Logger import report_error
 from src.domain.main.StoreModule.PurchaseRules.IRule import IRule
 from src.domain.main.Market.Appointment import Appointment
 from src.domain.main.Market.Permissions import Permission

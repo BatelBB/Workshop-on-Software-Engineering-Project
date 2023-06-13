@@ -4,9 +4,9 @@ from reactivex import Subject, Observable, of
 from reactivex.subject import BehaviorSubject
 import reactivex.operators as ops
 
-from domain.main.Notifications.notification import Notification, NotificationOriginType
-from domain.main.Utils.Logger import report_error
-from domain.main.Utils.Response import Response
+from src.domain.main.Notifications.notification import Notification, NotificationOriginType
+from src.domain.main.Utils.Logger import report_error
+from src.domain.main.Utils.Response import Response
 
 
 class _UnreadController:

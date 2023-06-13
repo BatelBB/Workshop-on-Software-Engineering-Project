@@ -1,6 +1,6 @@
 import unittest
 
-from domain.main.Utils.OwnersApproval import OwnersApproval
+from src.domain.main.Utils.OwnersApproval import OwnersApproval
 from src.domain.main.Market.Market import Market
 from src.domain.main.StoreModule.PurchasePolicy.BidPolicy import BidPolicy
 

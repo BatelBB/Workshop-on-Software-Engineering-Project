@@ -1,5 +1,5 @@
-from domain.main.Utils.Logger import report
-from domain.main.Utils.Response import Response
+from src.domain.main.Utils.Logger import report
+from src.domain.main.Utils.Response import Response
 
 
 class OwnersApproval:

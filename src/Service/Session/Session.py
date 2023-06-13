@@ -2,7 +2,7 @@ from typing import Any, List
 
 from reactivex import Observable
 
-from domain.main.Notifications.notification import Notification
+from src.domain.main.Notifications.notification import Notification
 from src.domain.main.StoreModule.PurchaseRules.IRule import IRule
 from src.domain.main.Market.Appointment import Appointment
 from src.domain.main.Market.Permissions import Permission

@@ -7,7 +7,7 @@ from flask_socketio import SocketIO, join_room
 from reactivex import interval, Observer
 from reactivex.abc import DisposableBase
 
-from domain.main.Notifications.notification import Notification
+from src.domain.main.Notifications.notification import Notification
 from website.core_features.domain_access.market_access import get_domain_adapter, _get_market
 
 _connected: Set[str] = set()
