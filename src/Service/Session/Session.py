@@ -129,6 +129,9 @@ class Session:
     def appoint_owner(self, appointee: str, store: str) -> Response[bool]:
         return self.apply(self.service.appoint_owner, self.identifier, appointee, store)
 
+    def approve_owner(self, appointee: str, store: str) -> Response[bool]:
+        return self.apply(self.service.approve_owner, self.identifier, appointee, store)
+
     def appointees_at(self, store: str) -> Response[list[str] | bool]:
         return self.apply(self.service.appointees_at, self.identifier, store)
 

@@ -3,12 +3,16 @@ import sys
 import threading
 from functools import reduce
 from typing import Any
-
 from multipledispatch import dispatch
 from sqlalchemy import inspect
 
+from src.domain.main.Utils.OwnersApproval import OwnersApproval
+
 from Service.IService.IService import IService
-from Service.Session.Session import Session
+from src.domain.main.Utils.Response import Response
+from src.domain.main.UserModule.Basket import Item
+from src.domain.main.Utils.Base_db import Base, engine, session_DB
+from src.domain.main.StoreModule.PurchaseRules.IRule import IRule
 from src.domain.main.ExternalServices.Payment.PaymentFactory import PaymentFactory
 from src.domain.main.ExternalServices.Payment.PaymentServices import IPaymentService
 from src.domain.main.ExternalServices.Provision.ProvisionServiceAdapter import provisionService, IProvisionService
@@ -32,6 +36,7 @@ from src.domain.main.Utils.Base_db import Base, engine
 from src.domain.main.Utils.ConcurrentDictionary import ConcurrentDictionary
 from src.domain.main.Utils.Logger import Logger, report_error, report_info
 from src.domain.main.Utils.Response import Response
+from src.Service.Session.Session import Session
 
 
 class Market(IService):
@@ -50,6 +55,9 @@ class Market(IService):
         self.store_activity_status: ConcurrentDictionary[str, str] = ConcurrentDictionary()
         self.package_counter = 0
         self.appointments_lock = threading.RLock()
+        self.approval_lock = threading.RLock()
+        self.approval_list: ConcurrentDictionary[str,ConcurrentDictionary[str, OwnersApproval]] = ConcurrentDictionary()
+
         self.init_db()
         self.init_admin()
 
@@ -467,16 +475,60 @@ class Market(IService):
         return self.appoint(session_identifier, self.appoint_manager.__qualname__, store_name, appointee_name,
                             Permission.AppointManager, get_default_manager_permissions(), role='StoreManager')
 
-    def appoint_owner(self, session_identifier: int, appointee_name: str, store_name: str) -> Response[bool]:
-        res = self.appoint(session_identifier, self.appoint_owner.__qualname__, store_name, appointee_name,
-                            Permission.AppointOwner, get_default_owner_permissions(), role='StoreOwner')
+    # only call from self.approve_owner or self.appoint_owner
+    def add_owner(self, session_identifier: int, appointee_name: str, store_name: str) -> Response:
+        res = self.appoint(session_identifier, self.add_owner.__qualname__, store_name, appointee_name,
+                           Permission.AppointOwner, get_default_owner_permissions(), role='StoreOwner')
         if res.success:
-            store_res = self.verify_registered_store(self.delete_discount.__qualname__, store_name)
+            store_res = self.verify_registered_store(self.add_owner.__qualname__, store_name)
             if not store_res.success:
-                return report_error(self.delete_discount.__qualname__, "invalid store")
+                return report_error(self.add_owner.__qualname__, "invalid store")
             store = store_res.result
             store.add_owner(appointee_name)
+
+            store_dict = self.approval_list.get(store_name)
+            for name in store_dict.get_all_keys():
+                store_dict.get(name).add_owner(appointee_name)
         return res
+
+    def approve_owner(self, session_identifier: int, appointee_name: str, store_name: str) -> Response[bool]:
+        with self.approval_lock:
+            actor = self.get_active_user(session_identifier)
+            store_dict = self.approval_list.get(store_name)
+            if store_dict is None:
+                return report_error(self.approve_owner.__qualname__, "approval doesnt exist")
+            approval = store_dict.get(appointee_name)
+            if approval is None:
+                return report_error(self.approve_owner.__qualname__, "approval doesnt exist")
+
+            approval_res = approval.approve(actor.username)
+            if not approval_res.result:
+                return report_info(self.approve_owner.__qualname__, f"{actor.username} approved")
+
+            store_dict.delete(appointee_name)
+            return self.add_owner(session_identifier, appointee_name, store_name)
+
+    def appoint_owner(self, session_identifier: int, appointee_name: str, store_name: str) -> Response[bool]:
+        actor = self.get_active_user(session_identifier)
+        perms = self.permissions_of(session_identifier, store_name, actor.username)
+
+        if Permission.AppointOwner not in perms.result:
+            return report_error(self.appoint_owner.__qualname__, f"{actor.username} does not have permissions to appoint owner")
+
+        store = self.verify_registered_store(self.appoint_owner.__qualname__, store_name)
+        if not store.success:
+            return store
+
+        self.approval_list.insert(store_name, ConcurrentDictionary())
+        approval = OwnersApproval(self.get_store_owners(session_identifier, store_name).result,
+                                                                 actor.username)
+        self.approval_list.get(store_name).insert(appointee_name, approval)
+
+        if approval.is_approved():
+            return self.add_owner(session_identifier, appointee_name, store_name)
+
+        return report_info(self.appoint_owner.__qualname__, f"approval process beggins for ownership for {appointee_name} of {store_name}")
+
 
     def set_permission(self, session_identifier: int, calling_method: str, store: str, appointee: str, permission: Permission, action: {'ADD', 'REMOVE'}) -> Response[bool]:
         actor = self.get_active_user(session_identifier)
@@ -527,6 +579,7 @@ class Market(IService):
         return successors
 
     def remove_appointment(self, session_identifier: int, fired_appointee: str, store_name: str) -> Response[bool]:
+        # TODO: add remove_owner() call from approval lists for relevat store
         actor = self.get_active_user(session_identifier)
         if self.is_appointed_by(fired_appointee, actor.username, store_name):
             fired_appointee_successors = self.bfs(fired_appointee, store_name)
@@ -672,7 +725,7 @@ class Market(IService):
     def update_item_prices(self, actor: User):
         baskets = actor.get_baskets()
         for store_name, basket in baskets.items():
-            response = self.verify_registered_store(self.purchase_shopping_cart.__qualname__, store_name)
+            response = self.verify_registered_store(self.update_item_prices.__qualname__, store_name)
             if not response.success:
                 return response
             store = response.result
@@ -744,6 +797,7 @@ class Market(IService):
             else:
                 return response2.success
         return cart_price
+
 
     def purchase_shopping_cart(self, session_identifier: int, payment_method: str, payment_details: list[str],
                                address: str, postal_code: str, city: str, country: str) -> Response[bool]:
@@ -830,8 +884,13 @@ class Market(IService):
             store = response.result
             actor = self.get_active_user(session_id)
             if self.has_permission_at(store_name, actor, Permission.StartBid):
-                policy = BidPolicy()
-                return store.add_product_to_bid_purchase_policy(product_name, policy, self.get_store_owners(session_id, store_name).result)
+                owners_list_res = self.get_store_owners(session_id, store_name)
+                if not owners_list_res.success:
+                    return owners_list_res
+
+                approval = OwnersApproval(owners_list_res.result, actor.username)
+                policy = BidPolicy(approval)
+                return store.add_product_to_bid_purchase_policy(product_name, policy)
             return self.report_no_permission(self.start_bid.__qualname__, actor, store_name, Permission.StartBid)
         return response
 
@@ -1087,3 +1146,18 @@ class Market(IService):
                 managers.append(p)
 
         return Response(managers, "list of managers")
+
+
+    ### only for testing purposes:
+    def approve_as_owner_immediatly(self, session_id, store_name, appointee_name):
+        store_dict = self.approval_list.get(store_name)
+        approval = store_dict.get(appointee_name)
+        for person in approval.to_approve.keys():
+            approval.approve(person)
+        self.add_owner(session_id, appointee_name, store_name)
+
+    def get_active_session_id(self, username):
+        for sess_id in self.sessions.get_all_keys():
+            if self.sessions.get(sess_id).username == username:
+                return sess_id
+        return None

@@ -1,10 +1,12 @@
 import unittest
 
+from domain.main.Utils.OwnersApproval import OwnersApproval
 from src.domain.main.Market.Market import Market
 from src.domain.main.StoreModule.PurchasePolicy.BidPolicy import BidPolicy
 
 
 class bid_tests(unittest.TestCase):
+
     def test_bid_set_bid(self):
         market = Market()
         s1 = market.enter()
@@ -13,7 +15,7 @@ class bid_tests(unittest.TestCase):
         s1.open_store("s1")
         s1.add_product("s1", "p1", "c1", 10, 5)
         # s1.start_auction("s1", "p1", 5, 2)
-        policy = BidPolicy()
+        policy = BidPolicy(OwnersApproval(market.get_store_owners(s1.identifier, "s1").result, "u1"))
         store = market.stores.get("s1")
         s1.start_bid("s1", "p1")
         policy = store.products_with_bid_purchase_policy["p1"]
@@ -35,7 +37,7 @@ class bid_tests(unittest.TestCase):
         s1.open_store("s1")
         s1.add_product("s1", "p1", "c1", 10, 5)
         # s1.start_auction("s1", "p1", 5, 2)
-        policy = BidPolicy()
+        policy = BidPolicy(OwnersApproval(market.get_store_owners(s1.identifier, "s1").result, "u1"))
         store = market.stores.get("s1")
         s1.start_bid("s1", "p1")
         policy: BidPolicy = store.products_with_bid_purchase_policy["p1"]
@@ -48,7 +50,7 @@ class bid_tests(unittest.TestCase):
                                               "beersheva", "israel")
         self.assertTrue(policy.delivery_service.user_name == "u2", "incorrect delivery service")
         s1.approve_bid("s1", "p1", True)
-        self.assertTrue(policy.is_approved(), "bid should be approved")
+        self.assertTrue(policy.approval.is_approved(), "bid should be approved")
 
     def test_bid_swich_user(self):
         market = Market()
@@ -58,7 +60,7 @@ class bid_tests(unittest.TestCase):
         s1.open_store("s1")
         s1.add_product("s1", "p1", "c1", 10, 5)
         # s1.start_auction("s1", "p1", 5, 2)
-        policy = BidPolicy()
+        policy = BidPolicy(OwnersApproval(market.get_store_owners(s1.identifier, "s1").result, "u1"))
         store = market.stores.get("s1")
         s1.start_bid("s1", "p1")
         policy: BidPolicy = store.products_with_bid_purchase_policy["p1"]
@@ -85,7 +87,7 @@ class bid_tests(unittest.TestCase):
         s1.open_store("s1")
         s1.add_product("s1", "p1", "c1", 10, 5)
         # s1.start_auction("s1", "p1", 5, 2)
-        policy = BidPolicy()
+        policy = BidPolicy(OwnersApproval(market.get_store_owners(s1.identifier, "s1").result, "u1"))
         store = market.stores.get("s1")
         s1.start_bid("s1", "p1")
         policy: BidPolicy = store.products_with_bid_purchase_policy["p1"]
@@ -114,4 +116,4 @@ class bid_tests(unittest.TestCase):
         s1.approve_bid("s1", "p1", True)
         s4.approve_bid("s1", "p1", True)
 
-        self.assertTrue(policy.is_approved(), "bid should be approved")
+        self.assertTrue(policy.approval.is_approved(), "bid should be approved")
