@@ -282,3 +282,15 @@ class SessionAdapter:
     def get_purchase_history_owner(self, store_name: str):
         return self._session.get_store_purchase_history(store_name)
 
+    @property
+    def unread_amount_observable(self):
+        return self._session.unread_amount_observable
+
+    def send_message(self, recipient: str, content: str):
+        return self._session.send_message(recipient, content)
+
+    def get_inbox(self):
+        return self._session.get_inbox()
+
+    def mark_read(self, msg_id):
+        return self._session.mark_read(msg_id)
