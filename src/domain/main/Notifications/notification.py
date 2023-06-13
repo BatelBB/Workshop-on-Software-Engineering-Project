@@ -1,4 +1,3 @@
-
 from dataclasses import dataclass
 from enum import Enum
 
@@ -9,6 +8,8 @@ class NotificationOriginType(Enum):
     User = 'User'
     Shop = 'Shop'
 
+
+_counter = 0
 
 @dataclass
 class Notification:
@@ -21,9 +22,11 @@ class Notification:
     seen: bool = False
 
     def __post_init__(self):
+        global _counter
+        _counter += 1
         if self.timestamp is None:
             self.timestamp = datetime.timestamp(datetime.now())
-        self.msg_id = abs(hash((self.recipient, self.sender, self.sender_type, self.timestamp, self.content)))
+        self.msg_id = abs(hash((self.recipient, self.sender, self.sender_type, self.timestamp, self.content, _counter)))
 
     @property
     def is_from_user(self):
