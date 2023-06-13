@@ -247,6 +247,4 @@ class StoreTestCase(unittest.TestCase):
         r = session.login(*self.service_admin)
         r = session.cancel_membership_of("Nir")
         r = session.login("Nir", "marry had a little lambda")
-        r = session.open_store("Amazon")
-        self.assertEqual(len(session.get_all_stores().result), 0)
-        self.assertFalse(session.get_store("Amazon").success)
+        self.assertFalse(r.success)

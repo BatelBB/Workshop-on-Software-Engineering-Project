@@ -32,13 +32,13 @@ class Session:
         return self.service.leave(self.identifier)
 
     def shutdown(self) -> Response[bool]:
-        return self.apply(self.service.shutdown, self.identifier)
+        return self.service.shutdown(self.identifier)
 
-    def register(self, username: str, encrypted_password: str) -> Response[bool]:
-        return self.apply(self.service.register, self.identifier, username, encrypted_password)
+    def register(self, username: str, password: str) -> Response[bool]:
+        return self.apply(self.service.register, self.identifier, username, password)
 
-    def register_admin(self, username: str, encrypted_password: str) -> Response[bool]:
-        return self.apply(self.service.register_admin, self.identifier, username, encrypted_password)
+    def register_admin(self, username: str, password: str, is_admin: bool = True) -> Response[bool]:
+        return self.apply(self.service.register_admin, self.identifier, username, password, is_admin)
 
     def is_registered(self, username: str) -> bool:
         return self.apply(self.service.is_registered, username)
@@ -258,3 +258,9 @@ class Session:
 
     def get_cart_price(self, baskets):
         return self.apply(self.service.get_cart_price, baskets)
+
+    def get_number_of_registered_users(self) -> int:
+        return self.apply(self.service.get_number_of_registered_users)
+
+    def get_number_of_stores(self) -> int:
+        return self.apply(self.service.get_number_of_stores)

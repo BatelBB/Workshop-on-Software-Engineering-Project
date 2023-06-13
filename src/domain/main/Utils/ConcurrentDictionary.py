@@ -67,3 +67,6 @@ class ConcurrentDictionary(Generic[Key, Value]):
     def list_entries(self):
         with self.lock:
             return list(self.dictionary.items())
+
+    def size(self) -> int:
+        return len(self.dictionary)

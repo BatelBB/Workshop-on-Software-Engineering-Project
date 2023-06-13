@@ -20,7 +20,6 @@ class Appointment(Base_db.Base):
     role = Column("role", String)
     appointed_by = Column("appointed_by", String, nullable=True)
     permissions_str = Column("permissions_str", String)
-    table_lock = threading.RLock()
 
     def __init__(self, appointee: str, store_name: str, role: {'StoreManager', 'StoreOwner'}='StoreOwner', appointed_by: str = None, permissions=None):
         self.appointee = appointee

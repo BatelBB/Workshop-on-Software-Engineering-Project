@@ -52,7 +52,6 @@ class Store(Base_db.Base):
     __table_args__ = {'extend_existing': True}
     name = Column("name", String, primary_key=True)
     purchase_history_str = Column("purchase_history_str", String, default='')
-    table_lock = threading.RLock()
 
     def __init__(self, name: str):
         self.name = name
@@ -68,6 +67,7 @@ class Store(Base_db.Base):
         self.discounts: AddDiscounts = AddDiscounts(0)
         self.discount_counter = 0
         self.discount_lock = threading.RLock()
+        self.table_lock = threading.Lock()
 
     @staticmethod
     def load_store(store_name):
@@ -137,13 +137,12 @@ class Store(Base_db.Base):
             if product not in self.products:
                 self.products.add(product)
                 self.products_quantities.update({product.name: ProductQuantity(quantity)})
-                with Store.table_lock:
-                    session_DB.merge(product)
-                    session_DB.commit()
+                session_DB.merge(product)
+                session_DB.commit()
             else:
                 new_quantity = self.products_quantities[product.name].refill(quantity)
                 if new_quantity > 0:
-                    with Store.table_lock:
+                    with self.table_lock:
                         r = session_DB.query(Product).filter(Product.name == product.name, Product.store_name == self.name).first()
                         r.quantity = new_quantity
                         session_DB.commit()
@@ -155,14 +154,14 @@ class Store(Base_db.Base):
         is_succeed = p in self.products
         if is_succeed:
             self.products_quantities[product_name].reset(quantity)
-            with Store.table_lock:
+            with self.table_lock:
                 r = session_DB.query(Product).filter(Product.name == product_name, Product.store_name == self.name).first()
                 r.quantity = quantity
                 session_DB.commit()
         return is_succeed
 
     def update_db(self, basket):
-        with Store.table_lock:
+        with self.table_lock:
             for item in basket.items:
                 r = session_DB.query(Product).filter(Product.name == item.product_name, item.store_name == self.name).first()
                 r.quantity -= item.quantity
@@ -173,7 +172,7 @@ class Store(Base_db.Base):
         try:
             self.products.remove(p)
             del self.products_quantities[product_name]
-            with Store.table_lock:
+            with self.table_lock:
                 session_DB.query(Product).filter(Product.name == product_name, Product.store_name == self.name).delete()
                 session_DB.commit()
             return True
@@ -243,7 +242,7 @@ class Store(Base_db.Base):
         is_changed = product is not None
         if is_changed:
             product.category = new
-            with Store.table_lock:
+            with self.table_lock:
                 r = session_DB.query(Product).filter(Product.name == product.name, Product.store_name == self.name).first()
                 r.category = new
                 session_DB.commit()
@@ -252,7 +251,7 @@ class Store(Base_db.Base):
     def change_product_price(self, old: float, new: float) -> None:
         for product in filter(lambda p: p.price == old, self.products):
             product.price = new
-            with Store.table_lock:
+            with self.table_lock:
                 r = session_DB.query(Product).filter(Product.name == product.name, Product.store_name == self.name).first()
                 r.price = new
                 session_DB.commit()
@@ -319,9 +318,8 @@ class Store(Base_db.Base):
 
     def add_to_purchase_history(self, baskets: Basket):
         self.purchase_history.append(baskets.__str__())
-        with Store.table_lock:
-            r = session_DB.query(Store).filter(Store.name == self.name).first()
-            r.purchase_history_str = '#'.join(self.purchase_history)
+        r = session_DB.query(Store).filter(Store.name == self.name).first()
+        r.purchase_history_str = '#'.join(self.purchase_history)
 
     def get_purchase_history(self) -> list[str]:
         return self.purchase_history

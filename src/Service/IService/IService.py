@@ -25,11 +25,7 @@ class IService(metaclass=IAbsractConcurrentSingleton):
         ...
 
     @abstractmethod
-    def register(self, session_identifier: int, username: str, encrypted_password: str) -> Response[bool]:
-        ...
-
-    @abstractmethod
-    def register_admin(self, session_identifier: int, username: str, encrypted_password: str) -> Response[bool]:
+    def register(self, session_identifier: int, username: str, password: str, is_admin: bool = False) -> Response[bool]:
         ...
 
     @abstractmethod
@@ -285,4 +281,12 @@ class IService(metaclass=IAbsractConcurrentSingleton):
 
     @abstractmethod
     def get_store_managers(self, session_id: int, store_name: str):
+        ...
+
+    @abstractmethod
+    def get_number_of_registered_users(self) -> int:
+        ...
+
+    @abstractmethod
+    def get_number_of_stores(self) -> int:
         ...
