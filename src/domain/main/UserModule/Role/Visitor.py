@@ -18,7 +18,7 @@ class Visitor(IRole, ABC):
         super().__init__(context)
 
     def __str__(self):
-        return f'Visitor'
+        return f'Visitor \'{self.context.username}\''
 
     def login(self, input_password: str) -> bool:
         if self.context.is_canceled:

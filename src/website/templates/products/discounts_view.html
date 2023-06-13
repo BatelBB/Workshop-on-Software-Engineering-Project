@@ -47,3 +47,7 @@
     {% endfor %}
     </tbody>
 </table>
+
+<form action="{{ url_for('buying.view_store', name=store_name) }}" method="get">
+    <button type="submit">Back</button>
+</form>

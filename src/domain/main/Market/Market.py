@@ -7,9 +7,11 @@ from typing import Any
 
 from multipledispatch import dispatch
 from sqlalchemy import inspect
-
 from Service.IService.IService import IService
-from Service.Session.Session import Session
+from domain.main.StoreModule.PurchaseRules.IRule import IRule
+from domain.main.UserModule.Cart import Cart
+from domain.main.Utils.OwnersApproval import OwnersApproval
+from src.domain.main.Notifications.notification_controller import NotificationController
 from src.domain.main.ExternalServices.Payment.PaymentFactory import PaymentFactory
 from src.domain.main.ExternalServices.Payment.PaymentServices import IPaymentService
 from src.domain.main.ExternalServices.Provision.ProvisionServiceAdapter import provisionService, IProvisionService
@@ -23,15 +25,14 @@ from src.domain.main.StoreModule.PurchasePolicy.BidPolicy import BidPolicy
 from src.domain.main.StoreModule.PurchasePolicy.LotteryPolicy import LotteryPolicy
 from src.domain.main.StoreModule.PurchasePolicy.PurchasePolicyFactory import PurchasePolicyFactory
 from src.domain.main.StoreModule.PurchaseRules import PurchaseRulesFactory
-from src.domain.main.StoreModule.PurchaseRules.IRule import IRule
 from src.domain.main.StoreModule.Store import Store
 from src.domain.main.UserModule.Basket import Item
-from src.domain.main.UserModule.Cart import Cart
 from src.domain.main.UserModule.User import User
-from src.domain.main.Utils.Base_db import Base, engine
+from src.domain.main.Utils.Base_db import Base, engine, init_db_from_configuration
 from src.domain.main.Utils.ConcurrentDictionary import ConcurrentDictionary
 from src.domain.main.Utils.Logger import Logger, report_error, report_info
 from src.domain.main.Utils.Response import Response
+from src.Service.Session.Session import Session
 
 
 class Market(IService):
@@ -40,6 +41,7 @@ class Market(IService):
         self.sessions: ConcurrentDictionary[int, User] = ConcurrentDictionary()
         self.users: ConcurrentDictionary[str, User] = ConcurrentDictionary()
         self.stores: ConcurrentDictionary[str, Store] = ConcurrentDictionary()
+        self.notifications = NotificationController()
         self.removed_stores: ConcurrentDictionary[str, Store] = ConcurrentDictionary()
         self.removed_store_products: ConcurrentDictionary[Store, set[Product]] = ConcurrentDictionary()
         self.removed_products_quantity: ConcurrentDictionary[Product, int] = ConcurrentDictionary()
@@ -50,9 +52,11 @@ class Market(IService):
         self.store_activity_status: ConcurrentDictionary[str, str] = ConcurrentDictionary()
         self.package_counter = 0
         self.appointments_lock = threading.RLock()
+        self.approval_lock = threading.RLock()
+        self.approval_list: ConcurrentDictionary[
+            str, ConcurrentDictionary[str, OwnersApproval]] = ConcurrentDictionary()
         self.init_db()
         self.init_admin()
-        max_process = max(multiprocessing.cpu_count() - 1, 1)
 
     def init_db(self):
         Base.metadata.reflect(engine)
@@ -64,6 +68,9 @@ class Market(IService):
                 tables_to_create.append(cls.__table__)
 
         Base.metadata.create_all(engine, checkfirst=True, tables=tables_to_create)
+
+    def load_configuration(self, config):   # TODO: Batel load external service here
+        init_db_from_configuration(config['db'])
 
     def is_table_exsits(self, table_name: str):
         inspector = inspect(engine)
@@ -115,9 +122,12 @@ class Market(IService):
     def remove_appointment_of(self, fired_user: str, store_name: str) -> None:
         Appointment.delete_record(fired_user, store_name)
         self.appointments.get(store_name).remove(Appointment(fired_user, store_name))
+        self.notifications.send_from_store(store_name, fired_user,
+                                           f"The store {store_name} no longer requires your service. Sorry.")
 
     def get_appointees_of(self, fired_user: str, store_name: str) -> list[str]:
-        appointments = filter(lambda appointment: appointment.appointed_by == fired_user, self.appointments.get(store_name))
+        appointments = filter(lambda appointment: appointment.appointed_by == fired_user,
+                              self.appointments.get(store_name))
         return list(map(lambda appointment: appointment.appointee, appointments))
 
     def appointees_at(self, session_identifier: int, store_name: str) -> Response[list[str]]:
@@ -142,7 +152,12 @@ class Market(IService):
         with self.appointments_lock:
             if self.is_not_appointed_yet(appointment.appointee, store_name):
                 Appointment.add_record(appointment)
-                self.appointments.insert(store_name, [appointment]) if appointments is None else appointments.append(appointment)
+                self.appointments.insert(store_name, [appointment]) if appointments is None else \
+                    appointments.append(appointment)
+                self.notifications.send_from_store(store_name, appointment.appointee,
+                           f"The store {store_name} appointed you with permissions {appointment.permissions}")
+                self.appointments.insert(store_name, [appointment]) if appointments is None else appointments.append(
+                    appointment)
                 return True
             return False
 
@@ -219,7 +234,8 @@ class Market(IService):
         return Response(user) if user is not None \
             else report_error(calling_method_name, f'User \'{username}\' is not registered to the market.')
 
-    def verify_registered_user_and_store(self, calling_method_name: str, username: str, store_name: str) -> Response[tuple[User, Store] | bool]:
+    def verify_registered_user_and_store(self, calling_method_name: str, username: str, store_name: str) -> Response[
+        tuple[User, Store] | bool]:
         response = self.verify_registered_user(calling_method_name, username)
         if response.success:
             user = response.result
@@ -244,11 +260,9 @@ class Market(IService):
                     return Response(store)
                 return report_error(self.verify_store_contains_product.__qualname__, f'Store \'{store_name}\' can provide only {store.amount_of(product_name)} units of Product \'{product_name}\'. Required: {quantity}.')
             return report_error(calling_method_name, f'Store \'{store_name}\' does not contains Product \'{product_name}\'')
-        return response
 
     def report_no_permission(self, calling_method: str, actor: User, store: str, permission: Permission):
-        return report_error(calling_method,
-                            f'\'{actor}\' has no permission to {get_permission_description(permission)} at store \'{store}\'')
+        return report_error(calling_method, f'\'{actor}\' has no permission to {get_permission_description(permission)} at store \'{store}\'')
 
     def leave(self, session_identifier: int) -> Response[bool]:
         leaving_user = self.sessions.delete(session_identifier)
@@ -323,6 +337,9 @@ class Market(IService):
                 self.removed_store_products.insert(store, products)
                 for product in products:
                     self.removed_products_quantity.insert(product, store.amount_of(product.name))
+
+                self.notifications.send_from_store(store_name, actor.username,
+                                           f"You have closed store {store_name}.")
                 return report_info(self.remove_store.__qualname__, f'{actor} removed store {store_name}')
             else:
                 return report_error(self.remove_store.__qualname__,
@@ -434,7 +451,8 @@ class Market(IService):
             if not actor.is_member():
                 return report_error(calling_method, f'{appointee} is not allowed to {required_permission.value}.')
             if self.has_permission_at(store_name, actor, required_permission):
-                if self.add_appointment(store_name, Appointment(appointee_name, store_name, role, actor.username, permissions)):
+                if self.add_appointment(store_name,
+                                        Appointment(appointee_name, store_name, role, actor.username, permissions)):
                     return report_info(calling_method, f'{actor} appointed \'{appointee.username}\' to a {role}.')
                 return report_error(calling_method, f'{appointee} is already appointed to a role at store \'{store_name}\'.')
             return self.report_no_permission(calling_method, actor, store_name, required_permission)
@@ -472,18 +490,65 @@ class Market(IService):
         return self.appoint(session_identifier, self.appoint_manager.__qualname__, store_name, appointee_name,
                             Permission.AppointManager, get_default_manager_permissions(), role='StoreManager')
 
-    def appoint_owner(self, session_identifier: int, appointee_name: str, store_name: str) -> Response[bool]:
-        res = self.appoint(session_identifier, self.appoint_owner.__qualname__, store_name, appointee_name,
-                            Permission.AppointOwner, get_default_owner_permissions(), role='StoreOwner')
+    # only call from self.approve_owner or self.appoint_owner
+    def add_owner(self, session_identifier: int, appointee_name: str, store_name: str) -> Response:
+        res = self.appoint(session_identifier, self.add_owner.__qualname__, store_name, appointee_name,
+                           Permission.AppointOwner, get_default_owner_permissions(), role='StoreOwner')
         if res.success:
-            store_res = self.verify_registered_store(self.appoint_owner.__qualname__, store_name)
+            store_res = self.verify_registered_store(self.add_owner.__qualname__, store_name)
             if not store_res.success:
-                return report_error(self.appoint_owner.__qualname__, "invalid store")
+                return report_error(self.add_owner.__qualname__, "invalid store")
+
             store = store_res.result
             store.add_owner(appointee_name)
+
+            store_dict = self.approval_list.get(store_name)
+            for name in store_dict.get_all_keys():
+                store_dict.get(name).add_owner(appointee_name)
         return res
 
-    def set_permission(self, session_identifier: int, calling_method: str, store: str, appointee: str, permission: Permission, action: {'ADD', 'REMOVE'}) -> Response[bool]:
+    def approve_owner(self, session_identifier: int, appointee_name: str, store_name: str) -> Response[bool]:
+        with self.approval_lock:
+            actor = self.get_active_user(session_identifier)
+            store_dict = self.approval_list.get(store_name)
+            if store_dict is None:
+                return report_error(self.approve_owner.__qualname__, "approval doesnt exist")
+            approval = store_dict.get(appointee_name)
+            if approval is None:
+                return report_error(self.approve_owner.__qualname__, "approval doesnt exist")
+
+            approval_res = approval.approve(actor.username)
+            if not approval_res.result:
+                return report_info(self.approve_owner.__qualname__, f"{actor.username} approved")
+
+            store_dict.delete(appointee_name)
+            return self.add_owner(session_identifier, appointee_name, store_name)
+
+    def appoint_owner(self, session_identifier: int, appointee_name: str, store_name: str) -> Response[bool]:
+        actor = self.get_active_user(session_identifier)
+        perms = self.permissions_of(session_identifier, store_name, actor.username)
+
+        if Permission.AppointOwner not in perms.result:
+            return report_error(self.appoint_owner.__qualname__,
+                                f"{actor.username} does not have permissions to appoint owner")
+
+        store = self.verify_registered_store(self.appoint_owner.__qualname__, store_name)
+        if not store.success:
+            return store
+
+        self.approval_list.insert(store_name, ConcurrentDictionary())
+        approval = OwnersApproval(self.get_store_owners(session_identifier, store_name).result,
+                                  actor.username)
+        self.approval_list.get(store_name).insert(appointee_name, approval)
+
+        if approval.is_approved():
+            return self.add_owner(session_identifier, appointee_name, store_name)
+
+        return report_info(self.appoint_owner.__qualname__,
+                           f"approval process beggins for ownership for {appointee_name} of {store_name}")
+
+    def set_permission(self, session_identifier: int, calling_method: str, store: str, appointee: str,
+                       permission: Permission, action: {'ADD', 'REMOVE'}) -> Response[bool]:
         actor = self.get_active_user(session_identifier)
         if self.is_appointed_by(appointee, actor.username, store):
             self.set_permissions_of(appointee, store, permission, action)
@@ -515,12 +580,11 @@ class Market(IService):
                         f'Display permission of admin')
         return Response(get_default_owner_permissions(), r.description)
 
-    '''
+    def bfs(self, root: str, store_name: str) -> list[str]:
+        """
         Store appointments creates a tree
         We iterate over the subtree of root in a breath-first-manner to aggregate all its successive appointees
-    '''
-
-    def bfs(self, root: str, store_name: str) -> list[str]:
+        """
         successors: list[str] = list()
         queue: list[str] = list()
         queue.append(root)
@@ -532,6 +596,7 @@ class Market(IService):
         return successors
 
     def remove_appointment(self, session_identifier: int, fired_appointee: str, store_name: str) -> Response[bool]:
+        # TODO: add remove_owner() call from approval lists for relevat store
         actor = self.get_active_user(session_identifier)
         if self.is_appointed_by(fired_appointee, actor.username, store_name):
             fired_appointee_successors = self.bfs(fired_appointee, store_name)
@@ -748,7 +813,7 @@ class Market(IService):
                     cart_price += store.calculate_basket_price(basket)
             else:
                 return response2.success
-        return cart_price
+        return cart_price, successful_store_purchases
 
     def purchase_shopping_cart(self, session_identifier: int, payment_method: str, payment_details: list[str],
                                address: str, postal_code: str, city: str, country: str) -> Response[bool]:
@@ -758,17 +823,17 @@ class Market(IService):
         response = actor.verify_cart_not_empty()
         if response.success:
             baskets = actor.get_baskets()
-            cart_price = self.get_cart_price(baskets)
-            payment_succeeded = self.pay(cart_price, payment_method, payment_details, holder, user_id)
+            resp = self.get_cart_price(baskets)
+            payment_succeeded = self.pay(resp[0], payment_method, payment_details, holder, user_id)
             if payment_succeeded:
                 # order delivery
                 delivery_service = provisionService()
                 delivery_service.set_info(actor.username, 0, address, postal_code, city, country)
                 if not delivery_service.getDelivery():
-                    payment_succeeded.refund(cart_price)
+                    payment_succeeded.refund(resp[0])
                     return report_error(self.purchase_shopping_cart.__qualname__, 'failed delivery')
                 self.add_to_purchase_history(baskets)
-                self.update_user_cart_after_purchase(actor, successful_store_purchases)
+                self.update_user_cart_after_purchase(actor, resp[1])
                 for store_name, basket in baskets.items():
                     self.find_store(store_name).update_db(basket)
                 return Response(True)
@@ -835,8 +900,13 @@ class Market(IService):
             store = response.result
             actor = self.get_active_user(session_id)
             if self.has_permission_at(store_name, actor, Permission.StartBid):
-                policy = BidPolicy()
-                return store.add_product_to_bid_purchase_policy(product_name, policy, self.get_store_owners(session_id, store_name).result)
+                owners_list_res = self.get_store_owners(session_id, store_name)
+                if not owners_list_res.success:
+                    return owners_list_res
+
+                approval = OwnersApproval(owners_list_res.result, actor.username)
+                policy = BidPolicy(approval)
+                return store.add_product_to_bid_purchase_policy(product_name, policy)
             return self.report_no_permission(self.start_bid.__qualname__, actor, store_name, Permission.StartBid)
         return response
 
@@ -1085,3 +1155,47 @@ class Market(IService):
                 managers.append(p)
 
         return Response(managers, "list of managers")
+
+    ### only for testing purposes:
+    def approve_as_owner_immediatly(self, session_id, store_name, appointee_name):
+        store_dict = self.approval_list.get(store_name)
+        approval = store_dict.get(appointee_name)
+        for person in approval.to_approve.keys():
+            approval.approve(person)
+        self.add_owner(session_id, appointee_name, store_name)
+
+    def get_active_session_id(self, username):
+        for sess_id in self.sessions.get_all_keys():
+            if self.sessions.get(sess_id).username == username:
+                return sess_id
+        return None
+
+
+    def send_user_message(self, session_id: int, recipient: str, content: str):
+        actor = self.get_active_user(session_id)
+        if not actor.is_logged_in:
+            return report_error(self.send_user_message.__qualname__, "Can't send message: not logged in")
+        if recipient not in self.users.get_all_keys():
+            return report_error(self.send_user_message.__qualname__, "no such user")
+        self.notifications.send_from_user(actor.username, recipient, content)
+        return report_info(self.send_user_message.__qualname__,
+                   f"send message succesful: {actor.username} -> {recipient}: {content}")
+
+    def get_user_unread_observable(self, session_id: int):
+        actor = self.get_active_user(session_id)
+        if not actor.is_logged_in:
+            return report_error(self.send_user_message.__qualname__, "Can't get unread observable: not logged in")
+        return Response(self.notifications.get_unread_observable(actor.username))
+
+    def get_inbox(self, session_id: int):
+        actor = self.get_active_user(session_id)
+        if not actor.is_logged_in:
+            return report_error(self.send_user_message.__qualname__, "Can't get inbox: not logged in")
+        return Response(self.notifications.get_notifications_for(actor.username))
+
+    def mark_read(self, session_id: int, msg_id: int):
+        actor = self.get_active_user(session_id)
+        if not actor.is_logged_in:
+            return report_error('mark_read', "mark_read: not logged in")
+        msg = self.notifications.mark_read(actor.username, msg_id)
+        return msg

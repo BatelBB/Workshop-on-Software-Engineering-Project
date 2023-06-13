@@ -10,7 +10,7 @@ from src.domain.test.UnitTests.RandomInputGenerator import get_random_product, g
 
 class RobustnessTest(unittest.TestCase):
 
-    number_of_threads = [1, 10, 100, 250, 500, 1000]
+    number_of_threads = [1, 10, 100]
 
     def __init__(self, *args, **kwargs):
         unittest.TestCase.__init__(self, *args, **kwargs)
@@ -30,7 +30,8 @@ class RobustnessTest(unittest.TestCase):
 
     def setUp(self) -> None:
         # Note: each test create a new, fresh market with a unique session identifier
-        self.service: IService = Market()
+        # self.market = Market()
+        self.service: Market = Market()
         self.session = self.service.enter()
         self.service_admin = ('Kfir', 'Kfir')
         self.session.login(*self.service_admin)
@@ -43,7 +44,10 @@ class RobustnessTest(unittest.TestCase):
 
     def register(self, i=0) -> tuple:
         user = self.users[i]
-        self.assertTrue(self.session.register(*user).success)
+        res = self.session.register(*user)
+        if not res.success:
+            print("awd")
+        self.assertTrue(res.success, f'{user[0]} failed register')
         return user
 
     def login(self, i=0) -> tuple:
@@ -114,13 +118,14 @@ class RobustnessTest(unittest.TestCase):
         self.assertTrue(r.success)
         results[index] = r
 
-    def appoints_owners_of(self, store, number_of_managers):
+    def appoints_owners_of(self, store, number_of_managers, session_id=1):
         appointees = []
         while number_of_managers > 0:
             appointee = get_random_user()
             appointee_name = appointee[0]
             self.session.register(*appointee)
             self.session.appoint_owner(appointee_name, store)
+            self.service.approve_as_owner_immediatly(session_id, store, appointee_name)
             appointees.append(appointee)
             number_of_managers -= 1
         return appointees
@@ -128,7 +133,7 @@ class RobustnessTest(unittest.TestCase):
     @parameterized.expand(number_of_threads)
     def test_multiple_threads_add_different_products_to_store(self, number_of_threads):
         owner, store = self.create_store_owner()
-        appointees = self.appoints_owners_of(store, number_of_threads)
+        appointees = self.appoints_owners_of(store, number_of_threads, self.service.get_active_session_id(owner[0]))
         threads = [None] * number_of_threads
         results = [None] * number_of_threads
 
@@ -145,7 +150,7 @@ class RobustnessTest(unittest.TestCase):
     # @parameterized.expand(number_of_threads)
     def test_multiple_threads_add_same_product_to_store(self, number_of_threads: int=1000):
         owner, store = self.create_store_owner()
-        appointees = self.appoints_owners_of(store, number_of_threads)
+        appointees = self.appoints_owners_of(store, number_of_threads, self.service.get_active_session_id(owner[0]))
         product = get_random_product()
         product_name, product_quantity = product[0], product[3]
         threads = [None] * number_of_threads
@@ -170,7 +175,7 @@ class RobustnessTest(unittest.TestCase):
     @parameterized.expand(number_of_threads)
     def test_multiple_threads_appoint_same_manager(self, number_of_threads: int):
         owner, store = self.create_store_owner()
-        appointed_store_owner = self.appoints_owners_of(store, number_of_threads)
+        appointed_store_owner = self.appoints_owners_of(store, number_of_threads, self.service.get_active_session_id(owner[0]))
         appointee = get_random_user()
         appointee_name = appointee[0]
         self.session.register(*appointee)

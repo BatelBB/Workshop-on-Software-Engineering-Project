@@ -11,6 +11,7 @@ from src.domain.main.StoreModule.DIscounts.IDIscount import IDiscount
 from src.domain.main.StoreModule.DIscounts.SimpleDiscount import SimpleDiscount
 from src.domain.main.Utils import Base_db
 from src.domain.main.Utils.Base_db import session_DB
+from src.domain.main.Utils.OwnersApproval import OwnersApproval
 from src.domain.main.ExternalServices.Payment.PaymentServices import IPaymentService
 from src.domain.main.ExternalServices.Provision.ProvisionServiceAdapter import IProvisionService, provisionService
 from src.domain.main.StoreModule.Product import Product
@@ -336,7 +337,7 @@ class Store(Base_db.Base):
         self.products_with_special_purchase_policy[product_name] = p_policy
         return report("add_product_to_special_purchase_policy", True)
 
-    def add_product_to_bid_purchase_policy(self, product_name: str, p_policy: IPurchasePolicy, staff: list[str]) -> \
+    def add_product_to_bid_purchase_policy(self, product_name: str, p_policy: IPurchasePolicy) -> \
             Response[bool]:
         if not self.reserve(product_name, 1):
             return report_error("add_product_to_bid_purchase_policy",
@@ -346,7 +347,6 @@ class Store(Base_db.Base):
             return report_error("add_product_to_bid_purchase_policy", "product can have only 1 special purchase policy")
 
         self.products_with_bid_purchase_policy[product_name] = p_policy
-        self.set_to_approve_for_bid(product_name, staff)
         return report("add_product_to_bid_purchase_policy", True)
 
     def apply_purchase_policy(self, payment_service: IPaymentService, product_name: str,
@@ -379,7 +379,11 @@ class Store(Base_db.Base):
         if product_name not in self.products_with_bid_purchase_policy.keys():
             return report_error("approve_bid", f"{product_name} not in bidding policy")
 
-        return self.products_with_bid_purchase_policy[product_name].approve(person)
+        res = self.products_with_bid_purchase_policy[product_name].approve(person)
+        if res.success:
+            if res.result:
+                self.products_with_bid_purchase_policy.pop(product_name)
+        return res
 
     def add_purchase_rule(self, rule: IRule) -> Response:
         with self.purchase_rule_lock:
@@ -462,3 +466,8 @@ class Store(Base_db.Base):
         for key in self.products_with_bid_purchase_policy.keys():
             policy = self.products_with_bid_purchase_policy[key]
             policy.add_to_approval_dict_in_bid_policy(name)
+
+    def remove_owner(self, name: str):
+        for key in self.products_with_bid_purchase_policy.keys():
+            policy = self.products_with_bid_purchase_policy[key]
+            policy.remove_from_approval_dict_in_bid_policy(name)
