@@ -1,5 +1,8 @@
-from typing import Any
+from typing import Any, List
 
+from reactivex import Observable
+
+from src.domain.main.Notifications.notification import Notification
 from src.domain.main.StoreModule.PurchaseRules.IRule import IRule
 from src.domain.main.Market.Appointment import Appointment
 from src.domain.main.Market.Permissions import Permission
@@ -15,7 +18,7 @@ from src.domain.main.Utils.Response import Response
 class Session:
     def __init__(self, identifier: int, service: IService):
         self.identifier = identifier
-        self.service = service
+        self.service: IService = service
         self.is_open = True
 
     def __str__(self):
@@ -128,6 +131,9 @@ class Session:
 
     def appoint_owner(self, appointee: str, store: str) -> Response[bool]:
         return self.apply(self.service.appoint_owner, self.identifier, appointee, store)
+
+    def approve_owner(self, appointee: str, store: str) -> Response[bool]:
+        return self.apply(self.service.approve_owner, self.identifier, appointee, store)
 
     def appointees_at(self, store: str) -> Response[list[str] | bool]:
         return self.apply(self.service.appointees_at, self.identifier, store)
@@ -260,3 +266,17 @@ class Session:
 
     def get_cart_price(self, baskets):
         return self.apply(self.service.get_cart_price, baskets)
+
+    def send_message(self, recipient, content):
+        return self.apply(self.service.send_user_message, self.identifier, recipient, content)
+
+    @property
+    def unread_amount_observable(self) -> Response[Observable[Notification]]:
+        return self.apply(self.service.get_user_unread_observable, self.identifier)
+
+    def get_inbox(self) -> Response[List[Notification]]:
+        return self.apply(self.service.get_inbox, self.identifier)
+
+    def mark_read(self, msg_id: int):
+        return self.apply(self.service.mark_read, self.identifier, msg_id)
+
