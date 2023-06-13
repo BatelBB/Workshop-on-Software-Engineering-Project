@@ -6,7 +6,6 @@ from flask import session, flash
 from src.domain.main.Market.Market import Market
 from src.domain.main.Utils.ConcurrentDictionary import ConcurrentDictionary
 from website.core_features.domain_access.session_adapter import SessionAdapter
-from website.core_features.seed import seed
 
 _lock = RLock()
 _instance: Optional[Market] = None
@@ -18,7 +17,6 @@ def _get_market() -> Market:
     with _lock:
         if _instance is None:
             _instance = Market()
-            seed(_instance)
         return _instance
 
 
