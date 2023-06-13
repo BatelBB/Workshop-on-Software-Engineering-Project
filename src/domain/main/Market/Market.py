@@ -56,7 +56,8 @@ class Market(IService):
         self.package_counter = 0
         self.appointments_lock = threading.RLock()
         self.approval_lock = threading.RLock()
-        self.approval_list: ConcurrentDictionary[str,ConcurrentDictionary[str, OwnersApproval]] = ConcurrentDictionary()
+        self.approval_list: ConcurrentDictionary[
+            str, ConcurrentDictionary[str, OwnersApproval]] = ConcurrentDictionary()
 
         self.init_db()
         self.init_admin()
@@ -124,7 +125,8 @@ class Market(IService):
         self.appointments.get(store_name).remove(Appointment(fired_user, store_name))
 
     def get_appointees_of(self, fired_user: str, store_name: str) -> list[str]:
-        appointments = filter(lambda appointment: appointment.appointed_by == fired_user, self.appointments.get(store_name))
+        appointments = filter(lambda appointment: appointment.appointed_by == fired_user,
+                              self.appointments.get(store_name))
         return list(map(lambda appointment: appointment.appointee, appointments))
 
     def appointees_at(self, session_identifier: int, store_name: str) -> Response[list[str]]:
@@ -132,7 +134,8 @@ class Market(IService):
         appointees = self.bfs(actor.username, store_name)
         appointees.remove(actor.username)
         msg = ', '.join(appointees)
-        r = report_info(self.appointees_at.__qualname__, f'\'{actor.username}\' appointees at store \'{store_name}\': {msg}')
+        r = report_info(self.appointees_at.__qualname__,
+                        f'\'{actor.username}\' appointees at store \'{store_name}\': {msg}')
         return Response(appointees, r.description)
 
     def has_permission_at(self, store_name: str, actor: User, permission: Permission) -> bool:
@@ -149,7 +152,8 @@ class Market(IService):
         with self.appointments_lock:
             if self.is_not_appointed_yet(appointment.appointee, store_name):
                 Appointment.add_record(appointment)
-                self.appointments.insert(store_name, [appointment]) if appointments is None else appointments.append(appointment)
+                self.appointments.insert(store_name, [appointment]) if appointments is None else appointments.append(
+                    appointment)
                 return True
             return False
 
@@ -205,7 +209,7 @@ class Market(IService):
                 if self.users.get(username) is None:
                     self.users.insert(username, user)
         return user
-    
+
     def find_store(self, store_name) -> Store | None:
         store = self.stores.get(store_name)
         if store is None:
@@ -220,7 +224,8 @@ class Market(IService):
         return Response(user) if user is not None \
             else report_error(calling_method_name, f'User \'{username}\' is not registered to the market.')
 
-    def verify_registered_user_and_store(self, calling_method_name: str, username: str, store_name: str) -> Response[tuple[User, Store] | bool]:
+    def verify_registered_user_and_store(self, calling_method_name: str, username: str, store_name: str) -> Response[
+        tuple[User, Store] | bool]:
         response = self.verify_registered_user(calling_method_name, username)
         if response.success:
             user = response.result
@@ -234,12 +239,14 @@ class Market(IService):
     def get_all_registered_users(self) -> list[str]:
         return self.users.get_all_keys()
 
-    def verify_store_contains_product(self, calling_method_name: str, store_name: str, product_name: str, quantity: int) -> Response[
+    def verify_store_contains_product(self, calling_method_name: str, store_name: str, product_name: str,
+                                      quantity: int) -> Response[
         Store | bool]:
         response = self.verify_registered_store(calling_method_name, store_name)
         if response.success:
             store = response.result
-            return Response(store) if store.contains(product_name) and store.amount_of(product_name) >= quantity and quantity > 0 else report_error(calling_method_name,
+            return Response(store) if store.contains(product_name) and store.amount_of(
+                product_name) >= quantity and quantity > 0 else report_error(calling_method_name,
                                                                              f'Store \'{store_name}\' does not contains Product \'{product_name}\'')
         return response
 
@@ -432,7 +439,8 @@ class Market(IService):
             if not actor.is_member():
                 return report_error(calling_method, f'{appointee} is not allowed to {required_permission.value}.')
             if self.has_permission_at(store_name, actor, required_permission):
-                if self.add_appointment(store_name, Appointment(appointee_name, store_name, role, actor.username, permissions)):
+                if self.add_appointment(store_name,
+                                        Appointment(appointee_name, store_name, role, actor.username, permissions)):
                     return report_info(calling_method, f'{actor} appointed \'{appointee.username}\' to a {role}.')
                 else:
                     return report_error(calling_method,
@@ -513,7 +521,8 @@ class Market(IService):
         perms = self.permissions_of(session_identifier, store_name, actor.username)
 
         if Permission.AppointOwner not in perms.result:
-            return report_error(self.appoint_owner.__qualname__, f"{actor.username} does not have permissions to appoint owner")
+            return report_error(self.appoint_owner.__qualname__,
+                                f"{actor.username} does not have permissions to appoint owner")
 
         store = self.verify_registered_store(self.appoint_owner.__qualname__, store_name)
         if not store.success:
@@ -521,16 +530,17 @@ class Market(IService):
 
         self.approval_list.insert(store_name, ConcurrentDictionary())
         approval = OwnersApproval(self.get_store_owners(session_identifier, store_name).result,
-                                                                 actor.username)
+                                  actor.username)
         self.approval_list.get(store_name).insert(appointee_name, approval)
 
         if approval.is_approved():
             return self.add_owner(session_identifier, appointee_name, store_name)
 
-        return report_info(self.appoint_owner.__qualname__, f"approval process beggins for ownership for {appointee_name} of {store_name}")
+        return report_info(self.appoint_owner.__qualname__,
+                           f"approval process beggins for ownership for {appointee_name} of {store_name}")
 
-
-    def set_permission(self, session_identifier: int, calling_method: str, store: str, appointee: str, permission: Permission, action: {'ADD', 'REMOVE'}) -> Response[bool]:
+    def set_permission(self, session_identifier: int, calling_method: str, store: str, appointee: str,
+                       permission: Permission, action: {'ADD', 'REMOVE'}) -> Response[bool]:
         actor = self.get_active_user(session_identifier)
         if self.is_appointed_by(appointee, actor.username, store):
             self.set_permissions_of(appointee, store, permission, action)
@@ -692,7 +702,7 @@ class Market(IService):
         if response.success:
             store = response.result
             actor = self.get_active_user(session_identifier)
-            if product_new_price > 0 :
+            if product_new_price > 0:
                 if self.has_permission_at(store_name, actor, Permission.Update):
                     store.change_product_price(product_old_price, product_new_price)
                     return report_info(self.change_product_price.__qualname__,
@@ -796,8 +806,7 @@ class Market(IService):
                     cart_price += store.calculate_basket_price(basket)
             else:
                 return response2.success
-        return cart_price
-
+        return cart_price, successful_store_purchases
 
     def purchase_shopping_cart(self, session_identifier: int, payment_method: str, payment_details: list[str],
                                address: str, postal_code: str, city: str, country: str) -> Response[bool]:
@@ -807,17 +816,17 @@ class Market(IService):
         response = actor.verify_cart_not_empty()
         if response.success:
             baskets = actor.get_baskets()
-            cart_price = self.get_cart_price(baskets)
-            payment_succeeded = self.pay(cart_price, payment_method, payment_details, holder, user_id)
+            resp = self.get_cart_price(baskets)
+            payment_succeeded = self.pay(resp[0], payment_method, payment_details, holder, user_id)
             if payment_succeeded:
                 # order delivery
                 delivery_service = provisionService()
                 delivery_service.set_info(actor.username, 0, address, postal_code, city, country)
                 if not delivery_service.getDelivery():
-                    payment_succeeded.refund(cart_price)
+                    payment_succeeded.refund(resp[0])
                     return report_error(self.purchase_shopping_cart.__qualname__, 'failed delivery')
                 self.add_to_purchase_history(baskets)
-                self.update_user_cart_after_purchase(actor, successful_store_purchases)
+                self.update_user_cart_after_purchase(actor, resp[1])
                 for store_name, basket in baskets.items():
                     self.find_store(store_name).update_db(basket)
                 return Response(True)
@@ -952,7 +961,6 @@ class Market(IService):
             store = response.result
             return store.apply_purchase_policy(payment_service, product_name, delivery_service, how_much)
         return response
-
 
     def add_simple_discount(self, session_id: int, store_name: str, discount_type: str, discount_percent: int,
                             discount_for_name: str = None,
@@ -1146,7 +1154,6 @@ class Market(IService):
                 managers.append(p)
 
         return Response(managers, "list of managers")
-
 
     ### only for testing purposes:
     def approve_as_owner_immediatly(self, session_id, store_name, appointee_name):
