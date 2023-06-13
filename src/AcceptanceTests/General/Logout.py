@@ -3,12 +3,11 @@ import unittest
 
 
 class Logout(unittest.TestCase):
-    app: Proxy
+    app: Proxy = Proxy()
     service_admin = None
 
     @classmethod
     def setUpClass(cls) -> None:
-        cls.app = Proxy()
         cls.registered_user1 = ("usr1", "password")
         cls.registered_user2 = ("usr222", "password")
         cls.not_registered_user = ("usr3", "password")

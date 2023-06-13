@@ -3,12 +3,11 @@ import unittest
 
 
 class SearchingProducts(unittest.TestCase):
-    app: Proxy
+    app: Proxy = Proxy()
     service_admin = None
 
     @classmethod
     def setUpClass(cls) -> None:
-        cls.app = Proxy()
         cls.store_owner1 = ("usr1", "password")
         cls.store_owner2 = ("usr2", "password")
         cls.service_admin = ('Kfir', 'Kfir')
@@ -30,21 +29,21 @@ class SearchingProducts(unittest.TestCase):
 
     def test_get_store_products_happy(self):
         self.set_stores()
-        r = self.app.get_store_products("bakery")
+        r = self.app.get_store("bakery")
         self.assertTrue(r.success, "error: get store product failed")
         products = r.result
         self.assertIn("pita", products, "error: pita not found")
         self.assertEqual(5, products["pita"]["Price"], "error: pita price incorrect")
         self.assertEqual("1", products["pita"]["Category"], "error: pita category incorrect")
-        self.assertEqual(None, products["pita"]["Rate"], "error: pita rate incorrect")
+        self.assertEqual(5, products["pita"]["Rate"], "error: pita rate incorrect")
         self.assertIn("bread", products, "error: bread not found")
         self.assertEqual(10, products["bread"]["Price"], "error: bread price incorrect")
         self.assertEqual("1", products["bread"]["Category"], "error: bread category incorrect")
-        self.assertEqual(None, products["bread"]["Rate"], "error: bread rate incorrect")
+        self.assertEqual(5, products["bread"]["Rate"], "error: bread rate incorrect")
 
     def test_get_store_products_invalid_store(self):
         self.set_stores()
-        r = self.app.get_store_products("xxx")
+        r = self.app.get_store("xxx")
         self.assertFalse(r.success, "error: get store product succeeded")
 
     def test_get_products_by_name_unique_name(self):
@@ -58,7 +57,7 @@ class SearchingProducts(unittest.TestCase):
         self.assertEqual("tuna", product["tuna"]["Name"], "error: tuna name incorrect")
         self.assertEqual(20, product["tuna"]["Price"], "error: tuna price incorrect")
         self.assertEqual("2", product["tuna"]["Category"], "error: tuna category incorrect")
-        self.assertEqual(None, product["tuna"]["Rate"], "error: tuna rate incorrect")
+        self.assertEqual(5, product["tuna"]["Rate"], "error: tuna rate incorrect")
 
     def test_get_products_by_name_common_name(self):
         self.set_stores()
@@ -72,12 +71,12 @@ class SearchingProducts(unittest.TestCase):
         self.assertEqual("pita", bakery["pita"]["Name"], "error: pita name incorrect")
         self.assertEqual(5, bakery["pita"]["Price"], "error: pita price incorrect")
         self.assertEqual("1", bakery["pita"]["Category"], "error: pita category incorrect")
-        self.assertEqual(None, bakery["pita"]["Rate"], "error: pita rate incorrect")
+        self.assertEqual(5, bakery["pita"]["Rate"], "error: pita rate incorrect")
         self.assertIn("pita", market, "error: pita not found")
         self.assertEqual("pita", market["pita"]["Name"], "error: pita name incorrect")
         self.assertEqual(8, market["pita"]["Price"], "error: pita price incorrect")
         self.assertEqual("1", market["pita"]["Category"], "error: pita category incorrect")
-        self.assertEqual(None, market["pita"]["Rate"], "error: pita rate incorrect")
+        self.assertEqual(5, market["pita"]["Rate"], "error: pita rate incorrect")
 
     def test_get_products_by_name_no_match(self):
         self.set_stores()
@@ -96,7 +95,7 @@ class SearchingProducts(unittest.TestCase):
         self.assertEqual("tuna", product["tuna"]["Name"], "error: tuna name incorrect")
         self.assertEqual(20, product["tuna"]["Price"], "error: tuna price incorrect")
         self.assertEqual("2", product["tuna"]["Category"], "error: tuna category incorrect")
-        self.assertEqual(None, product["tuna"]["Rate"], "error: tuna rate incorrect")
+        self.assertEqual(5, product["tuna"]["Rate"], "error: tuna rate incorrect")
 
     def test_get_products_by_name_common_category(self):
         self.set_stores()
@@ -110,17 +109,17 @@ class SearchingProducts(unittest.TestCase):
         self.assertEqual("pita", bakery["pita"]["Name"], "error: pita name incorrect")
         self.assertEqual(5, bakery["pita"]["Price"], "error: pita price incorrect")
         self.assertEqual("1", bakery["pita"]["Category"], "error: pita category incorrect")
-        self.assertEqual(None, bakery["pita"]["Rate"], "error: pita rate incorrect")
+        self.assertEqual(5, bakery["pita"]["Rate"], "error: pita rate incorrect")
         self.assertIn("bread", bakery, "error: bread not found")
         self.assertEqual("bread", bakery["bread"]["Name"], "error: bread name incorrect")
         self.assertEqual(10, bakery["bread"]["Price"], "error: bread price incorrect")
         self.assertEqual("1", bakery["bread"]["Category"], "error: bread category incorrect")
-        self.assertEqual(None, bakery["bread"]["Rate"], "error: bread rate incorrect")
+        self.assertEqual(5, bakery["bread"]["Rate"], "error: bread rate incorrect")
         self.assertIn("pita", market, "error: pita not found")
         self.assertEqual("pita", market["pita"]["Name"], "error: pita name incorrect")
         self.assertEqual(8, market["pita"]["Price"], "error: pita price incorrect")
         self.assertEqual("1", market["pita"]["Category"], "error: pita category incorrect")
-        self.assertEqual(None, market["pita"]["Rate"], "error: pita rate incorrect")
+        self.assertEqual(5, market["pita"]["Rate"], "error: pita rate incorrect")
 
     def test_get_products_by_category_no_match(self):
         self.set_stores()
@@ -139,7 +138,7 @@ class SearchingProducts(unittest.TestCase):
         self.assertEqual("tuna", product["tuna"]["Name"], "error: tuna name incorrect")
         self.assertEqual(20, product["tuna"]["Price"], "error: tuna price incorrect")
         self.assertEqual("2", product["tuna"]["Category"], "error: tuna category incorrect")
-        self.assertEqual(None, product["tuna"]["Rate"], "error: tuna rate incorrect")
+        self.assertEqual(5, product["tuna"]["Rate"], "error: tuna rate incorrect")
 
         product2 = self.app.get_products_by_keywords(["z"]).result[0]
         self.assertEqual(product2, product, "error: keywords 'z' and 'fish' should yield the same result")
@@ -156,17 +155,17 @@ class SearchingProducts(unittest.TestCase):
         self.assertEqual("pita", bakery["pita"]["Name"], "error: pita name incorrect")
         self.assertEqual(5, bakery["pita"]["Price"], "error: pita price incorrect")
         self.assertEqual("1", bakery["pita"]["Category"], "error: pita category incorrect")
-        self.assertEqual(None, bakery["pita"]["Rate"], "error: pita rate incorrect")
+        self.assertEqual(5, bakery["pita"]["Rate"], "error: pita rate incorrect")
         self.assertIn("bread", bakery, "error: bread not found")
         self.assertEqual("bread", bakery["bread"]["Name"], "error: bread name incorrect")
         self.assertEqual(10, bakery["bread"]["Price"], "error: bread price incorrect")
         self.assertEqual("1", bakery["bread"]["Category"], "error: bread category incorrect")
-        self.assertEqual(None, bakery["bread"]["Rate"], "error: bread rate incorrect")
+        self.assertEqual(5, bakery["bread"]["Rate"], "error: bread rate incorrect")
         self.assertIn("pita", market, "error: pita not found")
         self.assertEqual("pita", market["pita"]["Name"], "error: pita name incorrect")
         self.assertEqual(8, market["pita"]["Price"], "error: pita price incorrect")
         self.assertEqual("1", market["pita"]["Category"], "error: pita category incorrect")
-        self.assertEqual(None, market["pita"]["Rate"], "error: pita rate incorrect")
+        self.assertEqual(5, market["pita"]["Rate"], "error: pita rate incorrect")
 
     def test_get_products_by_keywords_no_match(self):
         self.set_stores()
@@ -185,7 +184,7 @@ class SearchingProducts(unittest.TestCase):
         self.assertEqual("tuna", product["tuna"]["Name"], "error: tuna name incorrect")
         self.assertEqual(20, product["tuna"]["Price"], "error: tuna price incorrect")
         self.assertEqual("2", product["tuna"]["Category"], "error: tuna category incorrect")
-        self.assertEqual(None, product["tuna"]["Rate"], "error: tuna rate incorrect")
+        self.assertEqual(5, product["tuna"]["Rate"], "error: tuna rate incorrect")
 
     def test_get_products_in_price_range_common_range(self):
         self.set_stores()
@@ -199,17 +198,17 @@ class SearchingProducts(unittest.TestCase):
         self.assertEqual("pita", bakery["pita"]["Name"], "error: pita name incorrect")
         self.assertEqual(5, bakery["pita"]["Price"], "error: pita price incorrect")
         self.assertEqual("1", bakery["pita"]["Category"], "error: pita category incorrect")
-        self.assertEqual(None, bakery["pita"]["Rate"], "error: pita rate incorrect")
+        self.assertEqual(5, bakery["pita"]["Rate"], "error: pita rate incorrect")
         self.assertIn("bread", bakery, "error: bread not found")
         self.assertEqual("bread", bakery["bread"]["Name"], "error: bread name incorrect")
         self.assertEqual(10, bakery["bread"]["Price"], "error: bread price incorrect")
         self.assertEqual("1", bakery["bread"]["Category"], "error: bread category incorrect")
-        self.assertEqual(None, bakery["bread"]["Rate"], "error: bread rate incorrect")
+        self.assertEqual(5, bakery["bread"]["Rate"], "error: bread rate incorrect")
         self.assertIn("pita", market, "error: pita not found")
         self.assertEqual("pita", market["pita"]["Name"], "error: pita name incorrect")
         self.assertEqual(8, market["pita"]["Price"], "error: pita price incorrect")
         self.assertEqual("1", market["pita"]["Category"], "error: pita category incorrect")
-        self.assertEqual(None, market["pita"]["Rate"], "error: pita rate incorrect")
+        self.assertEqual(5, market["pita"]["Rate"], "error: pita rate incorrect")
 
     def test_get_products_in_price_range_no_match(self):
         self.set_stores()

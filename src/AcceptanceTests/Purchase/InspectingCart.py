@@ -3,12 +3,11 @@ import unittest
 
 
 class InspectingCart(unittest.TestCase):
-    app: Proxy
+    app: Proxy = Proxy()
     service_admin = None
 
     @classmethod
     def setUpClass(cls) -> None:
-        cls.app = Proxy()
         cls.store_owner1 = ("usr1", "password")
         cls.store_owner2 = ("usr444", "password")
         cls.registered_buyer = ("usr2", "password")
@@ -81,6 +80,11 @@ class InspectingCart(unittest.TestCase):
         cart = self.app.show_cart().result
         self.assertNotIn("bakery", cart, "error: bakery store in cart after the guest left and reentered")
         self.assertNotIn("market", cart, "error: market store in cart after the guest left and reentered")
+
+    def test_inspecting_cart_after_product_name_changed(self):
+
+    def test_inspecting_cart_after_product_price_changed(self):
+
 
     def set_stores(self):
         self.app.login(*self.store_owner1)

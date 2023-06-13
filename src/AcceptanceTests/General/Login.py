@@ -3,12 +3,11 @@ import unittest
 
 
 class Login(unittest.TestCase):
-    app: Proxy
+    app: Proxy  = Proxy()
     service_admin = None
 
     @classmethod
     def setUpClass(cls) -> None:
-        cls.app = Proxy()
         cls.happy_user1 = ("usr1", "password")
         cls.happy_user2 = ("usr22", "password")
         cls.happy_user3 = ("usr3", "45sdfgs#$%1")

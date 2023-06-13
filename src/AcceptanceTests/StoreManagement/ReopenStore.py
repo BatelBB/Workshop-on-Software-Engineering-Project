@@ -3,12 +3,11 @@ import unittest
 
 
 class ReopenStore(unittest.TestCase):
-    app: Proxy
+    app: Proxy = Proxy()
     service_admin = None
 
     @classmethod
     def setUpClass(cls) -> None:
-        cls.app = Proxy()
         cls.store_owner1 = ("usr1", "password")
         cls.store_owner2 = ("usr2", "password")
         cls.registered_user = ("user33", "password")

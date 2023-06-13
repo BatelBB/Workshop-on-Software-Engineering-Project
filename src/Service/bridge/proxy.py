@@ -1,4 +1,4 @@
-from domain.main.Market.Permissions import Permission, get_permission_name, get_permission_description
+from domain.main.Market.Permissions import Permission
 from src.domain.main.Utils.Response import Response
 from Service.bridge.Bridge import Bridge
 from Service.bridge.real import Real
@@ -39,8 +39,8 @@ class Proxy(Bridge):
                          product_name: str) -> Response[bool]:
         return self.real.remove_from_cart(store_name, product_name)
 
-    def update_cart_product_quantity(self, store_name: str, product_name: str, quantity: int) -> Response[bool]:
-        return self.real.update_cart_product_quantity(store_name, product_name, quantity)
+    def add_product_quantity_to_cart(self, store_name: str, product_name: str, quantity: int) -> Response[bool]:
+        return self.real.add_product_quantity_to_cart(store_name, product_name, quantity)
 
     def show_cart(self) -> Response[dict | bool]:
         return self.real.show_cart()
@@ -49,9 +49,9 @@ class Proxy(Bridge):
                                city: str, country: str) -> Response[bool]:
         return self.real.purchase_shopping_cart(payment_method, payment_details, address, postal_code, city, country)
 
-    def purchase_with_non_immediate_policy(self, store_name: str, product_name: str,
-                                           payment_method: str, payment_details: list[str], address: str,
-                                           postal_code: str, how_much: float, city: str, country: str) -> Response[bool]:
+    def purchase_with_non_immediate_policy(self, store_name: str, product_name: str, payment_method: str,
+                                           payment_details: list[str], address: str, postal_code: str, how_much: float,
+                                           city: str, country: str) -> Response[bool]:
         return self.real.purchase_with_non_immediate_policy(store_name, product_name, payment_method,
                                                             payment_details, address, postal_code, how_much, city,
                                                             country)
@@ -84,9 +84,11 @@ class Proxy(Bridge):
                             product_name: str, new_name: str) -> Response[bool]:
         return self.real.change_product_name(store_name, product_name, new_name)
 
-    def change_product_price(self, store_name: str,
-                             product_price: float, new_price: float) -> Response[bool]:
+    def change_product_price(self, store_name: str, product_price: float, new_price: float) -> Response[bool]:
         return self.real.change_product_price(store_name, product_price, new_price)
+
+    def change_product_category(self, store_name: str, old_product_name: str, category: str) -> Response[bool]:
+        return self.real.change_product_category(store_name, old_product_name, category)
 
     def appoint_owner(self, appointee: str, store: str) -> Response[bool]:
         return self.real.appoint_owner(appointee, store)
@@ -104,7 +106,7 @@ class Proxy(Bridge):
         return self.real.add_permission(store, appointee, permission.name)
 
     def remove_permission(self, store: str, appointee: str, permission: Permission) -> Response[bool]:
-        return self.real.remove_permission(store, appointee, permission)
+        return self.real.remove_permission(store, appointee, permission.name)
 
     def permissions_of(self, store: str, subject: str) -> Response[set[Permission] | bool]:
         return self.real.permissions_of(store, subject)
@@ -120,7 +122,7 @@ class Proxy(Bridge):
         else:
             return Response(False)
 
-    def get_store_purchase_history(self, store_name: str) -> Response[dict]:
+    def get_store_purchase_history(self, store_name: str) -> Response[str]:
         return self.real.get_store_purchase_history(store_name)
 
     def start_auction(self, store_name: str, product_name: str, initial_price: float, duration: int) -> Response[bool]:
@@ -144,36 +146,31 @@ class Proxy(Bridge):
         return self.real.add_purchase_complex_rule(store_name, p1_name, gle1, amount1, p2_name, gle2, amount2,
                                                    complex_rule_type)
 
+    def delete_purchase_rule(self, index, store_name) -> Response[bool]:
+        return self.real.delete_purchase_rule(index, store_name)
+
+    def add_basket_purchase_rule(self, store_name: str, min_price: float) -> Response[bool]:
+        return self.real.add_basket_purchase_rule(store_name, min_price)
+
+    def add_simple_discount(self, store_name: str, discount_type: str, discount_percent: int,
+                            discount_for_name: str = None, rule_type=None, min_price: float = None, p1_name=None,
+                            gle1=None, amount1=None, p2_name=None, gle2=None, amount2=None) -> Response[bool]:
+        return self.real.add_simple_discount(store_name, discount_type, discount_percent, discount_for_name,
+                                             rule_type, min_price, p1_name, gle1, amount1, p2_name, gle2, amount2)
+
+    def connect_discounts(self, store_name, id1, id2, connection_type, rule_type=None, min_price: float = None,
+                          p1_name=None, gle1=None, amount1=None, p2_name=None, gle2=None, amount2=None) \
+            -> Response[bool]:
+        return self.real.connect_discounts(store_name, id1, id2, connection_type, rule_type, min_price, p1_name,
+                                           gle1, amount1, p2_name, gle2, amount2)
+
+    def delete_discount(self, store_name: str, index: int) -> Response[bool]:
+        return self.real.delete_discount(store_name, index)
+
     #######################
     # user search services
-    def get_all_stores(self) -> Response[dict | bool]:
-        res = self.real.get_all_stores()
-        if not res.success:
-            return res
-        else:
-            dic = {}
-            for store in res.result:
-                products = {}
-                for product in store.products:
-                    products[product.name] = {"Price": product.price, "Keywords": product.keywords,
-                                              "Category": product.category, "Rate": product.rate,
-                                              "Quantity": store.products_quantities[product.name].quantity}
-                dic[store.name] = products
-            return Response(dic)
-
     def get_store(self, store_name: str) -> Response[dict | bool]:
         return self.real.get_store(store_name)
-
-    def get_store_products(self, store_name: str) -> Response[dict | bool]:
-        res = self.real.get_store_products(store_name)
-        if not res.success:
-            return res
-        else:
-            products = {}
-            for product in res.result:
-                products[product.name] = {"Price": product.price, "Keywords": product.keywords,
-                                          "Category": product.category, "Rate": product.rate}
-            return Response(products)
 
     def get_products_by_name(self, name: str) -> Response[list[dict[str, dict]] | bool]:
         res = self.real.get_products_by_name(name)
@@ -220,16 +217,11 @@ class Proxy(Bridge):
                     products.append(product)
             return Response(products)
 
-    # def filter_products_by_rating(self, low: int, high: int) -> Response[dict]:
-    #     ...
-    # 
-    # 
-    # def filter_products_by_category(self, category: str) -> Response[dict]:
-    #     ...
-    # 
-    # 
-    # def filter_products_by_store_rating(self, low: int, high: int) -> Response[dict]:
-    #     ...
+    def get_discounts(self, store_name: str) -> Response[list[dict[int:str]]]:
+        return self.real.get_discounts(store_name)
+
+    def get_purchase_rules(self, store_name: str) -> Response[dict[int:dict]]:
+        return self.real.get_purchase_rules(store_name)
 
     ###################
     # admin service

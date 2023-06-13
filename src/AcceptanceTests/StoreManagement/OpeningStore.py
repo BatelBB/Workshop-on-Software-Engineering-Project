@@ -3,12 +3,11 @@ import unittest
 
 
 class OpeningStore(unittest.TestCase):
-    app: Proxy
+    app: Proxy = Proxy()
     service_admin = None
 
     @classmethod
     def setUpClass(cls) -> None:
-        cls.app = Proxy()
         cls.registered_user1 = ("usr44", "45sdfgs#$%1")
         cls.registered_user2 = ("usr5", "45sdfgs#$%1")
         cls.service_admin = ('Kfir', 'Kfir')
@@ -40,12 +39,15 @@ class OpeningStore(unittest.TestCase):
         self.assertEqual("tuna", product["tuna"]["Name"], "error: tuna name incorrect")
         self.assertEqual(20, product["tuna"]["Price"], "error: tuna price incorrect")
         self.assertEqual("2", product["tuna"]["Category"], "error: tuna category incorrect")
-        self.assertEqual(None, product["tuna"]["Rate"], "error: tuna rate incorrect")
+        self.assertEqual(5, product["tuna"]["Rate"], "error: tuna rate incorrect")
         self.app.logout()
         
     def test_guest_opening_a_store(self):
         r = self.app.open_store("market")
         self.assertFalse(r.success, "error: open store action succeeded")
+        self.app.add_product("market", "tuna", "2", 20, 40, ["fish", "z"])
+        products = self.app.get_products_by_name("tuna").result
+        self.assertEqual(0, len(products), "error: guest opened a store and added a product to it")
         
     def test_opening_a_store_taken_name(self):
         self.app.login(*self.registered_user1)

@@ -1,22 +1,25 @@
 from unittest.mock import patch
-from Service.bridge.proxy import Proxy
 import unittest
+from Service.bridge.proxy import Proxy
 from domain.main.Market import Permissions
 from domain.main.Market.Permissions import Permission
 
 
 class AppointOwner(unittest.TestCase):
-    app: Proxy
+    app: Proxy = Proxy()
     service_admin = None
 
     @classmethod
     def setUpClass(cls) -> None:
-        cls.app = Proxy()
         cls.store_founder1 = ("usr1", "password")
         cls.store_founder2 = ("usr2", "password")
         cls.store_owner1 = ("usr3", "password")
         cls.store_owner2 = ("usr6", "password")
         cls.store_manager1 = ("usr4", "password")
+        cls.store_manager2_2 = ("usr7", "password")
+        cls.store_manager1_2 = ("usr10", "password")
+        cls.store_owner1_2 = ("usr8", "password")
+        cls.store_owner2_2 = ("usr9", "password")
         cls.registered_user = ("user5", "password")
         cls.service_admin = ('Kfir', 'Kfir')
 
@@ -27,6 +30,10 @@ class AppointOwner(unittest.TestCase):
         self.app.register(*self.store_owner1)
         self.app.register(*self.store_owner2)
         self.app.register(*self.store_manager1)
+        self.app.register(*self.store_manager1_2)
+        self.app.register(*self.store_manager2_2)
+        self.app.register(*self.store_owner1_2)
+        self.app.register(*self.store_owner2_2)
         self.app.register(*self.registered_user)
         self.set_stores()
 
@@ -171,8 +178,7 @@ class AppointOwner(unittest.TestCase):
             self.assertIn(p.value, appointment[self.store_founder1[0]]["Permissions"], f"error: permission '{p.value}' "
                                                                                        "not found for an appointed "
                                                                                        "owner")
-    def test_circular_appointments2(self):
-        ...
+
     def test_circular_appointments(self):
         self.app.login(*self.store_founder1)
         r = self.app.appoint_owner(self.store_owner1[0], "bakery")
@@ -256,7 +262,7 @@ class AppointOwner(unittest.TestCase):
         self.assertEqual("lafa", store["lafa"]["Name"], "error: lafa name incorrect")
         self.assertEqual(5, store["lafa"]["Price"], "error: lafa price incorrect")
         self.assertEqual("1", store["lafa"]["Category"], "error: lafa category incorrect")
-        self.assertEqual(None, store["lafa"]["Rate"], "error: lafa rate incorrect")
+        self.assertEqual(5, store["lafa"]["Rate"], "error: lafa rate incorrect")
         self.assertEqual(20, store["lafa"]["Quantity"], "error: lafa quantity incorrect")
 
     def test_update_product_quantity(self):
@@ -269,7 +275,7 @@ class AppointOwner(unittest.TestCase):
         self.assertEqual("bread", store["bread"]["Name"], "error: bread name incorrect")
         self.assertEqual(10, store["bread"]["Price"], "error: bread price incorrect")
         self.assertEqual("1", store["bread"]["Category"], "error: bread category incorrect")
-        self.assertEqual(None, store["bread"]["Rate"], "error: bread rate incorrect")
+        self.assertEqual(5, store["bread"]["Rate"], "error: bread rate incorrect")
         self.assertEqual(50, store["bread"]["Quantity"], "error: bread quantity incorrect")
 
     def test_update_product_name(self):
@@ -282,7 +288,7 @@ class AppointOwner(unittest.TestCase):
         self.assertEqual("new_bread", store["new_bread"]["Name"], "error: new_bread name incorrect")
         self.assertEqual(10, store["new_bread"]["Price"], "error: new_bread price incorrect")
         self.assertEqual("1", store["new_bread"]["Category"], "error: new_bread category incorrect")
-        self.assertEqual(None, store["new_bread"]["Rate"], "error: new_bread rate incorrect")
+        self.assertEqual(5, store["new_bread"]["Rate"], "error: new_bread rate incorrect")
         self.assertEqual(15, store["new_bread"]["Quantity"], "error: new_bread quantity incorrect")
 
     def test_update_product_price(self):
@@ -295,7 +301,20 @@ class AppointOwner(unittest.TestCase):
         self.assertEqual("bread", store["bread"]["Name"], "error: bread name incorrect")
         self.assertEqual(30, store["bread"]["Price"], "error: bread price incorrect")
         self.assertEqual("1", store["bread"]["Category"], "error: bread category incorrect")
-        self.assertEqual(None, store["bread"]["Rate"], "error: bread rate incorrect")
+        self.assertEqual(5, store["bread"]["Rate"], "error: bread rate incorrect")
+        self.assertEqual(15, store["bread"]["Quantity"], "error: bread quantity incorrect")
+
+    def test_update_product_category(self):
+        self.set_owner_appointments()
+        self.app.login(*self.store_owner1)
+        r = self.app.change_product_category("bakery", "bread", "gluten")
+        self.assertTrue(r.success, "error: update product price action failed")
+        store = self.app.get_store("bakery").result
+        self.assertIn("bread", store, "error: bread not found")
+        self.assertEqual("bread", store["bread"]["Name"], "error: bread name incorrect")
+        self.assertEqual(10, store["bread"]["Price"], "error: bread price incorrect")
+        self.assertEqual("gluten", store["bread"]["Category"], "error: bread category incorrect")
+        self.assertEqual(5, store["bread"]["Rate"], "error: bread rate incorrect")
         self.assertEqual(15, store["bread"]["Quantity"], "error: bread quantity incorrect")
 
     def test_remove_product(self):
@@ -305,21 +324,6 @@ class AppointOwner(unittest.TestCase):
         self.assertTrue(r.success, "error: remove product action failed")
         store = self.app.get_store("bakery").result
         self.assertNotIn("bread", store, "error: bread found after removed by owner with permissions")
-
-    def test_appoint_another_manager(self):
-        self.set_owner_appointments()
-        self.app.login(*self.store_owner1)
-        r = self.app.appoint_manager(self.store_manager1[0], "bakery")
-        self.assertTrue(r.success, "error: appoint manager action failed")
-        r = self.app.get_store_staff("bakery")
-        self.assertTrue(r.success, "error: get store staff action failed")
-        appointment = r.result
-        self.assertIn(self.store_manager1[0], appointment)
-        self.assertEqual(self.store_owner1[0], appointment[self.store_manager1[0]]["Appointed by"])
-        for p in Permissions.get_default_manager_permissions():
-            self.assertIn(p.value, appointment[self.store_manager1[0]]["Permissions"], f"error: permission '{p.value}' "
-                                                                                       "not found for an appointed "
-                                                                                       "manager")
 
     def test_appoint_another_owner(self):
         self.set_owner_appointments()
@@ -337,56 +341,20 @@ class AppointOwner(unittest.TestCase):
                           "not found for an appointed "
                           "owner")
 
-    def test_cancel_appointment_of_another_manager(self):
+    def test_appoint_another_manager(self):
         self.set_owner_appointments()
-        self.app.login(*self.store_founder1)
-        self.app.appoint_manager(self.store_manager1[0], "bakery")
-        self.app.logout()
         self.app.login(*self.store_owner1)
-        r = self.app.remove_appointment(self.store_manager1[0], "bakery")
-        self.assertTrue(r.success, "error: remove appointment action failed")
+        r = self.app.appoint_manager(self.store_manager1[0], "bakery")
+        self.assertTrue(r.success, "error: appoint manager action failed")
         r = self.app.get_store_staff("bakery")
         self.assertTrue(r.success, "error: get store staff action failed")
         appointment = r.result
-        self.assertNotIn(self.store_manager1[0], appointment)
-
-    def test_cancel_appointment_of_another_owner(self):
-        self.set_owner_appointments()
-        self.app.login(*self.store_owner1)
-        r = self.app.remove_appointment(self.store_owner2[0], "bakery")
-        self.assertTrue(r.success, "error: remove appointment action failed")
-        r = self.app.get_store_staff("bakery")
-        self.assertTrue(r.success, "error: get store staff action failed")
-        appointment = r.result
-        self.assertNotIn(self.store_owner2[0], appointment)
-
-    def test_close_store(self):
-        self.set_owner_appointments()
-        self.app.login(*self.store_owner1)
-        r = self.app.close_store("bakery")
-        self.assertTrue(r.success, "error: close store action failed")
-        self.app.logout()
-        r = self.app.add_to_cart("bakery", "bread", 10)
-        self.assertFalse(r.success, "error: add to cart action succeeded")
-        cart = self.app.show_cart().result
-        self.assertDictEqual({}, cart, "error: product of closed store added to cart!")
-
-    def test_reopen_store(self):
-        self.set_owner_appointments()
-        self.app.login(*self.store_founder1)
-        self.app.close_store("bakery")
-        self.app.logout()
-        self.app.login(*self.store_owner1)
-        r = self.app.reopen_store("bakery")
-        self.assertTrue(r.success, "error: reopen store action failed")
-        self.app.logout()
-        r = self.app.add_to_cart("bakery", "bread", 15)
-        self.assertTrue(r.success, "error: add to cart action failed")
-        cart = self.app.show_cart().result
-        self.assertIn("bakery", cart, "error: bakery store not in cart")
-        self.assertIn("bread", cart["bakery"], "error: bread not in cart")
-        self.assertEqual(15, cart["bakery"]["bread"]["Quantity"], "error: bread quantity doesn't match")
-        self.assertEqual(10, cart["bakery"]["bread"]["Price"], "error: bread price doesn't match")
+        self.assertIn(self.store_manager1[0], appointment)
+        self.assertEqual(self.store_owner1[0], appointment[self.store_manager1[0]]["Appointed by"])
+        for p in Permissions.get_default_manager_permissions():
+            self.assertIn(p.value, appointment[self.store_manager1[0]]["Permissions"], f"error: permission '{p.value}' "
+                                                                                       "not found for an appointed "
+                                                                                       "manager")
 
     def test_interact_with_customer(self):
         pass

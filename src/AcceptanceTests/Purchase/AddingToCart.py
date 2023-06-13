@@ -3,12 +3,11 @@ import unittest
 
 
 class AddingToCart(unittest.TestCase):
-    app: Proxy
+    app: Proxy = Proxy()
     service_admin = None
 
     @classmethod
     def setUpClass(cls) -> None:
-        cls.app = Proxy()
         cls.store_owner1 = ("usr11", "password")
         cls.store_owner2 = ("usr5", "password")
         cls.registered_buyer1 = ("usr2", "password")
@@ -83,11 +82,11 @@ class AddingToCart(unittest.TestCase):
         self.app.login(*self.registered_buyer1)
         self.app.add_to_cart("bakery", "bread", 5)
         self.app.add_to_cart("market", "pita", 10)
-        r = self.app.update_cart_product_quantity("bakery", "bread", 10)
+        r = self.app.add_product_quantity_to_cart("bakery", "bread", 10)
         self.assertTrue(r.success and r.result, "error: update product quantity action failed!")
         cart = self.app.show_cart().result
         self.assertIn("bread", cart["bakery"], "error: bread not in cart")
-        self.assertEqual(10, cart["bakery"]["bread"]["Quantity"], "error: bread quantity doesn't match after updated")
+        self.assertEqual(15, cart["bakery"]["bread"]["Quantity"], "error: bread quantity doesn't match after updated")
         self.assertIn("pita", cart["market"], "error: pita not in cart")
         self.assertEqual(10, cart["market"]["pita"]["Quantity"], "error: pita quantity doesn't match")
         self.app.logout()
@@ -109,7 +108,7 @@ class AddingToCart(unittest.TestCase):
         self.app.login(*self.registered_buyer1)
         self.app.add_to_cart("bakery", "bread", 5)
         self.app.add_to_cart("market", "pita", 10)
-        r = self.app.update_cart_product_quantity("bakery", "bread", 100)
+        r = self.app.add_product_quantity_to_cart("bakery", "bread", 100)
         self.assertFalse(r.success, "error: update product quantity action not failed!")
         cart = self.app.show_cart().result
         self.assertIn("bread", cart["bakery"], "error: bread not in cart")

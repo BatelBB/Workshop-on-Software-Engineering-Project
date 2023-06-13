@@ -3,13 +3,12 @@ import unittest
 
 
 class Registering(unittest.TestCase):
-    app: Proxy
+    app: Proxy = Proxy()
     service_admin = None
 
     @classmethod
     def setUpClass(cls) -> None:
-        cls.app = Proxy()
-        cls.happy_user1 = ("usr11", "password")
+        cls.happy_user1 = ("usr1", "password")
         cls.happy_user2 = ("usr2", "password")
         cls.empty_password = ("user3", "")
         cls.taken_username = ("usr1", "45sdfcgs#$%1")

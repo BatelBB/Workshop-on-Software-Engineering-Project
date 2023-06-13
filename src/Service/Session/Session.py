@@ -141,6 +141,8 @@ class Session:
         return self.apply(self.service.add_permission, self.identifier, store, appointee, permission)
 
     def remove_permission(self, store: str, appointee: str, permission: Permission) -> Response[bool]:
+        if isinstance(permission, str):
+            permission = getattr(Permission, permission)
         return self.apply(self.service.remove_permission, self.identifier, store, appointee, permission)
 
     def permissions_of(self, store: str, subject: str) -> Response[set[Permission] | bool]:

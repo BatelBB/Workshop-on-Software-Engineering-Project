@@ -3,12 +3,11 @@ import unittest
 
 
 class UpdateStoreInventory(unittest.TestCase):
-    app: Proxy
+    app: Proxy = Proxy()
     service_admin = None
 
     @classmethod
     def setUpClass(cls) -> None:
-        cls.app = Proxy()
         cls.store_owner1 = ("usr11", "password")
         cls.service_admin = ('Kfir', 'Kfir')
 
@@ -47,13 +46,14 @@ class UpdateStoreInventory(unittest.TestCase):
         r = self.app.add_product("bakery", "bread", "5", 8, 2, ["yy", "zz"])
         self.assertFalse(r.success, "error: add product action succeeded")
         products = self.app.get_products_by_name("bread").result
+        print(products)
         self.assertEqual(1, len(products), "error: didn't get 1 stores that has the products while the market has 1")
         bakery = products[0]
         self.assertIn("bread", bakery, "error: bread not found")
         self.assertEqual("bread", bakery["bread"]["Name"], "error: bread name incorrect")
         self.assertEqual(10, bakery["bread"]["Price"], "error: bread price incorrect")
         self.assertEqual("1", bakery["bread"]["Category"], "error: bread category incorrect")
-        self.assertEqual(None, bakery["bread"]["Rate"], "error: bread rate incorrect")
+        self.assertEqual(5, bakery["bread"]["Rate"], "error: bread rate incorrect")
         self.app.logout()
 
     def test_owner_add_product_with_non_positive_price(self):
@@ -100,12 +100,12 @@ class UpdateStoreInventory(unittest.TestCase):
         self.app.login(*self.store_owner1)
         r = self.app.update_product_quantity("bakery", "bread", 100)
         self.assertTrue(r.success, "error: update product quantity action failed")
-        products = self.app.get_all_stores().result["bakery"]
+        products = self.app.get_store("bakery").result
         self.assertEqual(2, len(products), "error: didn't get 1 stores that has the products while the market has 1")
         self.assertIn("bread", products, "error: bread not found")
         self.assertEqual(10, products["bread"]["Price"], "error: bread price incorrect")
         self.assertEqual("1", products["bread"]["Category"], "error: bread category incorrect")
-        self.assertEqual(None, products["bread"]["Rate"], "error: bread rate incorrect")
+        self.assertEqual(5, products["bread"]["Rate"], "error: bread rate incorrect")
         self.assertEqual(100, products["bread"]["Quantity"], "error: bread rate incorrect")
         self.app.logout()
 
@@ -114,12 +114,12 @@ class UpdateStoreInventory(unittest.TestCase):
         self.app.login(*self.store_owner1)
         r = self.app.update_product_quantity("bakery", "bread", -5)
         self.assertFalse(r.success, "error: update product quantity action succeeded")
-        products = self.app.get_all_stores().result["bakery"]
+        products = self.app.get_store("bakery").result
         self.assertEqual(2, len(products), "error: didn't get 1 stores that has the products while the market has 1")
         self.assertIn("bread", products, "error: bread not found")
         self.assertEqual(10, products["bread"]["Price"], "error: bread price incorrect")
         self.assertEqual("1", products["bread"]["Category"], "error: bread category incorrect")
-        self.assertEqual(None, products["bread"]["Rate"], "error: bread rate incorrect")
+        self.assertEqual(5, products["bread"]["Rate"], "error: bread rate incorrect")
         self.assertEqual(15, products["bread"]["Quantity"], "error: bread rate incorrect")
         self.app.logout()
 
@@ -152,7 +152,7 @@ class UpdateStoreInventory(unittest.TestCase):
         self.assertEqual("bread", bakery["bread"]["Name"], "error: bread name incorrect")
         self.assertEqual(20, bakery["bread"]["Price"], "error: bread price incorrect")
         self.assertEqual("1", bakery["bread"]["Category"], "error: bread category incorrect")
-        self.assertEqual(None, bakery["bread"]["Rate"], "error: bread rate incorrect")
+        self.assertEqual(5, bakery["bread"]["Rate"], "error: bread rate incorrect")
         self.app.logout()
 
     def test_owner_change_product_price_to_non_positive_price(self):
@@ -167,7 +167,7 @@ class UpdateStoreInventory(unittest.TestCase):
         self.assertEqual("bread", bakery["bread"]["Name"], "error: bread name incorrect")
         self.assertEqual(10, bakery["bread"]["Price"], "error: bread price incorrect")
         self.assertEqual("1", bakery["bread"]["Category"], "error: bread category incorrect")
-        self.assertEqual(None, bakery["bread"]["Rate"], "error: bread rate incorrect")
+        self.assertEqual(5, bakery["bread"]["Rate"], "error: bread rate incorrect")
         self.app.logout()
 
     def set_stores(self):

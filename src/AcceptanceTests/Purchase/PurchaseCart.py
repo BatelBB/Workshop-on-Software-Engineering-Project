@@ -4,12 +4,11 @@ from unittest.mock import patch
 
 
 class PurchaseCart(unittest.TestCase):
-    app: Proxy
+    app: Proxy = Proxy()
     service_admin = None
 
     @classmethod
     def setUpClass(cls) -> None:
-        cls.app = Proxy()
         cls.store_owner1 = ("usr11", "password")
         cls.store_owner2 = ("usr4", "password")
         cls.registered_buyer1 = ("usr2", "password")
@@ -250,7 +249,7 @@ class PurchaseCart(unittest.TestCase):
             delivery_mock.assert_called()
             refund_mock.assert_called_once_with(560)
 
-    def test_purchase_when_payment_and_purchase_fails(self):
+    def test_purchase_when_payment_and_delivery_fails(self):
         with patch('src.domain.main.ExternalServices.Provision.ProvisionServiceAdapter.provisionService.getDelivery',
                    return_value=False) as delivery_mock, \
                 patch('src.domain.main.ExternalServices.Payment.PaymentServices.PayWithCard.pay',
@@ -272,6 +271,11 @@ class PurchaseCart(unittest.TestCase):
 
     def test_purchase_with_complex_rules_and_discount(self):
     def test_purchase_with_bid(self):
+
+    def test_purchase_after_product_name_changed(self):
+    def test_purchase_after_product_price_changed(self):
+    def test_purchase_after_product_rule_changed(self):
+    def test_purchase_after_product_discount_changed(self):
 
     def set_stores(self):
         self.app.login(*self.store_owner1)
