@@ -283,3 +283,7 @@ class Session:
 
     def mark_read(self, msg_id: int):
         return self.apply(self.service.mark_read, self.identifier, msg_id)
+
+
+    def get_store_staff_wit_permissions(self, store_name: str):
+        return self.apply(self.service.get_store_staff_wit_permissions, self.identifier, store_name)

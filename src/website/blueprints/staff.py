@@ -112,9 +112,18 @@ def remove_owner(store_name: str):
     return render_template("products/staff.html", form=form, get_all_registered_users=all_users, headline="Remove Owner")
 
 
-@bp.route('/view_staff_info', methods=('GET', 'POST'))
-def view_staff_info():
+@bp.route('/view_staff_info/<store_name>', methods=('GET', 'POST'))
+def view_staff_info(store_name: str):
     domain = get_domain_adapter()
     if not domain.is_logged_in:
         flash("You tried to view staff info but you need to be logged in for that.")
         return redirect(url_for('home.home'))
+    staff = domain.get_store_staff_with_permission(store_name)
+    form = AppointmentForm()
+    form.appointee.choices = [(user, user) for user in staff.keys()]
+    worker_permissions = None
+    if form.validate_on_submit():
+        worker = form.appointee.data
+        worker_permissions = staff[worker]
+    return render_template("products/staff_info.html", form=form, headline="View Staff Info", permissions=worker_permissions)
+

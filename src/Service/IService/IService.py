@@ -314,3 +314,7 @@ class IService(metaclass=IAbsractConcurrentSingleton):
     @abstractmethod
     def mark_read(self, session_id: int, msg_id: int):
         ...
+
+    @abstractmethod
+    def get_store_staff_wit_permissions(self, session_id: int, store_name: str):
+        ...

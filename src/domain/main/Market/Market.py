@@ -8,9 +8,9 @@ from typing import Any
 from multipledispatch import dispatch
 from sqlalchemy import inspect
 from Service.IService.IService import IService
-from domain.main.StoreModule.PurchaseRules.IRule import IRule
-from domain.main.UserModule.Cart import Cart
-from domain.main.Utils.OwnersApproval import OwnersApproval
+from src.domain.main.StoreModule.PurchaseRules.IRule import IRule
+from src.domain.main.UserModule.Cart import Cart
+from src.domain.main.Utils.OwnersApproval import OwnersApproval
 from src.domain.main.Notifications.notification_controller import NotificationController
 from src.domain.main.ExternalServices.Payment.PaymentFactory import PaymentFactory
 from src.domain.main.ExternalServices.Payment.PaymentServices import IPaymentService
@@ -1199,4 +1199,13 @@ class Market(IService):
         return msg
 
 
-    def get_store_staff_wit_permissions(self, store_name: str):
+    def get_store_staff_wit_permissions(self, session_id: int, store_name: str):
+        staff_permissions = {}
+        resp = self.get_store_staff(session_id, store_name)
+        if resp.success:
+            resp = resp.result
+            for person in resp:
+                permissions = self.permissions_of(session_id, store_name, person.appointee).result
+                staff_permissions[person.appointee] = permissions
+            return staff_permissions
+

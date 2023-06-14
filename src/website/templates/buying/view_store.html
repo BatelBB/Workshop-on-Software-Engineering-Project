@@ -78,7 +78,7 @@
 </div>
 
 {% if ('AppointOwner' in permissions) %}
-    <form action="{{ url_for('stores.get_staff_info') }}">
+    <form action="{{ url_for('staff.view_staff_info', store_name=name) }}">
         <button type="submit" style="background-color: #008CBA; color: white; padding: 10px 24px; margin: 8px 0; border: none; border-radius: 4px; cursor: pointer;">View Staff Info</button>
     </form>
 {% endif %}
