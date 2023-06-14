@@ -1209,3 +1209,33 @@ class Market(IService):
             return report_error('mark_read', "mark_read: not logged in")
         msg = self.notifications.mark_read(actor.username, msg_id)
         return msg
+
+    def get_approval_lists_for_store(self, session_id: int, store_name) -> Response:
+        actor = self.get_active_user(session_id)
+        store_res = self.verify_registered_store(self.get_approval_lists_for_store.__qualname__, store_name)
+        if not store_res.success:
+            return report_error(self.get_approval_lists_for_store.__qualname__, "invalid store")
+        store = store_res.result
+
+        perms = self.permissions_of(session_id, store_name, actor.username)
+        if not perms.success:
+            return report_error(self.get_approval_lists_for_store.__qualname__, "failed to retrieve permissions")
+        perms = perms.result
+
+        if Permission.AppointOwner not in perms:
+            return report_error(self.get_approval_lists_for_store.__qualname__,
+                                f"{actor.username} has no permission to approve things")
+
+        ret_dict = {}
+        ret_dict["owners"] = self.approval_list.get(store_name)
+        bids_dict = {}
+        for p in store.products_with_bid_purchase_policy.keys():
+            bids_dict[p] = store.products_with_bid_purchase_policy[p].get_cur_bid()
+        ret_dict["bids"] = bids_dict
+
+        if ret_dict["owners"] is None:
+            ret_dict["owners"] = {}
+        if ret_dict["bids"] is None:
+            ret_dict["bids"] = {}
+
+        return ret_dict

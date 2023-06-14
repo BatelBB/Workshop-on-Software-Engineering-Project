@@ -311,3 +311,7 @@ class IService(metaclass=IAbsractConcurrentSingleton):
     @abstractmethod
     def mark_read(self, session_id: int, msg_id: int):
         ...
+
+    @abstractmethod
+    def get_approval_lists_for_store(self, session_id: int, store_name) -> Response:
+        ...

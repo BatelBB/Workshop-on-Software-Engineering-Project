@@ -278,3 +278,6 @@ class Session:
     def mark_read(self, msg_id: int):
         return self.apply(self.service.mark_read, self.identifier, msg_id)
 
+    def get_approval_lists_for_store(self, store_name) -> Response:
+        return self.apply(self.service.get_approval_lists_for_store, self.identifier, store_name)
+

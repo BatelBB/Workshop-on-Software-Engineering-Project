@@ -257,7 +257,8 @@ class SessionAdapter:
         return self._session.purchase_shopping_cart('card', [str(number), f'{exp_month}/{exp_year}', ccv],
                                                     street, apt_number, city, country)
 
-    def bid_on_product(self, store_name, product_name,  how_much, number, exp_month, exp_year, ccv, street, apt_number, city, country):
+    def bid_on_product(self, store_name, product_name, how_much, number, exp_month, exp_year, ccv, street, apt_number,
+                       city, country):
         payment_details = [str(number), f'{exp_month}/{exp_year}', ccv]
         self._session.purchase_with_non_immediate_policy(store_name, product_name, "card", payment_details,
                                                          street, apt_number, how_much, city, country)
@@ -280,10 +281,10 @@ class SessionAdapter:
         return resp
 
     def get_all_store_managers(self, store_name: str):
-       resp = self._session.get_store_managers(store_name)
-       if resp.success:
-           return resp.result
-       return resp
+        resp = self._session.get_store_managers(store_name)
+        if resp.success:
+            return resp.result
+        return resp
 
     def get_purchase_history_owner(self, store_name: str):
         return self._session.get_store_purchase_history(store_name)
@@ -301,4 +302,11 @@ class SessionAdapter:
     def mark_read(self, msg_id):
         return self._session.mark_read(msg_id)
 
+    def get_approval_lists_for_store(self, store_name):
+        return self._session.get_approval_lists_for_store(store_name)
 
+    def approve_owner(self, store_name, owner_to_approve_name):
+        return self._session.approve_owner(owner_to_approve_name, store_name)
+
+    def approve_bid(self, store_name, product_name, is_approve):
+        return self._session.approve_bid(store_name, product_name, is_approve)
