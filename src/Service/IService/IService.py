@@ -318,3 +318,7 @@ class IService(metaclass=IAbsractConcurrentSingleton):
     @abstractmethod
     def get_store_staff_wit_permissions(self, session_id: int, store_name: str):
         ...
+
+    @abstractmethod
+    def load_configuration(self, config):
+        ...

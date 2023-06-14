@@ -1,7 +1,7 @@
 import string
 from abc import ABC, abstractmethod
 
-from src.domain.main.ExternalServices.Provision.IProvisionService import IExternalProvisionService, provisionReal
+from src.domain.main.ExternalServices.Provision.IProvisionService import IExternalProvisionService
 from src.domain.main.Utils.Logger import report, Logger, report_error, report_info
 
 
@@ -27,8 +27,8 @@ class IProvisionService(ABC):
 class provisionService(IProvisionService):
     proxy: IExternalProvisionService
 
-    def __init__(self):
-        self.proxy = provisionReal()
+    def __init__(self, proxy: IExternalProvisionService):
+        self.proxy = proxy
 
     def set_info(self, user_name: str, packageID: int, address: str, postal_code: str, city: str, country: str,
                  shop_name="market") -> bool:

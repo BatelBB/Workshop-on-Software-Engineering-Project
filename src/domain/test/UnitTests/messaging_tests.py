@@ -4,7 +4,9 @@ from unittest import TestCase
 
 from reactivex.abc import DisposableBase
 
-from domain.main.Notifications.notification_controller import NotificationController
+from Service.IService.IService import IService
+from src.domain.main.Market.Market import Market
+from src.domain.main.Notifications.notification_controller import NotificationController
 from util.iter_utils import single
 
 
@@ -14,13 +16,24 @@ class IntBox:
 
 
 class MessagingTests(TestCase):
+
+
     def setUp(self):
         self.notifications = NotificationController()
         self.subscriptions: List[DisposableBase] = []
+        self.service: IService = Market()
+        self.session = self.service.enter()
+        self.service_admin = ('Kfir', 'Kfir')
+        self.session.login(*self.service_admin)
 
     def tearDown(self):
         for s in self.subscriptions:
             s.dispose()
+        session = self.service.enter()
+        session.login(*self.service_admin)
+        session.shutdown()
+        self.service.clear()
+
 
     def test_send_from_user_does_not_raise(self):
         self.notifications.send_from_user('yuval', 'batel', 'sup?')

@@ -1,5 +1,6 @@
 import unittest
 
+from Service.IService.IService import IService
 from src.domain.main.StoreModule.DIscounts.SimpleDiscount import SimpleDiscount
 from src.domain.main.StoreModule.PurchaseRules.BasketRule import BasketRule
 from src.domain.main.StoreModule.PurchaseRules.SimpleRule import SimpleRule
@@ -10,6 +11,18 @@ from src.domain.main.UserModule.Basket import Basket, Item
 
 class new_discount_tests(unittest.TestCase):
 
+    def setUp(self) -> None:
+        self.service: IService = Market()
+        self.session = self.service.enter()
+        self.service_admin = ('Kfir', 'Kfir')
+        self.session.login(*self.service_admin)
+        self.session.load_configuration()
+
+    def tearDown(self) -> None:
+        session = self.service.enter()
+        session.login(*self.service_admin)
+        session.shutdown()
+        self.service.clear()
     def test_simple_success(self):
         market = Market()
         s1 = market.enter()

@@ -1,3 +1,5 @@
+import json
+import os
 from typing import Any, List
 
 from reactivex import Observable
@@ -287,3 +289,12 @@ class Session:
 
     def get_store_staff_wit_permissions(self, store_name: str):
         return self.apply(self.service.get_store_staff_wit_permissions, self.identifier, store_name)
+
+    def load_configuration(self):
+        dir_path = os.path.dirname(os.path.realpath(__file__))  # get the directory of the current script
+        config_path = os.path.join(dir_path, '..','..', '..', 'Configuration',
+                                   'config.json')  # construct the path to config.json
+        config_path = os.path.abspath(config_path)  # resolve the path
+        with open(config_path, 'r') as f:
+            config = json.load(f)
+        return self.apply(self.service.load_configuration, config)

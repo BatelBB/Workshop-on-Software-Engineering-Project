@@ -59,7 +59,6 @@ class Store(Base_db.Base):
         self.products: set[Product] = set()
         self.products_quantities: dict[str, ProductQuantity] = dict()
         self.purchase_history: list[str] = list()
-        self.provisionService: IProvisionService = provisionService()
         self.products_with_special_purchase_policy: dict[str:IPurchasePolicy] = {}
         self.products_with_bid_purchase_policy: dict[str: BidPolicy] = {}
         self.purchase_rules: dict[int:IRule] = {}

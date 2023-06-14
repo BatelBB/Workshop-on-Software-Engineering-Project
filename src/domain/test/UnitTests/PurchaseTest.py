@@ -14,6 +14,7 @@ class PurchaseTest(unittest.TestCase):
         self.session = self.service.enter()
         self.service_admin = ('Kfir', 'Kfir')
         self.session.login(*self.service_admin)
+        self.session.load_configuration()
 
     def tearDown(self) -> None:
         session = self.service.enter()
@@ -73,7 +74,7 @@ class PurchaseTest(unittest.TestCase):
         self.addProductsDefault()
         self.session.add_to_cart("IHerb", "Vitamin A", 2)
         response: Response[bool] = self.session.purchase_shopping_cart("invalid_payment_method",
-                                                                       ["123", "123", "12/4588"], "ben-gurion", "1234",
+                                                                       ["123", "123", "a"], "ben-gurion", "1234",
                                                                        "Beersheba", "Israel")
         self.assertFalse(response.result)
 
@@ -103,7 +104,7 @@ class PurchaseTest(unittest.TestCase):
 
         with patch('src.domain.main.ExternalServices.Provision.ProvisionServiceAdapter.provisionService.getDelivery',
                    return_value=False), \
-                patch('src.domain.main.ExternalServices.Payment.PaymentServices.PayWithCard.refund',
+                patch('src.domain.main.ExternalServices.Payment.PaymentServices.PaymentService.refund',
                       return_value=True) as mock_refund:
             response: Response[bool] = self.session.purchase_shopping_cart("card", ["123", "123", "12/6588"],
                                                                            "ben-gurion", "1234", "beer sheva", "israel")
