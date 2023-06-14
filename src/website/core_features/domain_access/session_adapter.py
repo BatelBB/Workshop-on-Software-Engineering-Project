@@ -306,7 +306,7 @@ class SessionAdapter:
         return self._session.get_approval_lists_for_store(store_name)
 
     def approve_owner(self, store_name, owner_to_approve_name):
-        return self._session.approve_owner(owner_to_approve_name, store_name)
+        return self._session.approve_owner(owner_to_approve_name, store_name, True)
 
     def approve_bid(self, store_name, product_name, is_approve):
         return self._session.approve_bid(store_name, product_name, is_approve)
@@ -316,3 +316,6 @@ class SessionAdapter:
 
     def decline_bid(self, store_name, product_name):
         return self._session.approve_bid(store_name, product_name, False)
+
+    def start_bid(self, store_name, product_name):
+        return self._session.start_bid(store_name, product_name)

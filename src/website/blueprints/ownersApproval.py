@@ -13,7 +13,7 @@ def view_approval_lists(store_name: str):
         return redirect(url_for('home.home'))
 
     approvals_lists = domain.get_approval_lists_for_store(store_name)
-    return render_template("stores/view_approval_lists.html", owners_to_approve=approvals_lists["owners"],
+    return render_template("stores/view_approval_lists.html", owners_to_approve=approvals_lists["owners"].dictionary,
                            bids_to_approve=approvals_lists["bids"], store_name=store_name)
 
 
@@ -27,9 +27,9 @@ def approve_owner(store_name: str, owner_name: str):
     res = domain.approve_owner(store_name, owner_name)
     if res.success:
         flash("you successfuly approved")
-        return redirect(url_for('ownersApproval.view_approval_lists', store_name=store_name))
     else:
         flash(res.description)
+    return redirect(url_for('ownersApproval.view_approval_lists', store_name=store_name))
 
 
 @bp.route('/approve_bid/<store_name>/<product_name>', methods=('POST', 'GET'))

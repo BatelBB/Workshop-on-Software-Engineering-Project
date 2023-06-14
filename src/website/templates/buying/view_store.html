@@ -99,6 +99,11 @@
                 <button type="submit" style="background-color: #019CBA; color: white; padding: 4px 10px; margin: 5px 0; border: none; border-radius: 4px; cursor: pointer;">Edit Product</button>
             </form>
         {% endif %}
+        {% if permissions and 'ChangePurchasePolicy' in permissions %}
+            <form action="{{ url_for('products.start_bid', store_name=name, product_name=product.name) }}">
+                <button type="submit" style="background-color: #019CBA; color: white; padding: 4px 10px; margin: 5px 0; border: none; border-radius: 4px; cursor: pointer;">Start Bid</button>
+            </form>
+        {% endif %}
         {% if product.isBid != -1 %}
                 <form action="{{ url_for('buying.bid_product', store_name=name, product_name=product.name) }}">
                     <button type="submit" style="background-color: #019CBA; color: white; padding: 4px 10px; margin: 5px 0; border: none; border-radius: 4px; cursor: pointer;">Bid</button>

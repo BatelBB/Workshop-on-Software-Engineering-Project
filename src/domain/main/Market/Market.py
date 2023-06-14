@@ -160,8 +160,6 @@ class Market(IService):
                     appointments.append(appointment)
                 self.notifications.send_from_store(store_name, appointment.appointee,
                            f"The store {store_name} appointed you with permissions {appointment.permissions}")
-                self.appointments.insert(store_name, [appointment]) if appointments is None else appointments.append(
-                    appointment)
                 return True
             return False
 
@@ -548,14 +546,15 @@ class Market(IService):
         if not store.success:
             return store
 
-        self.approval_list.insert(store_name, ConcurrentDictionary())
-        approval = OwnersApproval(self.get_store_owners(session_identifier, store_name).result,
-                                  actor.username)
-        self.approval_list.get(store_name).insert(appointee_name, approval)
+        if store_name not in self.approval_list.list_keys():
+            self.approval_list.insert(store_name, ConcurrentDictionary())
+        owners = self.get_store_owners(session_identifier, store_name).result
+        approval = OwnersApproval(owners, actor.username)
 
-        if approval.is_approved():
+        if approval.is_approved().result:
             return self.add_owner(session_identifier, appointee_name, store_name)
 
+        self.approval_list.get(store_name).insert(appointee_name, approval)
         return report_info(self.appoint_owner.__qualname__,
                            f"approval process beggins for ownership for {appointee_name} of {store_name}")
 

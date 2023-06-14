@@ -26,7 +26,7 @@
         </tr>
     </thead>
     <tbody>
-    {% for owner_name, app in owners_to_approve.items() %}
+    {% for owner_name, _ in owners_to_approve.items() %}
         <tr>
             <td>{{ loop.index }}</td>
             <td>{{ owner_name }}</td>
