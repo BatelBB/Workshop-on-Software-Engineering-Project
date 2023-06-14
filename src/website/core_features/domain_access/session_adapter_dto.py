@@ -10,6 +10,7 @@ class ProductDto:
     rate: Optional[float]
     quantity: int
     store_name: str
+    isBid: bool
 
 
 @dataclass

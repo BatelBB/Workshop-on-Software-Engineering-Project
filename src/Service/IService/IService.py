@@ -165,7 +165,7 @@ class IService(metaclass=IAbsractConcurrentSingleton):
         ...
 
     @abstractmethod
-    def approve_owner(self, session_identifier: int, appointee_name: str, store_name: str) -> Response[bool]:
+    def approve_owner(self, session_identifier: int, appointee_name: str, store_name: str, is_approve: bool) -> Response[bool]:
         ...
 
     @abstractmethod
@@ -313,6 +313,10 @@ class IService(metaclass=IAbsractConcurrentSingleton):
 
     @abstractmethod
     def mark_read(self, session_id: int, msg_id: int):
+        ...
+
+    @abstractmethod
+    def get_approval_lists_for_store(self, session_id: int, store_name) -> Response:
         ...
 
     @abstractmethod

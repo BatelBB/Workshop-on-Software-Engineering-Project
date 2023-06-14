@@ -105,6 +105,8 @@ def init_hagais_store(market):
 
     hagai.add_simple_discount('Hagai\'s StoreModule', "store", 50)
 
+    hagai.start_bid("Hagai\'s StoreModule", "Wireless Earbuds")
+
     hagai.logout()
     hagai.leave()
 

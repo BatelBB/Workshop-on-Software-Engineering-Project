@@ -25,6 +25,11 @@
 
 
 <div style="display:flex; justify-content:space-around; flex-wrap:wrap; margin-bottom:1em;">
+{% if ('AppointOwner' in permissions) %}
+    <form action="{{ url_for('ownersApproval.view_approval_lists', store_name=name) }}">
+        <button type="submit" style="background-color: #008CBA; color: white; padding: 10px 24px; margin: 8px 0; border: none; border-radius: 4px; cursor: pointer;">View Approval Lists</button>
+    </form>
+{% endif %}
 
 {% if ('ChangeDiscountPolicy' in permissions) %}
     <form action="{{ url_for('discounts.discounts_view', store_name=name) }}">
@@ -32,9 +37,9 @@
     </form>
 {% endif %}
 
-{% if ('ChangePurchasePolicy' in permissions) %}
+{% if ('Changerules' in permissions) %}
     <form action="{{ url_for('rules.rules_view', store_name=name) }}">
-        <button type="submit" style="background-color: #008CBA; color: white; padding: 10px 24px; margin: 8px 0; border: none; border-radius: 4px; cursor: pointer;">Manage purchase policy</button>
+        <button type="submit" style="background-color: #008CBA; color: white; padding: 10px 24px; margin: 8px 0; border: none; border-radius: 4px; cursor: pointer;">Manage purchase rules</button>
     </form>
 {% endif %}
 
@@ -100,6 +105,16 @@
             <form action="{{ url_for('products.edit_product_one_field', store_name=name, product_name=product.name) }}">
                 <button type="submit" style="background-color: #019CBA; color: white; padding: 4px 10px; margin: 5px 0; border: none; border-radius: 4px; cursor: pointer;">Edit Product</button>
             </form>
+        {% endif %}
+        {% if permissions and 'ChangePurchasePolicy' in permissions %}
+            <form action="{{ url_for('products.start_bid', store_name=name, product_name=product.name) }}">
+                <button type="submit" style="background-color: #019CBA; color: white; padding: 4px 10px; margin: 5px 0; border: none; border-radius: 4px; cursor: pointer;">Start Bid</button>
+            </form>
+        {% endif %}
+        {% if product.isBid != -1 %}
+                <form action="{{ url_for('buying.bid_product', store_name=name, product_name=product.name) }}">
+                    <button type="submit" style="background-color: #019CBA; color: white; padding: 4px 10px; margin: 5px 0; border: none; border-radius: 4px; cursor: pointer;">Bid</button>
+                </form>
         {% endif %}
     </td>
 </tr>
