@@ -39,6 +39,11 @@ def basic_interaction_with_market():
     r = session.add_to_cart("Amazon", "Razer Blackwidow V3", 123)
     r = session.add_to_cart("Yahoo", "Razer Blackwidow V3", 555)
     r = session.add_to_cart("Amazon", "Razer Blackwidow V3", 7) # should increase the quantity to 130
+    r = session.add_to_cart("Ebay", "marry had a little lambda", 7) #
+    r = session.add_to_cart("Ebay", "marry had a little lambda", 7)# should increase the quantity to 14
+    r = session.update_cart_product_quantity("Ebay", "marry had a little lambda", 55)# should increase the quantity to 55
+    r = session.update_cart_product_quantity("Ebay", "marry had a little lambda", 123)# should increase the quantity to 123
+    r = session.change_product_category("Ebay", "Razer Blackwidow V3", "SOoooKAAAAAA")
     r = session.show_cart()
     r = session.remove_product_from_cart("Yahoo", "Razer Blackwidow V3")
     r = session.show_cart()

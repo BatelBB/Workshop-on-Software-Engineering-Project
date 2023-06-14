@@ -7,7 +7,6 @@ from src.domain.main.Utils.Base_db import session_DB
 
 
 class Item(Base_db.Base):
-
     __tablename__ = 'items'
     __table_args__ = {'extend_existing': True}
     product_name = Column(String, primary_key=True)
@@ -17,7 +16,8 @@ class Item(Base_db.Base):
     price = Column(Float)
     discount_price = Column(Float)
 
-    def __init__(self, product_name: str, username: str, store_name: str, quantity: int = 0, price: float = 0.0):
+    def __init__(self, product_name: str, username: str, store_name: str, quantity: int = 0, price: float = 0.0,
+                 discount_price: float = 0.00):
         self.product_name = product_name
         self.username = username
         self.store_name = store_name
@@ -42,6 +42,20 @@ class Item(Base_db.Base):
 
     def get_price(self) -> float:
         return self.price
+
+    @staticmethod
+    def load_item(product_name, username, store_name):
+        q = session_DB.query(Item).filter(Item.product_name == product_name, Item.username == username, Item.store_name == store_name).all()
+        exist = len(q) > 0
+        if exist:
+            row = q[0]
+            return Item(row.product_name, row.username, row.store_name, row.quantity, row.price, row.discount_price)
+        return None
+
+    @staticmethod
+    def number_of_records():
+        session_DB.flush()
+        return session_DB.query(Item).count()
 
 
 class Basket:
@@ -84,10 +98,22 @@ class Basket:
     def remove_item(self, item: Item) -> bool:
         try:
             self.items.remove(item)
-            session_DB.query(Item).filter(Item.username==item.username, Item.store_name==item.store_name, Item.product_name==item.product_name).delete()
+            session_DB.query(Item).filter(Item.username == item.username, Item.store_name == item.store_name,
+                                          Item.product_name == item.product_name).delete()
             session_DB.commit()
             return True
-        except Exception:
+        except ValueError:
+            return False
+
+    def update_item(self, item: Item) -> bool:
+        try:
+            item_index = self.items.index(item)
+            item_in_basket = self.items[item_index]
+            item_in_basket.quantity = item.quantity
+            session_DB.merge(item_in_basket)
+            session_DB.commit()
+            return True
+        except ValueError:
             return False
 
     def get_item(self, name):
@@ -95,7 +121,7 @@ class Basket:
             if i.product_name == name:
                 return i
 
-    #only call from store
+    # only call from store
     def calc_price(self) -> float:
         price = 0
         for item in self.items:

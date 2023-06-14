@@ -62,6 +62,20 @@ class Appointment(Base_db.Base):
         session_DB.merge(appointment)
         session_DB.commit()
 
+    @staticmethod
+    def load_appointment(appointee, store_name):
+        q = session_DB.query(Appointment).filter(Appointment.appointee == appointee, Appointment.store_name == store_name).all()
+        exist = len(q) > 0
+        if exist:
+            row = q[0]
+            return Appointment(row.appointee, row.store_name, row.role, row.appointed_by, deserialize_permissions(row.permissions_str))
+        return None
+
+    @staticmethod
+    def number_of_records():
+        session_DB.flush()
+        return session_DB.query(Appointment).count()
+
     def __str__(self):
         permissions: str = ', '.join(map(lambda p: str(get_permission_description(p)), self.permissions))
         return f'{self.role} \'{self.appointee}\', appointed_by: \'{self.appointed_by}\'. Permissions: {permissions}'

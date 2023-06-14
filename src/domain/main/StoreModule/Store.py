@@ -80,6 +80,10 @@ class Store(Base_db.Base):
                 store.add(p, p.quantity)
             for purchase in q[0].purchase_history_str.split('#'):
                 store.purchase_history.append(purchase)
+            try:
+                store.purchase_history.remove('')   # drop default db value
+            except ValueError:
+                pass
             return store
         return None
 
@@ -102,6 +106,16 @@ class Store(Base_db.Base):
             for r in q:
                 session_DB.delete(r)
             session_DB.commit()
+
+    @staticmethod
+    def number_of_records():
+        session_DB.flush()
+        return session_DB.query(Store).count()
+
+    @staticmethod
+    def is_record_exists(store_name):
+        q = session_DB.query(Store.name).filter(Store.name == store_name)
+        return session_DB.query(q.exists()).scalar()
 
     def __str__(self):
         output: str = f'Store: {self.name}\nProducts:\n'
@@ -144,8 +158,7 @@ class Store(Base_db.Base):
                 new_quantity = self.products_quantities[product.name].refill(quantity)
                 if new_quantity > 0:
                     with self.table_lock:
-                        r = session_DB.query(Product).filter(Product.name == product.name, Product.store_name == self.name).first()
-                        r.quantity = new_quantity
+                        session_DB.merge(product)
                         session_DB.commit()
                 else:
                     self.remove(product.name)
@@ -155,9 +168,9 @@ class Store(Base_db.Base):
         is_succeed = p in self.products
         if is_succeed:
             self.products_quantities[product_name].reset(quantity)
+            p.quantity = quantity
             with self.table_lock:
-                r = session_DB.query(Product).filter(Product.name == product_name, Product.store_name == self.name).first()
-                r.quantity = quantity
+                session_DB.merge(p)
                 session_DB.commit()
         return is_succeed
 
@@ -173,9 +186,8 @@ class Store(Base_db.Base):
         try:
             self.products.remove(p)
             del self.products_quantities[product_name]
-            with self.table_lock:
-                session_DB.query(Product).filter(Product.name == product_name, Product.store_name == self.name).delete()
-                session_DB.commit()
+            session_DB.query(Product).filter(Product.name == product_name, Product.store_name == self.name).delete()
+            session_DB.commit()
             return True
         except KeyError:
             return False
@@ -244,8 +256,7 @@ class Store(Base_db.Base):
         if is_changed:
             product.category = new
             with self.table_lock:
-                r = session_DB.query(Product).filter(Product.name == product.name, Product.store_name == self.name).first()
-                r.category = new
+                session_DB.merge(product)
                 session_DB.commit()
         return is_changed
 
@@ -253,8 +264,7 @@ class Store(Base_db.Base):
         for product in filter(lambda p: p.price == old, self.products):
             product.price = new
             with self.table_lock:
-                r = session_DB.query(Product).filter(Product.name == product.name, Product.store_name == self.name).first()
-                r.price = new
+                session_DB.merge(product)
                 session_DB.commit()
 
     def enforce_purchase_rules(self, basket: Basket) -> Response[bool]:
