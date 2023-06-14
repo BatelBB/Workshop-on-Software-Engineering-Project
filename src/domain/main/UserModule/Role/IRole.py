@@ -10,10 +10,6 @@ class IRole(ABC):
         self.context = context
 
     @abstractmethod
-    def register(self) -> Response[bool]:
-        ...
-
-    @abstractmethod
     def login(self, encrypted_password: str) -> bool:
         ...
 

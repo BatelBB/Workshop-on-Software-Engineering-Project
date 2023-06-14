@@ -35,13 +35,13 @@ class Session:
         return self.service.leave(self.identifier)
 
     def shutdown(self) -> Response[bool]:
-        return self.apply(self.service.shutdown, self.identifier)
+        return self.service.shutdown(self.identifier)
 
-    def register(self, username: str, encrypted_password: str) -> Response[bool]:
-        return self.apply(self.service.register, self.identifier, username, encrypted_password)
+    def register(self, username: str, password: str) -> Response[bool]:
+        return self.apply(self.service.register, self.identifier, username, password)
 
-    def register_admin(self, username: str, encrypted_password: str) -> Response[bool]:
-        return self.apply(self.service.register_admin, self.identifier, username, encrypted_password)
+    def register_admin(self, username: str, password: str, is_admin: bool = True) -> Response[bool]:
+        return self.apply(self.service.register, self.identifier, username, password, is_admin)
 
     def is_registered(self, username: str) -> bool:
         return self.apply(self.service.is_registered, username)
@@ -132,8 +132,8 @@ class Session:
     def appoint_owner(self, appointee: str, store: str) -> Response[bool]:
         return self.apply(self.service.appoint_owner, self.identifier, appointee, store)
 
-    def approve_owner(self, appointee: str, store: str) -> Response[bool]:
-        return self.apply(self.service.approve_owner, self.identifier, appointee, store)
+    def approve_owner(self, appointee: str, store: str, is_approve: bool) -> Response[bool]:
+        return self.apply(self.service.approve_owner, self.identifier, appointee, store, is_approve)
 
     def appointees_at(self, store: str) -> Response[list[str] | bool]:
         return self.apply(self.service.appointees_at, self.identifier, store)
@@ -267,6 +267,12 @@ class Session:
     def get_cart_price(self, baskets):
         return self.apply(self.service.get_cart_price, baskets)
 
+    def get_number_of_registered_users(self) -> int:
+        return self.apply(self.service.get_number_of_registered_users)
+
+    def get_number_of_stores(self) -> int:
+        return self.apply(self.service.get_number_of_stores)
+
     def send_message(self, recipient, content):
         return self.apply(self.service.send_user_message, self.identifier, recipient, content)
 
@@ -280,3 +286,9 @@ class Session:
     def mark_read(self, msg_id: int):
         return self.apply(self.service.mark_read, self.identifier, msg_id)
 
+    def get_approval_lists_for_store(self, store_name) -> Response:
+        return self.apply(self.service.get_approval_lists_for_store, self.identifier, store_name)
+
+
+    def get_store_staff_wit_permissions(self, store_name: str):
+        return self.apply(self.service.get_store_staff_wit_permissions, self.identifier, store_name)

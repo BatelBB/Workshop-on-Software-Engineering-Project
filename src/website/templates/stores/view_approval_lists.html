@@ -1,0 +1,79 @@
+<style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        border: 1px solid black;
+    }
+    th, td {
+        border: 1px solid black;
+        padding: 10px;
+    }
+    th {
+        background-color: lightgray;
+    }
+    tr:not(:last-child) td {
+        border-bottom: 1px solid black;
+    }
+</style>
+
+<h2>Owners to Approve</h2>
+<table>
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for owner_name, _ in owners_to_approve.items() %}
+        <tr>
+            <td>{{ loop.index }}</td>
+            <td>{{ owner_name }}</td>
+            <td>
+                <form action="{{ url_for('ownersApproval.approve_owner', store_name=store_name, owner_name=owner_name) }}" method="post">
+                    <button type="submit">Approve</button>
+                </form>
+                <form action="{{ url_for('ownersApproval.decline_owner', store_name=store_name, owner_name=owner_name) }}" method="post">
+                    <button type="submit">Decline</button>
+                </form>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<h2>Bids to Approve</h2>
+<table>
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Product</th>
+            <th>Bid</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for product_name, bid in bids_to_approve.items() %}
+        <tr>
+            <td>{{ loop.index }}</td>
+            <td>{{ product_name }}</td>
+            <td>{{ bid }}</td>
+            <td>
+                {% if bid > 0 %}
+                    <form action="{{ url_for('ownersApproval.approve_bid', store_name=store_name, product_name=product_name) }}" method="post">
+                        <button type="submit">Approve</button>
+                    </form>
+                    <form action="{{ url_for('ownersApproval.decline_bid', store_name=store_name, product_name=product_name) }}" method="post">
+                        <button type="submit">Decline</button>
+                    </form>
+                {% endif %}
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<form action="{{ url_for('buying.view_store', name=store_name) }}" method="get">
+    <button type="submit">Back</button>
+</form>
