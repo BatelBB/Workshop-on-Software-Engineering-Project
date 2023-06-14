@@ -134,8 +134,8 @@ class Session:
     def appoint_owner(self, appointee: str, store: str) -> Response[bool]:
         return self.apply(self.service.appoint_owner, self.identifier, appointee, store)
 
-    def approve_owner(self, appointee: str, store: str) -> Response[bool]:
-        return self.apply(self.service.approve_owner, self.identifier, appointee, store)
+    def approve_owner(self, appointee: str, store: str, is_approve: bool) -> Response[bool]:
+        return self.apply(self.service.approve_owner, self.identifier, appointee, store, is_approve)
 
     def appointees_at(self, store: str) -> Response[list[str] | bool]:
         return self.apply(self.service.appointees_at, self.identifier, store)
@@ -285,6 +285,9 @@ class Session:
 
     def mark_read(self, msg_id: int):
         return self.apply(self.service.mark_read, self.identifier, msg_id)
+
+    def get_approval_lists_for_store(self, store_name) -> Response:
+        return self.apply(self.service.get_approval_lists_for_store, self.identifier, store_name)
 
 
     def get_store_staff_wit_permissions(self, store_name: str):

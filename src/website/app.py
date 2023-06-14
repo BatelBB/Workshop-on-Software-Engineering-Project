@@ -5,6 +5,7 @@ from flask import Flask, render_template
 from flask_bootstrap import Bootstrap
 
 from src.domain.main.Utils.Response import Response
+from website.blueprints.ownersApproval import bp as ownersApproval
 from website.blueprints.searching import bp as searching
 from website.blueprints.discounts import bp as discounts
 from website.blueprints.rules import bp as rules
@@ -57,6 +58,7 @@ app.register_blueprint(rules)
 app.register_blueprint(discounts)
 app.register_blueprint(searching)
 app.register_blueprint(dms)
+app.register_blueprint(ownersApproval)
 
 
 @app.errorhandler(500)

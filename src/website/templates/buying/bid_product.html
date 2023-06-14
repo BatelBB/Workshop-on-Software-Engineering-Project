@@ -1,0 +1,33 @@
+{% extends "layout.html" %}
+{% block title %}Login{% endblock %}
+
+{% block page %}
+<h1>Bid</h1>
+<form method="post">
+    
+  {{ form.hidden_tag() }}
+    <table>
+        {% for field in fields %}
+            <tr>
+                <td>{{field.label}}&nbsp;</td>
+                <td>{{ field }}</td>
+                <td>
+                    {% for error in field.errors %}
+                        {{ error }}
+                    {% endfor %}
+                </td>
+            </tr>
+        {% endfor %}
+        <tr>
+                <td>{{form.submit.label}}&nbsp;</td>
+                <td>{{ form.submit }}</td>
+                <td>
+                    {% for error in form.submit.errors %}
+                        {{ error }}
+                    {% endfor %}
+                </td>
+            </tr>
+    </table>
+</form>
+
+{% endblock %}
