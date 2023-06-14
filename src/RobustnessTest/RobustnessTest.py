@@ -10,7 +10,7 @@ from src.domain.test.UnitTests.RandomInputGenerator import get_random_product, g
 
 class RobustnessTest(unittest.TestCase):
 
-    number_of_threads = [1, 10, 50]
+    number_of_threads = [1, 10, 100]
 
     def __init__(self, *args, **kwargs):
         unittest.TestCase.__init__(self, *args, **kwargs)
