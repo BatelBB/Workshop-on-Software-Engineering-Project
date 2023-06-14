@@ -120,6 +120,14 @@ class Market(IService):
         return None
 
     def remove_appointment_of(self, fired_user: str, store_name: str) -> None:
+        # update owners_approval if removing owner
+        if self.has_permission_at(store_name, self.users.get(fired_user), Permission.AppointOwner):
+            store_dict = self.approval_list.get(store_name)
+            for person in store_dict.get_all_keys():
+                store_dict.get(person).remove_owner(fired_user)
+                store = self.verify_registered_store("remove_appointment_of", store_name).result
+                store.remove_owner(fired_user)
+
         Appointment.delete_record(fired_user, store_name)
         self.appointments.get(store_name).remove(Appointment(fired_user, store_name))
         self.notifications.send_from_store(store_name, fired_user,
