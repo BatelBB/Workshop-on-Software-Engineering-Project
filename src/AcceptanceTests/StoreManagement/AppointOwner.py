@@ -55,9 +55,8 @@ class AppointOwner(unittest.TestCase):
         self.assertTrue(r.success, "error: get store staff action failed")
         appointment = r.result
         self.assertIn(self.store_owner1[0], appointment)
-        self.assertEqual(self.store_founder1[0], appointment[self.store_owner1[0]]["Appointed by"], "error: appointed "
-                                                                                                    "by value is "
-                                                                                                    "incorrect")
+        self.assertEqual(self.store_founder1[0], appointment[self.store_owner1[0]]["Appointed by"],
+                         "error: Appointed By value is incorrect")
         for p in Permission:
             self.assertIn(p.value, appointment[self.store_owner1[0]]["Permissions"], f"error: permission '{p.value}' "
                                                                                      "not found for an appointed owner")
@@ -72,13 +71,14 @@ class AppointOwner(unittest.TestCase):
         self.assertTrue(r.success, "error: appoint owner action failed")
         self.app.logout()
         self.app.login(*self.store_founder1)
+        r = self.app.approve_owner(self.store_owner1[0], "bakery")
+        self.assertTrue(r.success, "error: approve owner action failed")
         r = self.app.get_store_staff("bakery")
         self.assertTrue(r.success, "error: get store staff action failed")
         appointment = r.result
         self.assertIn(self.store_owner1[0], appointment)
-        self.assertEqual(self.store_owner2[0], appointment[self.store_owner1[0]]["Appointed by"], "error: appointed "
-                                                                                                  "by value is "
-                                                                                                  "incorrect")
+        self.assertEqual(self.store_owner2[0], appointment[self.store_owner1[0]]["Appointed by"],
+                         "error: Appointed By value is incorrect")
         for p in Permission:
             self.assertIn(p.value, appointment[self.store_owner1[0]]["Permissions"], f"error: permission '{p.value}' "
                                                                                      "not found for an appointed owner")
@@ -95,6 +95,8 @@ class AppointOwner(unittest.TestCase):
         self.assertFalse(r.success, "error: appoint owner action succeeded")
         self.app.logout()
         self.app.login(*self.store_founder1)
+        r = self.app.approve_owner(self.store_owner1[0], "bakery")
+        self.assertFalse(r.success, "error: approve owner action succeeded")
         r = self.app.get_store_staff("bakery")
         self.assertTrue(r.success, "error: get store staff action failed")
         appointment = r.result
@@ -112,13 +114,14 @@ class AppointOwner(unittest.TestCase):
         self.assertTrue(r.success, "error: appoint owner action failed")
         self.app.logout()
         self.app.login(*self.store_founder1)
+        r = self.app.approve_owner(self.store_owner1[0], "bakery")
+        self.assertTrue(r.success, "error: approve owner action failed")
         r = self.app.get_store_staff("bakery")
         self.assertTrue(r.success, "error: get store staff action failed")
         appointment = r.result
         self.assertIn(self.store_owner1[0], appointment)
-        self.assertEqual(self.store_manager1[0], appointment[self.store_owner1[0]]["Appointed by"], "error: appointed "
-                                                                                                    "by value is "
-                                                                                                    "incorrect")
+        self.assertEqual(self.store_manager1[0], appointment[self.store_owner1[0]]["Appointed by"],
+                         "error: Appointed By value is incorrect")
         for p in Permission:
             self.assertIn(p.value, appointment[self.store_owner1[0]]["Permissions"], f"error: permission '{p.value}' "
                                                                                      "not found for an appointed owner")
@@ -133,6 +136,8 @@ class AppointOwner(unittest.TestCase):
         self.assertFalse(r.success, "error: appoint owner action succeeded")
         self.app.logout()
         self.app.login(*self.store_founder1)
+        r = self.app.approve_owner(self.store_owner1[0], "bakery")
+        self.assertFalse(r.success, "error: approve owner action succeeded")
         r = self.app.get_store_staff("bakery")
         self.assertTrue(r.success, "error: get store staff action failed")
         appointment = r.result
@@ -144,6 +149,8 @@ class AppointOwner(unittest.TestCase):
         self.assertFalse(r.success, "error: appoint owner action succeeded")
         self.app.logout()
         self.app.login(*self.store_founder1)
+        r = self.app.approve_owner(self.store_owner1[0], "bakery")
+        self.assertFalse(r.success, "error: approve owner action succeeded")
         r = self.app.get_store_staff("bakery")
         self.assertTrue(r.success, "error: get store staff action failed")
         appointment = r.result
@@ -154,6 +161,8 @@ class AppointOwner(unittest.TestCase):
         self.assertFalse(r.success, "error: appoint owner action succeeded")
         self.app.logout()
         self.app.login(*self.store_founder1)
+        r = self.app.approve_owner(self.store_owner1[0], "bakery")
+        self.assertFalse(r.success, "error: approve owner action succeeded")
         r = self.app.get_store_staff("bakery")
         self.assertTrue(r.success, "error: get store staff action failed")
         appointment = r.result
@@ -185,7 +194,13 @@ class AppointOwner(unittest.TestCase):
         self.assertTrue(r.success, "error: appoint owner action failed")
         r = self.app.appoint_owner(self.store_owner2[0], "bakery")
         self.assertTrue(r.success, "error: appoint owner action failed")
-        r = self.app.remove_permission("bakery", self.store_owner1[0], Permission.AppointOwner)
+        self.app.logout()
+        self.app.login(*self.store_owner1)
+        r = self.app.approve_owner(self.store_owner2[0], "bakery")
+        self.assertTrue(r.success, "error: approve owner action failed")
+        self.app.logout()
+        self.app.login(*self.store_founder1)
+        r = self.app.remove_permission("bakery", self.store_owner2[0], Permission.AppointOwner)
         self.assertTrue(r.success, "error: remove permission action failed")
         self.app.logout()
         self.app.login(*self.store_owner2)
@@ -195,8 +210,6 @@ class AppointOwner(unittest.TestCase):
         self.app.login(*self.store_owner1)
         r = self.app.appoint_owner(self.registered_user[0], "bakery")
         self.assertFalse(r.success, "error: appoint owner action succeeded")
-        self.app.logout()
-        self.app.login(*self.store_founder1)
         r = self.app.get_store_staff("bakery")
         self.assertTrue(r.success, "error: get store staff action failed")
         appointment = r.result
@@ -228,9 +241,9 @@ class AppointOwner(unittest.TestCase):
             self.app.login(*self.store_owner1)
             r = self.app.get_store_purchase_history("bakery")
             self.assertTrue(r.success, "error: get purchase history action failed")
-            purchase_history = r.result
-            self.assertIn("bread", purchase_history, "error: an owner with permission can't see the product after a "
-                                                     "purchase")
+            purchase_history = r.result[0]
+            self.assertIn("Product: 'bread', Quantity: 10, Price: 10.0, Discount-Price: 10.0", purchase_history,
+                          "error: an owner with permission can't see the product after a purchase")
 
     def test_retrieve_staff_details(self):
         self.set_owner_appointments()
@@ -330,6 +343,12 @@ class AppointOwner(unittest.TestCase):
         self.app.login(*self.store_owner1)
         r = self.app.appoint_owner(self.registered_user[0], "bakery")
         self.assertTrue(r.success, "error: appoint owner action failed")
+        self.app.logout()
+        self.app.login(*self.store_founder1)
+        self.app.approve_owner(self.registered_user[0], "bakery")
+        self.app.logout()
+        self.app.login(*self.store_owner2)
+        self.app.approve_owner(self.registered_user[0], "bakery")
         r = self.app.get_store_staff("bakery")
         self.assertTrue(r.success, "error: get store staff action failed")
         appointment = r.result
@@ -378,10 +397,53 @@ class AppointOwner(unittest.TestCase):
         r = self.app.purchase_with_non_immediate_policy("bakery", "bread", "card", ["123", "123", "12/6588"],
                                                         "ben-gurion", "1234", 10.5, "beer sheva", "israel")
         self.assertTrue(r.success, "error: purchase with a bid policy failed")
-
+        r = self.app.get_bid_products("bakery")
+        self.assertTrue(r.success, "error: get bid product action failed")
+        self.assertIn("bread", r.result, "error: no bid found for a bread after a owner started a bid")
+        self.assertEqual(10.5, r.result["bread"])
 
     def test_approve_a_bid(self):
-        pass
+        with patch('src.domain.main.ExternalServices.Provision.ProvisionServiceAdapter.provisionService.getDelivery',
+                   return_value=True) as delivery_mock, \
+                patch('src.domain.main.ExternalServices.Payment.PaymentServices.PayWithCard.pay',
+                      return_value=True) as payment_mock:
+
+            self.set_owner_appointments()
+            self.app.login(*self.store_owner1)
+            r = self.app.start_bid("bakery", "bread")
+            self.assertTrue(r.success, "error: start a bid action failed")
+            r = self.app.get_approval_lists_for_store_bids("bakery")
+            self.assertTrue(r.success, "error: get approval list for store bids action failed")
+            bids = r.result["Bids"]
+            approvals = r.result["Owners"].get("usr6").to_approve   # need to fix
+            self.assertIn("bread", bids, "error: bread not found in bids")
+            self.assertEqual(0, bids["bread"], "error: bid initial price is not 0")
+            self.assertIn(self.store_founder1[0], approvals, "error: founder not in approval list")
+            self.assertFalse(approvals[self.store_founder1[0]], "error: founder didn't approved bid")
+            self.assertIn(self.store_owner1[0], approvals, "error: owner not in approval list")
+            self.assertFalse(approvals[self.store_owner1[0]], "error: owner didn't approved bid")
+            self.assertIn(self.store_owner2[0], approvals, "error: owner not in approval list")
+            self.assertFalse(approvals[self.store_owner2[0]], "error: owner didn't approved bid")
+            self.app.logout()
+            self.app.login(*self.registered_user)
+            r = self.app.purchase_with_non_immediate_policy("bakery", "bread", "card", ["123", "123", "12/6588"],
+                                                            "ben-gurion", "1234", 10.5, "beer sheva", "israel")
+            self.assertTrue(r.success, "error: purchase with a bid policy failed")
+            self.app.logout()
+            self.app.login(*self.store_owner1)
+            r = self.app.approve_bid("bakery", "bread")
+            self.assertTrue(r.success, "error: approve bid action failed")
+            self.app.logout()
+            self.app.login(*self.store_owner2)
+            r = self.app.approve_bid("bakery", "bread")
+            self.assertTrue(r.success, "error: approve bid action failed")
+            self.app.logout()
+            self.app.login(*self.store_founder1)
+            r = self.app.approve_bid("bakery", "bread")
+            self.assertTrue(r.success, "error: approve bid action failed")
+
+            payment_mock.assert_called_once_with(10.5)
+            delivery_mock.assert_called_once()
 
     def set_stores(self):
         self.app.login(*self.store_founder1)
@@ -394,4 +456,7 @@ class AppointOwner(unittest.TestCase):
         self.app.login(*self.store_founder1)
         self.app.appoint_owner(self.store_owner1[0], "bakery")
         self.app.appoint_owner(self.store_owner2[0], "bakery")
+        self.app.logout()
+        self.app.login(*self.store_owner1)
+        self.app.approve_owner(self.store_owner2[0], "bakery")
         self.app.logout()

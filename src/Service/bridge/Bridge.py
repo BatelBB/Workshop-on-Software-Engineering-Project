@@ -30,6 +30,18 @@ class Bridge(ABC):
     def logout(self, ) -> Response[bool]:
         ...
 
+    @abstractmethod
+    def send_message(self, recipient, content):
+        ...
+
+    @abstractmethod
+    def get_inbox(self):
+        ...
+
+    @abstractmethod
+    def mark_read(self, msg_id: int):
+        ...
+
     #########################
     # user purchase services 
     @abstractmethod
@@ -46,6 +58,10 @@ class Bridge(ABC):
 
     @abstractmethod
     def show_cart(self) -> Response[dict | bool]:
+        ...
+
+    @abstractmethod
+    def get_cart_price(self) -> Response[float]:
         ...
 
     @abstractmethod
@@ -107,6 +123,10 @@ class Bridge(ABC):
         ...
 
     @abstractmethod
+    def approve_owner(self, appointee: str, store: str, is_approve: bool) -> Response[bool]:
+        ...
+
+    @abstractmethod
     def appoint_manager(self, appointee: str, store: str) -> Response[bool]:
         ...
 
@@ -152,6 +172,10 @@ class Bridge(ABC):
 
     @abstractmethod
     def approve_bid(self, store_name: str, product_name: str, is_approve: bool) -> Response:
+        ...
+
+    @abstractmethod
+    def get_approval_lists_for_store_bids(self, store_name) -> Response:
         ...
 
     @abstractmethod
@@ -215,6 +239,10 @@ class Bridge(ABC):
 
     @abstractmethod
     def get_purchase_rules(self, store_name: str):
+        ...
+
+    @abstractmethod
+    def get_bid_products(self, store_name: str) -> Response[dict | bool]:
         ...
 
     ###################

@@ -5,7 +5,7 @@ from Service.bridge.real import Real
 
 
 class Proxy(Bridge):
-    real: Bridge
+    real: Real
 
     def __init__(self):
         self.real = Real()
@@ -30,6 +30,23 @@ class Proxy(Bridge):
     def logout(self) -> Response[bool]:
         return self.real.logout()
 
+    def send_message(self, recipient, content) -> Response[bool]:
+        return self.real.send_message(recipient, content)
+
+    def get_inbox(self) -> Response[dict | bool]:
+        r = self.real.get_inbox()
+        if not r.success:
+            return Response(False)
+        dic = {}
+        notifications = r.result
+        for n in notifications:
+            dic[n.msg_id] = {"Sender": n.sender, "Recipient": n.recipient, "Seen": n.seen, "Sender_type": n.sender_type,
+                             "Content": n.content, "Timestamp": n.timestamp}
+        return Response(dic)
+
+    def mark_read(self, msg_id: int) -> Response[bool]:
+        return self.real.mark_read(msg_id)
+
     #########################
     # user purchase services
     def add_to_cart(self, store_name: str, product_name: str, quantity: int) -> Response[bool]:
@@ -44,6 +61,10 @@ class Proxy(Bridge):
 
     def show_cart(self) -> Response[dict | bool]:
         return self.real.show_cart()
+
+    def get_cart_price(self) -> Response[float]:
+        cart = self.real.get_cart().result
+        return self.real.get_cart_price(cart.baskets)
 
     def purchase_shopping_cart(self, payment_method: str, payment_details: list, address: str, postal_code: str,
                                city: str, country: str) -> Response[bool]:
@@ -93,6 +114,9 @@ class Proxy(Bridge):
     def appoint_owner(self, appointee: str, store: str) -> Response[bool]:
         return self.real.appoint_owner(appointee, store)
 
+    def approve_owner(self, appointee: str, store: str, is_approve: bool = True) -> Response[bool]:
+        return self.real.approve_owner(appointee, store, is_approve)
+
     def appoint_manager(self, appointee: str, store: str) -> Response[bool]:
         return self.real.appoint_manager(appointee, store)
 
@@ -140,8 +164,17 @@ class Proxy(Bridge):
     def start_bid(self, store_name: str, product_name: str) -> Response:
         return self.real.start_bid(store_name, product_name)
 
-    def approve_bid(self, store_name: str, product_name: str, is_approve: bool) -> Response:
+    def approve_bid(self, store_name: str, product_name: str, is_approve: bool = True) -> Response[bool]:
         return self.real.approve_bid(store_name, product_name, is_approve)
+
+    def get_approval_lists_for_store_bids(self, store_name) -> Response:
+        r = self.real.get_approval_lists_for_store_bids(store_name)
+        if isinstance(r, Response) and not r.success:
+            return r
+        elif isinstance(r, dict):
+            dic = {"Owners": r['owners'], "Bids": r['bids']}
+            return Response(dic)
+        return r
 
     def add_purchase_simple_rule(self, store_name: str, product_name: str, gle: str, amount: int) -> Response:
         return self.real.add_purchase_simple_rule(store_name, product_name, gle, amount)
@@ -228,6 +261,9 @@ class Proxy(Bridge):
 
     def get_purchase_rules(self, store_name: str) -> Response[dict[int:dict]]:
         return self.real.get_purchase_rules(store_name)
+
+    def get_bid_products(self, store_name: str) -> Response[dict | bool]:
+        return self.real.get_bid_products(store_name)
 
     ###################
     # admin service

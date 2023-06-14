@@ -289,6 +289,8 @@ class Session:
     def get_approval_lists_for_store(self, store_name) -> Response:
         return self.apply(self.service.get_approval_lists_for_store, self.identifier, store_name)
 
-
     def get_store_staff_wit_permissions(self, store_name: str):
         return self.apply(self.service.get_store_staff_wit_permissions, self.identifier, store_name)
+
+    def get_bid_products(self, store_name: str) -> Response[dict | bool]:
+        return self.apply(self.service.get_bid_products, self.identifier, store_name)

@@ -3,7 +3,7 @@ import unittest
 
 
 class Login(unittest.TestCase):
-    app: Proxy  = Proxy()
+    app: Proxy = Proxy()
     service_admin = None
 
     @classmethod

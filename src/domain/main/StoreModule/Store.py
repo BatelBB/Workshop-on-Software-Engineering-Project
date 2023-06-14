@@ -476,3 +476,11 @@ class Store(Base_db.Base):
         for key in self.products_with_bid_purchase_policy.keys():
             policy = self.products_with_bid_purchase_policy[key]
             policy.remove_from_approval_dict_in_bid_policy(name)
+
+    def get_bid_products(self) -> Response[dict]:
+        bids = {}
+        for product, bid in self.products_with_bid_purchase_policy.items():
+            bids[product] = bid.highest_bid
+        return Response(bids)
+
+

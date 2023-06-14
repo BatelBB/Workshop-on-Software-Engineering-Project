@@ -1,6 +1,7 @@
 from Service.IService.IService import IService
 from Service.Session.Session import Session
 from domain.main.Market.Permissions import Permission
+from domain.main.Notifications.notification import Notification
 from domain.main.StoreModule.PurchaseRules.IRule import IRule
 from src.domain.main.Utils.Response import Response
 from Service.bridge.Bridge import Bridge
@@ -34,6 +35,15 @@ class Real(Bridge):
     def logout(self) -> Response[bool]:
         return self.session.logout()
 
+    def send_message(self, recipient, content) -> Response[bool]:
+        return self.session.send_message(recipient, content)
+
+    def get_inbox(self) -> Response[list[Notification]]:
+        return self.session.get_inbox()
+
+    def mark_read(self, msg_id: int) -> Response[bool]:
+        return self.session.mark_read(msg_id)
+
     #########################
     # user purchase services
     def add_to_cart(self, store_name: str, product_name: str, quantity: int) -> Response[bool]:
@@ -48,6 +58,12 @@ class Real(Bridge):
 
     def show_cart(self) -> Response[dict | bool]:
         return self.session.show_cart()
+
+    def get_cart(self):
+        return self.session.get_cart()
+
+    def get_cart_price(self, basket):
+        return self.session.get_cart_price(basket)
 
     def purchase_shopping_cart(self, payment_method: str, payment_details: list, address: str, postal_code: str,
                                city: str, country: str) -> Response[bool]:
@@ -90,10 +106,13 @@ class Real(Bridge):
     def change_product_category(self, store_name: str, old_product_name: str, category: str) -> Response[bool]:
         return self.session.change_product_category(store_name, old_product_name, category)
 
+    # appointments and permissions
     def appoint_owner(self, appointee: str, store: str) -> Response[bool]:
         return self.session.appoint_owner(appointee, store)
 
-    # appointments and permissions
+    def approve_owner(self, appointee: str, store: str, is_approve: bool) -> Response[bool]:
+        return self.session.approve_owner(appointee, store, is_approve)
+
     def appoint_manager(self, appointee: str, store: str) -> Response[bool]:
         return self.session.appoint_manager(appointee, store)
 
@@ -130,6 +149,9 @@ class Real(Bridge):
 
     def approve_bid(self, store_name: str, product_name: str, is_approve: bool) -> Response[bool]:
         return self.session.approve_bid(store_name, product_name, is_approve)
+
+    def get_approval_lists_for_store_bids(self, store_name) -> Response:
+        return self.session.get_approval_lists_for_store(store_name)
 
     def add_purchase_simple_rule(self, store_name: str, product_name: str, gle: str, amount: int) -> Response[bool]:
         return self.session.add_purchase_simple_rule(store_name, product_name, gle, amount)
@@ -183,6 +205,9 @@ class Real(Bridge):
 
     def get_purchase_rules(self, store_name: str) -> Response[dict[int:IRule]]:
         return self.session.get_purchase_rules(store_name)
+
+    def get_bid_products(self, store_name: str) -> Response[dict | bool]:
+        return self.session.get_bid_products(store_name)
 
     ###################
     # admin service

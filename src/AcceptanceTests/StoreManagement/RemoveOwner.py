@@ -63,6 +63,8 @@ class RemoveOwner(unittest.TestCase):
         self.app.appoint_manager(self.store_manager2_2[0], "bakery")
         self.app.add_permission("bakery", self.store_manager2_2[0], Permission.Add)
         self.app.logout()
+        self.approve_owner(self.store_owner1_2, [self.store_founder1, self.store_owner1])
+        self.approve_owner(self.store_owner2_2, [self.store_founder1, self.store_owner1, self.store_owner1_2])
         self.app.login(*self.store_founder1)
         appointment = self.app.get_store_staff("bakery").result
         self.assertIn(self.store_owner1[0], appointment)
@@ -274,4 +276,10 @@ class RemoveOwner(unittest.TestCase):
         self.app.login(*self.store_founder1)
         self.app.remove_appointment(self.store_owner1[0], "bakery")
         self.app.logout()
+
+    def approve_owner(self, owner, approving_list):
+        for member in approving_list:
+            self.app.login(*member)
+            self.app.approve_owner(owner, "bakery")
+            self.app.logout()
         

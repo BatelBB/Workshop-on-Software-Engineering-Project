@@ -31,14 +31,14 @@ class Login(unittest.TestCase):
         cls.app.login(*cls.service_admin)
         cls.app.shutdown()
 
-    ChangePurchasePolicy = 'Change purchase policy'
-
-    def test_approve_bid_happy(self):
-    def test_approve_bid_accept_higher_bid(self):
-    def test_approve_bid_ignore_lower_bid(self):
-
-    def test_approve_bid_after_removing_owner_appointment(self):
-
-    def test_approve_bid_missing_product(self):
-    def test_approve_bid_(self):
-
+    # ChangePurchasePolicy = 'Change purchase policy'
+    #
+    # def test_approve_bid_happy(self):
+    # def test_approve_bid_accept_higher_bid(self):
+    # def test_approve_bid_ignore_lower_bid(self):
+    #
+    # def test_approve_bid_after_removing_owner_appointment(self):
+    #
+    # def test_approve_bid_missing_product(self):
+    # def test_approve_bid_(self):
+    #

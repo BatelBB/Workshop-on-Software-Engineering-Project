@@ -24,7 +24,7 @@ class OwnersApproval:
     def approve(self, person: str) -> Response:
         self.to_approve[person] = True
         res = self.is_approved()
-        if res.result:
+        if not res.result:
             return res
         return report(f"{person} approved bid", True)
 
