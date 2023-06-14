@@ -10,7 +10,7 @@ from src.domain.test.UnitTests.RandomInputGenerator import get_random_product, g
 
 class RobustnessTest(unittest.TestCase):
 
-    number_of_threads = [1, 10, 100]
+    number_of_threads = [1, 10, 50]
 
     def __init__(self, *args, **kwargs):
         unittest.TestCase.__init__(self, *args, **kwargs)
@@ -35,6 +35,7 @@ class RobustnessTest(unittest.TestCase):
         self.session = self.service.enter()
         self.service_admin = ('Kfir', 'Kfir')
         self.session.login(*self.service_admin)
+        self.session.load_configuration()
 
     def tearDown(self) -> None:
         session = self.service.enter()

@@ -1,0 +1,10 @@
+14/06/2023 21:26:21 INFO:	 Market.register: 'Admin 'Kfir'' is registered!
+14/06/2023 21:26:22 INFO:	 Session: 4233131188012389881 has been initialized
+14/06/2023 21:26:22 INFO:	 Market.login: Admin 'Kfir' is logged in
+14/06/2023 21:26:22 INFO:	 Session: 5145349349401145103 has been initialized
+14/06/2023 21:26:23 INFO:	 Market.login: Admin 'Kfir' is logged in
+14/06/2023 21:26:23 INFO:	 Market.open_store: Admin 'Kfir' opened store 'iclahlrlbmfrtwenfxisqfvtqsqcqqjwzmlzpgzyz'.
+14/06/2023 21:26:23 INFO:	 Session: 3115520713931514249 has been initialized
+14/06/2023 21:26:23 INFO:	 Market.login: Admin 'Kfir' is logged in
+14/06/2023 21:26:23 WARNING:	 Market is closed!
+14/06/2023 21:26:23 WARNING:	 Logger thread exits!
