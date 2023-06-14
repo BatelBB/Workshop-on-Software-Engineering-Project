@@ -45,3 +45,31 @@ def approve_bid(store_name: str, product_name: str):
         return redirect(url_for('ownersApproval.view_approval_lists', store_name=store_name))
     else:
         flash(res.description)
+
+@bp.route('/decline_owner/<store_name>/<owner_name>', methods=('POST', 'GET'))
+def decline_owner(store_name: str, owner_name: str):
+    domain = get_domain_adapter()
+    if not domain.is_logged_in:
+        flash("You tried to manage approvals but you need to be logged in for that.")
+        return redirect(url_for('home.home'))
+
+    res = domain.decline_owner(store_name, owner_name)
+    if res.success:
+        flash("you declined approved")
+        return redirect(url_for('ownersApproval.view_approval_lists', store_name=store_name))
+    else:
+        flash(res.description)
+
+@bp.route('/decline_bid/<store_name>/<product_name>', methods=('POST', 'GET'))
+def decline_bid(store_name: str, product_name: str):
+    domain = get_domain_adapter()
+    if not domain.is_logged_in:
+        flash("You tried to manage approvals but you need to be logged in for that.")
+        return redirect(url_for('home.home'))
+
+    res = domain.decline_bid(store_name, product_name)
+    if res.success:
+        flash("you declined approved")
+        return redirect(url_for('ownersApproval.view_approval_lists', store_name=store_name))
+    else:
+        flash(res.description)

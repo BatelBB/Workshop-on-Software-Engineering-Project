@@ -29,7 +29,13 @@ class BidPolicy(IPurchasePolicy):
     def add_to_approval_dict_in_bid_policy(self, person: str):
         self.approval.add_owner(person)
 
-    def approve(self, person: str) -> Response:
+    def approve(self, person: str, is_approve) -> Response:
+        if not is_approve:
+            self.highest_bid = 0
+            self.payment_service = None
+            self.delivery_service = None
+            return report("successfuly declined bid", False)
+
         res = self.approval.approve(person)
         if not res.result:
             return res

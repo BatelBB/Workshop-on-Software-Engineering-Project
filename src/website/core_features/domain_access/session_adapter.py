@@ -260,7 +260,7 @@ class SessionAdapter:
     def bid_on_product(self, store_name, product_name, how_much, number, exp_month, exp_year, ccv, street, apt_number,
                        city, country):
         payment_details = [str(number), f'{exp_month}/{exp_year}', ccv]
-        self._session.purchase_with_non_immediate_policy(store_name, product_name, "card", payment_details,
+        return self._session.purchase_with_non_immediate_policy(store_name, product_name, "card", payment_details,
                                                          street, apt_number, how_much, city, country)
 
     def get_all_products(self):
@@ -310,3 +310,9 @@ class SessionAdapter:
 
     def approve_bid(self, store_name, product_name, is_approve):
         return self._session.approve_bid(store_name, product_name, is_approve)
+
+    def decline_owner(self, store_name, owner_to_approve_name):
+        return self._session.approve_owner(owner_to_approve_name, store_name, False)
+
+    def decline_bid(self, store_name, product_name):
+        return self._session.approve_bid(store_name, product_name, False)

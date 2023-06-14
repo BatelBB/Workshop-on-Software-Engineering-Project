@@ -169,7 +169,7 @@ class IService(metaclass=IAbsractConcurrentSingleton):
         ...
 
     @abstractmethod
-    def approve_owner(self, session_identifier: int, appointee_name: str, store_name: str) -> Response[bool]:
+    def approve_owner(self, session_identifier: int, appointee_name: str, store_name: str, is_approve: bool) -> Response[bool]:
         ...
 
     @abstractmethod

@@ -510,9 +510,14 @@ class Market(IService):
                 store_dict.get(name).add_owner(appointee_name)
         return res
 
-    def approve_owner(self, session_identifier: int, appointee_name: str, store_name: str) -> Response[bool]:
+    def approve_owner(self, session_identifier: int, appointee_name: str, store_name: str, is_approve: bool) -> Response[bool]:
         with self.approval_lock:
             actor = self.get_active_user(session_identifier)
+            perms = self.permissions_of(session_identifier, store_name, actor.username)
+            if Permission.AppointOwner not in perms.result:
+                return report_error(self.appoint_owner.__qualname__,
+                                    f"{actor.username} does not have permissions to appoint owner")
+
             store_dict = self.approval_list.get(store_name)
             if store_dict is None:
                 return report_error(self.approve_owner.__qualname__, "approval doesnt exist")
@@ -520,12 +525,16 @@ class Market(IService):
             if approval is None:
                 return report_error(self.approve_owner.__qualname__, "approval doesnt exist")
 
-            approval_res = approval.approve(actor.username)
-            if not approval_res.result:
-                return report_info(self.approve_owner.__qualname__, f"{actor.username} approved")
+            if is_approve:
+                approval_res = approval.approve(actor.username)
+                if not approval_res.result:
+                    return report_info(self.approve_owner.__qualname__, f"{actor.username} approved")
 
-            store_dict.delete(appointee_name)
-            return self.add_owner(session_identifier, appointee_name, store_name)
+                store_dict.delete(appointee_name)
+                return self.add_owner(session_identifier, appointee_name, store_name)
+            else:
+                store_dict.delete(appointee_name)
+                return report_info(self.approve_owner.__qualname__, "approval declined successfully")
 
     def appoint_owner(self, session_identifier: int, appointee_name: str, store_name: str) -> Response[bool]:
         actor = self.get_active_user(session_identifier)

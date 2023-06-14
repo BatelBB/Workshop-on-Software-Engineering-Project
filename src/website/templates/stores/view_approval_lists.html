@@ -34,6 +34,9 @@
                 <form action="{{ url_for('ownersApproval.approve_owner', store_name=store_name, owner_name=owner_name) }}" method="post">
                     <button type="submit">Approve</button>
                 </form>
+                <form action="{{ url_for('ownersApproval.decline_owner', store_name=store_name, owner_name=owner_name) }}" method="post">
+                    <button type="submit">Decline</button>
+                </form>
             </td>
         </tr>
     {% endfor %}
@@ -57,9 +60,14 @@
             <td>{{ product_name }}</td>
             <td>{{ bid }}</td>
             <td>
-                <form action="{{ url_for('ownersApproval.approve_bid', store_name=store_name, product_name=product_name) }}" method="post">
-                    <button type="submit">Approve</button>
-                </form>
+                {% if bid > 0 %}
+                    <form action="{{ url_for('ownersApproval.approve_bid', store_name=store_name, product_name=product_name) }}" method="post">
+                        <button type="submit">Approve</button>
+                    </form>
+                    <form action="{{ url_for('ownersApproval.decline_bid', store_name=store_name, product_name=product_name) }}" method="post">
+                        <button type="submit">Decline</button>
+                    </form>
+                {% endif %}
             </td>
         </tr>
     {% endfor %}
