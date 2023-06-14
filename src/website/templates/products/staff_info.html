@@ -1,0 +1,24 @@
+{% extends "layout.html" %}
+{% block title %}View Staff Info{% endblock %}
+
+{% block page %}
+
+<h1>{{ headline }}</h1>
+
+<form method="post">
+    {{ form.hidden_tag() }}
+    {{ form.appointee.label }}: {{ form.appointee() }}
+    <input type="submit" value="Submit">
+</form>
+
+{% if permissions %}
+    <h2>Permissions:</h2>
+    <ul>
+        {% for permission in permissions %}
+            <li>{{ permission }}</li>
+        {% endfor %}
+    </ul>
+{% endif %}
+
+
+{% endblock %}

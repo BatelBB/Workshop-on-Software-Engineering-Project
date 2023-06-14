@@ -294,3 +294,7 @@ class SessionAdapter:
 
     def mark_read(self, msg_id):
         return self._session.mark_read(msg_id)
+
+
+    def get_store_staff_with_permission(self, store_name:str):
+        return self._session.get_store_staff_wit_permissions(store_name)
