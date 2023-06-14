@@ -35,11 +35,31 @@
 </div>
         </div>
         <div class="col-md-4">
+
+        {% if is_logged_in() %}
+            <h1>Your stores</h1>
+            <div>
+                <a href="{{ url_for('stores.create_store') }}">
+                    Open a new store
+                </a>
+            </div>
+            <table>
             {% for store in your_stores %}
                 <tr>
                     <td><img src="{{ dicebear_shop(store.name) }}" style="height: 4em;"/></td>
+                    <td><a href="{{ url_for('buying.view_store', name=store.name) }}">{{ store.name }}</a></td>
                 </tr>
+            {% else %}
+
+            <tr>
+                <td colspan="2">
+                    <p>You don't have any stores, yet.</p>
+                    <p>You can open one, or be appointed to an existing one.</p>
+                </td>
+            </tr>
             {% endfor %}
+            </table>
+            {% endif %}
         </div>
     </div>
 </div>

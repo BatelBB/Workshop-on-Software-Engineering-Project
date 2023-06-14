@@ -18,17 +18,12 @@ class Visitor(IRole, ABC):
         super().__init__(context)
 
     def __str__(self):
-        return f'Visitor'
-
-    def register(self) -> Response[bool]:
-        with Visitor.register_lock:
-            if not self.context.is_registered(self.context.username):
-                session_DB.add(self.context)
-                session_DB.commit()
-                return report_info(self.register.__qualname__, f'\'{self.context.username}\' is registered!')
-        return report_error(self.register.__qualname__, f'Username: \'{self.context.username}\' is occupied')
+        return f'Visitor \'{self.context.username}\''
 
     def login(self, input_password: str) -> bool:
+        if self.context.is_canceled:
+            report_error(self.login.__qualname__, f'Canceled member \'{self.context.username}\' attempted to login')
+            return False
         is_password_matched = bcrypt.checkpw(bytes(input_password, 'utf8'), self.context.encrypted_password)
         if is_password_matched:
             from src.domain.main.UserModule.Role.Member import Member

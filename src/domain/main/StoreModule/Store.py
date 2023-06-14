@@ -11,6 +11,7 @@ from src.domain.main.StoreModule.DIscounts.IDIscount import IDiscount
 from src.domain.main.StoreModule.DIscounts.SimpleDiscount import SimpleDiscount
 from src.domain.main.Utils import Base_db
 from src.domain.main.Utils.Base_db import session_DB
+from src.domain.main.Utils.OwnersApproval import OwnersApproval
 from src.domain.main.ExternalServices.Payment.PaymentServices import IPaymentService
 from src.domain.main.ExternalServices.Provision.ProvisionServiceAdapter import IProvisionService, provisionService
 from src.domain.main.StoreModule.Product import Product
@@ -52,7 +53,6 @@ class Store(Base_db.Base):
     __table_args__ = {'extend_existing': True}
     name = Column("name", String, primary_key=True)
     purchase_history_str = Column("purchase_history_str", String, default='')
-    table_lock = threading.RLock()
 
     def __init__(self, name: str):
         self.name = name
@@ -68,6 +68,7 @@ class Store(Base_db.Base):
         self.discounts: AddDiscounts = AddDiscounts(0)
         self.discount_counter = 0
         self.discount_lock = threading.RLock()
+        self.table_lock = threading.Lock()
 
     @staticmethod
     def load_store(store_name):
@@ -137,13 +138,12 @@ class Store(Base_db.Base):
             if product not in self.products:
                 self.products.add(product)
                 self.products_quantities.update({product.name: ProductQuantity(quantity)})
-                with Store.table_lock:
-                    session_DB.merge(product)
-                    session_DB.commit()
+                session_DB.merge(product)
+                session_DB.commit()
             else:
                 new_quantity = self.products_quantities[product.name].refill(quantity)
                 if new_quantity > 0:
-                    with Store.table_lock:
+                    with self.table_lock:
                         r = session_DB.query(Product).filter(Product.name == product.name, Product.store_name == self.name).first()
                         r.quantity = new_quantity
                         session_DB.commit()
@@ -155,14 +155,14 @@ class Store(Base_db.Base):
         is_succeed = p in self.products
         if is_succeed:
             self.products_quantities[product_name].reset(quantity)
-            with Store.table_lock:
+            with self.table_lock:
                 r = session_DB.query(Product).filter(Product.name == product_name, Product.store_name == self.name).first()
                 r.quantity = quantity
                 session_DB.commit()
         return is_succeed
 
     def update_db(self, basket):
-        with Store.table_lock:
+        with self.table_lock:
             for item in basket.items:
                 r = session_DB.query(Product).filter(Product.name == item.product_name, item.store_name == self.name).first()
                 r.quantity -= item.quantity
@@ -173,7 +173,7 @@ class Store(Base_db.Base):
         try:
             self.products.remove(p)
             del self.products_quantities[product_name]
-            with Store.table_lock:
+            with self.table_lock:
                 session_DB.query(Product).filter(Product.name == product_name, Product.store_name == self.name).delete()
                 session_DB.commit()
             return True
@@ -243,7 +243,7 @@ class Store(Base_db.Base):
         is_changed = product is not None
         if is_changed:
             product.category = new
-            with Store.table_lock:
+            with self.table_lock:
                 r = session_DB.query(Product).filter(Product.name == product.name, Product.store_name == self.name).first()
                 r.category = new
                 session_DB.commit()
@@ -252,7 +252,7 @@ class Store(Base_db.Base):
     def change_product_price(self, old: float, new: float) -> None:
         for product in filter(lambda p: p.price == old, self.products):
             product.price = new
-            with Store.table_lock:
+            with self.table_lock:
                 r = session_DB.query(Product).filter(Product.name == product.name, Product.store_name == self.name).first()
                 r.price = new
                 session_DB.commit()
@@ -319,9 +319,8 @@ class Store(Base_db.Base):
 
     def add_to_purchase_history(self, baskets: Basket):
         self.purchase_history.append(baskets.__str__())
-        with Store.table_lock:
-            r = session_DB.query(Store).filter(Store.name == self.name).first()
-            r.purchase_history_str = '#'.join(self.purchase_history)
+        r = session_DB.query(Store).filter(Store.name == self.name).first()
+        r.purchase_history_str = '#'.join(self.purchase_history)
 
     def get_purchase_history(self) -> list[str]:
         return self.purchase_history
@@ -338,7 +337,7 @@ class Store(Base_db.Base):
         self.products_with_special_purchase_policy[product_name] = p_policy
         return report("add_product_to_special_purchase_policy", True)
 
-    def add_product_to_bid_purchase_policy(self, product_name: str, p_policy: IPurchasePolicy, staff: list[str]) -> \
+    def add_product_to_bid_purchase_policy(self, product_name: str, p_policy: IPurchasePolicy) -> \
             Response[bool]:
         if not self.reserve(product_name, 1):
             return report_error("add_product_to_bid_purchase_policy",
@@ -348,7 +347,6 @@ class Store(Base_db.Base):
             return report_error("add_product_to_bid_purchase_policy", "product can have only 1 special purchase policy")
 
         self.products_with_bid_purchase_policy[product_name] = p_policy
-        self.set_to_approve_for_bid(product_name, staff)
         return report("add_product_to_bid_purchase_policy", True)
 
     def apply_purchase_policy(self, payment_service: IPaymentService, product_name: str,
@@ -381,7 +379,11 @@ class Store(Base_db.Base):
         if product_name not in self.products_with_bid_purchase_policy.keys():
             return report_error("approve_bid", f"{product_name} not in bidding policy")
 
-        return self.products_with_bid_purchase_policy[product_name].approve(person)
+        res = self.products_with_bid_purchase_policy[product_name].approve(person)
+        if res.success:
+            if res.result:
+                self.products_with_bid_purchase_policy.pop(product_name)
+        return res
 
     def add_purchase_rule(self, rule: IRule) -> Response:
         with self.purchase_rule_lock:
@@ -464,3 +466,8 @@ class Store(Base_db.Base):
         for key in self.products_with_bid_purchase_policy.keys():
             policy = self.products_with_bid_purchase_policy[key]
             policy.add_to_approval_dict_in_bid_policy(name)
+
+    def remove_owner(self, name: str):
+        for key in self.products_with_bid_purchase_policy.keys():
+            policy = self.products_with_bid_purchase_policy[key]
+            policy.remove_from_approval_dict_in_bid_policy(name)

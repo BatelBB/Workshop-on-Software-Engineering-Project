@@ -2,7 +2,6 @@ import random
 
 import bcrypt
 from sqlalchemy import Column, String, Boolean
-from sqlalchemy.orm import relationship
 
 from src.domain.main.UserModule.Cart import Cart
 from src.domain.main.UserModule.Role.Admin import Admin
@@ -43,7 +42,7 @@ class User(Base_db.Base):
 
     def register(self) -> Response[bool]:
         self.user_id = random.randint(100000000, 999999999)
-        return self.role.register()
+        return Response(True)
 
     def login(self, encrypted_password: str) -> bool:
         return self.role.login(encrypted_password)
@@ -78,6 +77,10 @@ class User(Base_db.Base):
     def get_user_id(self) -> int:
         return self.user_id
 
+    def cancel_membership(self):
+        self.is_canceled = True
+        self.role = Visitor(self)
+
     @staticmethod
     def is_registered(username: str) -> bool:
         q = session_DB.query(User.username).filter(User.username == username)
@@ -97,6 +100,12 @@ class User(Base_db.Base):
             row = q[0]
             user = User(username=row.username, password="whatever", is_admin=row.is_admin)
             user.encrypted_password = row.encrypted_password
-            user.cart = Cart.load_card(username)
+            user.cart = Cart.load_cart(username)
             return user
         return None
+
+    @staticmethod
+    def add_record(user):
+        session_DB.add(user)
+        session_DB.commit()
+

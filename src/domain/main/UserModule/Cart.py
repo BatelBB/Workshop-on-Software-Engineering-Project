@@ -51,7 +51,7 @@ class Cart:
         self.baskets.pop(store_name)
 
     @staticmethod
-    def load_card(username: str):
+    def load_cart(username: str):
         cart = Cart(username)
         records = session_DB.query(Item).filter(Item.username == username).all()
         for r in records:

@@ -27,7 +27,7 @@ class StoreTestCase(unittest.TestCase):
 
     def setUp(self) -> None:
         # Note: each test create a new, fresh market with a unique session identifier
-        self.service: IService = Market()
+        self.service: Market = Market()
         self.session = self.service.enter()
         self.service_admin = ('Kfir', 'Kfir')
         self.session.login(*self.service_admin)
@@ -247,6 +247,4 @@ class StoreTestCase(unittest.TestCase):
         r = session.login(*self.service_admin)
         r = session.cancel_membership_of("Nir")
         r = session.login("Nir", "marry had a little lambda")
-        r = session.open_store("Amazon")
-        self.assertEqual(len(session.get_all_stores().result), 0)
-        self.assertFalse(session.get_store("Amazon").success)
+        self.assertFalse(r.success)
