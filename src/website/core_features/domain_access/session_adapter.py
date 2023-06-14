@@ -254,7 +254,7 @@ class SessionAdapter:
         return self._session.get_cart_price(cart.result.baskets)
 
     def purchase_by_card(self, number, exp_month, exp_year, ccv, street, apt_number, city, country):
-        return self._session.purchase_shopping_cart('card', [str(number), f'{exp_month}/{exp_year}', ccv],
+        return self._session.purchase_shopping_cart('card', [str(number), ccv, f'{exp_month}/{exp_year}'],
                                                     street, apt_number, city, country)
 
     def bid_on_product(self, store_name, product_name, how_much, number, exp_month, exp_year, ccv, street, apt_number,

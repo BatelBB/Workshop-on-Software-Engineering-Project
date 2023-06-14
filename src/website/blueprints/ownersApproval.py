@@ -13,7 +13,9 @@ def view_approval_lists(store_name: str):
         return redirect(url_for('home.home'))
 
     approvals_lists = domain.get_approval_lists_for_store(store_name)
-    return render_template("stores/view_approval_lists.html", owners_to_approve=approvals_lists["owners"].dictionary,
+    if approvals_lists["owners"] != {}:
+        approvals_lists["owners"] = approvals_lists["owners"].dictionary
+    return render_template("stores/view_approval_lists.html", owners_to_approve=approvals_lists["owners"],
                            bids_to_approve=approvals_lists["bids"], store_name=store_name)
 
 

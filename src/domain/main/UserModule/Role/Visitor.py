@@ -58,8 +58,9 @@ class Visitor(IRole, ABC):
         return report_info(self.remove_product_from_cart.__qualname__, f'Product \'{product_name}\' of store \'{store_name}\' is removed from {self} cart')
 
     def update_cart_product_quantity(self, store_name: str, product_name: str, quantity: int) -> Response[bool]:
-        new_quantity = self.context.cart.update_item_quantity(store_name, product_name, quantity)
-        return report_info(self.update_cart_product_quantity.__qualname__,f'Product \'{product_name}\', of {self} cart is set to {new_quantity}.')
+        is_item_in_basket = self.context.cart.update_item_quantity(store_name, product_name, quantity)
+        return report_info(self.update_cart_product_quantity.__qualname__,f'Product \'{product_name}\', of {self} cart is set to {quantity}.')\
+            if is_item_in_basket else report_error(self.update_cart_product_quantity.__qualname__, f'{self} basket does not contains \'{product_name}\'')
 
     def show_cart(self) -> Response[dict]:
         return Response(self.context.cart.__dic__(), f'Cart of {self}:\n{self.context.cart.__str__()}')

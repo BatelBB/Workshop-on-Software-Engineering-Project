@@ -324,5 +324,9 @@ class IService(metaclass=IAbsractConcurrentSingleton):
         ...
 
     @abstractmethod
+    def load_configuration(self, config):
+        ...
+
+    @abstractmethod
     def get_bid_products(self, session_id: int, store_name: str) -> Response[dict | bool]:
         ...
