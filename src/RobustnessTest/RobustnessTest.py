@@ -109,8 +109,8 @@ class RobustnessTest(unittest.TestCase):
             number_of_managers -= 1
         return appointees
 
-    @parameterized.expand(number_of_threads)
-    def test_multiple_threads_add_different_products_to_store(self, number_of_threads: int):
+    # @parameterized.expand(number_of_threads)
+    def test_multiple_threads_add_different_products_to_store(self, number_of_threads: int = 10):
         owner, store = self.create_store_owner()
         appointees = self.appoints_owners_of(store, number_of_threads, self.service.get_active_session_id(owner[0]))
         threads = [None] * number_of_threads

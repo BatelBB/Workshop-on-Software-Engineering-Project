@@ -291,7 +291,8 @@ class Market(IService):
             if current_user.is_logged_in and current_user != next_user:
                 current_user.logout()
             self.sessions.update(session_identifier, next_user)
-            return report_info(self.login.__qualname__, f'{next_user} is logged in')
+            return report_info(self.login.__qualname__, f' is logged in')
+            #return report_info(self.login.__qualname__, f'{next_user} is logged in')
         return report_error(self.login.__qualname__, f'{username} failed to login: Incorrect password.')
 
     def is_logged_in(self, username: str) -> bool:
@@ -1178,9 +1179,12 @@ class Market(IService):
     def approve_as_owner_immediatly(self, session_id, store_name, appointee_name):
         store_dict = self.approval_list.get(store_name)
         approval = store_dict.get(appointee_name)
-        for person in approval.to_approve.keys():
-            approval.approve(person)
-        self.add_owner(session_id, appointee_name, store_name)
+        if approval is not None:
+            for person in approval.to_approve.keys():
+                approval.approve(person)
+
+            store_dict.delete(appointee_name)
+            self.add_owner(session_id, appointee_name, store_name)
 
     def get_active_session_id(self, username):
         for sess_id in self.sessions.get_all_keys():
