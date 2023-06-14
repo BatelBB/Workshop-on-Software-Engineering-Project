@@ -1158,8 +1158,9 @@ class Market(IService):
     def approve_as_owner_immediatly(self, session_id, store_name, appointee_name):
         store_dict = self.approval_list.get(store_name)
         approval = store_dict.get(appointee_name)
-        for person in approval.to_approve.keys():
-            approval.approve(person)
+        store_dict.delete(appointee_name)
+        # for person in approval.to_approve.keys():
+        #     approval.approve(person)
         self.add_owner(session_id, appointee_name, store_name)
 
     def get_active_session_id(self, username):

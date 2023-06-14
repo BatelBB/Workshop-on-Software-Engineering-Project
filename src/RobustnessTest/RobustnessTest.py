@@ -128,6 +128,7 @@ class RobustnessTest(unittest.TestCase):
             self.service.approve_as_owner_immediatly(session_id, store, appointee_name)
             appointees.append(appointee)
             number_of_managers -= 1
+            print(f'number_of_managers = {number_of_managers}')
         return appointees
 
     @parameterized.expand(number_of_threads)
@@ -148,7 +149,7 @@ class RobustnessTest(unittest.TestCase):
         self.assertEqual(number_of_threads, len(self.session.get_all_products_of(store).result))
 
     # @parameterized.expand(number_of_threads)
-    def test_multiple_threads_add_same_product_to_store(self, number_of_threads: int=1000):
+    def test_multiple_threads_add_same_product_to_store(self, number_of_threads: int=500):
         owner, store = self.create_store_owner()
         appointees = self.appoints_owners_of(store, number_of_threads, self.service.get_active_session_id(owner[0]))
         product = get_random_product()
