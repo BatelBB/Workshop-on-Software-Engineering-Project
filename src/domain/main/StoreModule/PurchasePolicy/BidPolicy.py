@@ -43,4 +43,7 @@ class BidPolicy(IPurchasePolicy):
 
         return report("bid ended", True)
 
+    def get_cur_bid(self):
+        return self.highest_bid
+
 

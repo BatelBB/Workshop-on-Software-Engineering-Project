@@ -120,7 +120,12 @@ class Store(Base_db.Base):
         for p in self.products:
             p_d = p.__dic__()
             p_d["Quantity"] = self.products_quantities.get(p.name).quantity
+            if p.name in self.products_with_bid_purchase_policy.keys():
+                p_d["isBid"] = self.products_with_bid_purchase_policy.get(p.name).get_cur_bid()
+            else:
+                p_d["isBid"] = -1
             out[p.name] = p_d
+
         return out
 
     def get_name(self):

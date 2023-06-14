@@ -41,7 +41,8 @@ class SessionAdapter:
                 quantity=product["Quantity"],
                 rate=product["Rate"],
                 price=product["Price"],
-                store_name=name
+                store_name=name,
+                isBid=product["isBid"]
             )
             for product in data.values()
         ]
@@ -256,6 +257,11 @@ class SessionAdapter:
         return self._session.purchase_shopping_cart('card', [str(number), f'{exp_month}/{exp_year}', ccv],
                                                     street, apt_number, city, country)
 
+    def bid_on_product(self, store_name, product_name,  how_much, number, exp_month, exp_year, ccv, street, apt_number, city, country):
+        payment_details = [str(number), f'{exp_month}/{exp_year}', ccv]
+        self._session.purchase_with_non_immediate_policy(store_name, product_name, "card", payment_details,
+                                                         street, apt_number, how_much, city, country)
+
     def get_all_products(self):
         list_of_all_products = {}
         # for all stores
@@ -294,3 +300,5 @@ class SessionAdapter:
 
     def mark_read(self, msg_id):
         return self._session.mark_read(msg_id)
+
+

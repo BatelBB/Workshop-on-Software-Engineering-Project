@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, flash, redirect, url_for
 from flask_wtf import FlaskForm
 from wtforms.validators import NumberRange, regexp, DataRequired
-from wtforms import IntegerField, SubmitField, SelectField, StringField
+from wtforms import IntegerField, SubmitField, SelectField, StringField, FloatField
 
 from src.domain.main.Market.Permissions import Permission
 from website.core_features.domain_access.market_access import get_domain_adapter
@@ -109,3 +109,46 @@ def buy_with_card():
         else:
             flash(response.description, category='danger')
     return render_template('buying/buy_with_card.html', form=form, fields=fields)
+
+
+
+
+class BidProduct(FlaskForm):
+    bid = FloatField(label='your bid')
+    number = StringField(label='credit card number', validators=[regexp(r'[\d]+', message='digits only plz')])
+    exp_month = IntegerField(label='expiration month', validators=[NumberRange(min=1, max=12)])
+    exp_year = IntegerField(label='expiration year', validators=[NumberRange(min=2023, max=2100)])
+    ccv = StringField(label='CCV', validators=[regexp(r'\d\d\d', message='3 digits please')])
+    street = StringField(label='street', validators=[DataRequired()])
+    apt_number = IntegerField(label='apartment number', validators=[NumberRange(min=1)])
+    city = StringField(label='city', validators=[DataRequired()])
+    country = StringField(label='country', validators=[DataRequired()])
+    submit = SubmitField(label='Submit')
+
+
+@bp.route('/bid_product/<store_name>/<product_name>', methods=('GET', 'POST'))
+def bid_product(store_name, product_name):
+    form = BidProduct()
+    fields = [form.bid, form.number, form.exp_month, form.exp_year,
+              form.ccv, form.street, form.apt_number, form.city, form.country]
+    bid = fields[0].data
+    number = fields[1].data
+    exp_month = fields[2].data
+    exp_year = fields[3].data
+    ccv = fields[4].data
+    street = fields[5].data
+    apt_number = fields[6].data
+    city = fields[7].data
+    country = fields[8].data
+    if form.validate_on_submit():
+        domain = get_domain_adapter()
+        response = domain.bid_on_product(store_name, product_name, bid, number, exp_month, exp_year, ccv,
+                                         street, apt_number, city, country)
+        if response.success:
+            flash('bid has been placed', category='success')
+            return redirect(url_for('home.home'))
+        else:
+            flash(response.description, category='danger')
+    return render_template('buying/bid_product.html', form=form, fields=fields)
+
+
