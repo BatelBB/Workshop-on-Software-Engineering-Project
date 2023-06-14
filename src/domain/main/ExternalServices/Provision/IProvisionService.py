@@ -1,7 +1,6 @@
-import string
 from abc import ABC, abstractmethod
 
-from src.domain.main.ExternalServices.REST_API.RestAPI_Service import RestAPI
+from src.domain.main.ExternalServices.RestAPI_Service import RestAPI
 from src.domain.main.Utils.Logger import report_error, report_info
 
 
@@ -22,8 +21,8 @@ class IExternalProvisionService(ABC):
 
 class provisionReal(IExternalProvisionService):
 
-    def __init__(self):
-        self.real = RestAPI('https://php-server-try.000webhostapp.com/')
+    def __init__(self, base_url):
+        self.real = RestAPI(base_url)
         self.transaction_id = -1
 
     def checkValidTransactionID(self, transaction_id: int):

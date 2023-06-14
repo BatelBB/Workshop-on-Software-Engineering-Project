@@ -35,6 +35,7 @@ class RobustnessTest(unittest.TestCase):
         self.session = self.service.enter()
         self.service_admin = ('Kfir', 'Kfir')
         self.session.login(*self.service_admin)
+        self.session.load_configuration()
 
     def tearDown(self) -> None:
         session = self.service.enter()

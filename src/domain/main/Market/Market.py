@@ -1,4 +1,3 @@
-import multiprocessing
 import random
 import sys
 import threading
@@ -8,11 +7,11 @@ from typing import Any
 from multipledispatch import dispatch
 from sqlalchemy import inspect
 from Service.IService.IService import IService
+from src.domain.main.Utils.InitExternalServices import init_external_services_from_configuration
 from src.domain.main.StoreModule.PurchaseRules.IRule import IRule
 from src.domain.main.UserModule.Cart import Cart
 from src.domain.main.Utils.OwnersApproval import OwnersApproval
 from src.domain.main.Notifications.notification_controller import NotificationController
-from src.domain.main.ExternalServices.Payment.PaymentFactory import PaymentFactory
 from src.domain.main.ExternalServices.Payment.PaymentServices import IPaymentService
 from src.domain.main.ExternalServices.Provision.ProvisionServiceAdapter import provisionService, IProvisionService
 from src.domain.main.Market.Appointment import Appointment
@@ -23,7 +22,6 @@ from src.domain.main.StoreModule.Product import Product
 from src.domain.main.StoreModule.PurchasePolicy.AuctionPolicy import AuctionPolicy
 from src.domain.main.StoreModule.PurchasePolicy.BidPolicy import BidPolicy
 from src.domain.main.StoreModule.PurchasePolicy.LotteryPolicy import LotteryPolicy
-from src.domain.main.StoreModule.PurchasePolicy.PurchasePolicyFactory import PurchasePolicyFactory
 from src.domain.main.StoreModule.PurchaseRules import PurchaseRulesFactory
 from src.domain.main.StoreModule.Store import Store
 from src.domain.main.UserModule.Basket import Item
@@ -38,6 +36,8 @@ from src.Service.Session.Session import Session
 class Market(IService):
 
     def __init__(self):
+        self.provisionService = None
+        self.paymentService = None
         self.sessions: ConcurrentDictionary[int, User] = ConcurrentDictionary()
         self.users: ConcurrentDictionary[str, User] = ConcurrentDictionary()
         self.stores: ConcurrentDictionary[str, Store] = ConcurrentDictionary()
@@ -46,9 +46,6 @@ class Market(IService):
         self.removed_store_products: ConcurrentDictionary[Store, set[Product]] = ConcurrentDictionary()
         self.removed_products_quantity: ConcurrentDictionary[Product, int] = ConcurrentDictionary()
         self.appointments: ConcurrentDictionary[str, list[Appointment]] = ConcurrentDictionary()
-        self.provision_service: IProvisionService = provisionService()
-        self.PurchasePolicyFactory: PurchasePolicyFactory = PurchasePolicyFactory()
-        self.payment_factory: PaymentFactory = PaymentFactory()
         self.store_activity_status: ConcurrentDictionary[str, str] = ConcurrentDictionary()
         self.package_counter = 0
         self.appointments_lock = threading.RLock()
@@ -69,8 +66,12 @@ class Market(IService):
 
         Base.metadata.create_all(engine, checkfirst=True, tables=tables_to_create)
 
-    def load_configuration(self, config):   # TODO: Batel load external service here
+    def load_configuration(self, config):
         init_db_from_configuration(config['db'])
+        payment_service, provision_service = init_external_services_from_configuration(config['external_services'])
+        self.paymentService = payment_service
+        self.provisionService = provision_service
+
 
     def is_table_exsits(self, table_name: str):
         inspector = inspect(engine)
@@ -258,6 +259,7 @@ class Market(IService):
                     return Response(store)
                 return report_error(self.verify_store_contains_product.__qualname__, f'Store \'{store_name}\' can provide only {store.amount_of(product_name)} units of Product \'{product_name}\'. Required: {quantity}.')
             return report_error(calling_method_name, f'Store \'{store_name}\' does not contains Product \'{product_name}\'')
+        return report_error(calling_method_name, f'Store \'{store_name}\' does not exist')
 
     def report_no_permission(self, calling_method: str, actor: User, store: str, permission: Permission):
         return report_error(calling_method, f'\'{actor}\' has no permission to {get_permission_description(permission)} at store \'{store}\'')
@@ -750,7 +752,7 @@ class Market(IService):
     def update_item_prices(self, actor: User):
         baskets = actor.get_baskets()
         for store_name, basket in baskets.items():
-            response = self.verify_registered_store(self.purchase_shopping_cart.__qualname__, store_name)
+            response = self.verify_registered_store(self.update_item_prices.__qualname__, store_name)
             if not response.success:
                 return response
             store = response.result
@@ -783,21 +785,20 @@ class Market(IService):
         Appointment.clear_db()
         self.__init__()
 
-    def pay(self, price: int, payment_type: str, payment_details: list[str], holder: str, user_id: int):
+    def pay(self, price: int, payment_details: list[str], holder: str, user_id: int):
         if price > 0:
             try:
-                payment_strategy: IPaymentService = self.payment_factory.getPaymentService(payment_type)
-                info_res = payment_strategy.set_information(payment_details, holder, user_id)
+                info_res = self.paymentService.set_information(payment_details, holder, user_id)
                 if info_res.success:
-                    payment_res = payment_strategy.pay(price)
+                    payment_res = self.paymentService.pay(price)
                     if not payment_res:
                         report_error(self.pay.__qualname__, f'paying failed')
                     else:
-                        return payment_strategy
+                        return payment_res
                 else:
                     report_error(self.pay.__qualname__, f'setting payment information failed {info_res}')
-            except Exception:
-                report_error(self.pay.__qualname__, "failed to get payment service")
+            except Exception as e:
+                report_error(self.pay.__qualname__, f"failed to get payment service {e}")
 
     def add_to_purchase_history(self, baskets: dict[str, Any]) -> None:
         for store_name, basket in baskets.items():
@@ -812,7 +813,7 @@ class Market(IService):
         successful_store_purchases = []
 
         for store_name, basket in baskets.items():
-            response2 = self.verify_registered_store(self.purchase_shopping_cart.__qualname__, store_name)
+            response2 = self.verify_registered_store(self.get_cart_price.__qualname__, store_name)
             if response2.success:
                 store = response2.result
                 res = store.reserve_products(basket)
@@ -832,13 +833,13 @@ class Market(IService):
         if response.success:
             baskets = actor.get_baskets()
             resp = self.get_cart_price(baskets)
-            payment_succeeded = self.pay(resp[0], payment_method, payment_details, holder, user_id)
+            payment_succeeded = self.pay(resp[0],  payment_details, holder, user_id)
             if payment_succeeded:
                 # order delivery
-                delivery_service = provisionService()
-                delivery_service.set_info(actor.username, 0, address, postal_code, city, country)
-                if not delivery_service.getDelivery():
-                    payment_succeeded.refund(resp[0])
+
+                self.provisionService.set_info(actor.username, 0, address, postal_code, city, country)
+                if not self.provisionService.getDelivery():
+                    self.paymentService.refund(resp[0])
                     return report_error(self.purchase_shopping_cart.__qualname__, 'failed delivery')
                 self.add_to_purchase_history(baskets)
                 self.update_user_cart_after_purchase(actor, resp[1])
@@ -870,14 +871,11 @@ class Market(IService):
             actor = self.get_active_user(session_identifier)
             holder = actor.username
             user_id = actor.get_user_id()
-            try:
-                payment_service = self.payment_factory.getPaymentService(payment_method)
-            except Exception:
-                report_error(self.purchase_with_non_immediate_policy.__qualname__, f'failed getting payment service')
+            payment_service = self.paymentService
+            provision_service = self.provisionService
             payment_service.set_information(payment_details, holder, user_id)
-            delivery_service = provisionService()
-            delivery_service.set_info(actor.username, 0, address, postal_code, city, country, store_name)
-            return store.apply_purchase_policy(payment_service, product_name, delivery_service, how_much)
+            provision_service.set_info(actor.username, 0, address, postal_code, city, country, store_name)
+            return store.apply_purchase_policy(payment_service, product_name, provision_service, how_much)
 
     def start_auction(self, session_id: int, store_name: str, product_name: str, initial_price: float, duration: int) -> \
             Response[Store | bool]:

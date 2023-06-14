@@ -8,10 +8,8 @@ from src.domain.main.Utils.Response import Response
 
 
 class IPaymentService(ABC):
-    external_payment_service: IExternalPaymentService
 
     def __init__(self):
-        self.external_payment_service = ExternalPaymentServiceReal()
         self.amount_payed: float = 0
 
     @abstractmethod
@@ -27,12 +25,13 @@ class IPaymentService(ABC):
         ...
 
 
-class PayWithCard(IPaymentService):
+class PaymentService(IPaymentService):
     card_number: int
     cvv: int
 
-    def __init__(self):
+    def __init__(self, external_payment_service: IExternalPaymentService):
         super().__init__()
+        self.external_payment_service = external_payment_service
         self.card_number = -1
         self.cvv = -1
         self.month = -1
@@ -64,7 +63,7 @@ class PayWithCard(IPaymentService):
                 self.month = date[0]
                 self.year = date[1]
             else:
-                return Response(False, "Invalid date - needs to be `mm/yyyy`")
+                return report_error(self.set_information.__qualname__, "Invalid payment details - needs to be mm/yyyy")
             return Response(True, "success")
 
     def pay(self, price: float):

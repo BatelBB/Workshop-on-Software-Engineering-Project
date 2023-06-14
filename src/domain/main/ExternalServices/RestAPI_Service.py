@@ -2,6 +2,7 @@ import requests
 from requests import Response
 from requests.exceptions import RequestException
 
+
 from src.domain.main.Utils.Logger import report_error
 
 
@@ -16,3 +17,5 @@ class RestAPI:
         except RequestException as e:
             report_error(__name__, f"Request failed due to: {str(e)}")
             return None
+
+
