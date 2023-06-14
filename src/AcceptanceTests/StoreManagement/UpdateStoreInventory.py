@@ -25,8 +25,6 @@ class UpdateStoreInventory(unittest.TestCase):
         cls.app.login(*cls.service_admin)
         cls.app.shutdown()
 
-    # def test_owner_change_product_name_and_cart_using_old_name_can_purchase(self):
-
     def test_owner_add_products_to_store_happy(self):
         self.app.login(*self.store_owner1)
         self.app.open_store("bakery")

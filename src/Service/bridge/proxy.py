@@ -122,8 +122,14 @@ class Proxy(Bridge):
         else:
             return Response(False)
 
-    def get_store_purchase_history(self, store_name: str) -> Response[str]:
-        return self.real.get_store_purchase_history(store_name)
+    def get_store_purchase_history(self, store_name: str):
+        result = self.real.get_store_purchase_history(store_name)
+        if isinstance(result, Response):
+            return result
+        elif isinstance(result, list) or isinstance(result, str):
+            return Response(result)
+        else:
+            return Response(None)
 
     def start_auction(self, store_name: str, product_name: str, initial_price: float, duration: int) -> Response[bool]:
         return self.real.start_auction(store_name, product_name, initial_price, duration)

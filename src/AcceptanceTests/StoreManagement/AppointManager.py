@@ -416,14 +416,26 @@ class AppointManager(unittest.TestCase):
     def test_change_purchase_policy(self):
         pass
 
-    def test_open_auction(self):
-        pass
-
-    def test_open_lottery(self):
-        pass
-
     def test_start_a_bid(self):
-        pass
+        self.set_appointments()
+        self.app.login(*self.store_founder1)
+        r = self.app.add_permission("bakery", self.store_manager1[0], Permission.AppointOwner)
+        self.assertTrue(r.success, "error: add permission action failed")
+        self.app.logout()
+        self.app.login(*self.store_manager1)
+        r = self.app.appoint_owner(self.store_owner1[0], "bakery")
+        self.assertTrue(r.success, "error: appoint owner action failed")
+        self.app.logout()
+        self.app.login(*self.store_founder1)
+        r = self.app.get_store_staff("bakery")
+        self.assertTrue(r.success, "error: get store staff action failed")
+        appointment = r.result
+        self.assertIn(self.store_owner1[0], appointment)
+        self.assertEqual(self.store_manager1[0], appointment[self.store_owner1[0]]["Appointed by"])
+        for p in Permission:
+            self.assertIn(p.value, appointment[self.store_owner1[0]]["Permissions"], f"error: permission '{p.value}' "
+                                                                                     "not found for an appointed "
+                                                                                     "manager")
 
     def test_approve_a_bid(self):
         pass

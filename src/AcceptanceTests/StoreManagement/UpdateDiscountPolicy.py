@@ -34,4 +34,4 @@ class Login(unittest.TestCase):
 
     ChangeDiscountPolicy = 'Change discount policy'
 
-    test_depth_3_discount
+    def test_depth_3_discount(self):

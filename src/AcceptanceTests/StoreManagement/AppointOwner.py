@@ -368,14 +368,17 @@ class AppointOwner(unittest.TestCase):
     def test_change_purchase_policy(self):
         pass
 
-    def test_open_auction(self):
-        pass
-
-    def test_open_lottery(self):
-        pass
-
     def test_start_a_bid(self):
-        pass
+        self.set_owner_appointments()
+        self.app.login(*self.store_owner1)
+        r = self.app.start_bid("bakery", "bread")
+        self.assertTrue(r.success, "error: start a bid action failed")
+        self.app.logout()
+        self.app.login(*self.registered_user)
+        r = self.app.purchase_with_non_immediate_policy("bakery", "bread", "card", ["123", "123", "12/6588"],
+                                                        "ben-gurion", "1234", 10.5, "beer sheva", "israel")
+        self.assertTrue(r.success, "error: purchase with a bid policy failed")
+
 
     def test_approve_a_bid(self):
         pass

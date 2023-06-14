@@ -135,7 +135,7 @@ class Bridge(ABC):
         ...
 
     @abstractmethod
-    def get_store_purchase_history(self, store_name: str) -> Response[str]:
+    def get_store_purchase_history(self, store_name: str):
         ...
     
     @abstractmethod

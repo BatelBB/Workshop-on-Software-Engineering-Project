@@ -192,3 +192,12 @@ fabric.properties
 /WorkshopLog.txt
 src/workshop.db
 src/WorkshopLog.txt
+/src/AcceptanceTests/General/workshop.db
+/src/AcceptanceTests/Purchase/workshop.db
+/src/AcceptanceTests/StoreManagement/workshop.db
+/src/AcceptanceTests/UserSearchServices/workshop.db
+/workshop.db
+/src/AcceptanceTests/General/WorkshopLog.txt
+/src/AcceptanceTests/Purchase/WorkshopLog.txt
+/src/AcceptanceTests/StoreManagement/WorkshopLog.txt
+/src/AcceptanceTests/UserSearchServices/WorkshopLog.txt

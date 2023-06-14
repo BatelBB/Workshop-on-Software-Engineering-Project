@@ -115,7 +115,7 @@ class Real(Bridge):
     def get_store_staff(self, store_name: str) -> Response[dict | bool]:
         return self.session.get_store_staff(store_name)
 
-    def get_store_purchase_history(self, store_name: str) -> Response[str]:
+    def get_store_purchase_history(self, store_name: str):
         return self.session.get_store_purchase_history(store_name)
 
     # product policies

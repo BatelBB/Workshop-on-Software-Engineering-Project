@@ -272,6 +272,7 @@ class PurchaseCart(unittest.TestCase):
     def test_purchase_with_complex_rules_and_discount(self):
     def test_purchase_with_bid(self):
 
+    def test_owner_change_product_name_and_cart_using_old_name_can_purchase(self):
     def test_purchase_after_product_name_changed(self):
     def test_purchase_after_product_price_changed(self):
     def test_purchase_after_product_rule_changed(self):
