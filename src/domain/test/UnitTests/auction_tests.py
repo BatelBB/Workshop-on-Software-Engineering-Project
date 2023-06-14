@@ -1,11 +1,24 @@
 import unittest
 
+from Service.IService.IService import IService
 from src.domain.main.Market.Market import Market
 from src.domain.main.StoreModule.PurchasePolicy.AuctionPolicy import AuctionPolicy
 
 
 class auction_tests(unittest.TestCase):
 
+    def setUp(self) -> None:
+        self.service: IService = Market()
+        self.session = self.service.enter()
+        self.service_admin = ('Kfir', 'Kfir')
+        self.session.login(*self.service_admin)
+        self.session.load_configuration()
+
+    def tearDown(self) -> None:
+        session = self.service.enter()
+        session.login(*self.service_admin)
+        session.shutdown()
+        self.service.clear()
     def test_auction_simple(self):
         market = Market()
         s1 = market.enter()

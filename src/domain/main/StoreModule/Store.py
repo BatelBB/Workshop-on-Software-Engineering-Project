@@ -19,7 +19,7 @@ from src.domain.main.StoreModule.PurchasePolicy.BidPolicy import BidPolicy
 from src.domain.main.StoreModule.PurchasePolicy.IPurchasePolicy import IPurchasePolicy
 from src.domain.main.StoreModule.PurchaseRules.IRule import IRule
 from src.domain.main.UserModule.Basket import Basket
-from src.domain.main.Utils.Logger import report_error, report
+from src.domain.main.Utils.Logger import report_error, report, report_info
 from src.domain.main.Utils.Response import Response
 
 
@@ -59,7 +59,6 @@ class Store(Base_db.Base):
         self.products: set[Product] = set()
         self.products_quantities: dict[str, ProductQuantity] = dict()
         self.purchase_history: list[str] = list()
-        self.provisionService: IProvisionService = provisionService()
         self.products_with_special_purchase_policy: dict[str:IPurchasePolicy] = {}
         self.products_with_bid_purchase_policy: dict[str: BidPolicy] = {}
         self.purchase_rules: dict[int:IRule] = {}
@@ -134,7 +133,12 @@ class Store(Base_db.Base):
         for p in self.products:
             p_d = p.__dic__()
             p_d["Quantity"] = self.products_quantities.get(p.name).quantity
+            if p.name in self.products_with_bid_purchase_policy.keys():
+                p_d["isBid"] = self.products_with_bid_purchase_policy.get(p.name).get_cur_bid()
+            else:
+                p_d["isBid"] = -1
             out[p.name] = p_d
+
         return out
 
     def get_name(self):
@@ -389,7 +393,7 @@ class Store(Base_db.Base):
         if product_name not in self.products_with_bid_purchase_policy.keys():
             return report_error("approve_bid", f"{product_name} not in bidding policy")
 
-        res = self.products_with_bid_purchase_policy[product_name].approve(person)
+        res = self.products_with_bid_purchase_policy[product_name].approve(person, is_approve)
         if res.success:
             if res.result:
                 self.products_with_bid_purchase_policy.pop(product_name)

@@ -1,3 +1,5 @@
+import json
+import os
 from typing import Any, List
 
 from reactivex import Observable
@@ -132,8 +134,8 @@ class Session:
     def appoint_owner(self, appointee: str, store: str) -> Response[bool]:
         return self.apply(self.service.appoint_owner, self.identifier, appointee, store)
 
-    def approve_owner(self, appointee: str, store: str) -> Response[bool]:
-        return self.apply(self.service.approve_owner, self.identifier, appointee, store)
+    def approve_owner(self, appointee: str, store: str, is_approve: bool) -> Response[bool]:
+        return self.apply(self.service.approve_owner, self.identifier, appointee, store, is_approve)
 
     def appointees_at(self, store: str) -> Response[list[str] | bool]:
         return self.apply(self.service.appointees_at, self.identifier, store)
@@ -284,6 +286,18 @@ class Session:
     def mark_read(self, msg_id: int):
         return self.apply(self.service.mark_read, self.identifier, msg_id)
 
+    def get_approval_lists_for_store(self, store_name) -> Response:
+        return self.apply(self.service.get_approval_lists_for_store, self.identifier, store_name)
+
 
     def get_store_staff_wit_permissions(self, store_name: str):
         return self.apply(self.service.get_store_staff_wit_permissions, self.identifier, store_name)
+
+    def load_configuration(self):
+        dir_path = os.path.dirname(os.path.realpath(__file__))  # get the directory of the current script
+        config_path = os.path.join(dir_path, '..','..', '..', 'Configuration',
+                                   'config.json')  # construct the path to config.json
+        config_path = os.path.abspath(config_path)  # resolve the path
+        with open(config_path, 'r') as f:
+            config = json.load(f)
+        return self.apply(self.service.load_configuration, config)

@@ -4,7 +4,7 @@ from abc import ABC, abstractmethod
 from requests import Response
 from requests.exceptions import Timeout
 
-from src.domain.main.ExternalServices.REST_API.RestAPI_Service import RestAPI
+from src.domain.main.ExternalServices.RestAPI_Service import RestAPI
 from src.domain.main.Utils.Logger import report_error, report_info
 
 
@@ -25,8 +25,8 @@ class IExternalPaymentService(ABC):
 
 class ExternalPaymentServiceReal(IExternalPaymentService):
 
-    def __init__(self, retry_limit=3, request_timeout=5):
-        self.real = RestAPI('https://php-server-try.000webhostapp.com/')
+    def __init__(self, base_url, retry_limit=3, request_timeout=5):
+        self.real = RestAPI(base_url)
         self.transaction_id = -1
         self.retry_limit = retry_limit
         self.request_timeout = request_timeout

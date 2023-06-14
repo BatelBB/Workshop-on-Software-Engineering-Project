@@ -137,3 +137,19 @@ def product_page(store_name, product_name):
         return redirect(url_for("buying.view_store", name=store_name))
     product = mathching[0]
     return render_template('products/product_page.html', product=product, store_name=store_name)
+
+
+@bp.route('/start_bid/<store_name>/<product_name>', methods=['GET'])
+def start_bid(store_name, product_name):
+    domain = get_domain_adapter()
+    if not domain.is_logged_in:
+        flash("You tried to manage purchase policy rules but you need to be logged in for that.")
+        return redirect(url_for('home.home'))
+
+    res = domain.start_bid(store_name, product_name)
+    if res.success:
+        flash('started bid successfully')
+    else:
+        flash(res.description)
+
+    return redirect(url_for("buying.view_store", name=store_name))
