@@ -26,14 +26,16 @@
         </tr>
     </thead>
     <tbody>
-    {% for owner_name, _ in owners_to_approve.items() %}
+    {% for owner_name, owner_approvals in owners_to_approve.items() %}
         <tr>
             <td>{{ loop.index }}</td>
             <td>{{ owner_name }}</td>
             <td>
-                <form action="{{ url_for('ownersApproval.approve_owner', store_name=store_name, owner_name=owner_name) }}" method="post">
-                    <button type="submit">Approve</button>
-                </form>
+                {% if actor_username in owner_approvals %}
+                    <form action="{{ url_for('ownersApproval.approve_owner', store_name=store_name, owner_name=owner_name) }}" method="post">
+                        <button type="submit">Approve</button>
+                    </form>
+                {% endif %}
                 <form action="{{ url_for('ownersApproval.decline_owner', store_name=store_name, owner_name=owner_name) }}" method="post">
                     <button type="submit">Decline</button>
                 </form>
@@ -54,20 +56,20 @@
         </tr>
     </thead>
     <tbody>
-    {% for product_name, bid in bids_to_approve.items() %}
+    {% for product_name, bid_details in bids_to_approve.items() %}
         <tr>
             <td>{{ loop.index }}</td>
             <td>{{ product_name }}</td>
-            <td>{{ bid }}</td>
+            <td>{{ bid_details["price"] }}</td>
             <td>
-                {% if bid > 0 %}
+                {% if bid_details["price"] > 0 and actor_username in bid_details["to_approve"] %}
                     <form action="{{ url_for('ownersApproval.approve_bid', store_name=store_name, product_name=product_name) }}" method="post">
                         <button type="submit">Approve</button>
                     </form>
-                    <form action="{{ url_for('ownersApproval.decline_bid', store_name=store_name, product_name=product_name) }}" method="post">
-                        <button type="submit">Decline</button>
-                    </form>
                 {% endif %}
+                <form action="{{ url_for('ownersApproval.decline_bid', store_name=store_name, product_name=product_name) }}" method="post">
+                    <button type="submit">Decline</button>
+                </form>
             </td>
         </tr>
     {% endfor %}

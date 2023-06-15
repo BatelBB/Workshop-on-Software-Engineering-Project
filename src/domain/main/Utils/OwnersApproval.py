@@ -40,3 +40,10 @@ class OwnersApproval:
     def restore(self):
         for p in self.to_approve:
             self.to_approve[p] = False
+
+    def left_to_approve(self) -> list[str]:
+        l = []
+        for p in self.to_approve:
+            if not self.to_approve[p]:
+                l.append(p)
+        return l
