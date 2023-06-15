@@ -399,3 +399,11 @@ class RobustnessTest(unittest.TestCase):
         self.assertEqual(number_of_threads, len(succeeded_results))
         self.assertEqual(number_of_threads, self.session.get_number_of_registered_users())
         self.assertEqual(number_of_threads * number_of_products, self.service.get_number_of_items())
+
+
+    '''
+        Purchase Concurrency Tests
+    '''
+
+    @parameterized.expand(number_of_threads)
+    def test_multiple_threads_purchase_same_product(self):
