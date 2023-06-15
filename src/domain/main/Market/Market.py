@@ -1367,16 +1367,21 @@ class Market(IService):
                                 f"{actor.username} has no permission to approve things")
 
         ret_dict = {}
-        ret_dict["owners"] = self.approval_list.get(store_name)
+        if self.approval_list.get(store_name) is None:
+            ret_dict["owners"] = {}
+        else:
+            store_dict = self.approval_list.get(store_name)
+            ret_dict["owners"] = {}
+            for person in store_dict.get_all_keys():
+                ret_dict["owners"][person] = store_dict.get(person).left_to_approve()
+
         bids_dict = {}
         for p in store.products_with_bid_purchase_policy.keys():
-            bids_dict[p] = store.products_with_bid_purchase_policy[p].get_cur_bid()
+            bid = store.products_with_bid_purchase_policy.get(p)
+            bids_dict[p] = {}
+            bids_dict[p]["price"] = bid.get_cur_bid()
+            bids_dict[p]["to_approve"] = bid.approval.left_to_approve()
         ret_dict["bids"] = bids_dict
-
-        if ret_dict["owners"] is None:
-            ret_dict["owners"] = {}
-        if ret_dict["bids"] is None:
-            ret_dict["bids"] = {}
 
         return ret_dict
 

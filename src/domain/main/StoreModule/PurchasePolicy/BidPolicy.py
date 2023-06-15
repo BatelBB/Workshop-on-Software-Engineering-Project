@@ -55,7 +55,7 @@ class BidPolicy(IPurchasePolicy):
         res = self.approval.approve(person)
         if not res.result:
             return res
-        self.execute()
+        return self.execute()
 
     def get_cur_bid(self):
         return self.highest_bid

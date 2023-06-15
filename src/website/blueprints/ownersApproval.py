@@ -12,11 +12,13 @@ def view_approval_lists(store_name: str):
         flash("You tried to manage approvals but you need to be logged in for that.")
         return redirect(url_for('home.home'))
 
-    approvals_lists = domain.get_approval_lists_for_store(store_name)
-    if approvals_lists["owners"] != {}:
-        approvals_lists["owners"] = approvals_lists["owners"].dictionary
-    return render_template("stores/view_approval_lists.html", owners_to_approve=approvals_lists["owners"],
-                           bids_to_approve=approvals_lists["bids"], store_name=store_name)
+    username = domain.username
+    approval_lists = domain.get_approval_lists_for_store(store_name)
+    owners_to_approve = approval_lists["owners"]
+    bids_to_approve = approval_lists["bids"]
+
+    return render_template("stores/view_approval_lists.html", owners_to_approve=owners_to_approve,
+                           bids_to_approve=bids_to_approve, store_name=store_name, actor_username=username)
 
 
 @bp.route('/approve_owner/<store_name>/<owner_name>', methods=('POST', 'GET'))
