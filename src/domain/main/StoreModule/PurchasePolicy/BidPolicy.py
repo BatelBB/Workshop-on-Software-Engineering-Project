@@ -12,6 +12,7 @@ class BidPolicy(IPurchasePolicy):
     def __init__(self, approval: OwnersApproval):
         self.approval = approval
         self.highest_bid = 0
+        self.approval.restore()
 
     def apply_policy(self, p_service: IPaymentService, d_service: IProvisionService, how_much: float) -> Response[bool]:
         if how_much > self.highest_bid:
@@ -25,20 +26,13 @@ class BidPolicy(IPurchasePolicy):
 
     def remove_from_approval_dict_in_bid_policy(self, person: str):
         self.approval.remove_owner(person)
+        if self.approval.is_approved().result:
+            self.execute()
 
     def add_to_approval_dict_in_bid_policy(self, person: str):
         self.approval.add_owner(person)
 
-    def approve(self, person: str, is_approve) -> Response:
-        if not is_approve:
-            self.highest_bid = 0
-            self.payment_service = None
-            self.delivery_service = None
-            return report("successfuly declined bid", False)
-
-        res = self.approval.approve(person)
-        if not res.result:
-            return res
+    def execute(self):
         # TODO: send notification to user in case of faliure
         payment_succeeded = self.payment_service.pay(self.highest_bid)
         if not payment_succeeded:
@@ -47,7 +41,21 @@ class BidPolicy(IPurchasePolicy):
             self.payment_service.refund(self.highest_bid)
             return report_error(self.approve.__qualname__, 'failed delivery')
 
+        self.is_active = 0
         return report("bid ended", True)
+
+    def approve(self, person: str, is_approve) -> Response:
+        if not is_approve:
+            self.highest_bid = 0
+            self.payment_service = None
+            self.delivery_service = None
+            self.approval.restore()
+            return report("successfuly declined bid", False)
+
+        res = self.approval.approve(person)
+        if not res.result:
+            return res
+        self.execute()
 
     def get_cur_bid(self):
         return self.highest_bid

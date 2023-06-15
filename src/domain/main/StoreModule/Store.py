@@ -482,9 +482,14 @@ class Store(Base_db.Base):
             policy.add_to_approval_dict_in_bid_policy(name)
 
     def remove_owner(self, name: str):
+        keys_to_pop = []
         for key in self.products_with_bid_purchase_policy.keys():
             policy = self.products_with_bid_purchase_policy[key]
             policy.remove_from_approval_dict_in_bid_policy(name)
+            if policy.is_active == 0:
+                keys_to_pop.append(key)
+        for key in keys_to_pop:
+            self.products_with_bid_purchase_policy.pop(key)
 
     def get_bid_products(self) -> Response[dict]:
         bids = {}

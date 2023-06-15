@@ -100,8 +100,10 @@ if __name__ == '__main__':
     s2.approve_owner("u4", "s1", True)
 
     s4.appoint_owner("u5", "s1")
-    s4.approve_bid("s1", "product", True)
     s2.approve_owner("u5", "s1", True)
+
+    s1.approve_bid("s1", "product", True)
+    s2.approve_bid("s1", "product", True)
 
     s2.remove_appointment("u3", "s1")
 

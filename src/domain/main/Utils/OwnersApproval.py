@@ -36,3 +36,7 @@ class OwnersApproval:
                 return report(f"is_approved {p} not approved yet", False)
 
         return report("approved", True)
+
+    def restore(self):
+        for p in self.to_approve:
+            self.to_approve[p] = False
