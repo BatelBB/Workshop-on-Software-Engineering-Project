@@ -326,3 +326,7 @@ class IService(metaclass=IAbsractConcurrentSingleton):
     @abstractmethod
     def load_configuration(self, config):
         ...
+
+    @abstractmethod
+    def is_admin(self, session_id):
+        ...

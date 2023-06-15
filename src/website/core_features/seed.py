@@ -115,9 +115,9 @@ def init_hagais_store(market):
 def seed(market: Market):
     session = market.enter()
     session.load_configuration()
-    market.init_admin()
     for username in ("Batel", "yuval", "hagai", "nir_m.", "mendi"):
         market.register(0, username, "123456")
     init_yuvals_store(market)
     init_batel_store(market)
     init_hagais_store(market)
+    market.set_admin_permissions()
