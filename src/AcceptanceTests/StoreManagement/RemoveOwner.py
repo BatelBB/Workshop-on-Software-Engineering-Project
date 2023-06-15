@@ -21,6 +21,9 @@ class RemoveOwner(unittest.TestCase):
         cls.store_owner2_2 = ("usr9", "password")
         cls.registered_user = ("user5", "password")
         cls.service_admin = ('Kfir', 'Kfir')
+        cls.delivery_path = "src.domain.main.ExternalServices.Provision.ProvisionServiceAdapter.provisionService" \
+                            ".getDelivery"
+        cls.payment_pay_path = "src.domain.main.ExternalServices.Payment.PaymentServices.PayWithCard.pay"
 
     def setUp(self) -> None:
         self.app.enter_market()
@@ -130,10 +133,9 @@ class RemoveOwner(unittest.TestCase):
         self.assertEqual(1, len(products), "error: didn't get 1 stores that has the products while the market has 1")
 
     def test_fail_to_retrieve_purchase_history(self):
-        with patch('src.domain.main.ExternalServices.Provision.ProvisionServiceAdapter.provisionService.getDelivery',
-                   return_value=True), \
-                patch('src.domain.main.ExternalServices.Payment.PaymentServices.PayWithCard.pay',
-                      return_value=True):
+        with patch(self.delivery_path, return_value=True), \
+                patch(self.payment_pay_path, return_value=True):
+
             self.set_store_and_appointments()
             self.app.add_to_cart("bakery", "bread", 10)
             self.app.purchase_shopping_cart("card", ["123", "123", "12/6588"],
@@ -259,10 +261,50 @@ class RemoveOwner(unittest.TestCase):
         ...
 
     def test_fail_to_start_bid(self):
-        ...
+        self.set_store_and_appointments()
+        self.app.login(*self.store_owner1)
+        r = self.app.start_bid("bakery", "bread")
+        self.assertFalse(r.success, "error: start a bid action succeeded")
+        self.app.logout()
+        self.app.login(*self.registered_user)
+        r = self.app.purchase_with_non_immediate_policy("bakery", "bread", "card", ["123", "123", "12/6588"],
+                                                        "ben-gurion", "1234", 10.5, "beer sheva", "israel")
+        self.assertFalse(r.success, "error: purchase with a bid policy succeeded")
+        r = self.app.get_bid_products("bakery")
+        self.assertTrue(r.success, "error: get bid product action failed")
+        self.assertNotIn("bread", r.result, "error: a bid found for a bread after a removed owner started a bid")
 
     def test_fail_to_approve_a_bid(self):
-        ...
+        with patch(self.delivery_path, return_value=True) as delivery_mock, \
+                patch(self.payment_pay_path, return_value=True) as payment_mock:
+
+            self.set_store_and_appointments()
+            self.app.login(*self.store_founder1)
+            r = self.app.start_bid("bakery", "bread")
+            self.assertTrue(r.success, "error: start a bid action failed")
+            r = self.app.get_approval_lists_for_store_bids("bakery")
+            self.assertTrue(r.success, "error: get approval list for store bids action failed")
+            bids = r.result["Bids"]
+            approvals = r.result["Owners"].get("usr6").to_approve   # need to fix
+            self.assertIn("bread", bids, "error: bread not found in bids")
+            self.assertEqual(0, bids["bread"], "error: bid initial price is not 0")
+            self.assertIn(self.store_founder1[0], approvals, "error: founder not in approval list")
+            self.assertFalse(approvals[self.store_founder1[0]], "error: founder didn't approved bid")
+            self.app.logout()
+            self.app.login(*self.registered_user)
+            r = self.app.purchase_with_non_immediate_policy("bakery", "bread", "card", ["123", "123", "12/6588"],
+                                                            "ben-gurion", "1234", 10.5, "beer sheva", "israel")
+            self.assertTrue(r.success, "error: purchase with a bid policy failed")
+            self.app.logout()
+            self.app.login(*self.store_founder1)
+            r = self.app.approve_bid("bakery", "bread")
+            self.assertTrue(r.success, "error: approve bid action failed")
+            payment_mock.assert_called_once_with(10.5)
+            delivery_mock.assert_called_once()
+            self.app.login(*self.store_owner1)
+            r = self.app.approve_bid("bakery", "bread")
+            self.assertFalse(r.success, "error: approve bid action succeeded")
+            self.app.logout()
 
     def set_store_and_appointments(self):
         self.app.login(*self.store_founder1)

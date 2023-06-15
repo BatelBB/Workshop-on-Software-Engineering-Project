@@ -22,6 +22,9 @@ class AppointOwner(unittest.TestCase):
         cls.store_owner2_2 = ("usr9", "password")
         cls.registered_user = ("user5", "password")
         cls.service_admin = ('Kfir', 'Kfir')
+        cls.delivery_path = "src.domain.main.ExternalServices.Provision.ProvisionServiceAdapter.provisionService" \
+                            ".getDelivery"
+        cls.payment_pay_path = "src.domain.main.ExternalServices.Payment.PaymentServices.PayWithCard.pay"
 
     def setUp(self) -> None:
         self.app.enter_market()
@@ -230,10 +233,9 @@ class AppointOwner(unittest.TestCase):
 
     # permissions tests #
     def test_retrieve_purchase_history(self):
-        with patch('src.domain.main.ExternalServices.Provision.ProvisionServiceAdapter.provisionService.getDelivery',
-                   return_value=True), \
-                patch('src.domain.main.ExternalServices.Payment.PaymentServices.PayWithCard.pay',
-                      return_value=True):
+        with patch(self.delivery_path, return_value=True), \
+                patch(self.payment_pay_path, return_value=True):
+
             self.set_owner_appointments()
             self.app.add_to_cart("bakery", "bread", 10)
             self.app.purchase_shopping_cart("card", ["123", "123", "12/6588"],
@@ -403,10 +405,8 @@ class AppointOwner(unittest.TestCase):
         self.assertEqual(10.5, r.result["bread"])
 
     def test_approve_a_bid(self):
-        with patch('src.domain.main.ExternalServices.Provision.ProvisionServiceAdapter.provisionService.getDelivery',
-                   return_value=True) as delivery_mock, \
-                patch('src.domain.main.ExternalServices.Payment.PaymentServices.PayWithCard.pay',
-                      return_value=True) as payment_mock:
+        with patch(self.delivery_path, return_value=True) as delivery_mock, \
+                patch(self.payment_pay_path, return_value=True) as payment_mock:
 
             self.set_owner_appointments()
             self.app.login(*self.store_owner1)

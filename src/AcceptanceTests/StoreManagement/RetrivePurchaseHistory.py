@@ -5,3 +5,4 @@
 #
 # def test_retrieve_purchase_history_changed_product_price
 # def test_retrieve_purchase_history_removed_store
+# def test_retrieve_purchase_history_product_with_discount
