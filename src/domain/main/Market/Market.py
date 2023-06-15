@@ -788,6 +788,7 @@ class Market(IService):
 
     def show_cart(self, session_identifier: int) -> Response[dict | bool]:
         actor = self.get_active_user(session_identifier)
+        self.update_item_prices(actor)
         r = actor.show_cart()
         report_info(self.show_cart.__qualname__, r.description)
         return r
