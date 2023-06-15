@@ -9,6 +9,7 @@ class ProductDto:
     category: str
     rate: Optional[float]
     quantity: int
+    keywords: str
     store_name: str
     isBid: bool
 

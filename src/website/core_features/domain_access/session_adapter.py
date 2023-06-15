@@ -39,6 +39,7 @@ class SessionAdapter:
                 name=product["Name"],
                 category=product["Category"],
                 quantity=product["Quantity"],
+                keywords=product["Keywords"],
                 rate=product["Rate"],
                 price=product["Price"],
                 store_name=name,

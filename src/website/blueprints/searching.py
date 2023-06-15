@@ -21,7 +21,7 @@ def search_product():
     for store_name, products in ProductsOfStore.items():
         for product in products:
             categories.add(product.category)
-            if query.lower() in product.name.lower() or query.lower() in product.category.lower():
+            if query.lower() in product.name.lower() or query.lower() in product.category.lower() or query.lower() in product.keywords_str.lower().split('#'):
                 if price_range:
                     low, high = map(int, price_range.split('-'))
                     if not (low <= product.price <= high):
