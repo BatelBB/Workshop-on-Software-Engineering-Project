@@ -1,10 +1,7 @@
 import unittest
-from threading import Thread
-from parameterized import parameterized
+
 from src.domain.main.Market.Market import Market
 from src.domain.main.Market.Permissions import Permission, get_default_manager_permissions
-from Service.IService.IService import IService
-from src.domain.test.UnitTests.RandomInputGenerator import get_random_product, get_random_user
 
 
 class StoreTestCase(unittest.TestCase):
@@ -66,13 +63,13 @@ class StoreTestCase(unittest.TestCase):
     '''
         Sequential Test
     '''
-    def test_add_product_to_non_registered_store_fail(self):
+    def test_add_product_to_non_registered_store_failure(self):
         store = "WHATEVER"
         for p in self.products:
             response = self.session.add_product(store, *p)
             self.assertFalse(response.success)
 
-    def test_visitor_add_product_to_registered_store(self):
+    def test_visitor_add_product_to_registered_store_failure(self):
         store = "WHATEVER"
         self.assertTrue(self.session.open_store(store)) # we are logged in to admin user
         product = self.products[0]
@@ -87,6 +84,7 @@ class StoreTestCase(unittest.TestCase):
             self.assertTrue(self.session.open_store(store).success)
             for product in self.products:
                 self.assertTrue(self.session.add_product(store, *product).success)
+                self.assertTrue(self.service.verify_product_integrity(store, product[0]))
 
     def test_store_owner_add_same_product_success(self):
         self.test_store_owner_add_products_success()
@@ -96,6 +94,7 @@ class StoreTestCase(unittest.TestCase):
                 product_expected_quantity = product_initial_quantity * 2
                 self.assertTrue(self.session.add_product(store, *product).success)
                 self.assertEqual(self.session.get_amount_of(product_name, store).result, product_expected_quantity)
+                self.assertTrue(self.service.verify_product_integrity(store, product[0]))
 
     def test_store_owner_remove_product_success(self):
         self.test_store_owner_add_products_success()
@@ -104,6 +103,7 @@ class StoreTestCase(unittest.TestCase):
                 product_name = product[0]
                 self.assertTrue(self.session.remove_product(store, product_name).success)
                 self.assertEqual(self.session.get_amount_of(product_name, store).result, 0)
+                self.assertTrue(self.service.verify_product_integrity(store, product_name))
 
     def test_store_owner_update_product_success(self):
         new_quantity = 496351
@@ -113,6 +113,7 @@ class StoreTestCase(unittest.TestCase):
                 product_name = product[0]
                 self.assertTrue(self.session.update_product_quantity(store, product_name, new_quantity).success)
                 self.assertEqual(self.session.get_amount_of(product_name, store).result, new_quantity)
+                self.assertEqual(self.service.get_product_from_db(store, product_name).quantity, new_quantity)
 
     def test_store_owner_appoints_visitor_failure(self):
         owner, store = self.create_store_owner()

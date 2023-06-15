@@ -82,7 +82,7 @@ class User(Base_db.Base):
         self.role = Visitor(self)
 
     @staticmethod
-    def is_registered(username: str) -> bool:
+    def is_record_exists(username: str) -> bool:
         q = session_DB.query(User.username).filter(User.username == username)
         return session_DB.query(q.exists()).scalar()
 
@@ -109,3 +109,7 @@ class User(Base_db.Base):
         session_DB.add(user)
         session_DB.commit()
 
+    @staticmethod
+    def number_of_records():
+        session_DB.flush()
+        return session_DB.query(User).count()

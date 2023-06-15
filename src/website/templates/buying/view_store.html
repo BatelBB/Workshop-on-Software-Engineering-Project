@@ -37,7 +37,7 @@
     </form>
 {% endif %}
 
-{% if ('Changerules' in permissions) %}
+{% if ('AddRule' in permissions) %}
     <form action="{{ url_for('rules.rules_view', store_name=name) }}">
         <button type="submit" style="background-color: #008CBA; color: white; padding: 10px 24px; margin: 8px 0; border: none; border-radius: 4px; cursor: pointer;">Manage purchase rules</button>
     </form>

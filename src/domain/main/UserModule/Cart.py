@@ -36,10 +36,18 @@ class Cart:
         item = Item(product_name, self.username, store_name)
         return basket.remove_item(item)
 
-    def update_item_quantity(self, store_name: str, product_name: str, quantity: int) -> int:
+    def update_item_quantity(self, store_name: str, product_name: str, quantity: int) -> bool:
         basket = self.get_or_create_basket(store_name)
         item = Item(product_name, self.username, store_name, quantity)
-        return basket.add_item(item)
+        return basket.update_item(item)
+
+    def find_item(self, product_name, store_name) -> Item | None:
+        basket = self.get_or_create_basket(store_name)
+        try:
+            i = basket.items.index(Item(product_name, self.username, store_name))
+            return basket.items[i]
+        except ValueError:
+            return None
 
     def is_empty(self) -> bool:
         return len(self.baskets.items()) == 0

@@ -218,7 +218,7 @@ class Market(IService):
             if user is not None:
                 self.users.insert(username, user)
         return user
-    
+
     def find_store(self, store_name) -> Store | None:
         store = self.stores.get(store_name)
         if store is None:
@@ -277,7 +277,7 @@ class Market(IService):
         return report_error(self.register.__qualname__, f'Username: \'{username}\' is occupied')
 
     def is_registered(self, username: str) -> bool:
-        return User.is_registered(username)
+        return self.find_user(username) is not None
 
     def login(self, session_identifier: int, username: str, encrypted_password: str) -> Response[bool]:
         next_user = self.find_user(username)
@@ -293,12 +293,6 @@ class Market(IService):
 
     def is_logged_in(self, username: str) -> bool:
         return self.is_registered(username) and self.users.get(username).is_logged_in
-
-    def get_number_of_registered_users(self) -> int:
-        return self.users.size() - 1 # ignore default admin user
-
-    def get_number_of_stores(self) -> int:
-        return self.stores.size()
 
     def logout(self, session_identifier: int) -> Response[bool]:
         actor = self.get_active_user(session_identifier)
@@ -693,8 +687,7 @@ class Market(IService):
     def update_cart_product_quantity(self, session_identifier: int, store_name: str, product_name: str,
                                      quantity: int) -> Response[bool]:
         actor = self.get_active_user(session_identifier)
-        response = self.verify_store_contains_product(self.update_cart_product_quantity.__qualname__, store_name,
-                                                      product_name, quantity)
+        response = self.verify_store_contains_product(self.update_cart_product_quantity.__qualname__, store_name, product_name, quantity)
         return actor.update_cart_product_quantity(store_name, product_name, quantity) if response.success else response
 
     def change_product_name(self, session_identifier: int, store_name: str, product_old_name: str,
@@ -707,14 +700,11 @@ class Market(IService):
                 if store.change_product_name(product_old_name, product_new_name):
                     return report_info(self.change_product_name.__qualname__,
                                        f'Product \'{product_old_name}\' changed to \'{product_new_name}\' at store \'{store_name}\' by {actor}')
-                return report_error(self.change_product_name.__qualname__,
-                                    f'\'{store_name}\' does not contains product \'{product_old_name}\'')
-            return self.report_no_permission(self.change_product_name.__qualname__, actor, store_name,
-                                             Permission.Update)
+                return report_error(self.change_product_name.__qualname__, f'Store \'{store_name}\' does not contains product \'{product_old_name}\'')
+            return self.report_no_permission(self.change_product_name.__qualname__, actor, store_name, Permission.Update)
         return response
 
-    def change_product_price(self, session_identifier: int, store_name: str, product_old_price: float,
-                             product_new_price: float) -> Response[bool]:
+    def change_product_price(self, session_identifier: int, store_name: str, product_old_price: float, product_new_price: float) -> Response[bool]:
         response = self.verify_registered_store(self.change_product_price.__qualname__, store_name)
         if response.success:
             store = response.result
@@ -722,10 +712,8 @@ class Market(IService):
             if product_new_price > 0 :
                 if self.has_permission_at(store_name, actor, Permission.Update):
                     store.change_product_price(product_old_price, product_new_price)
-                    return report_info(self.change_product_price.__qualname__,
-                                       f'Product of price {product_old_price} changed to \'{product_new_price}\' at store \'{store_name}\' by {actor}')
-                return self.report_no_permission(self.change_product_price.__qualname__, actor, store_name,
-                                                 Permission.Update)
+                    return report_info(self.change_product_price.__qualname__, f'Product of price {product_old_price} changed to \'{product_new_price}\' at store \'{store_name}\' by {actor}')
+                return self.report_no_permission(self.change_product_price.__qualname__, actor, store_name,Permission.Update)
             return report_error(self.change_product_price.__qualname__, "Price cannot be zero or negative!")
         return response
 
@@ -736,11 +724,10 @@ class Market(IService):
             store = response.result
             actor = self.get_active_user(session_identifier)
             if self.has_permission_at(store_name, actor, Permission.Update):
-                store.change_product_category(product_name, category)
-                return report_info(self.change_product_category.__qualname__,
-                                   f'Product {product_name} category changed to \'{category}\' at store \'{store_name}\' by {actor}')
-            return self.report_no_permission(self.change_product_category.__qualname__, actor, store_name,
-                                             Permission.Update)
+                if store.change_product_category(product_name, category):
+                    return report_info(self.change_product_category.__qualname__, f'Product {product_name} category changed to \'{category}\' at store \'{store_name}\' by {actor}')
+                return report_error(self.change_product_name.__qualname__, f' Store \'{store_name}\' does not contains product \'{product_name}\'')
+            return self.report_no_permission(self.change_product_category.__qualname__, actor, store_name, Permission.Update)
         return response
 
     def show_cart(self, session_identifier: int) -> Response[dict | bool]:
@@ -1219,7 +1206,89 @@ class Market(IService):
                 staff_permissions[person.appointee] = permissions
             return staff_permissions
 
+    '''
+        Validation methods - used to compare ram object against DB records
+    '''
 
+    def get_number_of_registered_users(self) -> int:
+        return self.users.size() - 1 if self.users.size() == User.number_of_records() else -1   # ignore default admin user
+
+    def get_number_of_stores(self) -> int:
+        return self.stores.size() if self.stores.size() == Store.number_of_records() else -1
+
+    def get_number_of_products(self):
+        return Product.number_of_records()
+
+    def get_number_of_items(self):
+        return Item.number_of_records()
+
+    def get_user_from_ram(self, username) -> User | None:
+        return self.users.get(username)
+
+    def get_user_from_db(self, username) -> User | None:
+        return User.load_user(username)
+
+    def verify_user_consistent(self, username) -> bool:
+        u1, u2 = self.get_user_from_ram(username), self.get_user_from_db(username)
+        return u1 is None and u2 is None or \
+            u1 is not None and u2 is not None and u1.username == u2.username and u1.encrypted_password == u2.encrypted_password
+
+    def get_store_from_ram(self, store_name) -> Store | None:
+        return self.stores.get(store_name)
+
+    def get_store_from_db(self, store_name) -> Store | None:
+        return Store.load_store(store_name)
+
+    def verify_store_consistent(self, store_name) -> bool:
+        s1, s2 = self.get_store_from_ram(store_name), self.get_store_from_db(store_name)
+        return s1 is None and s2 is None or \
+            s1 is not None and s2 is not None and s1.name == s2.name and set(s1.purchase_history) == set(s2.purchase_history)
+
+    def get_appointment_from_ram(self, appointee, store_name) -> Appointment | None:
+        return self.get_appointment_of(appointee, store_name)
+
+    def get_appointment_from_db(self, appointee, store_name) -> Appointment | None:
+        return Appointment.load_appointment(appointee, store_name)
+
+    def verify_appointment_integrity(self, appointee, store_name) -> bool:
+        a1, a2 = self.get_appointment_from_ram(appointee, store_name), self.get_appointment_from_db(appointee, store_name)
+        return a1 is None and a2 is None or\
+            a1.store_name == a2.store_name and a1.appointee == a2.appointee and a1.appointed_by == a2.appointed_by and a1.permissions == a2.permissions
+
+    def get_product_from_ram(self, store_name, product_name) -> Product | None:
+        store = self.verify_registered_store(self.get_product_from_ram.__qualname__, store_name).result
+        if store is not None:
+            return store.find(product_name)
+        return None
+
+    def get_product_from_db(self, store_name, product_name) -> Product | None:
+        return Product.load_product(product_name, store_name)
+
+    def verify_product_integrity(self, store_name, product_name) -> bool:
+        p1, p2 = self.get_product_from_ram(store_name, product_name), self.get_product_from_db(store_name, product_name)
+        return p1 is None and p2 is None or \
+            p1 is not None and p2 is not None and p1.name == p2.name and p1.store_name == p2.store_name and \
+            p1.price == p2.price and p1.category == p2.category and p1.quantity == p2.quantity and set(p1.keywords) == set(p2.keywords)
+
+    def get_cart_item_from_ram(self, product_name, username, store_name) -> Item | None:
+        user = self.verify_registered_user(self.get_cart_item_from_ram.__qualname__, username).result
+        if user is not None:
+            return user.cart.find_item(product_name, store_name)
+        return None
+
+    def get_cart_item_from_db(self, product_name, username, store_name) -> Item | None:
+        return Item.load_item(product_name, username, store_name)
+
+    def verify_item_integrity(self, product_name, username, store_name) -> bool:
+        i1, i2 = self.get_cart_item_from_ram(product_name, username, store_name), self.get_cart_item_from_db(product_name, username, store_name)
+        return i1 is None and i2 is None or \
+            i1 is not None and i2 is not None and i1.username == i2.username and i1.store_name == i2.store_name and \
+            i1.product_name == i2.product_name and i1.quantity == i2.quantity and i1.price == i2.price and \
+            i1.discount_price == i2.discount_price
+
+    '''
+        End of Validation methods
+    '''
     def get_approval_lists_for_store(self, session_id: int, store_name) -> Response:
         actor = self.get_active_user(session_id)
         store_res = self.verify_registered_store(self.get_approval_lists_for_store.__qualname__, store_name)

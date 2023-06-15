@@ -15,7 +15,7 @@ class Product(Base_db.Base):
     quantity = Column("quantity", Integer)
     category = Column("category", String)
     price = Column("price", Float)
-    keywords_str = Column("keywords_str", String)
+    keywords_str = Column("keywords_str", String, default='')
     rate = Column("rate", Integer)
 
     def __init__(self, name: str, store_name, quantity=1, category: str = "whatever", price: float = 0.0, keywords: Optional[list[str]] = None, rate: int = 5):
@@ -28,8 +28,8 @@ class Product(Base_db.Base):
         self.keywords = keywords
         if self.keywords is None:
             self.keywords = []
-        self.keywords.append(name)
         self.keywords_str = '#'.join(self.keywords)
+        self.keywords.append(name)
 
     @staticmethod
     def load_products_of(store_name):
@@ -43,6 +43,26 @@ class Product(Base_db.Base):
     def clear_db():
         session_DB.query(Product).delete()
         session_DB.commit()
+
+    @staticmethod
+    def load_product(product_name, store_name):
+        q = session_DB.query(Product).filter(Product.name == product_name, Product.store_name == store_name).all()
+        exist = len(q) > 0
+        if exist:
+            row = q[0]
+            keywords = row.keywords_str.split('#')
+            try:
+                keywords.remove('') # drop default DB value
+            except ValueError:
+                pass
+            return Product(row.name, row.store_name, row.quantity, row.category, row.price, keywords, row.rate)
+        return None
+
+    @staticmethod
+    def number_of_records():
+        session_DB.flush()
+        return session_DB.query(Product).count()
+
 
     def __str__(self):
         rate: str = 'Not rated yet' if self.is_unrated() else self.rate
