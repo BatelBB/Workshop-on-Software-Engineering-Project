@@ -1,0 +1,37 @@
+15/06/2023 12:22:39 INFO:	 Market.register: 'Admin 'Kfir'' is registered!
+15/06/2023 12:22:40 INFO:	 Session: 2605677864942372771 has been initialized
+15/06/2023 12:22:40 INFO:	 Market.login: Admin 'Kfir' is logged in
+15/06/2023 12:22:41 INFO:	 Session: 353837389102462837 has been initialized
+15/06/2023 12:22:41 INFO:	 Session: 1939995114794330045 has been initialized
+15/06/2023 12:22:41 INFO:	 Session: 5496523197856100741 has been initialized
+15/06/2023 12:22:41 INFO:	 Session: 123120814625063657 has been initialized
+15/06/2023 12:22:41 INFO:	 Session: 608375925556327176 has been initialized
+15/06/2023 12:22:41 INFO:	 Session: 2122859271739295255 has been initialized
+15/06/2023 12:22:41 INFO:	 Session: 867203334906583901 has been initialized
+15/06/2023 12:22:41 INFO:	 Session: 543175375326071565 has been initialized
+15/06/2023 12:22:41 INFO:	 Session: 7929023006571728906 has been initialized
+15/06/2023 12:22:41 INFO:	 Session: 5876870912615258117 has been initialized
+15/06/2023 12:22:41 INFO:	 Market.login: Admin 'Kfir' is logged in
+15/06/2023 12:22:41 INFO:	 Market.login: Admin 'Kfir' is logged in
+15/06/2023 12:22:41 INFO:	 Market.login: Admin 'Kfir' is logged in
+15/06/2023 12:22:41 INFO:	 Market.login: Admin 'Kfir' is logged in
+15/06/2023 12:22:41 INFO:	 Market.open_store: Admin 'Kfir' opened store 'pbzvefgsuzygxeqatygvxvirdjjlavyezxxnwueor'.
+15/06/2023 12:22:41 INFO:	 Market.open_store: Admin 'Kfir' opened store 'yfkltcjzxoyvmjwsvmgrxszbchwuwqobjgcllrsxd'.
+15/06/2023 12:22:41 INFO:	 Market.open_store: Admin 'Kfir' opened store 'fuzczfuoletfvxvzbrmiyuxivikiuhcfewyihczdf'.
+15/06/2023 12:22:41 INFO:	 Market.login: Admin 'Kfir' is logged in
+15/06/2023 12:22:41 INFO:	 Market.login: Admin 'Kfir' is logged in
+15/06/2023 12:22:41 INFO:	 Market.open_store: Admin 'Kfir' opened store 'drywtijbmixtdosetyefneeyxpuvfaqlnyaeavand'.
+15/06/2023 12:22:41 INFO:	 Market.open_store: Admin 'Kfir' opened store 'dabybldthsibxrxmedqmutndpsakrvwsacodcgljv'.
+15/06/2023 12:22:41 INFO:	 Market.login: Admin 'Kfir' is logged in
+15/06/2023 12:22:41 INFO:	 Market.login: Admin 'Kfir' is logged in
+15/06/2023 12:22:41 INFO:	 Market.open_store: Admin 'Kfir' opened store 'xrbozjumisnlebomebmkkrwjrogyoiaytyswwtask'.
+15/06/2023 12:22:41 INFO:	 Market.login: Admin 'Kfir' is logged in
+15/06/2023 12:22:41 INFO:	 Market.open_store: Admin 'Kfir' opened store 'lnxitksptjdkdxgezwxjyqpoyhfrobkskkjucvzhi'.
+15/06/2023 12:22:41 INFO:	 Market.login: Admin 'Kfir' is logged in
+15/06/2023 12:22:41 INFO:	 Market.open_store: Admin 'Kfir' opened store 'bworajicquxxntiotwdpvtrpyrkjmqqecvlqtbhqj'.
+15/06/2023 12:22:41 INFO:	 Market.open_store: Admin 'Kfir' opened store 'ogtsmopyobeuboycscnjchyxomqdfwqonzjlighfs'.
+15/06/2023 12:22:41 INFO:	 Market.open_store: Admin 'Kfir' opened store 'qpmuruwernycfxwiwdpklythssethbjqdsfxdnkok'.
+15/06/2023 12:22:42 INFO:	 Session: 2888494701619022307 has been initialized
+15/06/2023 12:22:42 INFO:	 Market.login: Admin 'Kfir' is logged in
+15/06/2023 12:22:42 WARNING:	 Market is closed!
+15/06/2023 12:22:42 WARNING:	 Logger thread exits!

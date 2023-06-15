@@ -443,7 +443,7 @@ class Market(IService):
 
     def appoint(self, session_identifier: int, calling_method: str, store_name: str, appointee_name: str,
                 required_permission: Permission, permissions: set[Permission],
-                role: {'StoreManager', 'StoreOwner'}) -> Response[bool]:
+                role: {'StoreManager', 'StoreOwner'}, original_appointer=None) -> Response[bool]:
         response = self.verify_registered_user_and_store(calling_method, appointee_name, store_name)
         if response.success:
             appointee, store = response.result
@@ -451,8 +451,11 @@ class Market(IService):
             if not actor.is_member():
                 return report_error(calling_method, f'{appointee} is not allowed to {required_permission.value}.')
             if self.has_permission_at(store_name, actor, required_permission):
+                appointer = actor.username
+                if original_appointer is not None:
+                    appointer = original_appointer
                 if self.add_appointment(store_name,
-                                        Appointment(appointee_name, store_name, role, actor.username, permissions)):
+                                        Appointment(appointee_name, store_name, role, appointer, permissions)):
                     return report_info(calling_method, f'{actor} appointed \'{appointee.username}\' to a {role}.')
                 return report_error(calling_method,
                                     f'{appointee} is already appointed to a role at store \'{store_name}\'.')
@@ -496,8 +499,14 @@ class Market(IService):
 
     # only call from self.approve_owner or self.appoint_owner
     def add_owner(self, session_identifier: int, appointee_name: str, store_name: str) -> Response:
+        approval = self.approval_list.get(store_name).get(appointee_name)
+        if approval is None:
+            appointer = None
+        else:
+            appointer = approval.starter
+
         res = self.appoint(session_identifier, self.add_owner.__qualname__, store_name, appointee_name,
-                           Permission.AppointOwner, get_default_owner_permissions(), role='StoreOwner')
+                           Permission.AppointOwner, get_default_owner_permissions(), role='StoreOwner', original_appointer=appointer)
         if res.success:
             store_res = self.verify_registered_store(self.add_owner.__qualname__, store_name)
             if not store_res.success:
@@ -509,6 +518,8 @@ class Market(IService):
             store_dict = self.approval_list.get(store_name)
             for name in store_dict.get_all_keys():
                 store_dict.get(name).add_owner(appointee_name)
+
+            store_dict.delete(appointee_name)
         return res
 
     def approve_owner(self, session_identifier: int, appointee_name: str, store_name: str, is_approve: bool) -> \
@@ -532,7 +543,7 @@ class Market(IService):
                 if not approval_res.result:
                     return report_info(self.approve_owner.__qualname__, f"{actor.username} approved")
 
-                store_dict.delete(appointee_name)
+                # store_dict.delete(appointee_name)
                 return self.add_owner(session_identifier, appointee_name, store_name)
             else:
                 store_dict.delete(appointee_name)
@@ -549,10 +560,16 @@ class Market(IService):
         store = self.verify_registered_store(self.appoint_owner.__qualname__, store_name)
         if not store.success:
             return store
+        owners = self.get_store_owners(session_identifier, store_name).result
+        if appointee_name in owners:
+            return report_error(self.appoint_owner.__qualname__, f"{appointee_name} is already owner of {store_name}")
 
         if store_name not in self.approval_list.list_keys():
             self.approval_list.insert(store_name, ConcurrentDictionary())
-        owners = self.get_store_owners(session_identifier, store_name).result
+
+        if appointee_name in self.approval_list.get(store_name).list_keys():
+            return self.approve_owner(session_identifier, appointee_name, store_name, True)
+
         approval = OwnersApproval(owners, actor.username)
 
         if approval.is_approved().result:
