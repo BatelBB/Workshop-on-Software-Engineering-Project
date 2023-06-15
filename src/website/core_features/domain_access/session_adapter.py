@@ -324,3 +324,6 @@ class SessionAdapter:
 
     def start_bid(self, store_name, product_name):
         return self._session.start_bid(store_name, product_name)
+
+    def is_admin(self):
+        return self._session.is_admin()

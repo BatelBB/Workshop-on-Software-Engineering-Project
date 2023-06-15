@@ -101,3 +101,17 @@ def view_purchase_history_owner(store_name: str):
         return redirect(url_for('home.home'))
     purchase_history = domain.get_purchase_history_owner(store_name)
     return render_template("stores/view_purchase_history.html", purchase_history=purchase_history, permissions=permissions)
+
+@bp.route('/view_purchase_history', methods=('GET', 'POST'))
+def view_purchase_history_admin():
+    domain = get_domain_adapter()
+    if not domain.is_admin():
+        flash("Get out of here, you are NOT an admin!!!!!!!")
+        return redirect(url_for("home.home"))
+    # get all stores
+    all_stores = domain.get_stores().result
+    #go through all stores and add to dictionary with the output of get all stores from session adapter
+    purchase_history_for_all_stores = {}
+    for store in all_stores:
+        purchase_history_for_all_stores[store.name] = domain.get_purchase_history_owner(store.name)
+    return render_template("partials/view_purchase_history_admin.html", purchase_history=purchase_history_for_all_stores)

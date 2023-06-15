@@ -301,3 +301,6 @@ class Session:
         with open(config_path, 'r') as f:
             config = json.load(f)
         return self.apply(self.service.load_configuration, config)
+
+    def is_admin(self):
+        return self.apply(self.service.is_admin, self.identifier)
