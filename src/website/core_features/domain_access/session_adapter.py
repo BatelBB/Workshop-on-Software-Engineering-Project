@@ -3,6 +3,7 @@ from typing import Optional, List, Dict, Any, Set
 from idlelib.multicall import r
 from typing import Optional, List, Dict, Any, Set, Mapping
 
+from domain.main.Utils.Response import Response
 from src.domain.main.Market.Permissions import Permission
 from src.domain.main.StoreModule.Store import Store
 from src.domain.main.Utils.Response import Response
@@ -142,8 +143,8 @@ class SessionAdapter:
             Response("no such product")  # \← default if not found
         )
 
-    def update_cart_product_quantity(self, store_name, product_name, qty) -> Response[None]:
-        return self._session.update_cart_product_quantity(store_name, product_name, qty)
+    def update_cart_product_quantity(self, store_name, product_name, qty) -> Response[bool]:
+        return self._session.add_to_cart(store_name, product_name, qty)
 
     def edit_product_name(self, store_name: str, old_product_name: str, new_product_name: str):
         return self._session.change_product_name(store_name, old_product_name, new_product_name)
