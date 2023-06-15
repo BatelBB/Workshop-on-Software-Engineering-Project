@@ -311,7 +311,7 @@ class Market(IService):
                 store = self.add_store(store_name)
                 if store is not None:
                     self.add_appointment(store_name, Appointment(actor.username, store_name))
-                    self.add_appointment(store_name, Appointment("Kfir", store_name))
+                    self.add_appointment(store_name, Appointment("Kfir", store_name, 'admin', permissions={Permission.RetrievePurchaseHistory}))
                     products_of_removed_store = self.removed_store_products.get(store)
 
                     if products_of_removed_store is not None:

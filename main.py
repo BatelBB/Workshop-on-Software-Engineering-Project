@@ -56,7 +56,25 @@ def basic_interaction_with_market():
     session.shutdown()
 
 
+
+
+
+
+
 if __name__ == '__main__':
-    basic_interaction_with_market()
+    market = Market()
+    s1 = market.enter()
+    s2 = market.enter()
+
+    s1.register("u1", "p1")
+    s2.register("u2", "p2")
+    s1.login("u1", "p1")
+
+    s1.open_store("s1")
+    s1.appoint_owner("u2", "s1")
+
+    s2.login("u2", "p2")
+    s2.add_product("s1", "p1", "c1", 12, 12)
+    # basic_interaction_with_market()
     # run_external_scenario('States/scenario1.json')
     # run_external_scenario('States/scenario2.json')
