@@ -201,3 +201,5 @@ src/WorkshopLog.txt
 /src/AcceptanceTests/Purchase/WorkshopLog.txt
 /src/AcceptanceTests/StoreManagement/WorkshopLog.txt
 /src/AcceptanceTests/UserSearchServices/WorkshopLog.txt
+/src/RobustnessTest/workshop.db
+/src/RobustnessTest/WorkshopLog.txt

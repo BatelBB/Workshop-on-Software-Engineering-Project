@@ -21,9 +21,10 @@ class AppointManager(unittest.TestCase):
         cls.store_manager2 = ("usr7", "password")
         cls.registered_user = ("user5", "password")
         cls.service_admin = ('Kfir', 'Kfir')
-        cls.delivery_path = "src.domain.main.ExternalServices.Provision.ProvisionServiceAdapter.provisionService" \
-                            ".getDelivery"
-        cls.payment_pay_path = "src.domain.main.ExternalServices.Payment.PaymentServices.PayWithCard.pay"
+        cls.provision_path = 'src.domain.main.ExternalServices.Provision.ProvisionServiceAdapter' \
+                             '.provisionService.getDelivery'
+        cls.payment_pay_path = 'src.domain.main.ExternalServices.Payment.ExternalPaymentServices' \
+                               '.ExternalPaymentServiceReal.payWIthCard'
         cls.manager_default_permissions = Permissions.get_default_manager_permissions()
         cls.not_manager_default_permissions = set()
         for p in Permission:
@@ -235,7 +236,7 @@ class AppointManager(unittest.TestCase):
 
     # permissions tests #
     def test_retrieve_purchase_history(self):
-        with patch(self.delivery_path, return_value=True), \
+        with patch(self.provision_path, return_value=True), \
                 patch(self.payment_pay_path, return_value=True):
 
             self.set_appointments()
@@ -455,7 +456,7 @@ class AppointManager(unittest.TestCase):
         self.assertEqual(10.5, r.result["bread"])
 
     def test_approve_a_bid(self):
-        with patch(self.delivery_path, return_value=True) as delivery_mock, \
+        with patch(self.provision_path, return_value=True) as delivery_mock, \
                 patch(self.payment_pay_path, return_value=True) as payment_mock:
 
             self.set_appointments()

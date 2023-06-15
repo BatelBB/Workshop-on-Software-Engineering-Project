@@ -21,9 +21,10 @@ class RemoveOwner(unittest.TestCase):
         cls.store_owner2_2 = ("usr9", "password")
         cls.registered_user = ("user5", "password")
         cls.service_admin = ('Kfir', 'Kfir')
-        cls.delivery_path = "src.domain.main.ExternalServices.Provision.ProvisionServiceAdapter.provisionService" \
-                            ".getDelivery"
-        cls.payment_pay_path = "src.domain.main.ExternalServices.Payment.PaymentServices.PayWithCard.pay"
+        cls.provision_path = 'src.domain.main.ExternalServices.Provision.ProvisionServiceAdapter' \
+                             '.provisionService.getDelivery'
+        cls.payment_pay_path = 'src.domain.main.ExternalServices.Payment.ExternalPaymentServices' \
+                               '.ExternalPaymentServiceReal.payWIthCard'
 
     def setUp(self) -> None:
         self.app.enter_market()
@@ -133,9 +134,8 @@ class RemoveOwner(unittest.TestCase):
         self.assertEqual(1, len(products), "error: didn't get 1 stores that has the products while the market has 1")
 
     def test_fail_to_retrieve_purchase_history(self):
-        with patch(self.delivery_path, return_value=True), \
+        with patch(self.provision_path, return_value=True), \
                 patch(self.payment_pay_path, return_value=True):
-
             self.set_store_and_appointments()
             self.app.add_to_cart("bakery", "bread", 10)
             self.app.purchase_shopping_cart("card", ["123", "123", "12/6588"],
@@ -275,9 +275,8 @@ class RemoveOwner(unittest.TestCase):
         self.assertNotIn("bread", r.result, "error: a bid found for a bread after a removed owner started a bid")
 
     def test_fail_to_approve_a_bid(self):
-        with patch(self.delivery_path, return_value=True) as delivery_mock, \
+        with patch(self.provision_path, return_value=True) as delivery_mock, \
                 patch(self.payment_pay_path, return_value=True) as payment_mock:
-
             self.set_store_and_appointments()
             self.app.login(*self.store_founder1)
             r = self.app.start_bid("bakery", "bread")
@@ -285,7 +284,7 @@ class RemoveOwner(unittest.TestCase):
             r = self.app.get_approval_lists_for_store_bids("bakery")
             self.assertTrue(r.success, "error: get approval list for store bids action failed")
             bids = r.result["Bids"]
-            approvals = r.result["Owners"].get("usr6").to_approve   # need to fix
+            approvals = r.result["Owners"].get("usr6").to_approve  # need to fix
             self.assertIn("bread", bids, "error: bread not found in bids")
             self.assertEqual(0, bids["bread"], "error: bid initial price is not 0")
             self.assertIn(self.store_founder1[0], approvals, "error: founder not in approval list")
@@ -324,4 +323,3 @@ class RemoveOwner(unittest.TestCase):
             self.app.login(*member)
             self.app.approve_owner(owner, "bakery")
             self.app.logout()
-        
