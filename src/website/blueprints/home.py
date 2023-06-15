@@ -17,6 +17,7 @@ bp = Blueprint("home", __name__)
 def home():
     domain = get_domain_adapter()
     stores_result = domain.get_stores()  # TODO get_domain_session(session).get_all_stores().result
+    is_admin = domain.is_admin()
     from random import shuffle
     made_by = ['Batel', 'Hagai', 'Mendi', 'Nir', 'Yuval']
     permissions = {p.name for p in domain.get_admin_permissions()}
@@ -38,5 +39,5 @@ def home():
             your_stores = your_stores_result
     else:
         your_stores = []
-    return render_template('home.html', made_by=made_by, stores=stores, your_stores=your_stores, permissions=permissions)
+    return render_template('home.html', made_by=made_by, stores=stores, your_stores=your_stores, permissions=permissions, is_admin=is_admin)
 

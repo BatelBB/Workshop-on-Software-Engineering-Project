@@ -303,5 +303,8 @@ class Session:
             config = json.load(f)
         return self.apply(self.service.load_configuration, config)
 
+    def is_admin(self):
+        return self.apply(self.service.is_admin, self.identifier)
+
     def get_bid_products(self, store_name: str) -> Response[dict | bool]:
         return self.apply(self.service.get_bid_products, self.identifier, store_name)

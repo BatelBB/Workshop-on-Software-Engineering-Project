@@ -113,12 +113,11 @@ def init_hagais_store(market):
     hagai.leave()
 
 def seed(market: Market):
-    with open('../Configuration/config.json', 'r') as f:
-        config = json.load(f)
-    market.load_configuration(config)
-    market.init_admin()
+    session = market.enter()
+    session.load_configuration()
     for username in ("Batel", "yuval", "hagai", "nir_m.", "mendi"):
         market.register(0, username, "123456")
     init_yuvals_store(market)
     init_batel_store(market)
     init_hagais_store(market)
+    market.set_admin_permissions()

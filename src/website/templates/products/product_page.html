@@ -55,6 +55,7 @@
             <p>Price: ${{ product.price }}</p>
             <p>Rating: {{ product.rating }} stars</p>
             <p>Category: {{ product.category }}</p>
+            <p>Keywords: {{ product.keywords.replace("#", ", ") }}</p>
             <p>Sold by: {{ store_name }}</p>
             <p><span class="qty-avail">{{ product.quantity }} in stock.</span></p>
         {% if basket and (product.name in basket.amounts) %}

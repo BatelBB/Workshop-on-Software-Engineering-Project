@@ -75,7 +75,7 @@ class Product(Base_db.Base):
         return hash(self.name)
 
     def __dic__(self):
-        return {"Name": self.name, "Price": self.price, "Category": self.category, "Rate": self.rate}
+        return {"Name": self.name, "Price": self.price, "Category": self.category, "Rate": self.rate, "Keywords": self.keywords_str}
 
     def is_unrated(self):
         return self.rate is None
