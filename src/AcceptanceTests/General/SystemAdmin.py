@@ -19,8 +19,8 @@ class SystemAdmin(unittest.TestCase):
         cls.service_admin = ('Kfir', 'Kfir')
         cls.provision_path = 'src.domain.main.ExternalServices.Provision.ProvisionServiceAdapter' \
                              '.provisionService.getDelivery'
-        cls.payment_path = 'src.domain.main.ExternalServices.Payment.ExternalPaymentServices' \
-                           '.ExternalPaymentServiceReal.payWIthCard'
+        cls.payment_pay_path = 'src.domain.main.ExternalServices.Payment.ExternalPaymentServices' \
+                               '.ExternalPaymentServiceReal.payWIthCard'
 
     def setUp(self) -> None:
         self.app.enter_market()
@@ -86,7 +86,7 @@ class SystemAdmin(unittest.TestCase):
         self.assertEqual(0, len(products), "error: product found added by a canceled membership founder")
 
     def test_retrieve_purchase_history(self):
-        with patch(self.provision_path, return_value=True), patch(self.payment_path, return_value=True):
+        with patch(self.provision_path, return_value=True), patch(self.payment_pay_path, return_value=True):
             self.set_stores()
             self.app.add_to_cart("bakery", "bread", 10)
             self.app.add_to_cart("bakery", "pita", 15)

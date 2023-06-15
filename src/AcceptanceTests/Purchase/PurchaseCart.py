@@ -20,6 +20,9 @@ class PurchaseCart(unittest.TestCase):
                                '.ExternalPaymentServiceReal.payWIthCard'
         cls.payment_refund_path = 'src.domain.main.ExternalServices.Payment.ExternalPaymentServices' \
                                   '.ExternalPaymentServiceReal.refundToCard'
+        cls.app.enter_market()
+        cls.app.real.session.login(*cls.service_admin)
+        cls.app.real.session.load_configuration()
 
     def setUp(self) -> None:
         self.app.enter_market()

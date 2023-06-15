@@ -31,20 +31,11 @@ class Login(unittest.TestCase):
         cls.app.login(*cls.service_admin)
         cls.app.shutdown()
 
-    def test_approve_bid_happy(self):
-    def test_not_approve_bid(self):
-    def test_approve_bid_accept_higher_bid(self):
-    def test_approve_bid_ignore_lower_bid(self):
-    def test_approve_bid_after_removing_owner_appointment(self):
-    def test_approve_bid_after_removing_owner_permission(self):
-    def test_approve_bid_after_removing_manager_appointment(self):
-    def test_approve_bid_after_removing_manager_permission(self):
-    def test_approve_bid_invalid_product(self):
-    def test_start_bid_invalid_product(self):
-    def test_approve_bid_missing_quantity_product(self):
-    def test_start_bid_missing_quantity_product(self):
-    def test_approve_bid_removed_product(self):
-    def test_start_bid_removed_product(self):
-    def test_approve_bid_closed_store(self):
-    def test_start_bid_closed_store(self):
+
+    def test_simple_rules(self)
+    def test_basket_rule(self)
+    def test_and_rule(self)
+    def test_conditioning_rule(self)
+    def test_or_rule(self)
+    def test_3_levels_rules(self):
 

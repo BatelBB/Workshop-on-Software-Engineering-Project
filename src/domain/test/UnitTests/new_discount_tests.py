@@ -113,7 +113,6 @@ class new_discount_tests(unittest.TestCase):
 
         store.connect_discounts(1, 2, "xor", SimpleRule("p1", "=", 1))
 
-
         basket = Basket()
         item = Item("p1", "u1", "s1", 2, 100)
         basket.add_item(item)

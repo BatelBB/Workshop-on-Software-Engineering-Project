@@ -467,7 +467,7 @@ class AppointManager(unittest.TestCase):
             self.app.login(*self.store_owner2)
             r = self.app.start_bid("bakery", "bread")
             self.assertTrue(r.success, "error: start a bid action failed")
-            r = self.app.get_approval_lists_for_store_bids("bakery")
+            r = self.app.get_store_approval_lists_and_bids("bakery")
             self.assertTrue(r.success, "error: get approval list for store bids action failed")
             bids = r.result["Bids"]
             approvals = r.result["Owners"].get("usr6").to_approve  # need to fix

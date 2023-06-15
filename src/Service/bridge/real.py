@@ -23,9 +23,6 @@ class Real(Bridge):
     def exit_market(self) -> Response[bool]:
         return self.session.leave()
 
-    def clear_data(self) -> None:
-        self.market.clear()
-
     def register(self, username: str, password: str) -> Response[bool]:
         return self.session.register(username, password)
 
@@ -150,7 +147,7 @@ class Real(Bridge):
     def approve_bid(self, store_name: str, product_name: str, is_approve: bool) -> Response[bool]:
         return self.session.approve_bid(store_name, product_name, is_approve)
 
-    def get_approval_lists_for_store_bids(self, store_name) -> Response:
+    def get_store_approval_lists_and_bids(self, store_name) -> Response:
         return self.session.get_approval_lists_for_store(store_name)
 
     def add_purchase_simple_rule(self, store_name: str, product_name: str, gle: str, amount: int) -> Response[bool]:
@@ -216,3 +213,9 @@ class Real(Bridge):
 
     def shutdown(self) -> Response[bool]:
         return self.session.shutdown()
+
+    def clear_data(self) -> None:
+        self.market.clear()
+
+    def load_configuration(self) -> None:
+        self.session.load_configuration()

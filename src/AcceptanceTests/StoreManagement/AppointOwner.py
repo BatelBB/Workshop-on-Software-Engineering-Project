@@ -80,6 +80,7 @@ class AppointOwner(unittest.TestCase):
         r = self.app.get_store_staff("bakery")
         self.assertTrue(r.success, "error: get store staff action failed")
         appointment = r.result
+        print(appointment)
         self.assertIn(self.store_owner1[0], appointment)
         self.assertEqual(self.store_owner2[0], appointment[self.store_owner1[0]]["Appointed by"],
                          "error: Appointed By value is incorrect")
@@ -236,7 +237,6 @@ class AppointOwner(unittest.TestCase):
     def test_retrieve_purchase_history(self):
         with patch(self.provision_path, return_value=True), \
                 patch(self.payment_pay_path, return_value=True):
-
             self.set_owner_appointments()
             self.app.add_to_cart("bakery", "bread", 10)
             self.app.purchase_shopping_cart("card", ["123", "123", "12/6588"],
@@ -384,8 +384,18 @@ class AppointOwner(unittest.TestCase):
     def test_add_a_store_rule(self):
         pass
 
-    def test_change_discount_policy(self):
-        pass
+    def test_add_discount_policy(self):
+        self.set_owner_appointments()
+        self.app.login(*self.store_founder1)
+        r = self.app.add_simple_discount("bakery", "product", 50, "bread")
+        self.assertTrue(r.success, "error: add simple discount action failed")
+        r = self.app.add_simple_discount("bakery", "product", 30, "bread")
+        self.assertTrue(r.success, "error: add simple discount action failed")
+        r = self.app.connect_discounts("bakery", 1, 2, "max", "simple", p1_name="bread", gle1=">", amount1=3)
+        self.assertTrue(r.success, "error: connect discount action failed")
+        r = self.app.get_discounts("bakery")
+        self.assertTrue(r.success, "error: get discounts action failed")
+        print(r.result)
 
     def test_change_purchase_policy(self):
         pass
@@ -408,23 +418,24 @@ class AppointOwner(unittest.TestCase):
     def test_approve_a_bid(self):
         with patch(self.provision_path, return_value=True) as delivery_mock, \
                 patch(self.payment_pay_path, return_value=True) as payment_mock:
-
             self.set_owner_appointments()
             self.app.login(*self.store_owner1)
             r = self.app.start_bid("bakery", "bread")
             self.assertTrue(r.success, "error: start a bid action failed")
-            r = self.app.get_approval_lists_for_store_bids("bakery")
+            r = self.app.get_store_approval_lists_and_bids("bakery")
             self.assertTrue(r.success, "error: get approval list for store bids action failed")
             bids = r.result["Bids"]
-            approvals = r.result["Owners"].get("usr6").to_approve   # need to fix
             self.assertIn("bread", bids, "error: bread not found in bids")
-            self.assertEqual(0, bids["bread"], "error: bid initial price is not 0")
-            self.assertIn(self.store_founder1[0], approvals, "error: founder not in approval list")
-            self.assertFalse(approvals[self.store_founder1[0]], "error: founder didn't approved bid")
-            self.assertIn(self.store_owner1[0], approvals, "error: owner not in approval list")
-            self.assertFalse(approvals[self.store_owner1[0]], "error: owner didn't approved bid")
-            self.assertIn(self.store_owner2[0], approvals, "error: owner not in approval list")
-            self.assertFalse(approvals[self.store_owner2[0]], "error: owner didn't approved bid")
+            self.assertEqual(0, bids["bread"]["Bid"], "error: bid initial price is not 0")
+            self.assertIn(self.store_founder1[0], bids["bread"]["Approval wait list"],
+                          "error: founder not in approval wait list")
+            self.assertFalse(bids["bread"][self.store_founder1[0]], "error: founder didn't approved bid")
+            self.assertIn(self.store_owner1[0], bids["bread"]["Approval wait list"],
+                          "error: owner not in approval wait list")
+            self.assertFalse(bids["bread"][self.store_owner1[0]],
+                             "error: owner not in approval wait list")
+            self.assertIn(self.store_owner2[0], bids["bread"], "error: owner not in approval list")
+            self.assertFalse(bids["bread"][self.store_owner2[0]], "error: owner didn't approved bid")
             self.app.logout()
             self.app.login(*self.registered_user)
             r = self.app.purchase_with_non_immediate_policy("bakery", "bread", "card", ["123", "123", "12/6588"],

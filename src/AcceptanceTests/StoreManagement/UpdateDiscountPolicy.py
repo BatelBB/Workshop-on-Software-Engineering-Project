@@ -31,7 +31,14 @@ class Login(unittest.TestCase):
         cls.app.login(*cls.service_admin)
         cls.app.shutdown()
 
-    #
-    # ChangeDiscountPolicy = 'Change discount policy'
-    #
-    # def test_depth_3_discount(self):
+    def test_add_simple_discount_product(self):
+    def test_add_simple_discount_store(self):
+    def test_add_simple_discount_category(self):
+    def test_connect_product_discounts(self):
+    def test_connect_store_discounts(self):
+    def test_connect_product_and_store_discounts(self):
+    def test_xor_discounts(self):
+    def test_max_discounts(self):
+    def test_or_discounts(self):
+    def test_add_discounts(self):
+    def test_3_levels_discount(self):

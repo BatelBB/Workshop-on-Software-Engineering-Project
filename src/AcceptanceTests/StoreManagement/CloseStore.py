@@ -95,6 +95,15 @@ class CloseStore(unittest.TestCase):
         products = self.app.get_products_by_name("bread").result
         self.assertEqual(1, len(products), "error: bakery products not found after the store closed by a guest")
 
+    def test_close_store_by_admin(self):
+        self.set_stores()
+        self.app.login(*self.service_admin)
+        r = self.app.close_store("bakery")
+        self.assertTrue(r.success, "error: closed store action failed")
+        products = self.app.get_products_by_name("bread").result
+        self.assertEqual(0, len(products), "error: bakery products found after the store closed by the admin")
+        self.app.logout()
+
     def set_stores(self):
         self.app.login(*self.store_founder1)
         self.app.open_store("bakery")

@@ -18,9 +18,6 @@ class Proxy(Bridge):
     def exit_market(self) -> Response[bool]:
         return self.real.exit_market()
 
-    def clear_data(self) -> None:
-        self.real.clear_data()
-
     def register(self, username: str, password: str) -> Response[bool]:
         return self.real.register(username, password)
 
@@ -167,8 +164,8 @@ class Proxy(Bridge):
     def approve_bid(self, store_name: str, product_name: str, is_approve: bool = True) -> Response[bool]:
         return self.real.approve_bid(store_name, product_name, is_approve)
 
-    def get_approval_lists_for_store_bids(self, store_name) -> Response:
-        r = self.real.get_approval_lists_for_store_bids(store_name)
+    def get_store_approval_lists_and_bids(self, store_name) -> Response:
+        r = self.real.get_store_approval_lists_and_bids(store_name)
         if isinstance(r, Response) and not r.success:
             return r
         elif isinstance(r, dict):
@@ -272,3 +269,12 @@ class Proxy(Bridge):
 
     def shutdown(self) -> Response[bool]:
         return self.real.shutdown()
+
+    def clear_data(self) -> None:
+        self.real.clear_data()
+
+    def load_configuration(self) -> None:
+        self.real.load_configuration()
+
+
+

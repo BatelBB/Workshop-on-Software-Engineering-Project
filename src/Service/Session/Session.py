@@ -181,7 +181,7 @@ class Session:
         return self.apply(self.service.change_product_category, self.identifier, store_name, old_product_name, category)
 
     def get_store_purchase_history(self, store_name: str) -> Response[str]:
-        return self.apply(self.service.get_store_purchase_history,self.identifier, store_name)
+        return self.apply(self.service.get_store_purchase_history, self.identifier, store_name)
 
     def purchase_with_non_immediate_policy(self, store_name: str, product_name: str,
                                            payment_method: str, payment_details: list[str], address: str,
@@ -296,7 +296,7 @@ class Session:
 
     def load_configuration(self):
         dir_path = os.path.dirname(os.path.realpath(__file__))  # get the directory of the current script
-        config_path = os.path.join(dir_path, '..','..', '..', 'Configuration',
+        config_path = os.path.join(dir_path, '..', '..', '..', 'Configuration',
                                    'config.json')  # construct the path to config.json
         config_path = os.path.abspath(config_path)  # resolve the path
         with open(config_path, 'r') as f:

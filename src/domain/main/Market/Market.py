@@ -1392,9 +1392,12 @@ class Market(IService):
         response = self.verify_registered_store(self.get_store.__qualname__, store_name)
         if response.success:
             store = response.result
-            actor = self.get_active_user(session_id)
-            bids_response = store.get_bid_products()
-            r = report_info(self.get_store.__qualname__, f'Return store \'{store_name}\' bids to {actor}\n{bids_response.result.__str__()}')
-            bids_response.description = r.description
-            return bids_response
+            if self.store_activity_status.get(store.name) == 'OPEN' or self.store_activity_status.get(store.name) == 'REOPEN':
+                actor = self.get_active_user(session_id)
+                bids_response = store.get_bid_products()
+                r = report_info(self.get_store.__qualname__, f'Return store \'{store_name}\' bids to {actor}\n{bids_response.result.__str__()}')
+                bids_response.description = r.description
+                return bids_response
+            else:
+                return Response(None)
         return response

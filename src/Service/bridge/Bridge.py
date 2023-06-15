@@ -15,10 +15,6 @@ class Bridge(ABC):
         ...
 
     @abstractmethod
-    def clear_data(self) -> None:
-        ...
-
-    @abstractmethod
     def register(self, username: str, password: str) -> Response[bool]:
         ...
 
@@ -175,7 +171,7 @@ class Bridge(ABC):
         ...
 
     @abstractmethod
-    def get_approval_lists_for_store_bids(self, store_name) -> Response:
+    def get_store_approval_lists_and_bids(self, store_name) -> Response:
         ...
 
     @abstractmethod
@@ -254,3 +250,11 @@ class Bridge(ABC):
     @abstractmethod
     def shutdown(self) -> Response[bool]:
         ...
+
+    @abstractmethod
+    def clear_data(self) -> None:
+        ...
+
+    def load_configuration(self) -> None:
+        ...
+
