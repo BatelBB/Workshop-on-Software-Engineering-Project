@@ -553,6 +553,8 @@ class Market(IService):
         actor = self.get_active_user(session_identifier)
         perms = self.permissions_of(session_identifier, store_name, actor.username)
 
+        if not perms.success:
+            return perms
         if Permission.AppointOwner not in perms.result:
             return report_error(self.appoint_owner.__qualname__,
                                 f"{actor.username} does not have permissions to appoint owner")
@@ -627,12 +629,29 @@ class Market(IService):
                 queue.append(successor)
         return successors
 
+    def update_owner_approvals(self, fired, store_name):
+        #update approval_list: remove approvals started by fired, remove_owner from all approvals for this store
+        store_dict = self.approval_list.get(store_name)
+        if store_dict is not None:
+            for key in store_dict.get_all_keys():
+                approval = store_dict.get(key)
+                if approval.starter == fired:
+                    store_dict.delete(key)
+                else:
+                    store_dict.get(key).remove_owner(fired)
+        # update bid approvals in store:
+        store = self.verify_registered_store("update_owner_approvals", store_name)
+        if not store.success:
+            return report_error("update_owner_approvals", f"{store_name} store not found")
+        store = store.result
+        store.remove_owner(fired)
+
     def remove_appointment(self, session_identifier: int, fired_appointee: str, store_name: str) -> Response[bool]:
-        # TODO: add remove_owner() call from approval lists for relevat store
         actor = self.get_active_user(session_identifier)
         if self.is_appointed_by(fired_appointee, actor.username, store_name):
             fired_appointee_successors = self.bfs(fired_appointee, store_name)
             fired_appointee_successors_msg = ', '.join(fired_appointee_successors)
+            [self.update_owner_approvals(fired, store_name) for fired in fired_appointee_successors]
             [self.remove_appointment_of(fired, store_name) for fired in fired_appointee_successors]
             return report_info(self.remove_appointment.__qualname__,
                                f'\'{actor}\' remove appointment of \'{fired_appointee_successors_msg}\' at store \'{store_name}\'.')

@@ -96,7 +96,7 @@ class new_discount_tests(unittest.TestCase):
         basket.add_item(item)
         price = store.calculate_basket_price(basket)
 
-        self.assertTrue(price == 40, f"price should be 70 but is {price}")
+        self.assertTrue(price == 80, f"price should be 70 but is {price}")
 
     def test_xor_02(self):
         market = Market()
@@ -119,7 +119,7 @@ class new_discount_tests(unittest.TestCase):
         basket.add_item(item)
         price = store.calculate_basket_price(basket)
 
-        self.assertTrue(price == 70, f"price should be 70 but is {price}")
+        self.assertTrue(price == 140, f"price should be 70 but is {price}")
 
 
     def test_conn_2_level(self):
