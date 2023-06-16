@@ -1,3 +1,6 @@
+from sqlalchemy import Column, Integer, String
+
+from domain.main.Utils import Base_db
 from src.domain.main.StoreModule.PurchaseRules.RuleCombiner.IRuleCombiner import IRuleCombiner
 from src.domain.main.StoreModule.PurchaseRules.SimpleRule import SimpleRule
 from src.domain.main.UserModule.Basket import Basket
@@ -5,7 +8,13 @@ from src.domain.main.Utils.Logger import report
 from src.domain.main.Utils.Response import Response
 
 
-class ConditioningRule(IRuleCombiner):
+class ConditioningRule(IRuleCombiner, Base_db.Base):
+    __tablename__ = 'cond_rules'
+    __table_args__ = {'extend_existing': True}
+    id = Column("id", Integer, primary_key=True)
+    store_name = Column("store_name", String, primary_key=True)
+    id1 = Column("id1", Integer)
+    id2 = Column("id2", Integer)
     def __init__(self, r1: SimpleRule, r2: SimpleRule):
         super().__init__(r1, r2)
 

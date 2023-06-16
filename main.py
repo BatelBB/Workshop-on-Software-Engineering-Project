@@ -77,6 +77,9 @@ if __name__ == '__main__':
     # s1.add_purchase_simple_rule("s1", "p1", "<", 3)
     # s1.add_basket_purchase_rule("s1", 123)
     # s1.add_purchase_complex_rule("s1", "p1", ">", 10, "p1", "<", 3, "or")
+    # s1.add_purchase_complex_rule("s1", "p1", ">", 9, "p1", "<", 100, "and")
+    # s1.add_purchase_complex_rule("s1", "p1", ">", 885, "p1", "<", 888, "cond")
+    s1.add_purchase_complex_rule("s1", "p1", ">", 885, "p1", "<", 888, "cond")
 
     res = s1.get_purchase_rules("s1")
 

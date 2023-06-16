@@ -29,3 +29,6 @@ class IRule:
     def add_record(rule):
         session_DB.add(rule)
         session_DB.commit()
+
+    def number_of_ids(self):
+        return 1

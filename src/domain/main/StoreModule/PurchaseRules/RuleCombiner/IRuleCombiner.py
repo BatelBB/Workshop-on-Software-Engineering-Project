@@ -28,3 +28,6 @@ class IRuleCombiner(IRule):
         self.rule1.add_to_db()
         self.rule2.add_to_db()
         IRule.add_record(self)
+
+    def number_of_ids(self):
+        return 3

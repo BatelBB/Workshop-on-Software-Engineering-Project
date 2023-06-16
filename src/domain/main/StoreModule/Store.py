@@ -4,6 +4,8 @@ from multipledispatch import dispatch
 from sqlalchemy import Column, String
 
 from domain.main.StoreModule.PurchaseRules.BasketRule import BasketRule
+from domain.main.StoreModule.PurchaseRules.RuleCombiner.AndRule import AndRule
+from domain.main.StoreModule.PurchaseRules.RuleCombiner.ConditioningRule import ConditioningRule
 from domain.main.StoreModule.PurchaseRules.RuleCombiner.OrRule import OrRule
 from domain.main.StoreModule.PurchaseRules.SimpleRule import SimpleRule
 from domain.main.Utils.ConcurrentDictionary import ConcurrentDictionary
@@ -118,15 +120,17 @@ class Store(Base_db.Base):
         self.purchase_rules = self.load_simple_rules()
         self.purchase_rules.update(self.load_basket_rules())
         or_rules = self.load_or_rules(self.purchase_rules)
-
+        and_rules = self.load_and_rules(self.purchase_rules)
+        cond_rules = self.load_cond_rules(self.purchase_rules)
         self.purchase_rules.update(or_rules)
+        self.purchase_rules.update(and_rules)
+        self.purchase_rules.update(cond_rules)
 
-        highest = 0
+        count = 0
         for id, rule in self.purchase_rules.items():
-            if id > highest:
-                highest = id
+            count += rule.number_of_ids()
 
-        self.purchase_rule_ids = highest + 1
+        self.purchase_rule_ids = count + 1
 
     def load_simple_rules(self) -> dict:
         q = session_DB.query(SimpleRule).filter(SimpleRule.store_name == self.name).all()
@@ -154,6 +158,34 @@ class Store(Base_db.Base):
 
     def load_or_rules(self, irules) -> dict:
         q = session_DB.query(OrRule).filter(OrRule.store_name == self.name).all()
+        exist = len(q) > 0
+        if exist:
+            rules_dict = {}
+            for record in q:
+                r1 = irules.pop(record.id+1)
+                r2 = irules.pop(record.id+2)
+                rule = OrRule(r1, r2)
+                rule.set_db_info(self.name, record.id)
+                rules_dict[record.id] = rule
+            return rules_dict
+        return {}
+
+    def load_and_rules(self, irules) -> dict:
+        q = session_DB.query(AndRule).filter(AndRule.store_name == self.name).all()
+        exist = len(q) > 0
+        if exist:
+            rules_dict = {}
+            for record in q:
+                r1 = irules.pop(record.id+1)
+                r2 = irules.pop(record.id+2)
+                rule = OrRule(r1, r2)
+                rule.set_db_info(self.name, record.id)
+                rules_dict[record.id] = rule
+            return rules_dict
+        return {}
+
+    def load_cond_rules(self, irules) -> dict:
+        q = session_DB.query(ConditioningRule).filter(ConditioningRule.store_name == self.name).all()
         exist = len(q) > 0
         if exist:
             rules_dict = {}
