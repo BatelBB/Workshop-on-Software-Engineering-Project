@@ -22,6 +22,7 @@ class Session:
         self.identifier = identifier
         self.service: IService = service
         self.is_open = True
+        self.load_configuration()
 
     def __str__(self):
         return f'Session: {self.identifier}'
