@@ -6,14 +6,21 @@ from Service.bridge.real import Real
 
 class Proxy(Bridge):
     real: Real
+    first_entrance : bool
 
     def __init__(self):
         self.real = Real()
+        self.system_admin = ('Kfir', 'Kfir')
+        self.first_entrance = True
 
     ###################
     # general services
     def enter_market(self):
         self.real.enter_market()
+        if self.first_entrance:
+            self.real.login(*self.system_admin)
+            self.real.load_configuration()
+        self.first_entrance = False
 
     def exit_market(self) -> Response[bool]:
         return self.real.exit_market()
@@ -272,9 +279,3 @@ class Proxy(Bridge):
 
     def clear_data(self) -> None:
         self.real.clear_data()
-
-    def load_configuration(self) -> None:
-        self.real.load_configuration()
-
-
-

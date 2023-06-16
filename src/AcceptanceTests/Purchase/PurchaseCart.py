@@ -254,7 +254,22 @@ class PurchaseCart(unittest.TestCase):
         ...
 
     def test_purchase_after_product_name_changed(self):
-        ...
+        with patch(self.provision_path, return_value=False) as delivery_mock, \
+                patch(self.payment_pay_path, return_value=False) as payment_mock:
+            self.set_stores()
+            self.set_cart()
+            self.app.login(*self.s)
+            self.app.login(*self.registered_buyer1)
+            cart_before = self.app.show_cart().result
+            r = self.app.purchase_shopping_cart("card", ["123", "123", "12/6588"],
+                                                "ben-gurion", "1234", "beer sheva", "israel")
+            self.assertFalse(r.success, "error: cart payment with outdated card not failed")
+            cart_after = self.app.show_cart().result
+            self.assertDictEqual(cart_before, cart_after, "error: cart changed after failed purchase")
+            self.app.logout()
+
+            payment_mock.assert_called_once_with(560)
+            delivery_mock.assert_not_called()
 
     def test_purchase_after_product_price_changed(self):
         ...
