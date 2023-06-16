@@ -1,12 +1,13 @@
 {
-  "actions": [{"action":  "register", "args": ["u1", "moshe"]},
-              {"action":  "register", "args": ["u2", "marry had a little lambda"]},
-              {"action":  "register", "args": ["u3", "blahblahblah"]},
-              {"action":  "login", "args": ["u1", "moshe"]},
-              {"action":  "open_store", "args":  ["Hummus Said"]},
-              {"action":  "appoint_owner", "args": ["u2", "Hummus Said"]},
-              {"action":  "login", "args": ["u2", "marry had a little lambda"]},
-              {"action":  "appoint_owner", "args": ["u3", "Hummus Said"]},
-              {"action":  "login", "args": ["u1", "moshe"]},
-              {"action":  "logout", "args": []}]
+  "$schema": "./schema.json",
+  "init": [
+    {
+      "tag": "register",
+      "username": "yuval",
+      "password": "123456"
+    },
+    {
+
+    }
+  ]
 }

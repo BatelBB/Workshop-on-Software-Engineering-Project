@@ -1,0 +1,306 @@
+{
+    "$schema": "./schema.json",
+    "version": "0.1",
+    "init": [
+        {
+            "tag": "register",
+            "username": "yuval",
+            "password": "123456"
+        },
+        {
+            "tag": "register",
+            "username": "Batel",
+            "password": "123456"
+        },
+        {
+            "tag": "register",
+            "username": "nir_m.",
+            "password": "123456"
+        },
+        {
+            "tag": "register",
+            "username": "hagai",
+            "password": "123456"
+        },
+        {
+            "tag": "register",
+            "username": "mendi",
+            "password": "123456"
+        },
+        {
+            "tag": "login",
+            "username": "yuval",
+            "encrypted_password": "123456"
+        },
+        {
+            "tag": "open_store",
+            "store_name": "Electric dungeons"
+        },
+        {
+            "tag": "add_product",
+            "store_name": "Electric dungeons",
+            "product_name": "electric toothpaste",
+            "category": "Electric Items",
+            "price": 9.99,
+            "quantity": 10,
+            "keywords": [
+                "electric",
+                "toothpaste"
+            ]
+        },
+        
+        {
+            "tag": "add_product",
+            "store_name": "Electric dungeons",
+            "product_name": "electric razor",
+            "category": "Electric Items",
+            "price": 39.99,
+            "quantity": 5,
+            "keywords": [
+                "electric",
+                "razor"
+            ]
+        },
+        {
+            "tag": "add_product",
+            "store_name": "Electric dungeons",
+            "product_name": "electric blanket",
+            "category": "Electric Items",
+            "price": 59.99,
+            "quantity": 3,
+            "keywords": [
+                "electric",
+                "blanket"
+            ]
+        },
+        {
+            "tag": "add_product",
+            "store_name": "Electric dungeons",
+            "product_name": "electric scooter",
+            "category": "Electric Items",
+            "price": 199.99,
+            "quantity": 2,
+            "keywords": [
+                "electric",
+                "scooter"
+            ]
+        },
+        {
+            "tag": "add_product",
+            "store_name": "Electric dungeons",
+            "product_name": "electric guitar",
+            "category": "Electric Items",
+            "price": 299.99,
+            "quantity": 1,
+            "keywords": [
+                "electric",
+                "guitar"
+            ]
+        },
+        {
+            "tag": "add_product",
+            "store_name": "Electric dungeons",
+            "product_name": "electric fan",
+            "category": "Electric Items",
+            "price": 49.99,
+            "quantity": 4,
+            "keywords": [
+                "electric",
+                "fan"
+            ]
+        },
+        {
+            "tag": "add_product",
+            "store_name": "Electric dungeons",
+            "product_name": "electric kettle",
+            "category": "Electric Items",
+            "price": 29.99,
+            "quantity": 6,
+            "keywords": [
+                "electric",
+                "kettle"
+            ]
+        },
+        {
+            "tag": "add_product",
+            "store_name": "Electric dungeons",
+            "product_name": "electric bike",
+            "category": "Electric Items",
+            "price": 599.99,
+            "quantity": 2,
+            "keywords": [
+                "electric",
+                "bike"
+            ]
+        },
+        {
+            "tag": "add_product",
+            "store_name": "Electric dungeons",
+            "product_name": "electric shaver",
+            "category": "Electric Items",
+            "price": 79.99,
+            "quantity": 3,
+            "keywords": [
+                "electric",
+                "shaver"
+            ]
+        },
+        {
+            "tag": "add_product",
+            "store_name": "Electric dungeons",
+            "product_name": "electric mixer",
+            "category": "Electric Items",
+            "price": 49.99,
+            "quantity": 7,
+            "keywords": [
+                "electric",
+                "mixer"
+            ]
+        },
+
+        {"tag": "logout"},
+
+        {
+            "tag": "login",
+            "username": "Batel",
+            "encrypted_password": "123456"
+        },
+
+        {
+            "tag": "open_store",
+            "store_name": "Selling the stars"
+        },
+        {
+            "tag": "add_product",
+            "store_name": "Selling the stars",
+            "product_name": "Meteorite necklace",
+            "category": "Celestial Items",
+            "price": 59.99,
+            "quantity": 10,
+            "keywords": [
+                "meteorite",
+                "necklace"
+            ]
+        },
+        {
+            "tag": "add_product",
+            "store_name": "Selling the stars",
+            "product_name": "Stardust earrings",
+            "category": "Celestial Items",
+            "price": 29.99,
+            "quantity": 6,
+            "keywords": [
+                "stardust",
+                "earrings"
+            ]
+        },
+        {
+            "tag": "add_product",
+            "store_name": "Selling the stars",
+            "product_name": "Galaxy leggings",
+            "category": "Celestial Items",
+            "price": 39.99,
+            "quantity": 8,
+            "keywords": [
+                "galaxy",
+                "leggings"
+            ]
+        },
+        {
+            "tag": "add_product",
+            "store_name": "Selling the stars",
+            "product_name": "Cosmic mug",
+            "category": "Celestial Items",
+            "price": 14.99,
+            "quantity": 12,
+            "keywords": [
+                "cosmic",
+                "mug"
+            ]
+        },
+        {
+            "tag": "add_product",
+            "store_name": "Selling the stars",
+            "product_name": "Moon phase necklace",
+            "category": "Celestial Items",
+            "price": 19.99,
+            "quantity": 5,
+            "keywords": [
+                "moon",
+                "necklace"
+            ]
+        },
+        {
+            "tag": "add_product",
+            "store_name": "Selling the stars",
+            "product_name": "Constellation poster",
+            "category": "Celestial Items",
+            "price": 24.99,
+            "quantity": 3,
+            "keywords": [
+                "constellation",
+                "poster"
+            ]
+        },
+        {
+            "tag": "add_product",
+            "store_name": "Selling the stars",
+            "product_name": "Galactic bracelet",
+            "category": "Celestial Items",
+            "price": 9.99,
+            "quantity": 7,
+            "keywords": [
+                "galactic",
+                "bracelet"
+            ]
+        },
+        {
+            "tag": "add_product",
+            "store_name": "Selling the stars",
+            "product_name": "Space-themed backpack",
+            "category": "Celestial Items",
+            "price": 49.99,
+            "quantity": 4,
+            "keywords": [
+                "space-themed",
+                "backpack"
+            ]
+        },
+        {
+            "tag": "add_product",
+            "store_name": "Selling the stars",
+            "product_name": "Star-shaped earrings",
+            "category": "Celestial Items",
+            "price": 14.99,
+            "quantity": 9,
+            "keywords": [
+                "star-shaped",
+                "earrings"
+            ]
+        },
+        {
+            "tag": "add_product",
+            "store_name": "Selling the stars",
+            "product_name": "Galaxy phone case",
+            "category": "Celestial Items",
+            "price": 19.99,
+            "quantity": 6,
+            "keywords": [
+                "galaxy",
+                "phone case"
+            ]
+        },
+        {
+            "tag": "add_product",
+            "store_name": "Selling the stars",
+            "product_name": "Astronaut figurine",
+            "category": "Celestial Items",
+            "price": 12.99,
+            "quantity": 10,
+            "keywords": [
+                "astronaut",
+                "figurine"
+            ]
+        }
+    ]
+}

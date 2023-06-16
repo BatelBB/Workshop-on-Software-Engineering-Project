@@ -203,3 +203,4 @@ src/WorkshopLog.txt
 /src/AcceptanceTests/UserSearchServices/WorkshopLog.txt
 /src/RobustnessTest/workshop.db
 /src/RobustnessTest/WorkshopLog.txt
+/.idea/misc.xml
