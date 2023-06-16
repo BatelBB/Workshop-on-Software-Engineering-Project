@@ -18,7 +18,7 @@ from src.domain.main.StoreModule.Product import Product
 from src.domain.main.StoreModule.PurchasePolicy.BidPolicy import BidPolicy
 from src.domain.main.StoreModule.PurchasePolicy.IPurchasePolicy import IPurchasePolicy
 from src.domain.main.StoreModule.PurchaseRules.IRule import IRule
-from src.domain.main.UserModule.Basket import Basket
+from src.domain.main.UserModule.Basket import Basket, Item
 from src.domain.main.Utils.Logger import report_error, report, report_info
 from src.domain.main.Utils.Response import Response
 
@@ -396,7 +396,12 @@ class Store(Base_db.Base):
         res = self.products_with_bid_purchase_policy[product_name].approve(person, is_approve)
         if res.success:
             if res.result:
-                self.products_with_bid_purchase_policy.pop(product_name)
+                bid: BidPolicy = self.products_with_bid_purchase_policy.pop(product_name)
+                item = Item(product_name, bid.delivery_service.user_name, self.name, 1, bid.highest_bid,
+                            bid.highest_bid)
+                basket = Basket()
+                basket.add_item(item)
+                self.add_to_purchase_history(basket)
         return res
 
     def add_purchase_rule(self, rule: IRule) -> Response:
