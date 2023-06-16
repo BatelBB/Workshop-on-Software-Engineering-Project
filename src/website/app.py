@@ -74,4 +74,3 @@ def start_app():
     print('start_app')
     # socketio.run(app, port=80)
     app.run(port=80)
-    
