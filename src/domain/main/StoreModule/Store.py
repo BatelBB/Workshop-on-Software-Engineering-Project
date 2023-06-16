@@ -3,6 +3,7 @@ import threading
 from multipledispatch import dispatch
 from sqlalchemy import Column, String
 
+from domain.main.StoreModule.PurchaseRules.SimpleRule import SimpleRule
 from domain.main.Utils.ConcurrentDictionary import ConcurrentDictionary
 from src.domain.main.StoreModule.DIscounts.Discount_Connectors.AddDiscounts import AddDiscounts
 from src.domain.main.StoreModule.DIscounts.Discount_Connectors.MaxDiscounts import MaxDiscounts
@@ -97,6 +98,7 @@ class Store(Base_db.Base):
             stores_dict = ConcurrentDictionary()
             for record in q:
                 store = Store(record.name)
+                store.load_rules()
                 for p in Product.load_products_of(record.name):
                     store.add(p, p.quantity)
                 for purchase in q[0].purchase_history_str.split('#'):
@@ -109,6 +111,28 @@ class Store(Base_db.Base):
                 stores_dict.insert(record.name, store)
             return stores_dict
         return ConcurrentDictionary()
+
+    def load_rules(self):
+        self.purchase_rules = self.load_simple_rules()
+
+        highest = 0
+        for id, rule in self.purchase_rules.items():
+            if id > highest:
+                highest = id
+
+        self.purchase_rule_ids = highest + 1
+
+    def load_simple_rules(self) -> dict:
+        q = session_DB.query(SimpleRule).filter(SimpleRule.store_name == self.name).all()
+        exist = len(q) > 0
+        if exist:
+            rules_dict = {}
+            for record in q:
+                rule = SimpleRule(record.product_name, record.gle, record.num)
+                rule.set_db_info(self.name, record.id)
+                rules_dict[record.id] = rule
+            return rules_dict
+        return {}
 
     @staticmethod
     def clear_db():
@@ -443,6 +467,8 @@ class Store(Base_db.Base):
     def add_purchase_rule(self, rule: IRule) -> Response:
         with self.purchase_rule_lock:
             self.purchase_rules[self.purchase_rule_ids] = rule
+            rule.set_db_info(self.name, self.purchase_rule_ids)
+            Store.add_record(rule)
             self.purchase_rule_ids += 1
             return report("add_purchase_rule -> success", True)
 

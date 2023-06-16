@@ -63,18 +63,20 @@ def basic_interaction_with_market():
 
 if __name__ == '__main__':
     market = Market()
-    s0 = market.enter()
-    s0.load_configuration()
+    # s0 = market.enter()
+    # s0.load_configuration()
     s1 = market.enter()
-    s1.register("u1", "p1")
+    # s1.register("u1", "p1")
     s1.login("u1", "p1")
-    s2 = market.enter()
-    s2.register("u2", "p1")
-    s2.login("u2", "p1")
+    # s2 = market.enter()
+    # s2.register("u2", "p1")
+    # s2.login("u2", "p1")
+    #
+    # s1.open_store("s1")
+    # s1.add_product("s1", "p1", "c1", 100, 12)
+    # s1.add_purchase_simple_rule("s1", "p1", "<", 3)
 
-    s1.open_store("s1")
-    s1.add_product("s1", "p1", "c1", 100, 12)
-    s1.add_simple_discount("s1", "store", 50)
+    res = s1.get_purchase_rules("s1")
 
     res = s1.get_store("s1")
     print(res)

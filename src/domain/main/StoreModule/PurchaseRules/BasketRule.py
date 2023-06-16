@@ -8,6 +8,7 @@ class BasketRule(IRule):
     min_price: float
 
     def __init__(self, min_price: float):
+        super().__init__()
         self.min_price = min_price
 
     # must call with most recent price in basket items!

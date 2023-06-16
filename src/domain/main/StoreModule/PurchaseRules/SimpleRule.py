@@ -1,16 +1,24 @@
+from sqlalchemy import Column, String, Float, Integer
+
+from domain.main.Utils import Base_db
+from src.domain.main.Utils.Base_db import session_DB
 from src.domain.main.StoreModule.PurchaseRules.IRule import IRule
 from src.domain.main.UserModule.Basket import Basket
 from src.domain.main.Utils.Logger import report_error, report
 from src.domain.main.Utils.Response import Response
 
 
-class SimpleRule(IRule):
-    product_name: str
-    gle: str
-    num: int
-    funcs: dict
+class SimpleRule(IRule, Base_db.Base):
+    __tablename__ = 'simple_rules'
+    __table_args__ = {'extend_existing': True}
+    id = Column("id", Float, primary_key=True)
+    store_name = Column("store_name", String, primary_key=True)
+    product_name = Column("product_name", String, primary_key=True)
+    gle = Column("gle", String, primary_key=True)
+    num = Column("num", Integer, primary_key=True)
 
     def __init__(self, product_name: str, gle: str, num: int):
+        super().__init__()
         self.product_name = product_name
         self.num = num
         if gle == ">" or gle == "<" or gle == "=":
@@ -37,3 +45,5 @@ class SimpleRule(IRule):
 
     def __str__(self):
         return f'rule: {self.product_name} quantity {self.gle} {self.num}'
+
+

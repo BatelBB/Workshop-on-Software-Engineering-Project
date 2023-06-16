@@ -9,5 +9,6 @@ class IRuleCombiner(IRule, ABC):
     rule2: SimpleRule
 
     def __init__(self, r1: SimpleRule, r2: SimpleRule):
+        super().__init__()
         self.rule1 = r1
         self.rule2 = r2

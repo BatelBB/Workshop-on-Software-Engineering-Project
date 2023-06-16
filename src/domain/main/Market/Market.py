@@ -7,6 +7,7 @@ from typing import Any
 from multipledispatch import dispatch
 from sqlalchemy import inspect
 from Service.IService.IService import IService
+from domain.main.StoreModule.PurchaseRules.SimpleRule import SimpleRule
 from src.domain.main.Utils.InitExternalServices import init_external_services_from_configuration
 from src.domain.main.StoreModule.PurchaseRules.IRule import IRule
 from src.domain.main.UserModule.Cart import Cart
@@ -60,7 +61,7 @@ class Market(IService):
 
     def init_db(self):
         Base.metadata.reflect(engine)
-        classes_for_db = (User, Item, Store, Product, Appointment)
+        classes_for_db = (User, Item, Store, Product, Appointment, SimpleRule)
         tables_to_create = []
 
         for cls in classes_for_db:
