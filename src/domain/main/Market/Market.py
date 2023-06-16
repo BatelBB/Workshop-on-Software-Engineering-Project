@@ -311,7 +311,8 @@ class Market(IService):
                 store = self.add_store(store_name)
                 if store is not None:
                     self.add_appointment(store_name, Appointment(actor.username, store_name))
-                    self.add_appointment(store_name, Appointment("Kfir", store_name, 'admin', permissions={Permission.RetrievePurchaseHistory}))
+                    self.add_appointment(store_name, Appointment("Kfir", store_name, 'admin',
+                                                                 permissions={Permission.RetrievePurchaseHistory}))
                     products_of_removed_store = self.removed_store_products.get(store)
 
                     if products_of_removed_store is not None:
@@ -506,7 +507,8 @@ class Market(IService):
             appointer = approval.starter
 
         res = self.appoint(session_identifier, self.add_owner.__qualname__, store_name, appointee_name,
-                           Permission.AppointOwner, get_default_owner_permissions(), role='StoreOwner', original_appointer=appointer)
+                           Permission.AppointOwner, get_default_owner_permissions(), role='StoreOwner',
+                           original_appointer=appointer)
         if res.success:
             store_res = self.verify_registered_store(self.add_owner.__qualname__, store_name)
             if not store_res.success:
@@ -523,7 +525,7 @@ class Market(IService):
         return res
 
     def approve_owner(self, session_identifier: int, appointee_name: str, store_name: str, is_approve: bool) -> \
-    Response[bool]:
+            Response[bool]:
         with self.approval_lock:
             actor = self.get_active_user(session_identifier)
             perms = self.permissions_of(session_identifier, store_name, actor.username)
@@ -630,7 +632,7 @@ class Market(IService):
         return successors
 
     def update_owner_approvals(self, fired, store_name):
-        #update approval_list: remove approvals started by fired, remove_owner from all approvals for this store
+        # update approval_list: remove approvals started by fired, remove_owner from all approvals for this store
         store_dict = self.approval_list.get(store_name)
         if store_dict is not None:
             for key in store_dict.get_all_keys():
@@ -854,19 +856,17 @@ class Market(IService):
 
     def get_cart_price(self, baskets):
         cart_price = 0
-        successful_store_purchases = []
 
         for store_name, basket in baskets.items():
             response2 = self.verify_registered_store(self.get_cart_price.__qualname__, store_name)
             if response2.success:
                 store = response2.result
-                res = store.reserve_products(basket)
+                res = store.check_rules(basket)
                 if res:
-                    successful_store_purchases.append(store_name)
                     cart_price += store.calculate_basket_price(basket)
             else:
                 return response2.success
-        return cart_price, successful_store_purchases
+        return cart_price
 
     def purchase_shopping_cart(self, session_identifier: int, payment_method: str, payment_details: list[str],
                                address: str, postal_code: str, city: str, country: str) -> Response[bool]:
@@ -874,19 +874,25 @@ class Market(IService):
         holder = actor.username
         user_id = actor.get_user_id()
         response = actor.verify_cart_not_empty()
+        successful_store_purchases = []
         if response.success:
             baskets = actor.get_baskets()
+            for store_name, basket in baskets.items():
+                store = self.stores.get(store_name)
+                res = store.reserve_products(basket)
+                if res:
+                    successful_store_purchases.append(store_name)
             resp = self.get_cart_price(baskets)
-            payment_succeeded = self.pay(resp[0], payment_details, holder, user_id)
+            payment_succeeded = self.pay(resp, payment_details, holder, user_id)
             if payment_succeeded:
                 # order delivery
-
                 self.provisionService.set_info(actor.username, 0, address, postal_code, city, country)
                 if not self.provisionService.getDelivery():
-                    self.paymentService.refund(resp[0])
+                    self.paymentService.refund(resp)
                     return report_error(self.purchase_shopping_cart.__qualname__, 'failed delivery')
-                self.add_to_purchase_history(baskets)
-                self.update_user_cart_after_purchase(actor, resp[1])
+                successful_baskets = {store_name: basket for store_name, basket in baskets.items() if store_name in successful_store_purchases}
+                self.add_to_purchase_history(successful_baskets)
+                self.update_user_cart_after_purchase(actor, successful_store_purchases)
                 for store_name, basket in baskets.items():
                     self.find_store(store_name).update_db(basket)
                 return Response(True)
@@ -1071,15 +1077,6 @@ class Market(IService):
             rule = rule.result
 
         return store.connect_discounts(id1, id2, connection_type, rule)
-
-    def get_store_products_with_discounts(self, session_id: int, store_name: str) -> dict[Product:str]:
-        store_res = self.verify_registered_store(self.get_store_products_with_discounts.__qualname__, store_name)
-        if not store_res.success:
-            return report_error(self.get_store_products_with_discounts.__qualname__, "invalid store")
-        store = store_res.result
-
-        dict = store.get_products_with_discounts()
-        return dict
 
     def get_purchase_rules(self, session_id: int, store_name: str) -> Response[dict[int:IRule]]:
         actor = self.get_active_user(session_id)
@@ -1400,7 +1397,8 @@ class Market(IService):
             store = response.result
             actor = self.get_active_user(session_id)
             bids_response = store.get_bid_products()
-            r = report_info(self.get_store.__qualname__, f'Return store \'{store_name}\' bids to {actor}\n{bids_response.result.__str__()}')
+            r = report_info(self.get_store.__qualname__,
+                            f'Return store \'{store_name}\' bids to {actor}\n{bids_response.result.__str__()}')
             bids_response.description = r.description
             return bids_response
         return response
