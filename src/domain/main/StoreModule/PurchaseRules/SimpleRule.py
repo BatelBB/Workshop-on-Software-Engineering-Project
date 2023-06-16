@@ -27,6 +27,7 @@ class SimpleRule(IRule):
                 if self.funcs[self.gle](item.quantity, self.num):
                     return report("law is kept Kfir is happy!", True)
                 else:
+                    item.rule_msg = self.__str__()
                     return report_error("enforce_rule", f"invalid basket: {self.__str__()}")
 
         if self.gle == ">":         # incase the item is not in the cart

@@ -128,6 +128,9 @@ class Store(Base_db.Base):
     def __hash__(self):
         return hash(self.name)
     def update_product_discounts(self):
+        for p in self.products:
+            p.discount_price = p.price
+
         with self.discount_lock:
             for p in self.products:
                 self.discounts.set_disconted_price_in_product(p)
@@ -328,6 +331,7 @@ class Store(Base_db.Base):
             i.discount_price = i.price
 
     def check_rules(self, basket: Basket) -> Response[bool]:
+        basket.restore_rule_msgs()
         return self.enforce_purchase_rules(basket)
 
     def calculate_basket_price(self, basket: Basket) -> float:
