@@ -1,4 +1,5 @@
 from domain.main.Market.Permissions import Permission
+from domain.main.Notifications.notification import Notification
 from src.domain.main.Utils.Response import Response
 from Service.bridge.Bridge import Bridge
 from Service.bridge.real import Real
@@ -33,16 +34,8 @@ class Proxy(Bridge):
     def send_message(self, recipient, content) -> Response[bool]:
         return self.real.send_message(recipient, content)
 
-    def get_inbox(self) -> Response[dict | bool]:
-        r = self.real.get_inbox()
-        if not r.success:
-            return Response(False)
-        dic = {}
-        notifications = r.result
-        for n in notifications:
-            dic[n.msg_id] = {"Sender": n.sender, "Recipient": n.recipient, "Seen": n.seen, "Sender_type": n.sender_type,
-                             "Content": n.content, "Timestamp": n.timestamp}
-        return Response(dic)
+    def get_inbox(self) -> Response[list[Notification]]:
+        return self.real.get_inbox()
 
     def mark_read(self, msg_id: int) -> Response[bool]:
         return self.real.mark_read(msg_id)
