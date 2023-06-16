@@ -11,7 +11,7 @@ from src.domain.main.Utils.Response import Response
 class SimpleRule(IRule, Base_db.Base):
     __tablename__ = 'simple_rules'
     __table_args__ = {'extend_existing': True}
-    id = Column("id", Float, primary_key=True)
+    id = Column("id", Integer, primary_key=True)
     store_name = Column("store_name", String, primary_key=True)
     product_name = Column("product_name", String, primary_key=True)
     gle = Column("gle", String, primary_key=True)

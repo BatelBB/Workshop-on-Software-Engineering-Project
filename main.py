@@ -71,11 +71,12 @@ if __name__ == '__main__':
     # s2 = market.enter()
     # s2.register("u2", "p1")
     # s2.login("u2", "p1")
-    #
+
     # s1.open_store("s1")
     # s1.add_product("s1", "p1", "c1", 100, 12)
     # s1.add_purchase_simple_rule("s1", "p1", "<", 3)
     # s1.add_basket_purchase_rule("s1", 123)
+    # s1.add_purchase_complex_rule("s1", "p1", ">", 10, "p1", "<", 3, "or")
 
     res = s1.get_purchase_rules("s1")
 

@@ -8,6 +8,7 @@ from multipledispatch import dispatch
 from sqlalchemy import inspect
 from Service.IService.IService import IService
 from domain.main.StoreModule.PurchaseRules.BasketRule import BasketRule
+from domain.main.StoreModule.PurchaseRules.RuleCombiner.OrRule import OrRule
 from domain.main.StoreModule.PurchaseRules.SimpleRule import SimpleRule
 from src.domain.main.Utils.InitExternalServices import init_external_services_from_configuration
 from src.domain.main.StoreModule.PurchaseRules.IRule import IRule
@@ -62,7 +63,7 @@ class Market(IService):
 
     def init_db(self):
         Base.metadata.reflect(engine)
-        classes_for_db = (User, Item, Store, Product, Appointment, SimpleRule, BasketRule)
+        classes_for_db = (User, Item, Store, Product, Appointment, SimpleRule, BasketRule, OrRule)
         tables_to_create = []
 
         for cls in classes_for_db:

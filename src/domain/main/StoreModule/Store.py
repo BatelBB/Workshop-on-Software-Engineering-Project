@@ -4,6 +4,7 @@ from multipledispatch import dispatch
 from sqlalchemy import Column, String
 
 from domain.main.StoreModule.PurchaseRules.BasketRule import BasketRule
+from domain.main.StoreModule.PurchaseRules.RuleCombiner.OrRule import OrRule
 from domain.main.StoreModule.PurchaseRules.SimpleRule import SimpleRule
 from domain.main.Utils.ConcurrentDictionary import ConcurrentDictionary
 from src.domain.main.StoreModule.DIscounts.Discount_Connectors.AddDiscounts import AddDiscounts
@@ -116,6 +117,9 @@ class Store(Base_db.Base):
     def load_rules(self):
         self.purchase_rules = self.load_simple_rules()
         self.purchase_rules.update(self.load_basket_rules())
+        or_rules = self.load_or_rules(self.purchase_rules)
+
+        self.purchase_rules.update(or_rules)
 
         highest = 0
         for id, rule in self.purchase_rules.items():
@@ -143,6 +147,20 @@ class Store(Base_db.Base):
             rules_dict = {}
             for record in q:
                 rule = BasketRule(record.min_price)
+                rule.set_db_info(self.name, record.id)
+                rules_dict[record.id] = rule
+            return rules_dict
+        return {}
+
+    def load_or_rules(self, irules) -> dict:
+        q = session_DB.query(OrRule).filter(OrRule.store_name == self.name).all()
+        exist = len(q) > 0
+        if exist:
+            rules_dict = {}
+            for record in q:
+                r1 = irules.pop(record.id+1)
+                r2 = irules.pop(record.id+2)
+                rule = OrRule(r1, r2)
                 rule.set_db_info(self.name, record.id)
                 rules_dict[record.id] = rule
             return rules_dict
@@ -481,9 +499,9 @@ class Store(Base_db.Base):
     def add_purchase_rule(self, rule: IRule) -> Response:
         with self.purchase_rule_lock:
             self.purchase_rules[self.purchase_rule_ids] = rule
-            rule.set_db_info(self.name, self.purchase_rule_ids)
-            Store.add_record(rule)
-            self.purchase_rule_ids += 1
+            count = rule.set_db_info(self.name, self.purchase_rule_ids)
+            rule.add_to_db()
+            self.purchase_rule_ids += count
             return report("add_purchase_rule -> success", True)
 
     def get_purchase_rules(self):
