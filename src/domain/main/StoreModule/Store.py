@@ -537,7 +537,11 @@ class Store(Base_db.Base):
             return report("add_purchase_rule -> success", True)
 
     def get_purchase_rules(self):
-        return self.purchase_rules
+        rule_str_dict = {}
+        for rule_num in self.purchase_rules.keys():
+            rule_str_dict[rule_num] = self.purchase_rules[rule_num].__str__()
+
+        return rule_str_dict
 
     def remove_purchase_rule(self, rule_id: int):
         self.purchase_rules.pop(rule_id)

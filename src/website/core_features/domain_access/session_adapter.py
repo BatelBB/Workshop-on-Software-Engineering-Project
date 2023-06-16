@@ -177,16 +177,12 @@ class SessionAdapter:
     def remove_product(self, store_name: str, product_name: str):
         return self._session.remove_product(store_name, product_name)
 
-    def get_purchase_rules(self, store_name: str) -> list[str]:
+    def get_purchase_rules(self, store_name: str) -> dict:
         rules = self._session.get_purchase_rules(store_name)
         if not rules.success:
-            return None
-        rules_dict: dict = rules.result
-        rule_str_dict = {}
-        for rule_num in rules_dict.keys():
-            rule_str_dict[rule_num] = rules_dict[rule_num].__str__()
+            return {}
+        return rules.result
 
-        return rule_str_dict
 
     def delete_purchase_rule(self, index: int, store_name: str):
         self._session.delete_purchase_rule(index, store_name)
