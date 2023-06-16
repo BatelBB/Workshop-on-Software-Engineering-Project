@@ -127,8 +127,13 @@ class Store(Base_db.Base):
 
     def __hash__(self):
         return hash(self.name)
+    def update_product_discounts(self):
+        with self.discount_lock:
+            for p in self.products:
+                self.discounts.set_disconted_price_in_product(p)
 
     def __dic__(self):
+        self.update_product_discounts()
         out = {}
         for p in self.products:
             p_d = p.__dic__()
@@ -465,9 +470,6 @@ class Store(Base_db.Base):
             return Response(self.find(p_name), "product found")
         else:
             return report_error("get_product_obj", "product doesnt exsist")
-
-    def get_products_with_discounts(self) -> dict[Product:str]:
-        return report_error("delete_discount", "no implemented")
 
     def get_discounts(self) -> list[dict[int:str]]:
         # returns 2 lists: [0]: simple discounts

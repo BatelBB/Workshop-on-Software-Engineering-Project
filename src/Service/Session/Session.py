@@ -232,9 +232,6 @@ class Session:
         return self.apply(self.service.connect_discounts, self.identifier, store_name, id1, id2, connection_type,
                           rule_type, min_price, p1_name, gle1, amount1, p2_name, gle2, amount2)
 
-    def get_store_products_with_discounts(self, store_name: str) -> dict[Product:str]:
-        self.apply(self.service.get_store_products_with_discounts, self.identifier, store_name)
-
     def get_purchase_rules(self, store_name: str) -> Response[dict[int:IRule]]:
         return self.apply(self.service.get_purchase_rules, self.identifier, store_name)
 

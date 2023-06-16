@@ -1072,15 +1072,6 @@ class Market(IService):
 
         return store.connect_discounts(id1, id2, connection_type, rule)
 
-    def get_store_products_with_discounts(self, session_id: int, store_name: str) -> dict[Product:str]:
-        store_res = self.verify_registered_store(self.get_store_products_with_discounts.__qualname__, store_name)
-        if not store_res.success:
-            return report_error(self.get_store_products_with_discounts.__qualname__, "invalid store")
-        store = store_res.result
-
-        dict = store.get_products_with_discounts()
-        return dict
-
     def get_purchase_rules(self, session_id: int, store_name: str) -> Response[dict[int:IRule]]:
         actor = self.get_active_user(session_id)
         store_res = self.verify_registered_store(self.get_purchase_rules.__qualname__, store_name)
