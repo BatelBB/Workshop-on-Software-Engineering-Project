@@ -322,6 +322,9 @@ class Store(Base_db.Base):
             i.price = self.get_product_price(i.product_name)
             i.discount_price = i.price
 
+    def check_rules(self, basket: Basket) -> Response[bool]:
+        return self.enforce_purchase_rules(basket)
+
     def calculate_basket_price(self, basket: Basket) -> float:
         self.update_basket_to_current_price(basket)
         basket = self.discounts.apply_discount(basket, self.products)

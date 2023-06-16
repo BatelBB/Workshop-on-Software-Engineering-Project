@@ -65,7 +65,7 @@ def view_cart():
     domain = get_domain_adapter()
     cart = domain.get_cart()
     resp = domain.get_cart_price()
-    return render_template("buying/view_cart.html", cart=cart, cart_price=resp[0])
+    return render_template("buying/view_cart.html", cart=cart, cart_price=resp)
 
 
 class CheckoutTypeSelectionForm(FlaskForm):
