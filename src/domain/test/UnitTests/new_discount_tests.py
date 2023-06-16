@@ -55,6 +55,27 @@ class new_discount_tests(unittest.TestCase):
 
         self.assertTrue(price == 20, f"price should be 20 but is {price}")
 
+    def test_Or_Discounts_success(self):
+        market = Market()
+        s1 = market.enter()
+        s1.register("u1", "p1")
+        s1.login("u1", "p1")
+        s1.open_store("s1")
+        store = market.stores.get("s1")
+        s1.add_product("s1", "p1", "c1", 100, 50)
+
+        store.add_simple_discount(50, "product", discount_for_name="p1")
+        store.add_simple_discount(20, "product", discount_for_name="p1")
+        store.add_simple_discount(10, "product", discount_for_name="p1")
+        store.connect_discounts(1, 2, "or")
+
+        basket = Basket()
+        item = Item("p1", "u1", "s1", 1, 100)
+        basket.add_item(item)
+        price = store.calculate_basket_price(basket)
+
+        self.assertTrue(price == 70, f"price should be 20 but is {price}")
+
     def test_add_with_rule(self):
         market = Market()
         s1 = market.enter()

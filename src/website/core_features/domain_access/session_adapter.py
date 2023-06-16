@@ -44,7 +44,8 @@ class SessionAdapter:
                 rate=product["Rate"],
                 price=product["Price"],
                 store_name=name,
-                isBid=product["isBid"]
+                isBid=product["isBid"],
+                discounted_price=product["discounted_price"]
             )
             for product in data.values()
         ]

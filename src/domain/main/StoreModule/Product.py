@@ -30,6 +30,7 @@ class Product(Base_db.Base):
             self.keywords = []
         self.keywords_str = '#'.join(self.keywords)
         self.keywords.append(name)
+        self.discount_price = price
 
     @staticmethod
     def load_products_of(store_name):
@@ -75,7 +76,8 @@ class Product(Base_db.Base):
         return hash(self.name)
 
     def __dic__(self):
-        return {"Name": self.name, "Price": self.price, "Category": self.category, "Rate": self.rate, "Keywords": self.keywords_str}
+        return {"Name": self.name, "Price": self.price, "Category": self.category, "Rate": self.rate,
+                "Keywords": self.keywords_str, "discounted_price": self.discount_price}
 
     def is_unrated(self):
         return self.rate is None
