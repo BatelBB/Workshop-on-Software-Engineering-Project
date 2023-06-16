@@ -56,6 +56,7 @@ class Market(IService):
         self.init_admin()
 
         self.stores = Store.load_all_stores()
+        self.appointments = Appointment.load_all_appointments()
 
     def init_db(self):
         Base.metadata.reflect(engine)

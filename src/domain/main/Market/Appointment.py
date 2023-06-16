@@ -5,6 +5,7 @@ from sqlalchemy.orm import relationship
 
 from sqlalchemy import Column, String, ForeignKey
 
+from domain.main.Utils.ConcurrentDictionary import ConcurrentDictionary
 from src.domain.main.Utils import Base_db
 from src.domain.main.Utils.Base_db import session_DB
 from src.domain.main.Market.Permissions import Permission, get_default_owner_permissions, get_permission_description, \
@@ -42,6 +43,18 @@ class Appointment(Base_db.Base):
                 appointments.append(Appointment(r.appointee, r.store_name, r.role, r.appointed_by, deserialize_permissions(r.permissions_str)))
             return appointments
         return None
+
+    @staticmethod
+    def load_all_appointments():
+        q = session_DB.query(Appointment).all()
+        exist = len(q) > 0
+        if exist:
+            app_dict = ConcurrentDictionary()
+            for row in q:
+                app = Appointment.load_appointments_of(row.store_name)
+                app_dict.insert(row.store_name, app)
+            return app_dict
+        return ConcurrentDictionary()
 
     @staticmethod
     def clear_db():
