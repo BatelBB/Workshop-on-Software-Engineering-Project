@@ -3,7 +3,7 @@ from unittest.mock import patch
 from Service.bridge.proxy import Proxy
 
 
-class AppointOwner(unittest.TestCase):
+class SearchingStorePurchasePolicies(unittest.TestCase):
     app: Proxy = Proxy()
 
     @classmethod

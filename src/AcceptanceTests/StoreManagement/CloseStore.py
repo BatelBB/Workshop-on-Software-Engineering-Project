@@ -10,7 +10,6 @@ class CloseStore(unittest.TestCase):
         cls.store_founder1 = ("usr1", "password")
         cls.store_founder2 = ("usr2", "password")
         cls.registered_user = ("user33", "password")
-        cls.service_admin = ('Kfir', 'Kfir')
 
     def setUp(self) -> None:
         self.app.enter_market()

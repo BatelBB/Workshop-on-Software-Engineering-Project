@@ -59,8 +59,8 @@ class Proxy(Bridge):
                          product_name: str) -> Response[bool]:
         return self.real.remove_from_cart(store_name, product_name)
 
-    def add_product_quantity_to_cart(self, store_name: str, product_name: str, quantity: int) -> Response[bool]:
-        return self.real.add_product_quantity_to_cart(store_name, product_name, quantity)
+    def update_cart_product_quantity(self, store_name: str, product_name: str, quantity: int) -> Response[bool]:
+        return self.real.update_cart_product_quantity(store_name, product_name, quantity)
 
     def show_cart(self) -> Response[dict | bool]:
         return self.real.show_cart()
@@ -151,12 +151,9 @@ class Proxy(Bridge):
 
     def get_store_purchase_history(self, store_name: str):
         result = self.real.get_store_purchase_history(store_name)
-        if isinstance(result, Response):
-            return result
-        elif isinstance(result, list) or isinstance(result, str):
-            return Response(result)
-        else:
-            return Response(None)
+        if isinstance(result, list):
+            return Response(result[0])
+        return result
 
     def start_auction(self, store_name: str, product_name: str, initial_price: float, duration: int) -> Response[bool]:
         return self.real.start_auction(store_name, product_name, initial_price, duration)

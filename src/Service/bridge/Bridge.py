@@ -49,7 +49,7 @@ class Bridge(ABC):
         ...
 
     @abstractmethod
-    def add_product_quantity_to_cart(self, store_name: str, product_name: str, quantity: int) -> Response[bool]:
+    def update_cart_product_quantity(self, store_name: str, product_name: str, quantity: int) -> Response[bool]:
         ...
 
     @abstractmethod

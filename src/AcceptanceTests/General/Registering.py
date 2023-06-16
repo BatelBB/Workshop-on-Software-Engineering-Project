@@ -14,6 +14,7 @@ class Registering(unittest.TestCase):
         cls.admin_username = ("Kfir", "45sdfgs#$%1")
 
     def setUp(self) -> None:
+        self.app.enter_market()
         self.app.load_configuration()
 
     def tearDown(self) -> None:

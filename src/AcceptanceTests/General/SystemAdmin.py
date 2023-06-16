@@ -1,5 +1,4 @@
 from unittest.mock import patch
-
 from Service.bridge.proxy import Proxy
 import unittest
 from domain.main.Market.Permissions import Permission
@@ -25,6 +24,7 @@ class SystemAdmin(unittest.TestCase):
         self.app.register(*self.store_manager1)
         self.app.register(*self.registered_user)
         self.set_stores()
+        self.app.login(*self.app.system_admin)
 
     def tearDown(self) -> None:
         self.app.exit_market()
@@ -90,14 +90,14 @@ class SystemAdmin(unittest.TestCase):
             self.app.login(*self.app.system_admin)
             r = self.app.get_store_purchase_history("bakery")
             self.assertTrue(r.success, "error: get purchase history action failed")
-            purchase_history = r.result[0]
+            purchase_history = r.result
             self.assertIn("Product: 'bread', Quantity: 10, Price: 10.0, Discount-Price: 10.0", purchase_history,
                           "error: the admin can't see the purchase history")
             self.assertIn("Product: 'pita', Quantity: 15, Price: 5.0, Discount-Price: 5.0", purchase_history,
                           "error: the admin can't see the purchase history")
             r = self.app.get_store_purchase_history("market")
             self.assertTrue(r.success, "error: get purchase history action failed")
-            purchase_history = r.result[0]
+            purchase_history = r.result
             self.assertIn("Product: 'tuna', Quantity: 30, Price: 20.0, Discount-Price: 20.0", purchase_history,
                           "error: the admin can't see the purchase history")
             self.assertIn("Product: 'pita', Quantity: 5, Price: 8.5, Discount-Price: 8.5", purchase_history,

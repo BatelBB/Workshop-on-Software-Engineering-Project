@@ -79,7 +79,7 @@ class InspectingCart(unittest.TestCase):
         self.assertNotIn("bakery", cart, "error: bakery store in cart after the guest left and reentered")
         self.assertNotIn("market", cart, "error: market store in cart after the guest left and reentered")
 
-    def test_inspecting_cart_after_product_name_changed_is_not_changing_the_name_in_cart(self):
+    def test_inspecting_cart_after_product_name_changed_is_changing_the_name_in_cart(self):
         self.set_stores()
         self.app.login(*self.registered_buyer)
         self.app.add_to_cart("bakery", "bread", 5)
@@ -89,14 +89,13 @@ class InspectingCart(unittest.TestCase):
         self.app.logout()
         self.app.login(*self.registered_buyer)
         cart = self.app.show_cart().result
-        print(cart)
         self.assertIn("bakery", cart, "error: bakery store not in cart")
         self.assertIn("bread", cart["bakery"], "error: bread not in cart")
         self.assertEqual(5, cart["bakery"]["bread"]["Quantity"], "error: bread quantity doesn't match")
         self.assertEqual(10, cart["bakery"]["bread"]["Price"], "error: bread price doesn't match")
         self.app.logout()
 
-    def test_inspecting_cart_after_product_price_changed_is_not_changing_the_price_in_cart(self):
+    def test_inspecting_cart_after_product_price_changed_is_changing_the_price_in_cart(self):
         self.set_stores()
         self.app.login(*self.registered_buyer)
         self.app.add_to_cart("bakery", "bread", 5)
@@ -109,7 +108,7 @@ class InspectingCart(unittest.TestCase):
         self.assertIn("bakery", cart, "error: bakery store not in cart")
         self.assertIn("bread", cart["bakery"], "error: bread not in cart")
         self.assertEqual(5, cart["bakery"]["bread"]["Quantity"], "error: bread quantity doesn't match")
-        self.assertEqual(10, cart["bakery"]["bread"]["Price"], "error: bread price doesn't match")
+        self.assertEqual(20, cart["bakery"]["bread"]["Price"], "error: bread price doesn't match")
         self.app.logout()
 
     def set_stores(self):

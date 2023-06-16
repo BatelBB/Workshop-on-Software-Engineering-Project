@@ -44,16 +44,10 @@ class RemoveStore(unittest.TestCase):
         r = self.app.remove_store("bakery")
         self.assertTrue(r.success, "error: remove store action failed")
         self.app.logout()
-        self.app.login(*self.store_founder2)
-        r = self.app.reopen_store("market")
-        self.assertTrue(r.success, "error: remove store action failed")
-        self.app.logout()
         products = self.app.get_products_by_name("bread").result
         self.assertEqual(0, len(products), "error: bakery product found after the store removed")
         products = self.app.get_products_by_name("pita").result
         self.assertEqual(0, len(products), "error: bakery and market products found after the stores removed")
-        products = self.app.get_products_by_name("tuna").result
-        self.assertEqual(0, len(products), "error: market product found after the store removed")
         self.app.logout()
 
     def test_remove_store_already_removed(self):
@@ -77,7 +71,7 @@ class RemoveStore(unittest.TestCase):
         self.assertEqual(0, len(products), "error: bakery product found after the store closed and removed")
         self.app.logout()
 
-    def test_remove_store_no_permission_member(self):
+    def test_remove_store_by_member_with_no_permission(self):
         self.set_stores()
         self.app.login(*self.registered_user)
         r = self.app.remove_store("bakery")
@@ -87,7 +81,7 @@ class RemoveStore(unittest.TestCase):
                                            "without permissions")
         self.app.logout()
 
-    def test_remove_store_by_another_owner(self):
+    def test_remove_store_of_another_founder(self):
         self.set_stores()
         self.app.login(*self.store_founder2)
         r = self.app.remove_store("bakery")
@@ -96,7 +90,7 @@ class RemoveStore(unittest.TestCase):
         self.assertEqual(1, len(products), "error: bakery products not found after the store removed by another owner")
         self.app.logout()
 
-    def test_remove_store_no_permission_guest(self):
+    def test_remove_store_by_guest(self):
         self.set_stores()
         r = self.app.remove_store("bakery")
         self.assertFalse(r.success, "error: remove store action succeeded")

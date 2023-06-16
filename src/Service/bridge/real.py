@@ -50,7 +50,7 @@ class Real(Bridge):
                          product_name: str) -> Response[bool]:
         return self.session.remove_product_from_cart(store_name, product_name)
 
-    def add_product_quantity_to_cart(self, store_name: str, product_name: str, quantity: int) -> Response[bool]:
+    def update_cart_product_quantity(self, store_name: str, product_name: str, quantity: int) -> Response[bool]:
         return self.session.update_cart_product_quantity(store_name, product_name, quantity)
 
     def show_cart(self) -> Response[dict | bool]:

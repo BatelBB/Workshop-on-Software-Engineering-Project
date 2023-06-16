@@ -278,11 +278,11 @@ class RemoveOwner(unittest.TestCase):
             r = self.app.get_store_approval_lists_and_bids("bakery")
             self.assertTrue(r.success, "error: get approval list for store bids action failed")
             bids = r.result["Bids"]
-            approvals = r.result["Owners"].get("usr6").to_approve  # need to fix
             self.assertIn("bread", bids, "error: bread not found in bids")
-            self.assertEqual(0, bids["bread"], "error: bid initial price is not 0")
-            self.assertIn(self.store_founder1[0], approvals, "error: founder not in approval list")
-            self.assertFalse(approvals[self.store_founder1[0]], "error: founder didn't approved bid")
+            self.assertEqual(0, bids["bread"]["price"], "error: bid initial price is not 0")
+            self.assertEqual(1, len(bids["bread"]["to_approve"]), "error: not only founder in approval list")
+            self.assertIn(self.store_founder1[0], bids["bread"]["to_approve"],
+                          "error: founder not in approval list")
             self.app.logout()
             self.app.login(*self.registered_user)
             r = self.app.purchase_with_non_immediate_policy("bakery", "bread", "card", ["123", "123", "12/6588"],

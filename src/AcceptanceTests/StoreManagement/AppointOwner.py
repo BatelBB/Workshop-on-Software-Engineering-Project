@@ -199,12 +199,12 @@ class AppointOwner(unittest.TestCase):
         self.assertTrue(r.success, "error: approve owner action failed")
         self.app.logout()
         self.app.login(*self.store_founder1)
-        r = self.app.remove_permission("bakery", self.store_owner2[0], Permission.AppointOwner)
+        r = self.app.remove_permission("bakery", self.store_owner1[0], Permission.AppointOwner)
         self.assertTrue(r.success, "error: remove permission action failed")
         self.app.logout()
         self.app.login(*self.store_owner2)
         r = self.app.appoint_owner(self.store_owner1[0], "bakery")
-        self.assertFalse(r.success, "error: appoint owner action succeeded")
+        self.assertFalse(r.success, "error: appoint owner action succeeded - circular appointment")
         self.app.logout()
         self.app.login(*self.store_owner1)
         r = self.app.appoint_owner(self.registered_user[0], "bakery")
@@ -238,7 +238,7 @@ class AppointOwner(unittest.TestCase):
             self.app.login(*self.store_owner1)
             r = self.app.get_store_purchase_history("bakery")
             self.assertTrue(r.success, "error: get purchase history action failed")
-            purchase_history = r.result[0]
+            purchase_history = r.result
             self.assertIn("Product: 'bread', Quantity: 10, Price: 10.0, Discount-Price: 10.0", purchase_history,
                           "error: an owner with permission can't see the product after a purchase")
 
@@ -419,17 +419,13 @@ class AppointOwner(unittest.TestCase):
             r = self.app.get_store_approval_lists_and_bids("bakery")
             self.assertTrue(r.success, "error: get approval list for store bids action failed")
             bids = r.result["Bids"]
+            print(bids)
             self.assertIn("bread", bids, "error: bread not found in bids")
-            self.assertEqual(0, bids["bread"]["Bid"], "error: bid initial price is not 0")
-            self.assertIn(self.store_founder1[0], bids["bread"]["Approval wait list"],
+            self.assertEqual(0, bids["bread"]["price"], "error: bid initial price is not 0")
+            self.assertIn(self.store_founder1[0], bids["bread"]["to_approve"],
                           "error: founder not in approval wait list")
-            self.assertFalse(bids["bread"][self.store_founder1[0]], "error: founder didn't approved bid")
-            self.assertIn(self.store_owner1[0], bids["bread"]["Approval wait list"],
-                          "error: owner not in approval wait list")
-            self.assertFalse(bids["bread"][self.store_owner1[0]],
-                             "error: owner not in approval wait list")
-            self.assertIn(self.store_owner2[0], bids["bread"], "error: owner not in approval list")
-            self.assertFalse(bids["bread"][self.store_owner2[0]], "error: owner didn't approved bid")
+            self.assertIn(self.store_owner1[0], bids["bread"]["to_approve"], "error: owner not in approval wait list")
+            self.assertIn(self.store_owner2[0], bids["bread"]["to_approve"], "error: owner not in approval list")
             self.app.logout()
             self.app.login(*self.registered_user)
             r = self.app.purchase_with_non_immediate_policy("bakery", "bread", "card", ["123", "123", "12/6588"],

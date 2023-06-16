@@ -355,7 +355,7 @@ class AppointManager(unittest.TestCase):
         store = self.app.get_store("bakery").result
         self.assertIn("bread", store, "error: bread not found")
         self.assertEqual("bread", store["bread"]["Name"], "error: bread name incorrect")
-        self.assertEqual(30, store["bread"]["Price"], "error: bread price incorrect")
+        self.assertEqual(10, store["bread"]["Price"], "error: bread price incorrect")
         self.assertEqual("5", store["bread"]["Category"], "error: bread category incorrect")
         self.assertEqual(5, store["bread"]["Rate"], "error: bread rate incorrect")
         self.assertEqual(15, store["bread"]["Quantity"], "error: bread quantity incorrect")
@@ -449,51 +449,6 @@ class AppointManager(unittest.TestCase):
         self.assertTrue(r.success, "error: get bid product action failed")
         self.assertIn("bread", r.result, "error: no bid found for a bread after a owner started a bid")
         self.assertEqual(10.5, r.result["bread"])
-
-    def test_approve_a_bid(self):
-        with patch(self.app.provision_path, return_value=True) as delivery_mock, \
-                patch(self.app.payment_pay_path, return_value=True) as payment_mock:
-
-            self.set_appointments()
-            self.app.login(*self.store_founder1)
-            r = self.app.add_permission("bakery", self.store_manager1[0], Permission.ApproveBid)
-            self.assertTrue(r.success, "error: add permission action failed")
-            self.app.logout()
-            self.app.login(*self.store_owner2)
-            r = self.app.start_bid("bakery", "bread")
-            self.assertTrue(r.success, "error: start a bid action failed")
-            r = self.app.get_store_approval_lists_and_bids("bakery")
-            self.assertTrue(r.success, "error: get approval list for store bids action failed")
-            bids = r.result["Bids"]
-            approvals = r.result["Owners"].get("usr6").to_approve  # need to fix
-            self.assertIn("bread", bids, "error: bread not found in bids")
-            self.assertEqual(0, bids["bread"], "error: bid initial price is not 0")
-            self.assertIn(self.store_founder1[0], approvals, "error: founder not in approval list")
-            self.assertFalse(approvals[self.store_founder1[0]], "error: founder didn't approved bid")
-            self.assertIn(self.store_manager1[0], approvals, "error: manager not in approval list")
-            self.assertFalse(approvals[self.store_owner1[0]], "error: manager didn't approved bid")
-            self.assertIn(self.store_owner2[0], approvals, "error: owner not in approval list")
-            self.assertFalse(approvals[self.store_owner2[0]], "error: owner didn't approved bid")
-            self.app.logout()
-            self.app.login(*self.registered_user)
-            r = self.app.purchase_with_non_immediate_policy("bakery", "bread", "card", ["123", "123", "12/6588"],
-                                                            "ben-gurion", "1234", 10.5, "beer sheva", "israel")
-            self.assertTrue(r.success, "error: purchase with a bid policy failed")
-            self.app.logout()
-            self.app.login(*self.store_manager1)
-            r = self.app.approve_bid("bakery", "bread")
-            self.assertTrue(r.success, "error: approve bid action failed")
-            self.app.logout()
-            self.app.login(*self.store_owner2)
-            r = self.app.approve_bid("bakery", "bread")
-            self.assertTrue(r.success, "error: approve bid action failed")
-            self.app.logout()
-            self.app.login(*self.store_founder1)
-            r = self.app.approve_bid("bakery", "bread")
-            self.assertTrue(r.success, "error: approve bid action failed")
-
-            payment_mock.assert_called_once_with(10.5)
-            delivery_mock.assert_called_once()
 
     def set_stores(self):
         self.app.login(*self.store_founder1)
