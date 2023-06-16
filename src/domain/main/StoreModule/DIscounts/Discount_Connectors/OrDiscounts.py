@@ -10,16 +10,25 @@ class OrDiscounts(IDiscountConnector):
 
     # returns the min discount
     def apply_discount(self, basket: Basket, products: set[Product]):
-        basket_save = basket.deep_copy()
-        best_price = basket.calc_price()
+        initial = basket.calc_price()
 
-        for discount in self.children:
-            next_basket = discount.apply_discount(basket.deep_copy(), products)
-            if next_basket.calc_price() > best_price:
-                best_price = next_basket.calc_price()
-                basket_save = next_basket.deep_copy()
+        basket1 = basket.deep_copy()
+        basket2 = basket.deep_copy()
 
-        return basket_save
+        basket1 = self.children[0].apply_discount(basket1, products)
+        price1 = basket1.calc_price()
+        basket2 = self.children[1].apply_discount(basket2, products)
+        price2 = basket2.calc_price()
+
+        if price1 == initial:
+            return basket2
+        elif price2 == initial:
+            return basket1
+        elif price1 > price2:
+            return basket1
+        else:
+            return basket2
+
 
     def __str__(self, indent):
         return f"{indent}Or connector:  \n{super().__str__(indent)} \n"
