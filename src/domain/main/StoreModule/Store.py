@@ -283,10 +283,10 @@ class Store(Base_db.Base):
                 return res
         return report("all rules are kept: Kfir is happy!", True)
 
-    def reserve_products(self, basket: Basket) -> bool:
-        res = self.enforce_purchase_rules(basket)
+    def reserve_products(self, basket: Basket) -> Response[bool]:
+        res = self.check_rules(basket)
         if not res.success:
-            return False
+            return res
 
         reserved: dict[str, int] = dict()
         is_reservation_succeed = True
@@ -298,7 +298,7 @@ class Store(Base_db.Base):
                 break
         if not is_reservation_succeed:
             self.refill(reserved)
-        return is_reservation_succeed
+        return Response(is_reservation_succeed)
 
     def get_products(self, predicate) -> list[Product]:
         return list(filter(predicate, self.products))
