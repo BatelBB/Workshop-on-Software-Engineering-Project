@@ -63,8 +63,8 @@ def buy_product(store_name: str, product_name: str):
 @bp.get('/cart')
 def view_cart():
     domain = get_domain_adapter()
+    resp = domain.get_cart_price()  # important b4 get_cart so if a rule will fail the failiure msg will be saved in the item
     cart = domain.get_cart()
-    resp = domain.get_cart_price()
     return render_template("buying/view_cart.html", cart=cart, cart_price=resp)
 
 

@@ -21,6 +21,7 @@
             <h2 class="text-center">
                 Total Cart Price: <span class="badge bg-secondary">{{ cart_price | round(2) }}₪</span>
                 <p class="lead">Looks good?</p>
+                <p class="text-danger">Notice: If one rule is broken in a store, clicking here will not purchase anything from that store in the current transaction.</p>
                 <a href="{{ url_for('buying.checkout_cart') }}" class="btn btn-primary">Proceed to checkout</a>
             </h2>
         </div>
@@ -43,6 +44,9 @@
                             <div class="card-body">
                                 <h5 class="card-title">{{ product_name }}</h5>
                                 <p class="card-text">Price of {{ amount }} after discount: <span class="badge bg-secondary">{{ product.discount_price * amount | round(2) }}₪</span></p>
+                                {% if product.rule_msg %}
+                                    <p class="card-text text-danger">{{ product.rule_msg }}</p>
+                                {% endif %}
                                 <a href="{{ url_for('buying.buy_product', store_name=store_name, product_name=product_name) }}" class="btn btn-outline-primary">Change amount or remove</a>
                             {% endwith %}
                             </div>

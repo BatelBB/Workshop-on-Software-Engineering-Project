@@ -862,7 +862,7 @@ class Market(IService):
             if response2.success:
                 store = response2.result
                 res = store.check_rules(basket)
-                if res:
+                if res.success and res.result:
                     cart_price += store.calculate_basket_price(basket)
             else:
                 return response2.success
@@ -880,7 +880,7 @@ class Market(IService):
             for store_name, basket in baskets.items():
                 store = self.stores.get(store_name)
                 res = store.reserve_products(basket)
-                if res:
+                if res.success and res.result:
                     successful_store_purchases.append(store_name)
             resp = self.get_cart_price(baskets)
             payment_succeeded = self.pay(resp, payment_details, holder, user_id)

@@ -24,6 +24,7 @@ class Item(Base_db.Base):
         self.quantity = quantity
         self.price = price
         self.discount_price = price
+        self.rule_msg = ""
 
     def __str__(self):
         return f'Product: \'{self.product_name}\', Quantity: {self.quantity}, Price: {self.price}, Discount-Price: {self.discount_price}'
@@ -135,3 +136,7 @@ class Basket:
             new_item.discount_price = item.discount_price
             new_basket.add_item(new_item)
         return new_basket
+
+    def restore_rule_msgs(self):
+        for i in self.items:
+            i.rule_msg = ""

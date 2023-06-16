@@ -128,6 +128,9 @@ class Store(Base_db.Base):
     def __hash__(self):
         return hash(self.name)
     def update_product_discounts(self):
+        for p in self.products:
+            p.discount_price = p.price
+
         with self.discount_lock:
             for p in self.products:
                 self.discounts.set_disconted_price_in_product(p)
@@ -283,10 +286,10 @@ class Store(Base_db.Base):
                 return res
         return report("all rules are kept: Kfir is happy!", True)
 
-    def reserve_products(self, basket: Basket) -> bool:
-        res = self.enforce_purchase_rules(basket)
+    def reserve_products(self, basket: Basket) -> Response[bool]:
+        res = self.check_rules(basket)
         if not res.success:
-            return False
+            return res
 
         reserved: dict[str, int] = dict()
         is_reservation_succeed = True
@@ -298,7 +301,7 @@ class Store(Base_db.Base):
                 break
         if not is_reservation_succeed:
             self.refill(reserved)
-        return is_reservation_succeed
+        return Response(is_reservation_succeed)
 
     def get_products(self, predicate) -> list[Product]:
         return list(filter(predicate, self.products))
@@ -328,6 +331,7 @@ class Store(Base_db.Base):
             i.discount_price = i.price
 
     def check_rules(self, basket: Basket) -> Response[bool]:
+        basket.restore_rule_msgs()
         return self.enforce_purchase_rules(basket)
 
     def calculate_basket_price(self, basket: Basket) -> float:
