@@ -12,6 +12,7 @@ class ProductDto:
     keywords: str
     store_name: str
     isBid: bool
+    discounted_price: float
 
 
 @dataclass
