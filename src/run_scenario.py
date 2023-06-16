@@ -3,7 +3,6 @@ from os.path import exists
 from json import load
 from typing import Callable
 
-from tqdm import tqdm
 
 from domain.main.Market import Market
 

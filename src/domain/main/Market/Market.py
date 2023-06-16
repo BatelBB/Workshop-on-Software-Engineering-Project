@@ -55,6 +55,8 @@ class Market(IService):
         self.init_db()
         self.init_admin()
 
+        self.stores = Store.load_all_stores()
+
     def init_db(self):
         Base.metadata.reflect(engine)
         classes_for_db = (User, Item, Store, Product, Appointment)

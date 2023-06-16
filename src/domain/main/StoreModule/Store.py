@@ -3,6 +3,7 @@ import threading
 from multipledispatch import dispatch
 from sqlalchemy import Column, String
 
+from domain.main.Utils.ConcurrentDictionary import ConcurrentDictionary
 from src.domain.main.StoreModule.DIscounts.Discount_Connectors.AddDiscounts import AddDiscounts
 from src.domain.main.StoreModule.DIscounts.Discount_Connectors.MaxDiscounts import MaxDiscounts
 from src.domain.main.StoreModule.DIscounts.Discount_Connectors.OrDiscounts import OrDiscounts
@@ -47,6 +48,8 @@ class ProductQuantity:
             self.quantity = new_quantity
 
 
+
+
 class Store(Base_db.Base):
 
     __tablename__ = 'stores'
@@ -85,6 +88,27 @@ class Store(Base_db.Base):
                 pass
             return store
         return None
+
+    @staticmethod
+    def load_all_stores():
+        q = session_DB.query(Store).all()
+        exist = len(q) > 0
+        if exist:
+            stores_dict = ConcurrentDictionary()
+            for record in q:
+                store = Store(record.name)
+                for p in Product.load_products_of(record.name):
+                    store.add(p, p.quantity)
+                for purchase in q[0].purchase_history_str.split('#'):
+                    store.purchase_history.append(purchase)
+                try:
+                    store.purchase_history.remove('')  # drop default db value
+                except ValueError:
+                    pass
+
+                stores_dict.insert(record.name, store)
+            return stores_dict
+        return ConcurrentDictionary()
 
     @staticmethod
     def clear_db():
