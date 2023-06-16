@@ -66,10 +66,12 @@ def internal_error(error):
     return render_template('500.html'), 500
 
 
-socketio = init_realtime(app)
+# socketio = init_realtime(app)
 
 
 
 def start_app():
     print('start_app')
-    socketio.run(app, port=80)
+    # socketio.run(app, port=80)
+    app.run(port=80)
+    
