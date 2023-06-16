@@ -50,7 +50,7 @@ def buy_product(store_name: str, product_name: str):
                                                             form.amount.data - (amount or 0))
         if update_basket.success:
             flash(
-                f"You have succesfully updated your basket in store {store_name}: {form.amount.data} of {product_name}",
+                f"You have successfully updated your basket in store {store_name}: {form.amount.data} of {product_name}",
                 category="success")
             return redirect(url_for('buying.view_store', name=store_name))
         else:
@@ -109,8 +109,6 @@ def buy_with_card():
         else:
             flash(response.description, category='danger')
     return render_template('buying/buy_with_card.html', form=form, fields=fields)
-
-
 
 
 class BidProduct(FlaskForm):
