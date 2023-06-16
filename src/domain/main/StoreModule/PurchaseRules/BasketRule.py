@@ -1,11 +1,18 @@
+from sqlalchemy import Column, Float, String
+
+from domain.main.Utils import Base_db
 from src.domain.main.StoreModule.PurchaseRules.IRule import IRule
 from src.domain.main.UserModule.Basket import Basket
 from src.domain.main.Utils.Logger import report_error, report
 from src.domain.main.Utils.Response import Response
 
 
-class BasketRule(IRule):
-    min_price: float
+class BasketRule(IRule, Base_db.Base):
+    __tablename__ = 'basket_rules'
+    __table_args__ = {'extend_existing': True}
+    id = Column("id", Float, primary_key=True)
+    store_name = Column("store_name", String, primary_key=True)
+    min_price = Column("min_price", Float, primary_key=True)
 
     def __init__(self, min_price: float):
         super().__init__()

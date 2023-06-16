@@ -75,6 +75,7 @@ if __name__ == '__main__':
     # s1.open_store("s1")
     # s1.add_product("s1", "p1", "c1", 100, 12)
     # s1.add_purchase_simple_rule("s1", "p1", "<", 3)
+    # s1.add_basket_purchase_rule("s1", 123)
 
     res = s1.get_purchase_rules("s1")
 
