@@ -4,7 +4,6 @@ import unittest
 
 class Registering(unittest.TestCase):
     app: Proxy = Proxy()
-    service_admin = None
 
     @classmethod
     def setUpClass(cls) -> None:
@@ -13,10 +12,9 @@ class Registering(unittest.TestCase):
         cls.empty_password = ("user3", "")
         cls.taken_username = ("usr1", "45sdfcgs#$%1")
         cls.admin_username = ("Kfir", "45sdfgs#$%1")
-        cls.service_admin = ('Kfir', 'Kfir')
 
     def setUp(self) -> None:
-        self.app.enter_market()
+        self.app.load_configuration()
 
     def tearDown(self) -> None:
         self.app.exit_market()
@@ -25,7 +23,6 @@ class Registering(unittest.TestCase):
     @classmethod
     def tearDownClass(cls) -> None:
         cls.app.enter_market()
-        cls.app.login(*cls.service_admin)
         cls.app.shutdown()
 
     def test_registering_happy(self):

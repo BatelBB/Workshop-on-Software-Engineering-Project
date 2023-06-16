@@ -7,7 +7,6 @@ from domain.main.Market.Permissions import Permission
 
 class RemoveManager(unittest.TestCase):
     app: Proxy = Proxy()
-    service_admin = None
 
     @classmethod
     def setUpClass(cls) -> None:
@@ -21,14 +20,10 @@ class RemoveManager(unittest.TestCase):
         cls.store_owner1_2 = ("usr8", "password")
         cls.store_owner2_2 = ("usr9", "password")
         cls.registered_user = ("user5", "password")
-        cls.service_admin = ('Kfir', 'Kfir')
-        cls.provision_path = 'src.domain.main.ExternalServices.Provision.ProvisionServiceAdapter' \
-                             '.provisionService.getDelivery'
-        cls.payment_pay_path = 'src.domain.main.ExternalServices.Payment.ExternalPaymentServices' \
-                               '.ExternalPaymentServiceReal.payWIthCard'
 
     def setUp(self) -> None:
         self.app.enter_market()
+        self.app.load_configuration()
         self.app.register(*self.store_founder1)
         self.app.register(*self.store_founder2)
         self.app.register(*self.store_owner1)
@@ -47,7 +42,6 @@ class RemoveManager(unittest.TestCase):
     @classmethod
     def tearDownClass(cls) -> None:
         cls.app.enter_market()
-        cls.app.login(*cls.service_admin)
         cls.app.shutdown()
 
     def test_product_added_by_manager_is_in_store_after_manager_removed(self):
@@ -56,8 +50,8 @@ class RemoveManager(unittest.TestCase):
         self.assertEqual(1, len(products), "error: didn't get 1 stores that has the products while the market has 1")
 
     def test_fail_to_retrieve_purchase_history(self):
-        with patch(self.provision_path, return_value=True), \
-                patch(self.payment_pay_path, return_value=True):
+        with patch(self.app.provision_path, return_value=True), \
+                patch(self.app.payment_pay_path, return_value=True):
 
             self.set_store_and_appointments()
             self.app.add_to_cart("bakery", "bread", 10)
@@ -198,8 +192,8 @@ class RemoveManager(unittest.TestCase):
         self.assertNotIn("bread", r.result, "error: a bid found for a bread after a removed manager started a bid")
 
     def test_no_need_to_approve_a_bid(self):
-        with patch(self.provision_path, return_value=True) as delivery_mock, \
-                patch(self.payment_pay_path, return_value=True) as payment_mock:
+        with patch(self.app.provision_path, return_value=True) as delivery_mock, \
+                patch(self.app.payment_pay_path, return_value=True) as payment_mock:
 
             self.set_store_and_appointments()
             self.app.login(*self.store_founder1)

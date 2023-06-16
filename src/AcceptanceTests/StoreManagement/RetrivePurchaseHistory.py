@@ -5,23 +5,16 @@ from unittest.mock import patch
 
 class PurchaseCart(unittest.TestCase):
     app: Proxy = Proxy()
-    service_admin = None
 
     @classmethod
     def setUpClass(cls) -> None:
         cls.store_founder1 = ("usr1", "password")
         cls.store_founder2 = ("usr2", "password")
         cls.registered_buyer = ("usr3", "password")
-        cls.service_admin = ('Kfir', 'Kfir')
-        cls.provision_path = 'src.domain.main.ExternalServices.Provision.ProvisionServiceAdapter' \
-                             '.provisionService.getDelivery'
-        cls.payment_pay_path = 'src.domain.main.ExternalServices.Payment.ExternalPaymentServices' \
-                               '.ExternalPaymentServiceReal.payWIthCard'
-        cls.payment_refund_path = 'src.domain.main.ExternalServices.Payment.ExternalPaymentServices' \
-                                  '.ExternalPaymentServiceReal.refundToCard'
 
     def setUp(self) -> None:
         self.app.enter_market()
+        self.app.load_configuration()
         self.app.register(*self.store_founder1)
         self.app.register(*self.store_founder2)
         self.app.register(*self.registered_buyer)
@@ -35,7 +28,6 @@ class PurchaseCart(unittest.TestCase):
     @classmethod
     def tearDownClass(cls) -> None:
         cls.app.enter_market()
-        cls.app.login(*cls.service_admin)
         cls.app.shutdown()
 
     def test_retrieve_purchase_history_happy(self):
@@ -89,7 +81,7 @@ class PurchaseCart(unittest.TestCase):
                       "error: the admin can't see the purchase history")
 
     def test_retrieve_purchase_history_bid_purchase(self):
-        with patch(self.provision_path, return_value=True), patch(self.payment_pay_path, return_value=True):
+        with patch(self.app.provision_path, return_value=True), patch(self.app.payment_pay_path, return_value=True):
 
             self.set_stores()
             self.app.login(*self.store_founder1)
@@ -109,7 +101,7 @@ class PurchaseCart(unittest.TestCase):
                           "error: the founder can't see the purchase history")
 
     def test_retrieve_purchase_history_removed_product_before_purchase(self):
-        with patch(self.provision_path, return_value=True), patch(self.payment_pay_path, return_value=True):
+        with patch(self.app.provision_path, return_value=True), patch(self.app.payment_pay_path, return_value=True):
 
             self.set_stores()
             self.set_cart()
@@ -170,7 +162,7 @@ class PurchaseCart(unittest.TestCase):
         self.app.logout()
 
     def buy_cart(self):
-        with patch(self.provision_path, return_value=True), patch(self.payment_pay_path, return_value=True):
+        with patch(self.app.provision_path, return_value=True), patch(self.app.payment_pay_path, return_value=True):
             self.app.login(*self.registered_buyer)
             r = self.app.purchase_shopping_cart("card", ["123", "123", "12/6588"],
                                                 "ben-gurion", "1234", "beer sheva", "israel")

@@ -4,7 +4,6 @@ import unittest
 
 class ChangeManagerPermissions(unittest.TestCase):
     app: Proxy = Proxy()
-    service_admin = None
 
     @classmethod
     def setUpClass(cls) -> None:
@@ -12,10 +11,10 @@ class ChangeManagerPermissions(unittest.TestCase):
         cls.happy_user2 = ("usr2", "password")
         cls.happy_user3 = ("usr3", "45sdfgs#$%1")
         cls.not_registered_user = ("usr4", "45sdfgs#$%1")
-        cls.service_admin = ('Kfir', 'Kfir')
 
     def setUp(self) -> None:
         self.app.enter_market()
+        self.app.load_configuration()
         self.app.register(*self.happy_user1)
         self.app.register(*self.happy_user2)
         self.app.register(*self.happy_user3)
@@ -27,5 +26,4 @@ class ChangeManagerPermissions(unittest.TestCase):
     @classmethod
     def tearDownClass(cls) -> None:
         cls.app.enter_market()
-        cls.app.login(*cls.service_admin)
         cls.app.shutdown()

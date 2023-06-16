@@ -4,16 +4,15 @@ import unittest
 
 class UpdateStoreInventory(unittest.TestCase):
     app: Proxy = Proxy()
-    service_admin = None
 
     @classmethod
     def setUpClass(cls) -> None:
-        cls.store_owner1 = ("usr11", "password")
-        cls.service_admin = ('Kfir', 'Kfir')
+        cls.store_founder = ("usr11", "password")
 
     def setUp(self) -> None:
         self.app.enter_market()
-        self.app.register(*self.store_owner1)
+        self.app.load_configuration()
+        self.app.register(*self.store_founder)
 
     def tearDown(self) -> None:
         self.app.exit_market()
@@ -22,11 +21,10 @@ class UpdateStoreInventory(unittest.TestCase):
     @classmethod
     def tearDownClass(cls) -> None:
         cls.app.enter_market()
-        cls.app.login(*cls.service_admin)
         cls.app.shutdown()
 
     def test_owner_add_products_to_store_happy(self):
-        self.app.login(*self.store_owner1)
+        self.app.login(*self.store_founder)
         self.app.open_store("bakery")
         r = self.app.add_product("bakery", "bread", "1", 10, 15, ["basic", "x"])
         self.assertTrue(r.success, "error: add product action failed")
@@ -40,7 +38,7 @@ class UpdateStoreInventory(unittest.TestCase):
 
     def test_owner_add_products_that_already_existed(self):
         self.set_stores()
-        self.app.login(*self.store_owner1)
+        self.app.login(*self.store_founder)
         r = self.app.add_product("bakery", "bread", "5", 8, 2, ["yy", "zz"])
         self.assertFalse(r.success, "error: add product action succeeded")
         products = self.app.get_products_by_name("bread").result
@@ -55,7 +53,7 @@ class UpdateStoreInventory(unittest.TestCase):
         self.app.logout()
 
     def test_owner_add_product_with_non_positive_price(self):
-        self.app.login(*self.store_owner1)
+        self.app.login(*self.store_founder)
         self.app.open_store("bakery")
         r = self.app.add_product("bakery", "bread", "1", -5, 2, ["yy", "zz"])
         self.assertFalse(r.success, "error: add product action succeeded")
@@ -69,7 +67,7 @@ class UpdateStoreInventory(unittest.TestCase):
         self.app.logout()
 
     def test_owner_add_product_with_negative_quantity(self):
-        self.app.login(*self.store_owner1)
+        self.app.login(*self.store_founder)
         self.app.open_store("bakery")
         r = self.app.add_product("bakery", "bread", "1", 5, -8, ["yy", "zz"])
         self.assertFalse(r.success, "error: add product action succeeded")
@@ -79,7 +77,7 @@ class UpdateStoreInventory(unittest.TestCase):
 
     def test_owner_remove_product(self):
         self.set_stores()
-        self.app.login(*self.store_owner1)
+        self.app.login(*self.store_founder)
         r = self.app.remove_product("bakery", "bread")
         self.assertTrue(r.success, "error: remove product action failed")
         products = self.app.get_products_by_name("bread").result
@@ -88,14 +86,14 @@ class UpdateStoreInventory(unittest.TestCase):
 
     def test_owner_remove_product_not_existed(self):
         self.set_stores()
-        self.app.login(*self.store_owner1)
+        self.app.login(*self.store_founder)
         r = self.app.remove_product("bakery", "xxx")
         self.assertFalse(r.success, "error: remove product action succeeded")
         self.app.logout()
 
     def test_owner_update_product_quantity_happy(self):
         self.set_stores()
-        self.app.login(*self.store_owner1)
+        self.app.login(*self.store_founder)
         r = self.app.update_product_quantity("bakery", "bread", 100)
         self.assertTrue(r.success, "error: update product quantity action failed")
         products = self.app.get_store("bakery").result
@@ -109,7 +107,7 @@ class UpdateStoreInventory(unittest.TestCase):
 
     def test_owner_update_product_quantity_illegal_quantity(self):
         self.set_stores()
-        self.app.login(*self.store_owner1)
+        self.app.login(*self.store_founder)
         r = self.app.update_product_quantity("bakery", "bread", -5)
         self.assertFalse(r.success, "error: update product quantity action succeeded")
         products = self.app.get_store("bakery").result
@@ -123,7 +121,7 @@ class UpdateStoreInventory(unittest.TestCase):
 
     def test_owner_change_product_name(self):
         self.set_stores()
-        self.app.login(*self.store_owner1)
+        self.app.login(*self.store_founder)
         r = self.app.change_product_name("bakery", "bread", "new_bread")
         self.assertTrue(r.success, "error: change product name action failed")
         products = self.app.get_products_by_name("bread").result
@@ -140,7 +138,7 @@ class UpdateStoreInventory(unittest.TestCase):
 
     def test_owner_change_product_price(self):
         self.set_stores()
-        self.app.login(*self.store_owner1)
+        self.app.login(*self.store_founder)
         r = self.app.change_product_price("bakery", 10, 20)
         self.assertTrue(r.success, "error: change product price action failed")
         products = self.app.get_products_by_name("bread").result
@@ -155,7 +153,7 @@ class UpdateStoreInventory(unittest.TestCase):
 
     def test_owner_change_product_price_to_non_positive_price(self):
         self.set_stores()
-        self.app.login(*self.store_owner1)
+        self.app.login(*self.store_founder)
         r = self.app.change_product_price("bakery", 10, -5)
         self.assertFalse(r.success, "error: change product price action succeeded")
         products = self.app.get_products_by_name("bread").result
@@ -169,7 +167,7 @@ class UpdateStoreInventory(unittest.TestCase):
         self.app.logout()
 
     def set_stores(self):
-        self.app.login(*self.store_owner1)
+        self.app.login(*self.store_founder)
         self.app.open_store("bakery")
         self.app.add_product("bakery", "bread", "1", 10, 15, ["basic", "x"])
         self.app.add_product("bakery", "pita", "1", 5, 20, ["basic", "y"])

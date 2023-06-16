@@ -4,7 +4,6 @@ import unittest
 
 class CloseStore(unittest.TestCase):
     app: Proxy = Proxy()
-    service_admin = None
 
     @classmethod
     def setUpClass(cls) -> None:
@@ -15,6 +14,7 @@ class CloseStore(unittest.TestCase):
 
     def setUp(self) -> None:
         self.app.enter_market()
+        self.app.load_configuration()
         self.app.register(*self.store_founder1)
         self.app.register(*self.store_founder2)
         self.app.register(*self.registered_user)
@@ -26,7 +26,6 @@ class CloseStore(unittest.TestCase):
     @classmethod
     def tearDownClass(cls) -> None:
         cls.app.enter_market()
-        cls.app.login(*cls.service_admin)
         cls.app.shutdown()
 
     def test_close_store_happy(self):

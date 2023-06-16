@@ -7,7 +7,6 @@ from domain.main.Market.Permissions import Permission
 
 class AppointOwner(unittest.TestCase):
     app: Proxy = Proxy()
-    service_admin = None
 
     @classmethod
     def setUpClass(cls) -> None:
@@ -21,14 +20,10 @@ class AppointOwner(unittest.TestCase):
         cls.store_owner1_2 = ("usr8", "password")
         cls.store_owner2_2 = ("usr9", "password")
         cls.registered_user = ("user5", "password")
-        cls.service_admin = ('Kfir', 'Kfir')
-        cls.provision_path = 'src.domain.main.ExternalServices.Provision.ProvisionServiceAdapter' \
-                             '.provisionService.getDelivery'
-        cls.payment_pay_path = 'src.domain.main.ExternalServices.Payment.ExternalPaymentServices' \
-                               '.ExternalPaymentServiceReal.payWIthCard'
 
     def setUp(self) -> None:
         self.app.enter_market()
+        self.app.load_configuration()
         self.app.register(*self.store_founder1)
         self.app.register(*self.store_founder2)
         self.app.register(*self.store_owner1)
@@ -48,7 +43,6 @@ class AppointOwner(unittest.TestCase):
     @classmethod
     def tearDownClass(cls) -> None:
         cls.app.enter_market()
-        cls.app.login(*cls.service_admin)
         cls.app.shutdown()
 
     def test_appoint_owner_by_founder(self):
@@ -235,8 +229,8 @@ class AppointOwner(unittest.TestCase):
 
     # permissions tests #
     def test_retrieve_purchase_history(self):
-        with patch(self.provision_path, return_value=True), \
-                patch(self.payment_pay_path, return_value=True):
+        with patch(self.app.provision_path, return_value=True), \
+                patch(self.app.payment_pay_path, return_value=True):
             self.set_owner_appointments()
             self.app.add_to_cart("bakery", "bread", 10)
             self.app.purchase_shopping_cart("card", ["123", "123", "12/6588"],
@@ -416,8 +410,8 @@ class AppointOwner(unittest.TestCase):
         self.assertEqual(10.5, r.result["bread"])
 
     def test_approve_a_bid(self):
-        with patch(self.provision_path, return_value=True) as delivery_mock, \
-                patch(self.payment_pay_path, return_value=True) as payment_mock:
+        with patch(self.app.provision_path, return_value=True) as delivery_mock, \
+                patch(self.app.payment_pay_path, return_value=True) as payment_mock:
             self.set_owner_appointments()
             self.app.login(*self.store_owner1)
             r = self.app.start_bid("bakery", "bread")

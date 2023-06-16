@@ -5,20 +5,15 @@ from Service.bridge.proxy import Proxy
 
 class AppointOwner(unittest.TestCase):
     app: Proxy = Proxy()
-    service_admin = None
 
     @classmethod
     def setUpClass(cls) -> None:
         cls.store_founder1 = ("usr1", "password")
         cls.registered_user = ("usr2", "password")
-        cls.service_admin = ('Kfir', 'Kfir')
-        cls.provision_path = 'src.domain.main.ExternalServices.Provision.ProvisionServiceAdapter' \
-                             '.provisionService.getDelivery'
-        cls.payment_pay_path = 'src.domain.main.ExternalServices.Payment.ExternalPaymentServices' \
-                               '.ExternalPaymentServiceReal.payWIthCard'
 
     def setUp(self) -> None:
         self.app.enter_market()
+        self.app.load_configuration()
         self.app.register(*self.store_founder1)
         self.app.register(*self.registered_user)
         self.set_stores_and_bids()
@@ -30,7 +25,6 @@ class AppointOwner(unittest.TestCase):
     @classmethod
     def tearDownClass(cls) -> None:
         cls.app.enter_market()
-        cls.app.login(*cls.service_admin)
         cls.app.shutdown()
 
     def test_search_for_a_bid_happy(self):
@@ -84,7 +78,7 @@ class AppointOwner(unittest.TestCase):
         self.assertEqual(0, bids["pita"])
 
     def test_search_for_a_bid_after_bid_finished(self):
-        with patch(self.provision_path, return_value=True), patch(self.payment_pay_path, return_value=True):
+        with patch(self.app.provision_path, return_value=True), patch(self.app.payment_pay_path, return_value=True):
             self.app.login(*self.registered_user)
             self.app.purchase_with_non_immediate_policy("bakery", "bread", "card", ["123", "123", "12/6588"],
                                                         "ben-gurion", "1234", 15.5, "beer sheva", "israel")

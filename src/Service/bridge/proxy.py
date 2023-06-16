@@ -6,21 +6,20 @@ from Service.bridge.real import Real
 
 class Proxy(Bridge):
     real: Real
-    first_entrance : bool
+    first_entrance: bool
 
     def __init__(self):
         self.real = Real()
         self.system_admin = ('Kfir', 'Kfir')
-        self.first_entrance = True
+        self.provision_path = 'src.domain.main.ExternalServices.Provision.ProvisionServiceAdapter' \
+                              '.provisionService.getDelivery'
+        self.payment_pay_path = 'src.domain.main.ExternalServices.Payment.PaymentServices.PaymentService.pay'
+        self.payment_refund_path = 'src.domain.main.ExternalServices.Payment.PaymentServices.PaymentService.refund'
 
     ###################
     # general services
     def enter_market(self):
         self.real.enter_market()
-        if self.first_entrance:
-            self.real.login(*self.system_admin)
-            self.real.load_configuration()
-        self.first_entrance = False
 
     def exit_market(self) -> Response[bool]:
         return self.real.exit_market()
@@ -275,7 +274,14 @@ class Proxy(Bridge):
         return self.real.cancel_membership_of(member_name)
 
     def shutdown(self) -> Response[bool]:
+        self.real.login(*self.system_admin)
         return self.real.shutdown()
 
+    def load_configuration(self) -> None:
+        self.real.login(*self.system_admin)
+        self.real.load_configuration()
+        self.real.logout()
+
+    # clear db data and call init market (need to load configuration)
     def clear_data(self) -> None:
         self.real.clear_data()

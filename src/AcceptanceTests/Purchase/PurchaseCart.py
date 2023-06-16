@@ -5,7 +5,6 @@ from unittest.mock import patch
 
 class PurchaseCart(unittest.TestCase):
     app: Proxy = Proxy()
-    service_admin = None
 
     @classmethod
     def setUpClass(cls) -> None:
@@ -13,19 +12,10 @@ class PurchaseCart(unittest.TestCase):
         cls.store_owner2 = ("usr4", "password")
         cls.registered_buyer1 = ("usr2", "password")
         cls.registered_buyer2 = ("usr3", "password")
-        cls.service_admin = ('Kfir', 'Kfir')
-        cls.provision_path = 'src.domain.main.ExternalServices.Provision.ProvisionServiceAdapter' \
-                             '.provisionService.getDelivery'
-        cls.payment_pay_path = 'src.domain.main.ExternalServices.Payment.ExternalPaymentServices' \
-                               '.ExternalPaymentServiceReal.payWIthCard'
-        cls.payment_refund_path = 'src.domain.main.ExternalServices.Payment.ExternalPaymentServices' \
-                                  '.ExternalPaymentServiceReal.refundToCard'
-        cls.app.enter_market()
-        cls.app.real.session.login(*cls.service_admin)
-        cls.app.real.session.load_configuration()
 
     def setUp(self) -> None:
         self.app.enter_market()
+        self.app.load_configuration()
         self.app.register(*self.store_owner1)
         self.app.register(*self.store_owner2)
         self.app.register(*self.registered_buyer1)
@@ -38,12 +28,11 @@ class PurchaseCart(unittest.TestCase):
     @classmethod
     def tearDownClass(cls) -> None:
         cls.app.enter_market()
-        cls.app.login(*cls.service_admin)
         cls.app.shutdown()
 
     def test_member_purchase_cart_happy(self):
-        with patch(self.provision_path, return_value=True) as delivery_mock, \
-                patch(self.payment_pay_path, return_value=True) as payment_mock:
+        with patch(self.app.provision_path, return_value=True) as delivery_mock, \
+                patch(self.app.payment_pay_path, return_value=True) as payment_mock:
             self.set_stores()
             self.set_cart()
             self.app.login(*self.registered_buyer1)
@@ -58,8 +47,8 @@ class PurchaseCart(unittest.TestCase):
             delivery_mock.assert_called_once()
 
     def test_guest_purchase_cart_happy(self):
-        with patch(self.provision_path, return_value=True) as delivery_mock, \
-                patch(self.payment_pay_path, return_value=True) as payment_mock:
+        with patch(self.app.provision_path, return_value=True) as delivery_mock, \
+                patch(self.app.payment_pay_path, return_value=True) as payment_mock:
             self.set_stores()
             self.app.add_to_cart("bakery", "bread", 5)
             self.app.add_to_cart("bakery", "pita", 10)
@@ -76,8 +65,8 @@ class PurchaseCart(unittest.TestCase):
             delivery_mock.assert_called_once()
 
     def test_purchase_empty_cart(self):
-        with patch(self.provision_path, return_value=True) as delivery_mock, \
-                patch(self.payment_pay_path, return_value=True) as payment_mock:
+        with patch(self.app.provision_path, return_value=True) as delivery_mock, \
+                patch(self.app.payment_pay_path, return_value=True) as payment_mock:
             self.app.login(*self.registered_buyer1)
             cart_before = self.app.show_cart().result
             r = self.app.purchase_shopping_cart("card", ["123", "123", "12/6588"],
@@ -91,8 +80,8 @@ class PurchaseCart(unittest.TestCase):
             delivery_mock.assert_not_called()
 
     def test_purchase_while_product_quantity_in_store_is_insufficient_due_to_owner_removing_quantity(self):
-        with patch(self.provision_path, return_value=True) as delivery_mock, \
-                patch(self.payment_pay_path, return_value=True) as payment_mock:
+        with patch(self.app.provision_path, return_value=True) as delivery_mock, \
+                patch(self.app.payment_pay_path, return_value=True) as payment_mock:
             self.set_stores()
             self.set_cart()
             self.app.login(*self.store_owner2)
@@ -111,8 +100,8 @@ class PurchaseCart(unittest.TestCase):
             delivery_mock.assert_not_called()
 
     def test_purchase_products_while_after_owner_removing_product(self):
-        with patch(self.provision_path, return_value=True) as delivery_mock, \
-                patch(self.payment_pay_path, return_value=True) as payment_mock:
+        with patch(self.app.provision_path, return_value=True) as delivery_mock, \
+                patch(self.app.payment_pay_path, return_value=True) as payment_mock:
             self.set_stores()
             self.set_cart()
             self.app.login(*self.store_owner2)
@@ -131,8 +120,8 @@ class PurchaseCart(unittest.TestCase):
             delivery_mock.assert_not_called()
 
     def test_purchase_while_product_quantity_in_store_is_insufficient_due_to_owner_closing_the_store(self):
-        with patch(self.provision_path, return_value=True) as delivery_mock, \
-                patch(self.payment_pay_path, return_value=True) as payment_mock:
+        with patch(self.app.provision_path, return_value=True) as delivery_mock, \
+                patch(self.app.payment_pay_path, return_value=True) as payment_mock:
             self.set_stores()
             self.set_cart()
             self.app.login(*self.store_owner2)
@@ -152,8 +141,8 @@ class PurchaseCart(unittest.TestCase):
 
     def test_purchase_while_product_quantity_in_store_is_insufficient_due_to_another_purchase(self):
         # first to pay first to take policy test
-        with patch(self.provision_path, return_value=True) as delivery_mock, \
-                patch(self.payment_pay_path, return_value=True) as payment_mock:
+        with patch(self.app.provision_path, return_value=True) as delivery_mock, \
+                patch(self.app.payment_pay_path, return_value=True) as payment_mock:
             self.set_stores()
             self.set_cart()
             self.app.login(*self.registered_buyer2)
@@ -175,8 +164,8 @@ class PurchaseCart(unittest.TestCase):
             delivery_mock.assert_called_once()
 
     def test_purchase_with_invalid_card(self):
-        with patch(self.provision_path, return_value=True) as delivery_mock, \
-                patch(self.payment_pay_path, return_value=False) as payment_mock:
+        with patch(self.app.provision_path, return_value=True) as delivery_mock, \
+                patch(self.app.payment_pay_path, return_value=False) as payment_mock:
             self.set_stores()
             self.set_cart()
             self.app.login(*self.registered_buyer1)
@@ -192,8 +181,8 @@ class PurchaseCart(unittest.TestCase):
             delivery_mock.assert_not_called()
 
     def test_purchase_when_payment_fails(self):
-        with patch(self.provision_path, return_value=True) as delivery_mock, \
-                patch(self.payment_pay_path, return_value=False) as payment_mock:
+        with patch(self.app.provision_path, return_value=True) as delivery_mock, \
+                patch(self.app.payment_pay_path, return_value=False) as payment_mock:
             self.set_stores()
             self.set_cart()
             self.app.login(*self.registered_buyer1)
@@ -209,9 +198,9 @@ class PurchaseCart(unittest.TestCase):
             delivery_mock.assert_not_called()
 
     def test_purchase_when_shipping_fails(self):
-        with patch(self.provision_path, return_value=False) as delivery_mock, \
-                patch(self.payment_pay_path, return_value=True) as payment_mock, \
-                patch(self.payment_refund_path, return_value=True) as refund_mock:
+        with patch(self.app.provision_path, return_value=False) as delivery_mock, \
+                patch(self.app.payment_pay_path, return_value=True) as payment_mock, \
+                patch(self.app.payment_refund_path, return_value=True) as refund_mock:
             self.set_stores()
             self.set_cart()
             self.app.login(*self.registered_buyer1)
@@ -228,8 +217,8 @@ class PurchaseCart(unittest.TestCase):
             refund_mock.assert_called_once_with(560)
 
     def test_purchase_when_payment_and_delivery_fails(self):
-        with patch(self.provision_path, return_value=False) as delivery_mock, \
-                patch(self.payment_pay_path, return_value=False) as payment_mock:
+        with patch(self.app.provision_path, return_value=False) as delivery_mock, \
+                patch(self.app.payment_pay_path, return_value=False) as payment_mock:
             self.set_stores()
             self.set_cart()
             self.app.login(*self.registered_buyer1)
@@ -254,8 +243,8 @@ class PurchaseCart(unittest.TestCase):
         ...
 
     def test_purchase_after_product_name_changed(self):
-        with patch(self.provision_path, return_value=False) as delivery_mock, \
-                patch(self.payment_pay_path, return_value=False) as payment_mock:
+        with patch(self.app.provision_path, return_value=False) as delivery_mock, \
+                patch(self.app.payment_pay_path, return_value=False) as payment_mock:
             self.set_stores()
             self.set_cart()
             self.app.login(*self.s)

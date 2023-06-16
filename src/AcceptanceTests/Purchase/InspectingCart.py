@@ -4,17 +4,16 @@ import unittest
 
 class InspectingCart(unittest.TestCase):
     app: Proxy = Proxy()
-    service_admin = None
 
     @classmethod
     def setUpClass(cls) -> None:
         cls.store_founder1 = ("usr1", "password")
         cls.store_founder2 = ("usr444", "password")
         cls.registered_buyer = ("usr2", "password")
-        cls.service_admin = ('Kfir', 'Kfir')
 
     def setUp(self) -> None:
         self.app.enter_market()
+        self.app.load_configuration()
         self.app.register(*self.store_founder1)
         self.app.register(*self.store_founder2)
         self.app.register(*self.registered_buyer)
@@ -26,7 +25,6 @@ class InspectingCart(unittest.TestCase):
     @classmethod
     def tearDownClass(cls) -> None:
         cls.app.enter_market()
-        cls.app.login(*cls.service_admin)
         cls.app.shutdown()
 
     def test_member_inspecting_empty_cart(self):

@@ -4,17 +4,16 @@ import unittest
 
 class ReopenStore(unittest.TestCase):
     app: Proxy = Proxy()
-    service_admin = None
 
     @classmethod
     def setUpClass(cls) -> None:
         cls.store_owner1 = ("usr1", "password")
         cls.store_owner2 = ("usr2", "password")
         cls.registered_user = ("user33", "password")
-        cls.service_admin = ('Kfir', 'Kfir')
 
     def setUp(self) -> None:
         self.app.enter_market()
+        self.app.load_configuration()
         self.app.register(*self.store_owner1)
         self.app.register(*self.store_owner2)
         self.app.register(*self.registered_user)
@@ -26,7 +25,6 @@ class ReopenStore(unittest.TestCase):
     @classmethod
     def tearDownClass(cls) -> None:
         cls.app.enter_market()
-        cls.app.login(*cls.service_admin)
         cls.app.shutdown()
 
     def test_reopen_store_happy(self):

@@ -4,17 +4,16 @@ import unittest
 
 class Logout(unittest.TestCase):
     app: Proxy = Proxy()
-    service_admin = None
 
     @classmethod
     def setUpClass(cls) -> None:
         cls.registered_user1 = ("usr1", "password")
         cls.registered_user2 = ("usr222", "password")
         cls.not_registered_user = ("usr3", "password")
-        cls.service_admin = ('Kfir', 'Kfir')
 
     def setUp(self) -> None:
         self.app.enter_market()
+        self.app.load_configuration()
         self.app.register(*self.registered_user1)
         self.app.register(*self.registered_user2)
 
@@ -25,7 +24,6 @@ class Logout(unittest.TestCase):
     @classmethod
     def tearDownClass(cls) -> None:
         cls.app.enter_market()
-        cls.app.login(*cls.service_admin)
         cls.app.shutdown()
 
     def test_member_logout(self):

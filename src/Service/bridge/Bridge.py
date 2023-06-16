@@ -252,5 +252,9 @@ class Bridge(ABC):
         ...
 
     @abstractmethod
+    def load_configuration(self) -> None:
+        ...
+
+    @abstractmethod
     def clear_data(self) -> None:
         ...

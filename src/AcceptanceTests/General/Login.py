@@ -4,7 +4,6 @@ import unittest
 
 class Login(unittest.TestCase):
     app: Proxy = Proxy()
-    service_admin = None
 
     @classmethod
     def setUpClass(cls) -> None:
@@ -12,10 +11,10 @@ class Login(unittest.TestCase):
         cls.happy_user2 = ("usr22", "password")
         cls.happy_user3 = ("usr3", "45sdfgs#$%1")
         cls.not_registered_user = ("usr4", "45sdfgs#$%1")
-        cls.service_admin = ('Kfir', 'Kfir')
 
     def setUp(self) -> None:
         self.app.enter_market()
+        self.app.load_configuration()
         self.app.register(*self.happy_user1)
         self.app.register(*self.happy_user2)
         self.app.register(*self.happy_user3)
@@ -27,7 +26,6 @@ class Login(unittest.TestCase):
     @classmethod
     def tearDownClass(cls) -> None:
         cls.app.enter_market()
-        cls.app.login(*cls.service_admin)
         cls.app.shutdown()
 
     def test_login_happy(self):

@@ -214,8 +214,9 @@ class Real(Bridge):
     def shutdown(self) -> Response[bool]:
         return self.session.shutdown()
 
+    def load_configuration(self) -> None:
+        self.session.load_configuration()
+
     def clear_data(self) -> None:
         self.market.clear()
 
-    def load_configuration(self) -> None:
-        self.session.load_configuration()

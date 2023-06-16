@@ -4,7 +4,6 @@ import unittest
 
 class AddingToCart(unittest.TestCase):
     app: Proxy = Proxy()
-    service_admin = None
 
     @classmethod
     def setUpClass(cls) -> None:
@@ -12,10 +11,10 @@ class AddingToCart(unittest.TestCase):
         cls.store_owner2 = ("usr5", "password")
         cls.registered_buyer1 = ("usr2", "password")
         cls.registered_buyer2 = ("usr3", "45sdfgs#$%1")
-        cls.service_admin = ('Kfir', 'Kfir')
 
     def setUp(self) -> None:
         self.app.enter_market()
+        self.app.load_configuration()
         self.app.register(*self.store_owner1)
         self.app.register(*self.store_owner2)
         self.app.register(*self.registered_buyer1)
@@ -28,7 +27,6 @@ class AddingToCart(unittest.TestCase):
     @classmethod
     def tearDownClass(cls) -> None:
         cls.app.enter_market()
-        cls.app.login(*cls.service_admin)
         cls.app.shutdown()
 
     def test_member_adding_to_cart(self):
