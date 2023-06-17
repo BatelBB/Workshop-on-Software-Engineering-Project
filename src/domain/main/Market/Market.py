@@ -87,7 +87,7 @@ class Market(IService):
         return self.sessions.get(session_identifier)
 
     def has_a_role(self, username: str) -> bool:
-        for store, appointments in self.appointments.get_all():
+        for store, appointments in self.appointments.get_dict().items():
             for appointment in appointments:
                 if appointment.appointed_by == username or appointment.appointee == username:
                     return True
@@ -263,8 +263,8 @@ class Market(IService):
         return report_info(self.leave.__qualname__, f'{leaving_user} left session: {session_identifier}')
 
     def register(self, session_identifier: int, username: str, password: str, is_admin=False) -> Response[bool]:
-        if password == "":
-            return report_error(self.login.__qualname__, "Cannot register with empty password!")
+        if len(password) < 1:
+            return report_error(self.register.__qualname__, "Cannot register with empty password!")
         if self.find_user(username) is None:
             new_user = self.add_user(username, password, is_admin)
             if new_user is not None:
@@ -335,7 +335,7 @@ class Market(IService):
             else:
                 return report_error(self.remove_store.__qualname__,
                                     f'{actor} is not allowed to remove store {store_name}')
-        return report_error(self.remove_store.__qualname__, f'store {store_name} doesn\'t exist and can\'t be removed')
+        return report_error(self.remove_store.__qualname__, f'Store \'{store_name}\' does not exist')
 
     def get_all_stores(self, session_identifier: int) -> Response[list[Store] | bool]:
         actor = self.get_active_user(session_identifier)
@@ -520,9 +520,9 @@ class Market(IService):
         with self.approval_lock:
             actor = self.get_active_user(session_identifier)
             perms = self.permissions_of(session_identifier, store_name, actor.username)
-            if Permission.AppointOwner not in perms.result:
-                return report_error(self.appoint_owner.__qualname__,
-                                    f"{actor.username} does not have permissions to appoint owner")
+
+            if perms.result is None or Permission.AppointOwner not in perms.result:
+                return report_error(self.appoint_owner.__qualname__, f"{actor} does not has a permissions to appoint owner")
 
             store_dict = self.approval_list.get(store_name)
             if store_dict is None:
@@ -548,14 +548,17 @@ class Market(IService):
 
         if not perms.success:
             return perms
-        if Permission.AppointOwner not in perms.result:
-            return report_error(self.appoint_owner.__qualname__,
-                                f"{actor.username} does not have permissions to appoint owner")
+        if perms.result is None or Permission.AppointOwner not in perms.result:
+            return report_error(self.appoint_owner.__qualname__, f"{actor} does not has permissions to appoint owner")
 
         store = self.verify_registered_store(self.appoint_owner.__qualname__, store_name)
         if not store.success:
             return store
         owners = self.get_store_owners(session_identifier, store_name).result
+
+        if owners is None:
+            owners = []
+
         if appointee_name in owners:
             return report_error(self.appoint_owner.__qualname__, f"{appointee_name} is already owner of {store_name}")
 
@@ -583,10 +586,8 @@ class Market(IService):
                                f'\'{actor}\' {action} permission {get_permission_description(permission)} to \'{appointee}\'')
         return report_error(calling_method, f'\'{appointee}\' is not appointed by \'{actor}\'')
 
-    def add_permission(self, session_identifier: int, store: str, appointee: str, permission: Permission) -> Response[
-        bool]:
-        return self.set_permission(session_identifier, self.add_permission.__qualname__, store, appointee, permission,
-                                   'ADD')
+    def add_permission(self, session_identifier: int, store: str, appointee: str, permission: Permission) -> Response[bool]:
+        return self.set_permission(session_identifier, self.add_permission.__qualname__, store, appointee, permission,'ADD')
 
     def remove_permission(self, session_identifier: int, store: str, appointee: str, permission: Permission) -> \
             Response[bool]:
