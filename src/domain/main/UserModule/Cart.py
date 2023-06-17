@@ -1,6 +1,6 @@
 from functools import reduce
 
-from src.domain.main.Utils.Base_db import session_DB
+from DataLayer.DAL import DAL
 from src.domain.main.UserModule.Basket import Basket, Item
 
 
@@ -61,12 +61,10 @@ class Cart:
     @staticmethod
     def load_cart(username: str):
         cart = Cart(username)
-        records = session_DB.query(Item).filter(Item.username == username).all()
-        for r in records:
+        for r in DAL.retrieve_all(Item, lambda i: i.username == username):
             cart.add_item(r.store_name, r.product_name, r.price, r.quantity)
         return cart
 
     @staticmethod
     def clear_db():
-        session_DB.query(Item).delete()
-        session_DB.commit()
+        DAL.clear(Item)

@@ -29,6 +29,8 @@ src/workshop.db
 src/WorkshopLog.txt
 src/domain/test/UnitTests/workshop.db
 src/domain/test/UnitTests/WorkshopLog.txt
+src/AcceptanceTests/workshop.db
+src/AcceptanceTests/WorkshopLog.txt
 
 # PyInstaller
 #  Usually these files are written by a python script from a template

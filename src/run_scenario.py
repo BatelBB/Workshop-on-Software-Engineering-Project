@@ -7,7 +7,7 @@ from typing import Callable
 from domain.main.Market import Market
 
 if __name__ == '__main__':
-    file_path = "../States/scenario3.json"
+    file_path = "../States/scenario4.json"
     if exists('workshop.db'):
         choice = input("A db file exists. "
                        "I'll delete it an create a new one. "

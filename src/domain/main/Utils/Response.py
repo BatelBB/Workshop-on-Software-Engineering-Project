@@ -12,5 +12,5 @@ class Response(Generic[Result]):
         self.success = result is not None
 
     def __str__(self):
-        return f'Request result is: {self.result}\nDescription: {self.description}'
+        return f'Request result is: {self.result}.\nDescription: {self.description}'
 

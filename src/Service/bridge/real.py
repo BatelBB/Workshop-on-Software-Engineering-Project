@@ -209,6 +209,8 @@ class Real(Bridge):
     ###################
     # admin service
     def cancel_membership_of(self, member_name: str) -> Response[bool]:
+        admin_credentials = ('Kfir', 'Kfir')
+        self.session.login(*admin_credentials)
         return self.session.cancel_membership_of(member_name)
 
     def shutdown(self) -> Response[bool]:

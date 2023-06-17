@@ -40,7 +40,6 @@ class provisionService(IProvisionService):
         self.city = city
         self.country = country
 
-        report("set_info", True)
         return True
 
     def getDelivery(self) -> bool:

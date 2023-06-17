@@ -1,0 +1,20 @@
+{
+    "$schema": "./schema.json",
+    "version": "0.1",
+    "init": [
+            {"tag": "register_admin", "is_admin": true, "username": "u1", "password": "moshe"},
+            { "tag": "register", "username": "u2", "password": "marry had a little lambda" },
+            { "tag": "register", "username": "u3", "password": "blahblahblah" },
+            { "tag": "register", "username": "u4", "password": "AbraKadabra"},
+            { "tag": "register", "username": "u5", "password": "boo()" },
+            { "tag": "register", "username": "u6", "password": "foo()" },
+            { "tag": "login", "username": "u2", "encrypted_password": "marry had a little lambda" },
+            { "tag": "open_store", "store_name": "s1" },
+            { "tag": "add_product", "store_name": "s1", "product_name": "Bamba", "category": "Snacks",
+             "price": 30, "quantity": 20, "keywords": ["Snacks", "Peanuts"] },
+            { "tag": "appoint_manager", "appointee": "u3", "store": "s1" },
+            { "tag": "appoint_owner", "appointee": "u4", "store": "s1" },
+            { "tag": "appoint_owner", "appointee": "u5", "store": "s1" },
+            { "tag": "logout" }
+    ]
+}

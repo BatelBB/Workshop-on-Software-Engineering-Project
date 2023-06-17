@@ -2,11 +2,10 @@ from typing import Optional
 
 from sqlalchemy import Column, String, ForeignKey, Integer, Float
 
-from src.domain.main.Utils import Base_db
-from src.domain.main.Utils.Base_db import session_DB
+from DataLayer.DAL import DAL, Base
 
 
-class Product(Base_db.Base):
+class Product(Base):
 
     __tablename__ = 'products'
     __table_args__ = {'extend_existing': True}
@@ -33,37 +32,29 @@ class Product(Base_db.Base):
         self.discount_price = price
 
     @staticmethod
+    def create_instance_from_db_query(r):
+        p = Product(r.name, r.store_name, r.quantity, r.category, r.price, r.keywords_str.split('#'), r.rate)
+        try:
+            p.keywords.remove('')  # drop default DB value
+        except ValueError:
+            pass
+        return p
+
+    @staticmethod
     def load_products_of(store_name):
-        products = []
-        records = session_DB.query(Product).filter(Product.store_name == store_name).all()
-        for r in records:
-            products.append(Product(r.name, r.store_name, r.quantity, r.category, r.price, r.keywords_str.split('#'), r.rate))
-        return products
+        return DAL.load_all_by(Product, lambda r: r.store_name == store_name, Product.create_instance_from_db_query)
 
     @staticmethod
     def clear_db():
-        session_DB.query(Product).delete()
-        session_DB.commit()
+        DAL.clear(Product)
 
     @staticmethod
     def load_product(product_name, store_name):
-        q = session_DB.query(Product).filter(Product.name == product_name, Product.store_name == store_name).all()
-        exist = len(q) > 0
-        if exist:
-            row = q[0]
-            keywords = row.keywords_str.split('#')
-            try:
-                keywords.remove('') # drop default DB value
-            except ValueError:
-                pass
-            return Product(row.name, row.store_name, row.quantity, row.category, row.price, keywords, row.rate)
-        return None
+        return DAL.load(Product, lambda r: r.name == product_name and r.store_name == store_name, Product.create_instance_from_db_query)
 
     @staticmethod
     def number_of_records():
-        session_DB.flush()
-        return session_DB.query(Product).count()
-
+        return DAL.size(Product)
 
     def __str__(self):
         rate: str = 'Not rated yet' if self.is_unrated() else self.rate

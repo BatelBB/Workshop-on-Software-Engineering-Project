@@ -48,20 +48,20 @@ class provisionReal(IExternalProvisionService):
                 try:
                     new_response = int(response.text)
                 except ValueError:
-                    report_error(self.getDelivery.__qualname__, "response text is invalid")
+                    report_error(self.getDelivery.__qualname__, f"{user_name} - response text is invalid")
                     return False
                 if self.checkValidTransactionID(int(new_response)):
                     self.transaction_id = new_response
-                    report_info(self.getDelivery.__qualname__, "post request for sending delivery success!")
+                    report_info(self.getDelivery.__qualname__, f"{user_name} - post request for sending delivery success!")
                     return True
                 else:
-                    report_error(self.getDelivery.__qualname__, "transaction id is incorrect")
+                    report_error(self.getDelivery.__qualname__, f"{user_name} - transaction id is incorrect")
                     return False
             else:
-                report_error(self.getDelivery.__qualname__, f'post request failed - {response.status_code}')
+                report_error(self.getDelivery.__qualname__, f"{user_name} - post request failed - {response.status_code}")
                 return False
         else:
-            report_error(self.getDelivery.__qualname__, f'handshake failed ')
+            report_error(self.getDelivery.__qualname__, f"{user_name} - handshake failed ")
             return False
 
     def cancelDelivery(self):

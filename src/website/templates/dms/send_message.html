@@ -1,24 +1,22 @@
 {% extends "layout.html" %}
-{% block title %}Add Product{% endblock %}
+{% block title %}Send Message{% endblock %}
 
 {% block page %}
-<h1>send message</h1>
-<form method="post">
-    
-  {{ form.hidden_tag() }}
-    <table>
+<div class="container mt-4">
+    <h1 class="text-center mb-4">Send Message</h1>
+    <form method="post" class="needs-validation" novalidate>
+        {{ form.hidden_tag() }}
         {% for field in (form.recipient, form.message, form.submit) %}
-            <tr>
-                <td>{{field.label}}&nbsp;</td>
-                <td>{{ field }}</td>
-                <td>
-                    {% for error in field.errors %}
+            <div class="form-group">
+                {{ field.label(class="form-control-label") }}
+                {{ field(class="form-control") }}
+                {% for error in field.errors %}
+                    <div class="invalid-feedback">
                         {{ error }}
-                    {% endfor %}
-                </td>
-            </tr>
+                    </div>
+                {% endfor %}
+            </div>
         {% endfor %}
-    </table>
-</form>
-
+    </form>
+</div>
 {% endblock %}
