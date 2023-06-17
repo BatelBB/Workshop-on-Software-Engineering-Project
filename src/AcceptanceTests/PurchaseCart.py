@@ -36,7 +36,7 @@ class PurchaseCart(unittest.TestCase):
     def test_member_purchase_cart_happy(self):
         with patch('src.domain.main.ExternalServices.Provision.ProvisionServiceAdapter.provisionService.getDelivery',
                    return_value=True) as delivery_mock, \
-                patch('src.domain.main.ExternalServices.Payment.PaymentServices.PayWithCard.pay',
+                patch('src.domain.main.ExternalServices.Payment.PaymentServices.PaymentService.pay',
                       return_value=True) as payment_mock:
 
             self.set_stores()
@@ -62,7 +62,7 @@ class PurchaseCart(unittest.TestCase):
     def test_purchase_while_product_quantity_in_store_is_insufficient_due_to_owner(self):
         with patch('src.domain.main.ExternalServices.Provision.ProvisionServiceAdapter.provisionService.getDelivery',
                    return_value=True) as delivery_mock, \
-                patch('src.domain.main.ExternalServices.Payment.PaymentServices.PayWithCard.pay',
+                patch('src.domain.main.ExternalServices.Payment.PaymentServices.PaymentService.pay',
                       return_value=True) as payment_mock:
 
             self.set_stores()
@@ -97,7 +97,7 @@ class PurchaseCart(unittest.TestCase):
         # first to pay first to take policy test
         with patch('src.domain.main.ExternalServices.Provision.ProvisionServiceAdapter.provisionService.getDelivery',
                    return_value=True) as delivery_mock, \
-                patch('src.domain.main.ExternalServices.Payment.PaymentServices.PayWithCard.pay',
+                patch('src.domain.main.ExternalServices.Payment.PaymentServices.PaymentService.pay',
                       return_value=True) as payment_mock:
 
             self.set_stores()
@@ -135,7 +135,7 @@ class PurchaseCart(unittest.TestCase):
     def test_purchase_with_invalid_card(self):
         with patch('src.domain.main.ExternalServices.Provision.ProvisionServiceAdapter.provisionService.getDelivery',
                    return_value=True) as delivery_mock, \
-                patch('src.domain.main.ExternalServices.Payment.PaymentServices.PayWithCard.pay',
+                patch('src.domain.main.ExternalServices.Payment.PaymentServices.PaymentService.pay',
                       return_value=False) as payment_mock:
 
             self.set_stores()
@@ -165,7 +165,7 @@ class PurchaseCart(unittest.TestCase):
     def test_purchase_when_payment_fails(self):
         with patch('src.domain.main.ExternalServices.Provision.ProvisionServiceAdapter.provisionService.getDelivery',
                    return_value=True) as delivery_mock, \
-                patch('src.domain.main.ExternalServices.Payment.PaymentServices.PayWithCard.pay',
+                patch('src.domain.main.ExternalServices.Payment.PaymentServices.PaymentService.pay',
                       return_value=False) as payment_mock:
 
             self.set_stores()
@@ -195,9 +195,9 @@ class PurchaseCart(unittest.TestCase):
     def test_purchase_when_shipping_fails(self):
         with patch('src.domain.main.ExternalServices.Provision.ProvisionServiceAdapter.provisionService.getDelivery',
                    return_value=False) as delivery_mock, \
-                patch('src.domain.main.ExternalServices.Payment.PaymentServices.PayWithCard.pay',
+                patch('src.domain.main.ExternalServices.Payment.PaymentServices.PaymentService.pay',
                       return_value=True) as payment_mock, \
-                patch('src.domain.main.ExternalServices.Payment.PaymentServices.PayWithCard.refund',
+                patch('src.domain.main.ExternalServices.Payment.PaymentServices.PaymentService.refund',
                       return_value=True) as refund_mock:
 
             self.set_stores()
