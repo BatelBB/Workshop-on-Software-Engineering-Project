@@ -705,7 +705,7 @@ class Market(IService):
         if response.success:
             store = response.result
             price = store.get_product_price(product)
-            return actor.add_to_cart(store_name, product, price, quantity) if price > 0 \
+            return actor.add_to_cart(store_name, product, price, quantity) if price > 0 and quantity > 0\
                 else report_error(self.add_to_cart.__qualname__,
                                   f'Store \'{store}\' does not contains product \'{product}\'')
         return response
