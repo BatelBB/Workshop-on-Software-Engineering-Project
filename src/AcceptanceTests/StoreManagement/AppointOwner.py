@@ -375,24 +375,54 @@ class AppointOwner(unittest.TestCase):
     def test_interact_with_customer(self):
         pass
 
-    def test_add_a_store_rule(self):
-        pass
-
-    def test_add_discount_policy(self):
+    def test_add_store_rules(self):
         self.set_owner_appointments()
-        self.app.login(*self.store_founder1)
-        r = self.app.add_simple_discount("bakery", "product", 50, "bread")
-        self.assertTrue(r.success, "error: add simple discount action failed")
-        r = self.app.add_simple_discount("bakery", "product", 30, "bread")
-        self.assertTrue(r.success, "error: add simple discount action failed")
-        r = self.app.connect_discounts("bakery", 1, 2, "max", "simple", p1_name="bread", gle1=">", amount1=3)
-        self.assertTrue(r.success, "error: connect discount action failed")
-        r = self.app.get_discounts("bakery")
-        self.assertTrue(r.success, "error: get discounts action failed")
-        print(r.result)
+        self.app.login(*self.store_owner1)
+        r1 = self.app.add_purchase_simple_rule("bakery", "bread", ">", 10)
+        self.assertTrue(r1.success, "error: add simple rule action failed")
+        r2 = self.app.add_basket_purchase_rule("bakery", 300)
+        self.assertTrue(r2.success, "error: add basket rule action failed")
+        r3 = self.app.add_purchase_complex_rule("bakery", "bread", ">", 10, "pita", ">", 10, "or")
+        self.assertTrue(r3.success, "error: add complex rule action failed")
+        r = self.app.get_purchase_rules("bakery")
+        self.assertTrue(r.success, "error: get purchase rule action failed")
+        rules = r.result
+        self.assertIn(r1.result, rules, "error: simple rule not found")
+        self.assertEqual("simple", rules[r1.result]["Type"], "error: simple rule type is incorrect")
+        self.assertEqual("bread", rules[r1.result]["Product"], "error: simple rule product name is incorrect")
+        self.assertEqual(">", rules[r1.result]["Gle"], "error: simple rule 'gle' is incorrect")
+        self.assertEqual(10, rules[r1.result]["Amount"], "error: simple rule amount is incorrect")
+        self.assertIn(r2.result, rules, "error: basket rule not found")
+        self.assertEqual("basket", rules[r2.result]["Type"], "error: basket rule type is incorrect")
+        self.assertEqual(300, rules[r2.result]["Min price"], "error: basket rule minimum price is incorrect")
+        self.assertIn(r3.result, rules, "error: simple rule not found")
+        self.assertEqual("or", rules[r3.result]["Type"], "error: or rule type is incorrect")
+        self.assertEqual(r3.result+1, rules[r3.result]["Rule1 id"], "error: or rule first rule id is incorrect")
+        self.assertEqual(r3.result+2, rules[r3.result]["Rule2 id"], "error: or rule second rule id is incorrect")
 
-    def test_change_purchase_policy(self):
-        pass
+    def test_add_discount_policies(self):
+        self.set_owner_appointments()
+        self.app.login(*self.store_owner1)
+        r1 = self.app.add_simple_discount("bakery", "product", 50, "bread")
+        self.assertTrue(r1.success, "error: add simple discount action failed")
+        r2 = self.app.add_simple_discount("bakery", "product", 30, "pita")
+        self.assertTrue(r2.success, "error: add simple discount action failed")
+        r3 = self.app.connect_discounts("bakery", r1.result, r2.result, "max", "simple",
+                                        p1_name="bread", gle1=">", amount1=3)
+        self.assertTrue(r3.success, "error: connect discount action failed")
+        r = self.app.get_discounts("bakery")
+        simples = r.result[0]
+        connectors = r.result[1]
+        self.assertTrue(r.success, "error: get discounts action failed")
+        self.assertIn(r1.result, simples, "error: first discount not found")
+        self.assertIn(r2.result, simples, "error: second discount not found")
+        self.assertIn("simple discount: 50% for bread", simples[r1.result], "error: first discount doesn't match")
+        self.assertIn("simple discount: 30% for pita", simples[r2.result], "error: second discount doesn't match")
+        self.assertIn(r3.result, connectors, "error: connector discount not found")
+        self.assertIn(f"Max connector: id: {r1.result}     id: {r2.result}", connectors[r3.result],
+                      "error: connector discount doesn't match")
+        self.assertIn(f"Add connector: id: {r3.result}", connectors["bakery"],
+                      "error: second discount doesn't match")
 
     def test_start_a_bid(self):
         self.set_owner_appointments()

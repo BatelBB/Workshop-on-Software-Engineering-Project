@@ -398,75 +398,133 @@ class UpdateDiscountPolicy(unittest.TestCase):
             payment_mock.assert_called_once_with(175)
             delivery_mock.assert_called_once()
 
-    # def test_add_simple_discount_for_product_negative_discount(self):
-    #     with patch(self.app.provision_path, return_value=True) as delivery_mock, \
-    #             patch(self.app.payment_pay_path, return_value=True) as payment_mock:
-    #         self.app.login(*self.store_founder)
-    #         r = self.app.add_simple_discount("bakery", "product", 50, "bread")
-    #         self.assertTrue(r.success, "error: add simple discount action failed")
-    #         self.app.logout()
-    #         self.app.add_to_cart("bakery", "bread", 10)
-    #         self.app.add_to_cart("bakery", "pita", 5)
-    #         r = self.app.purchase_shopping_cart("card", ["123", "123", "12/6588"],
-    #                                             "ben-gurion", "1234", "beer sheva", "israel")
-    #         self.assertFalse(r.success, "error: cart payment succeeded")
-    #
-    #         payment_mock.assert_not_called()
-    #         delivery_mock.assert_not_called()
-    #
-    # def test_add_simple_discount_for_store_non_positive_discount(self):
-    #     with patch(self.app.provision_path, return_value=True) as delivery_mock, \
-    #             patch(self.app.payment_pay_path, return_value=True) as payment_mock:
-    #         self.app.login(*self.store_founder)
-    #         r = self.app.add_simple_discount("bakery", "product", 50, "bread")
-    #         self.assertTrue(r.success, "error: add simple discount action failed")
-    #         self.app.logout()
-    #
-    #
-    #         payment_mock.assert_not_called()
-    #         delivery_mock.assert_not_called()
-    #
-    # def test_add_simple_discount_for_category_negative_discount(self):
-    #     with patch(self.app.provision_path, return_value=True) as delivery_mock, \
-    #             patch(self.app.payment_pay_path, return_value=True) as payment_mock:
-    #         self.app.login(*self.store_founder)
-    #         r = self.app.add_simple_discount("bakery", "product", 50, "bread")
-    #         self.assertTrue(r.success, "error: add simple discount action failed")
-    #         self.app.logout()
-    #         self.app.add_to_cart("bakery", "bread", 10)
-    #         self.app.add_to_cart("bakery", "pita", 5)
-    #         r = self.app.purchase_shopping_cart("card", ["123", "123", "12/6588"],
-    #                                             "ben-gurion", "1234", "beer sheva", "israel")
-    #         self.assertFalse(r.success, "error: cart payment succeeded")
-    #
-    #         payment_mock.assert_not_called()
-    #         delivery_mock.assert_not_called()
-    #
-    # def test_connect_discounts_invalid_store_name(self):
-    # def test_connect_discounts_invalid_discount_type(self):
-    # def test_connect_discounts_invalid_product_name(self):
-    #
-    # def test_connect_discounts_invalid_ids(self):
-    #     with patch(self.app.provision_path, return_value=True) as delivery_mock, \
-    #             patch(self.app.payment_pay_path, return_value=True) as payment_mock:
-    #         self.app.login(*self.store_founder)
-    #         r = self.app.add_simple_discount("bakery", "product", 50, "bread")
-    #         self.assertTrue(r.success, "error: add simple discount action failed")
-    #         self.app.logout()
-    #         self.app.add_to_cart("bakery", "bread", 10)
-    #         self.app.add_to_cart("bakery", "pita", 5)
-    #         r = self.app.purchase_shopping_cart("card", ["123", "123", "12/6588"],
-    #                                             "ben-gurion", "1234", "beer sheva", "israel")
-    #         self.assertFalse(r.success, "error: cart payment succeeded")
-    #
-    #         payment_mock.assert_not_called()
-    #         delivery_mock.assert_not_called()
+    def test_add_simple_discount_for_product_negative_discount(self):
+        with patch(self.app.provision_path, return_value=True) as delivery_mock, \
+                patch(self.app.payment_pay_path, return_value=True) as payment_mock:
+            self.app.login(*self.store_founder)
+            r = self.app.add_simple_discount("bakery", "product", -20, "bread")
+            self.assertFalse(r.success, "error: add simple discount action succeeded")
+            self.app.logout()
+            self.set_cart_and_buy()
 
-    def test_retrieve_store_discounts(self):
-        self.set_3_levels_discount()
+            payment_mock.assert_called_once_with(350)
+            delivery_mock.assert_called_once()
+
+    def test_add_simple_discount_for_store_non_positive_discount(self):
+        with patch(self.app.provision_path, return_value=True) as delivery_mock, \
+                patch(self.app.payment_pay_path, return_value=True) as payment_mock:
+            self.app.login(*self.store_founder)
+            r = self.app.add_simple_discount("bakery", "store", 0)
+            self.assertFalse(r.success, "error: add simple discount action succeeded")
+            self.app.logout()
+            self.set_cart_and_buy()
+
+            payment_mock.assert_called_once_with(350)
+            delivery_mock.assert_called_once()
+
+    def test_add_simple_discount_for_category_negative_discount(self):
+        with patch(self.app.provision_path, return_value=True) as delivery_mock, \
+                patch(self.app.payment_pay_path, return_value=True) as payment_mock:
+            self.app.login(*self.store_founder)
+            r = self.app.add_simple_discount("bakery", "category", -20, "1")
+            self.assertFalse(r.success, "error: add simple discount action succeeded")
+            self.app.logout()
+            self.set_cart_and_buy()
+
+            payment_mock.assert_called_once_with(350)
+            delivery_mock.assert_called_once()
+
+    def test_simple_discounts_invalid_store_name(self):
+        with patch(self.app.provision_path, return_value=True) as delivery_mock, \
+                patch(self.app.payment_pay_path, return_value=True) as payment_mock:
+            self.app.login(*self.store_founder)
+            r = self.app.add_simple_discount("xxx", "product", 50, "bread")
+            self.assertFalse(r.success, "error: add simple discount action succeeded")
+            self.app.logout()
+            self.set_cart_and_buy()
+
+            payment_mock.assert_called_once_with(350)
+            delivery_mock.assert_called_once()
+
+    def test_simple_discounts_invalid_discount_type(self):
+        with patch(self.app.provision_path, return_value=True) as delivery_mock, \
+                patch(self.app.payment_pay_path, return_value=True) as payment_mock:
+            self.app.login(*self.store_founder)
+            r = self.app.add_simple_discount("bakery", "xxx", 50)
+            self.assertFalse(r.success, "error: add simple discount action succeeded")
+            self.app.logout()
+            self.set_cart_and_buy()
+
+            payment_mock.assert_called_once_with(350)
+            delivery_mock.assert_called_once()
+
+    def test_simple_discounts_invalid_product_name(self):
+        with patch(self.app.provision_path, return_value=True) as delivery_mock, \
+                patch(self.app.payment_pay_path, return_value=True) as payment_mock:
+            self.app.login(*self.store_founder)
+            r = self.app.add_simple_discount("bakery", "product", 50, "xxx")
+            self.assertFalse(r.success, "error: add simple discount action succeeded")
+            self.app.logout()
+            self.set_cart_and_buy()
+
+            payment_mock.assert_called_once_with(350)
+            delivery_mock.assert_called_once()
+
+    def test_simple_discounts_invalid_category_name(self):
+        with patch(self.app.provision_path, return_value=True) as delivery_mock, \
+                patch(self.app.payment_pay_path, return_value=True) as payment_mock:
+            self.app.login(*self.store_founder)
+            r = self.app.add_simple_discount("bakery", "category", 50, "xxx")
+            self.assertFalse(r.success, "error: add simple discount action succeeded")
+            self.app.logout()
+            self.set_cart_and_buy()
+
+            payment_mock.assert_called_once_with(350)
+            delivery_mock.assert_called_once()
+
+    def test_connect_discounts_invalid_ids(self):
+        with patch(self.app.provision_path, return_value=True) as delivery_mock, \
+                patch(self.app.payment_pay_path, return_value=True) as payment_mock:
+            self.app.login(*self.store_founder)
+            r1 = self.app.add_simple_discount("bakery", "store", 50)
+            self.assertTrue(r1.success, "error: add simple discount action failed")
+            r2 = self.app.add_simple_discount("bakery", "product", 50, "cake")
+            self.assertTrue(r2.success, "error: add simple discount action failed")
+            r = self.app.connect_discounts("bakery", 1, 8, "max")
+            self.assertFalse(r.success, "error: connect discount action with invalid ids succeeded")
+            self.app.logout()
+            self.set_cart_and_buy()
+
+            payment_mock.assert_called_once_with(75)
+            delivery_mock.assert_called_once()
+
+    def test_discount_ids(self):
+        self.app.login(*self.store_founder)
+        r1 = self.app.add_simple_discount("bakery", "store", 50)
+        self.assertTrue(r1.success, "error: add simple discount action failed")
+        self.assertEqual(1, r1.result, "error: discount generated with incorrect id")
+        r2 = self.app.add_simple_discount("bakery", "product", 50, "cake")
+        self.assertTrue(r2.success, "error: add simple discount action failed")
+        self.assertEqual(2, r2.result, "error: discount generated with incorrect id")
+        r3 = self.app.add_simple_discount("bakery", "category", 50, "1")
+        self.assertTrue(r3.success, "error: add simple discount action failed")
+        self.assertEqual(3, r3.result, "error: discount generated with incorrect id")
+        r4 = self.app.connect_discounts("bakery", 1, 2, "max")
+        self.assertTrue(r4.success, "error: connect discounts action failed")
+        self.assertEqual(6, r4.result, "error: discount generated with incorrect id")
+        r5 = self.app.connect_discounts("bakery", 6, 3, "or")
+        self.assertTrue(r5.success, "error: connect discounts action failed")
+        self.assertEqual(9, r5.result, "error: discount generated with incorrect id")
+        self.app.logout()
 
     def test_3_levels_discount(self):
-        self.set_3_levels_discount()
+        with patch(self.app.provision_path, return_value=True) as delivery_mock, \
+                patch(self.app.payment_pay_path, return_value=True) as payment_mock:
+            self.set_3_levels_discount()
+            self.set_cart_and_buy()
+
+            payment_mock.assert_called_once_with(325)
+            delivery_mock.assert_called_once()
 
     def set_store(self):
         self.app.login(*self.store_founder)
@@ -487,4 +545,22 @@ class UpdateDiscountPolicy(unittest.TestCase):
         self.app.logout()
 
     def set_3_levels_discount(self):
-        ...
+        # only r2 discount should be applied
+        self.app.login(*self.store_founder)
+        r1 = self.app.add_simple_discount("bakery", "store", 30, p1_name="bread", gle1=">", amount1=8)
+        self.assertTrue(r1.success, "error: add simple discount action failed")
+        r2 = self.app.add_simple_discount("bakery", "product", 50, "bread", p1_name="pita", gle1=">", amount1=8)
+        self.assertTrue(r2.success, "error: add simple discount action failed")
+        r3 = self.app.add_simple_discount("bakery", "product", 50, "cake", p1_name="cake", gle1=">", amount1=8)
+        self.assertTrue(r3.success, "error: add simple discount action failed")
+        r4 = self.app.add_simple_discount("bakery", "category", 50, "1", p1_name="bread", gle1="<", amount1=50)
+        self.assertTrue(r4.success, "error: add simple discount action failed")
+
+        r5 = self.app.connect_discounts("bakery", r1.result, r2.result, "or")
+        self.assertTrue(r5.success, "error: connect discounts action failed")
+        r6 = self.app.connect_discounts("bakery", r3.result, r4.result, "max")
+        self.assertTrue(r6.success, "error: connect discounts action failed")
+
+        r7 = self.app.connect_discounts("bakery", r5.result, r6.result, "xor", rule_type="basket", min_price=300)
+        self.assertTrue(r7.success, "error: connect discounts action failed")
+        self.app.logout()

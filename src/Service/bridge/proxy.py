@@ -1,4 +1,9 @@
 from domain.main.Market.Permissions import Permission
+from src.domain.main.StoreModule.PurchaseRules.BasketRule import BasketRule
+from src.domain.main.StoreModule.PurchaseRules.RuleCombiner.AndRule import AndRule
+from src.domain.main.StoreModule.PurchaseRules.RuleCombiner.ConditioningRule import ConditioningRule
+from src.domain.main.StoreModule.PurchaseRules.RuleCombiner.OrRule import OrRule
+from src.domain.main.StoreModule.PurchaseRules.SimpleRule import SimpleRule
 from src.domain.main.Utils.Response import Response
 from Service.bridge.Bridge import Bridge
 from Service.bridge.real import Real
@@ -259,7 +264,24 @@ class Proxy(Bridge):
         return self.real.get_discounts(store_name)
 
     def get_purchase_rules(self, store_name: str) -> Response[dict[int:dict]]:
-        return self.real.get_purchase_rules(store_name)
+        r = self.real.get_purchase_rules(store_name)
+        if not r.success:
+            return r
+        dic = {}
+        for rule in r.result.values():
+            if isinstance(rule, SimpleRule):
+                dic[rule.rule_id] = {"Type": "simple", "Product": rule.product_name, "Gle": rule.gle, "Amount": rule.num}
+            elif isinstance(rule, BasketRule):
+                dic[rule.rule_id] = {"Type": "basket", "Min price": rule.min_price}
+            elif isinstance(rule, OrRule):
+                dic[rule.rule_id] = {"Type": "or", "Rule1 id": rule.rule_id1, "Rule2 id": rule.rule_id2}
+            elif isinstance(rule, AndRule):
+                dic[rule.rule_id] = {"Type": "and", "Rule1 id": rule.rule_id1, "Rule2 id": rule.rule_id2}
+            elif isinstance(rule, ConditioningRule):
+                dic[rule.rule_id] = {"Type": "conditional", "Rule1 id": rule.rule_id1, "Rule2 id": rule.rule_id2}
+            else:
+                raise NotImplemented
+        return Response(dic)
 
     def get_bid_products(self, store_name: str) -> Response[dict | bool]:
         return self.real.get_bid_products(store_name)
