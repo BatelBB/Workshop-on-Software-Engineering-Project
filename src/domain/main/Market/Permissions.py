@@ -18,6 +18,7 @@ class Permission(Enum):
     # OpenLottery = 'Open Lottery'
     StartBid = 'Start a bid'
     ApproveBid = 'Approve a bid'
+    CloseStore = 'Close Store'
 
 def get_permission_name(permission: Permission) -> str:
     return Permission(permission).name

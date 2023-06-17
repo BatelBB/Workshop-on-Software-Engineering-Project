@@ -73,7 +73,7 @@ class Appointment(Base):
         return self.appointee == other.appointee
 
     def is_allowed(self, required_permission: Permission) -> bool:
-        return self.is_store_active and required_permission in self.permissions
+        return required_permission in self.permissions
 
     def is_manager(self):
         return self.role == 'StoreManager'
