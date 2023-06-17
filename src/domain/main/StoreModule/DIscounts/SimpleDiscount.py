@@ -104,6 +104,7 @@ class SimpleDiscount(IDiscount, Base):
         self.store_name = store_name
         self.discount_id = discount_id
         if rule is not None:
+            self.rule_id = discount_id + 1
             return 1 + self.rule.set_db_info(f"{store_name}_discount", discount_id + 1)
         return 1
 
@@ -131,7 +132,7 @@ class SimpleDiscount(IDiscount, Base):
         discount = SimpleDiscount(discount_id, percent, discount_type, discount_for_name=discount_for_name)
         if is_rule == 'True':
             discount.is_rule = is_rule
-            discount.rule_id = discount_id - 1
+            discount.rule_id = rule_id
         return discount
 
     @staticmethod
@@ -141,7 +142,7 @@ class SimpleDiscount(IDiscount, Base):
         if not isinstance(records, list):
             records = [records]
         for record in records:
-            out[record.rule_id] = record
+            out[record.discount_id] = record
         return out
 
     @staticmethod

@@ -30,3 +30,6 @@ class IRule:
     def number_of_ids(self):
         return 1
 
+    @staticmethod
+    def load_all_disconut_rules(store_name):
+        n = f'{store_name}_discount'

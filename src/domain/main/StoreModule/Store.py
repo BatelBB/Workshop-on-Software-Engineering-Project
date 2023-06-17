@@ -4,6 +4,7 @@ from multipledispatch import dispatch
 from sqlalchemy import Column, String
 
 from DataLayer.DAL import DAL, Base
+from domain.main.StoreModule.DIscounts.Discount_Connectors.IDIscountConnector import IDiscountConnector
 from domain.main.StoreModule.PurchaseRules.BasketRule import BasketRule
 from domain.main.StoreModule.PurchaseRules.RuleCombiner.AndRule import AndRule
 from domain.main.StoreModule.PurchaseRules.RuleCombiner.ConditioningRule import ConditioningRule
@@ -67,10 +68,21 @@ class Store(Base):
         self.purchase_rules: dict[int:IRule] = {}
         self.purchase_rule_ids = 0
         self.purchase_rule_lock = threading.RLock()
-        self.discounts: AddDiscounts = AddDiscounts(0)
+        self.discounts = None
+        self.init_discounts()
         self.discount_counter = 1
         self.discount_lock = threading.RLock()
         self.discount_rule_counter = 0
+
+    def init_discounts(self):
+        root = AddDiscounts.load_add_discount_by_id(self.name, 0)
+        if root:
+            self.discounts = root
+        else:
+            self.discounts: AddDiscounts = AddDiscounts(0)
+            self.discounts.set_db_info(0, self.name)
+            self.discounts.add_to_db()
+
 
     @staticmethod
     def create_instance_from_db_query(r):
@@ -144,8 +156,50 @@ class Store(Base):
             num_ids = r.number_of_ids()
         self.purchase_rule_ids = highest + 1 + num_ids
 
+    def connect_discount_tree(self, all_connectors: dict[int,IDiscountConnector], all_simple):
+        for discount_id, discount in all_connectors.items():
+            if discount.children_ids is not None and discount.children_ids != "":
+                children_id_list = discount.children_ids.split(",")
+                for child_id in children_id_list:
+                    if child_id != '':
+                        child_id = int(child_id)
+                        if child_id in all_connectors.keys():
+                            discount.children.append(all_connectors[child_id])
+                        else:
+                            discount.children.append(all_simple[child_id])
+
+    def connect_discount_to_rules(self, d1, d2, d3, d4, d5):
+        # d1.update(d2).update(d3).update(d4).update(d5)
+        demi_store = Store(f'{self.name}_discount')
+        demi_store.load_my_rules()
+        discount_rules = demi_store.purchase_rules
+
+        for id, discount in d1.items():
+            if discount.is_rule == 'True':
+                discount.rule = discount_rules[discount.rule_id]
+
+        Store.delete_record(f'{self.name}_discounts')
+
+
+
+
     def load_my_discounts(self):
+
         simple_discounts = SimpleDiscount.load_all_simple_discounts(self.name)
+        add_discounts = AddDiscounts.load_all_add_discounts(self.name)
+        max_discounts = {}
+        or_discounts = {}
+        xor_discounts = {}
+
+        self.connect_discount_to_rules(simple_discounts, add_discounts,  max_discounts, or_discounts, xor_discounts)
+
+        all_connectors = add_discounts
+        self.connect_discount_tree(all_connectors, simple_discounts)
+
+
+        #find discount 0:
+        self.discounts = add_discounts[0]
+
         print("3")
 
     @staticmethod

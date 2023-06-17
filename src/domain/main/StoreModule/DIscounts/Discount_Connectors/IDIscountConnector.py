@@ -1,18 +1,23 @@
 from abc import ABC, abstractmethod
 
+from DataLayer.DAL import DAL
 from domain.main.StoreModule.Product import Product
 from src.domain.main.StoreModule.DIscounts.IDIscount import IDiscount
 from src.domain.main.Utils.Logger import report
 from src.domain.main.Utils.Response import Response
 
 
-class IDiscountConnector(IDiscount, ABC):
+class IDiscountConnector(IDiscount):
     def __init__(self, id: int):
         super().__init__(id)
         self.children: list[IDiscount] = []
+        self.children_ids = ""
+
 
     def add_discount_to_connector(self, discount) -> Response:
         self.children.append(discount)
+        self.children_ids += f'{discount.discount_id},'
+        DAL.update(self)
         return report("added discount", True)
 
     def find_discount(self, id: int):
@@ -26,7 +31,7 @@ class IDiscountConnector(IDiscount, ABC):
 
     def remove_discount(self, id) -> bool:
         for dis in self.children:
-            if dis.id == id:
+            if dis.discount_id == id:
                 self.children.remove(dis)
                 return True
             if dis.remove_discount(id):
@@ -35,7 +40,7 @@ class IDiscountConnector(IDiscount, ABC):
 
     def replace(self, id, discount: IDiscount) -> bool:
         for dis in self.children:
-            if dis.id == id:
+            if dis.discount_id == id:
                 self.children.remove(dis)
                 self.add_discount_to_connector(discount)
                 return True
@@ -45,8 +50,8 @@ class IDiscountConnector(IDiscount, ABC):
 
     def get_parents_id(self, id) -> int:
         for dis in self.children:
-            if dis.id == id:
-                return self.id
+            if dis.discount_id == id:
+                return self.discount_id
             ret = dis.get_parents_id(id)
             if ret != -1:
                 return ret

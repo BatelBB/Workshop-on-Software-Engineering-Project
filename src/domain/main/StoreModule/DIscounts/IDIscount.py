@@ -31,11 +31,15 @@ class IDiscount:
     def __str__(self, indent) -> str:
         pass
 
-    def get_all_simple_discounts(self, l) -> dict:
-        pass
+    def get_all_simple_discounts(self, d) -> dict:
+        d[self.discount_id] = self.__repr__()
+        return d
 
     def get_all_connectors(self, l):
         pass
 
     def set_disconted_price_in_product(self, p: Product):
+        pass
+
+    def delete_from_db(self):
         pass
