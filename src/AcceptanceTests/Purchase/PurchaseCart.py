@@ -247,7 +247,6 @@ class PurchaseCart(unittest.TestCase):
                 patch(self.app.payment_pay_path, return_value=False) as payment_mock:
             self.set_stores()
             self.set_cart()
-            self.app.login(*self.s)
             self.app.login(*self.registered_buyer1)
             cart_before = self.app.show_cart().result
             r = self.app.purchase_shopping_cart("card", ["123", "123", "12/6588"],
