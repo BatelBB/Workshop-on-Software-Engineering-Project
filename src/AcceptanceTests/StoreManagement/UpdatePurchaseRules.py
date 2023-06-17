@@ -27,6 +27,8 @@ class UpdatePurchaseRules(unittest.TestCase):
         cls.app.enter_market()
         cls.app.shutdown()
 
+    # rules type: simple, basket, and, or, cond
+
     def test_simple_rule_greater_happy(self):
         with patch(self.app.provision_path, return_value=True) as delivery_mock, \
                 patch(self.app.payment_pay_path, return_value=True) as payment_mock:

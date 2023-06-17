@@ -84,6 +84,9 @@ class Real(Bridge):
     def reopen_store(self, store_name: str) -> Response[bool]:
         return self.session.reopen_store(store_name)
 
+    def remove_store(self, store_name: str) -> Response[bool]:
+        return self.session.remove_store(store_name)
+
     def add_product(self, store_name: str, product_name: str, category: str,
                     price: float, quantity: int, keywords: list[str] = None) -> Response[bool]:
         return self.session.add_product(store_name, product_name, category, price, quantity, keywords)

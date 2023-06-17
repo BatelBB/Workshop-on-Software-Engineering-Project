@@ -6,7 +6,6 @@ from Service.bridge.real import Real
 
 class Proxy(Bridge):
     real: Real
-    first_entrance: bool
 
     def __init__(self):
         self.real = Real()
@@ -92,7 +91,7 @@ class Proxy(Bridge):
         return self.real.reopen_store(store_name)
 
     def remove_store(self, store_name: str) -> Response[bool]:
-        return Response(False)
+        return self.real.remove_store(store_name)
 
     def add_product(self, store_name: str, product_name: str, category: str,
                     price: float, quantity: int, keywords: list[str] = None) -> Response[bool]:
