@@ -884,6 +884,8 @@ class Market(IService):
                 res = store.reserve_products(basket)
                 if res.success and res.result:
                     successful_store_purchases.append(store_name)
+                else:
+                    return report_error(self.purchase_shopping_cart.__qualname__, "Products are gone - you cannot buy them. Bye Bye")
             resp = self.get_cart_price(baskets)
             payment_succeeded = self.pay(resp, payment_details, holder, user_id)
             if payment_succeeded[0]:
