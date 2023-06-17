@@ -9,7 +9,7 @@
 
     {% for msg in inbox %}
 
-    <div class="{{ 'alert alert-secondary' if msg.seen else 'alert alert-primary' }}">
+    <div class="{{ 'alert alert-secondary msg-read' if msg.seen else 'alert alert-primary msg-unread' }}">
         <div class="d-flex justify-content-between align-items-center">
             {% if msg.is_from_store %}
                 <a href="{{url_for('buying.view_store', name=msg.sender)}}" class="d-flex align-items-center">
