@@ -59,6 +59,12 @@ class ConditioningRule(IRuleCombiner, Base):
         return out
 
     @staticmethod
+    def load_rule_by_id(store_name, rule_id):
+        return DAL.load_all_by(ConditioningRule, lambda r: r.store_name == store_name and r.rule_id == rule_id,
+                                 ConditioningRule.create_instance_from_db_query)
+
+
+    @staticmethod
     def clear_db():
         DAL.clear(ConditioningRule)
 

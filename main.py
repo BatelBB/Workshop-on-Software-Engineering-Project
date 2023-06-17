@@ -58,7 +58,7 @@ def basic_interaction_with_market():
 
 if __name__ == '__main__':
     market = Market()
-    # s0 = market.enter()
+    s0 = market.enter()
     # s0.load_configuration()
     s1 = market.enter()
     s1.register("u1", "p1")
@@ -67,15 +67,16 @@ if __name__ == '__main__':
     # s2.register("u2", "p1")
     # s2.login("u2", "p1")
 
-    # s1.open_store("s1")
-    # s1.add_product("s1", "p1", "c1", 100, 12)
+    s1.open_store("s1")
+    s1.add_product("s1", "p1", "c1", 100, 12)
     # s1.add_purchase_simple_rule("s1", "p1", "<", 3)
     # s1.add_basket_purchase_rule("s1", 123)
     # s1.add_purchase_complex_rule("s1", "p1", ">", 10, "p1", "<", 3, "or")
     # s1.add_purchase_complex_rule("s1", "p1", ">", 9, "p1", "<", 100, "and")
     # s1.add_purchase_complex_rule("s1", "p1", ">", 885, "p1", "<", 888, "cond")
     # s1.add_purchase_complex_rule("s1", "p1", ">", 885, "p1", "<", 888, "cond")
-
+    s1.add_simple_discount("s1", "store", 50, rule_type="simple", p1_name="p1", gle1=">", amount1=3)
+    res = s1.get_discounts("s1")
     # res = s1.get_purchase_rules("s1")
     # s1.delete_purchase_rule(8, "s1")
     res = s1.get_purchase_rules("s1")

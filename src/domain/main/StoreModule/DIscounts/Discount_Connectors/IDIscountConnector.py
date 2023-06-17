@@ -62,7 +62,7 @@ class IDiscountConnector(IDiscount, ABC):
     def __repr__(self):
         s = ""
         for dis in self.children:
-            s += f"id: {dis.id}     "
+            s += f"id: {dis.discount_id}     "
         return s
 
     def get_all_simple_discounts(self, d) -> dict:
@@ -73,7 +73,7 @@ class IDiscountConnector(IDiscount, ABC):
     def get_all_connectors(self, d) -> dict:
         for dis in self.children:
             d = dis.get_all_connectors(d)
-        d[self.id] = self.__repr__()
+        d[self.discount_id] = self.__repr__()
         return d
 
     def set_disconted_price_in_product(self, p: Product):

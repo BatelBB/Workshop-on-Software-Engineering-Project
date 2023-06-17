@@ -68,7 +68,7 @@ class Store(Base):
         self.purchase_rule_ids = 0
         self.purchase_rule_lock = threading.RLock()
         self.discounts: AddDiscounts = AddDiscounts(0)
-        self.discount_counter = 0
+        self.discount_counter = 1
         self.discount_lock = threading.RLock()
         self.discount_rule_counter = 0
 
@@ -144,6 +144,10 @@ class Store(Base):
             num_ids = r.number_of_ids()
         self.purchase_rule_ids = highest + 1 + num_ids
 
+    def load_my_discounts(self):
+        simple_discounts = SimpleDiscount.load_all_simple_discounts(self.name)
+        print("3")
+
     @staticmethod
     def load_store(store_name):
         return DAL.load(Store, lambda r: r.name == store_name, Store.create_instance_from_db_query)
@@ -154,6 +158,7 @@ class Store(Base):
         for s in DAL.load_all(Store, Store.create_instance_from_db_query):
             out.insert(s.name, s)
             s.load_my_rules()
+            s.load_my_discounts()
         return out
 
     @staticmethod
@@ -485,8 +490,10 @@ class Store(Base):
     def add_simple_discount(self, percent: int, discount_type: str, rule: IRule = None, discount_for_name=None) -> \
     Response[bool]:
         with self.discount_lock:
-            self.discount_counter += 1
             discount = SimpleDiscount(self.discount_counter, percent, discount_type, rule, discount_for_name)
+            count = discount.set_db_info(self.discount_counter, self.name, rule)
+            discount.add_to_db()
+            self.discount_counter += count + 1
             return self.discounts.add_discount_to_connector(discount)
 
     def connect_discounts(self, id1, id2, connection_type, rule=None) -> Response:

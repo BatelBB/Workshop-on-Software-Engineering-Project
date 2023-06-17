@@ -63,12 +63,18 @@ class SimpleRule(IRule, Base):
     @staticmethod
     def load_all_simple_rules(store_name):
         out = {}
-        records = DAL.load_all_by(SimpleRule, lambda r: r.store_name == store_name, SimpleRule.create_instance_from_db_query)
+        records = DAL.load_all_by(SimpleRule, lambda r: r.store_name == store_name,
+                                  SimpleRule.create_instance_from_db_query)
         if not isinstance(records, list):
             records = [records]
         for record in records:
             out[record.rule_id] = record
         return out
+
+    @staticmethod
+    def load_rule_by_id(store_name, rule_id):
+        return DAL.load_all_by(SimpleRule, lambda r: r.store_name == store_name and r.rule_id == rule_id,
+                               SimpleRule.create_instance_from_db_query)
 
     @staticmethod
     def clear_db():
