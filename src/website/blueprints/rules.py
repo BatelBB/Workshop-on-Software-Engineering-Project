@@ -59,7 +59,7 @@ class AddComplexRuleForm(FlaskForm):
     product2_name = StringField(validators=[Length(min=1, max=100)])
     gle2 = StringField(validators=[DataRequired()])
     amount2 = IntegerField(validators=[NumberRange(min=0)])
-    rule_type = SelectField('Rule Type', choices=[('and', 'AND'), ('or', 'OR')])
+    rule_type = SelectField('Rule Type', choices=[('and', 'AND'), ('or', 'OR'), ('cond', 'COND')])
     submit = SubmitField()
 
 @bp.route('/add_complex_rule/<store_name>',  methods=('POST', 'GET'))

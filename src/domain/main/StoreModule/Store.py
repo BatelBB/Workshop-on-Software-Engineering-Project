@@ -541,7 +541,7 @@ class Store(Base):
             count = rule.set_db_info(self.name, self.purchase_rule_ids)
             rule.add_to_db()
             self.purchase_rule_ids += count
-            return report("add_purchase_rule -> success", True)
+            return report("add_purchase_rule -> success", rule.rule_id)
 
     def get_purchase_rules(self):
         return self.purchase_rules
