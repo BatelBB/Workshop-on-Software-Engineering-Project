@@ -819,13 +819,14 @@ class Market(IService):
                 if info_res.success:
                     payment_res = self.paymentService.pay(price)
                     if not payment_res:
-                        report_error(self.pay.__qualname__, f'paying failed')
+                        return False, report_error(self.pay.__qualname__, f'paying failed')
                     else:
-                        return payment_res
+                        return True, report_info(self.pay.__qualname__, f'paying succeeded!')
                 else:
-                    report_error(self.pay.__qualname__, f'setting payment information failed {info_res}')
+                    return False, report_error(self.pay.__qualname__, f'setting payment information failed {info_res}')
             except Exception as e:
-                report_error(self.pay.__qualname__, f"failed to get payment service {e}")
+                return False, report_error(self.pay.__qualname__, f"failed to get payment service {e}")
+        return False, report_error(self.pay.__qualname__, "Price cannot be less than 0")
 
     def add_to_purchase_history(self, baskets: dict[str, Any]) -> None:
         for store_name, basket in baskets.items():
@@ -865,7 +866,7 @@ class Market(IService):
                     successful_store_purchases.append(store_name)
             resp = self.get_cart_price(baskets)
             payment_succeeded = self.pay(resp, payment_details, holder, user_id)
-            if payment_succeeded:
+            if payment_succeeded[0]:
                 # order delivery
                 self.provisionService.set_info(actor.username, 0, address, postal_code, city, country)
                 if not self.provisionService.getDelivery():
@@ -878,7 +879,7 @@ class Market(IService):
                     self.find_store(store_name).update_db(basket)
                 return Response(True)
             else:
-                return report_error(self.purchase_shopping_cart.__qualname__, "payment_succeeded = false")
+                return report_error(self.purchase_shopping_cart.__qualname__, payment_succeeded[1].description)
         else:
             return response
 
