@@ -12,3 +12,6 @@ class IRuleCombiner(IRule, ABC):
         super().__init__()
         self.rule1 = r1
         self.rule2 = r2
+
+    def number_of_ids(self):
+        return 3

@@ -1,11 +1,18 @@
+from sqlalchemy import Column, Integer, String, Float
+
+from DataLayer.DAL import Base, DAL
 from src.domain.main.StoreModule.PurchaseRules.IRule import IRule
 from src.domain.main.UserModule.Basket import Basket
 from src.domain.main.Utils.Logger import report_error, report
 from src.domain.main.Utils.Response import Response
 
 
-class BasketRule(IRule):
-    min_price: float
+class BasketRule(IRule, Base):
+    __tablename__ = 'basket_rules'
+    __table_args__ = {'extend_existing': True}
+    rule_id = Column("rule_id", Integer, primary_key=True)
+    store_name = Column("store_name", String, primary_key=True)
+    min_price = Column("num", Float, primary_key=True)
 
     def __init__(self, min_price: float):
         super().__init__()
@@ -23,3 +30,35 @@ class BasketRule(IRule):
 
     def __str__(self):
         return f'rule: basket price >= {self.min_price}'
+
+    def add_to_db(self):
+        BasketRule.add_record(self)
+
+    def delete_from_db(self):
+        BasketRule.delete_record(self.rule_id, self.store_name)
+
+    @staticmethod
+    def create_instance_from_db_query(r):
+        rule_id, store_name, min_price = r.rule_id, r.store_name, r.min_price
+        rule = BasketRule(min_price)
+        rule.set_db_info(store_name, rule_id)
+        return rule
+
+    @staticmethod
+    def load_all_basket_rules():
+        out = {}
+        for r in DAL.load_all(BasketRule, BasketRule.create_instance_from_db_query):
+            out[r.rule_id] = r
+        return out
+
+    @staticmethod
+    def clear_db():
+        DAL.clear(BasketRule)
+
+    @staticmethod
+    def add_record(rule):
+        DAL.add(rule)
+
+    @staticmethod
+    def delete_record(rule_id, store_name):
+        DAL.delete(BasketRule, lambda r: ((r.rule_id == rule_id) and (r.store_name == store_name)))

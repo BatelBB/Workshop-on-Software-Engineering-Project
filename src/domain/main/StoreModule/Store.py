@@ -4,6 +4,7 @@ from multipledispatch import dispatch
 from sqlalchemy import Column, String
 
 from DataLayer.DAL import DAL, Base
+from domain.main.StoreModule.PurchaseRules.BasketRule import BasketRule
 from domain.main.StoreModule.PurchaseRules.SimpleRule import SimpleRule
 from domain.main.Utils.ConcurrentDictionary import ConcurrentDictionary
 from src.domain.main.StoreModule.DIscounts.Discount_Connectors.AddDiscounts import AddDiscounts
@@ -87,7 +88,9 @@ class Store(Base):
 
     def load_my_rules(self):
         simple_rule_dict = SimpleRule.load_all_simple_rules()
+        basket_rules_dict = BasketRule.load_all_basket_rules()
         self.purchase_rules = simple_rule_dict
+        self.purchase_rules.update(basket_rules_dict)
 
         highest = 0
         r = None

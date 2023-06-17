@@ -26,3 +26,6 @@ class IRule:
 
     def delete_from_db(self):
         pass
+
+    def number_of_ids(self):
+        return 1
