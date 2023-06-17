@@ -20,4 +20,4 @@ def plot(dataframe_path, title):
     plt.show()
 
 if __name__ == '__main__':
-    plot('update_same_product.data', "Concurrency-Update-Same-Product-Quantity")
+    plot('purchase_shopping_cart_with_different_carts.data', "Purchase-Shopping-Cart-with-Different-Cart")
