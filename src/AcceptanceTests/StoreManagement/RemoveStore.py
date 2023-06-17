@@ -47,7 +47,7 @@ class RemoveStore(unittest.TestCase):
         products = self.app.get_products_by_name("bread").result
         self.assertEqual(0, len(products), "error: bakery product found after the store removed")
         products = self.app.get_products_by_name("pita").result
-        self.assertEqual(0, len(products), "error: bakery and market products found after the stores removed")
+        self.assertEqual(1, len(products), "error: bakery products found after the store removed")
         self.app.logout()
 
     def test_remove_store_already_removed(self):
