@@ -994,10 +994,10 @@ class Market(IService):
             return PurchaseRulesFactory.make_basket_rule(min_price)
         elif rule_type == "simple":
             return PurchaseRulesFactory.make_simple_rule(p1_name, gle1, amount1)
-        elif rule_type == "and" or rule_type == "or":
+        elif rule_type == "and" or rule_type == "or" or rule_type == "cond":
             return PurchaseRulesFactory.make_complex_rule(p1_name, gle1, amount1, p2_name, gle2, amount2, rule_type)
         else:
-            report_error(self.rule_maker.__qualname__, f"no such rule type: {rule_type}")
+            return report_error(self.rule_maker.__qualname__, f"no such rule type: {rule_type}")
 
     def add_purchase_simple_rule(self, session_id: int, store_name: str, product_name: str, gle: str,
                                  amount: int) -> Response:

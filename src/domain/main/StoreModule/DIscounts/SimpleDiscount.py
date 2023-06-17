@@ -41,7 +41,7 @@ class SimpleDiscount(IDiscount, Base):
                 or (self.discount_type == "store"):
             return item.price * (self.percent) * 0.01
 
-        return item.discount_price
+        return 0
 
     def find(self, product_name: str, products: set[Product]) -> Product | None:
         filtered = list(filter(lambda p: p.name == product_name, products))
