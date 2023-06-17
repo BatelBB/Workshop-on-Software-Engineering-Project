@@ -203,6 +203,37 @@ class PurchaseCart(unittest.TestCase):
             payment_mock.assert_called_once_with(50)
             delivery_mock.assert_called_once()
 
+    def test_purchase_with_bid_and_regular_purchase_dont_interfere(self):
+        with patch(self.app.provision_path, return_value=True) as delivery_mock, \
+                patch(self.app.payment_pay_path, return_value=True) as payment_mock:
+            self.set_stores()
+            self.app.login(*self.store_founder1)
+            self.app.start_bid("bakery", "bread")
+            self.app.logout()
+            self.app.login(*self.registered_buyer1)
+            r = self.app.purchase_with_non_immediate_policy("bakery", "bread", "card",
+                                                            ["1234567812345678", "123", "05/2028"], "ben-gurion",
+                                                            "1234", 50, "beer sheva", "israel")
+            self.assertTrue(r.success, "error: bid offer failed")
+            self.app.logout()
+            self.set_cart()
+            self.app.login(*self.registered_buyer1)
+            r = self.app.purchase_shopping_cart("card", ["1234567812345678", "123", "05/2028"],
+                                                "ben-gurion", "1234", "beer sheva", "israel")
+            self.assertTrue(r.success, "error: payment failed")
+            payment_mock.assert_called_once_with(560)
+            delivery_mock.assert_called_once()
+            self.app.logout()
+            self.app.login(*self.store_founder1)
+            self.app.approve_bid("bakery", "bread")
+            self.app.logout()
+            cart = self.app.show_cart().result
+            self.assertDictEqual({}, cart, "error: cart not empty after a purchase")
+            self.app.logout()
+
+            payment_mock.assert_called_with(50)
+            delivery_mock.assert_called()
+
     def test_purchase_after_complex_rule_added_rule_doesnt_affect_cart(self):
         with patch(self.app.provision_path, return_value=True) as delivery_mock, \
                 patch(self.app.payment_pay_path, return_value=True) as payment_mock:
@@ -378,29 +409,49 @@ class PurchaseCart(unittest.TestCase):
             payment_mock.assert_called_once_with(100)
             delivery_mock.assert_called_once()
 
-    # todo
-    def test_purchase_with_complex_rules_and_discount(self):
+    def test_purchase_with_complex_rules_and_discount_happy(self):
         with patch(self.app.provision_path, return_value=True) as delivery_mock, \
                 patch(self.app.payment_pay_path, return_value=True) as payment_mock:
             self.set_stores()
             self.set_complex_rules_and_discounts()
-            self.set_cart()
-            self.app.login(*self.registered_buyer1)
-            r = self.app.purchase_shopping_cart("card", ["1234567812345678", "123", "05/2028"],
+            self.app.add_to_cart("bakery", "bread", 10)
+            self.app.add_to_cart("bakery", "pita", 10)
+            self.app.add_to_cart("bakery", "cake", 10)
+            r = self.app.purchase_shopping_cart("card", ["1234123412341234", "123", "05/2028"],
                                                 "ben-gurion", "1234", "beer sheva", "israel")
-            self.assertTrue(r.success, "error: payment failed")
+            self.assertTrue(r.success, "error: cart payment failed")
             cart = self.app.show_cart().result
             self.assertDictEqual({}, cart, "error: cart not empty after a purchase")
             self.app.logout()
 
-            payment_mock.assert_called_once_with(100)
+            payment_mock.assert_called_once_with(300)
             delivery_mock.assert_called_once()
+
+    def test_purchase_with_complex_rules_and_discount_basket_rule_doesnt_hold(self):
+        with patch(self.app.provision_path, return_value=True) as delivery_mock, \
+                patch(self.app.payment_pay_path, return_value=True) as payment_mock:
+            self.set_stores()
+            self.set_complex_rules_and_discounts()
+            self.app.add_to_cart("bakery", "bread", 10)
+            self.app.add_to_cart("bakery", "pita", 10)
+            self.app.add_to_cart("bakery", "cake", 5)
+            cart_before = self.app.show_cart().result
+            r = self.app.purchase_shopping_cart("card", ["1234123412341234", "123", "05/2028"],
+                                                "ben-gurion", "1234", "beer sheva", "israel")
+            self.assertFalse(r.success, "error: cart payment succeeded")
+            cart_after = self.app.show_cart().result
+            self.assertDictEqual(cart_before, cart_after, "error: cart not empty after a purchase")
+            self.app.logout()
+
+            payment_mock.assert_not_called()
+            delivery_mock.assert_not_called()
 
     def set_stores(self):
         self.app.login(*self.store_founder1)
         self.app.open_store("bakery")
         self.app.add_product("bakery", "bread", "1", 10, 15, ["basic", "x"])
         self.app.add_product("bakery", "pita", "1", 5, 20, ["basic", "y"])
+        self.app.add_product("bakery", "cake", "2", 20, 40, ["sweets", "z"])
         self.app.logout()
         self.app.login(*self.store_founder2)
         self.app.open_store("market")
@@ -417,4 +468,24 @@ class PurchaseCart(unittest.TestCase):
         self.app.logout()
 
     def set_complex_rules_and_discounts(self):
-        ...
+        self.app.login(*self.store_founder1)
+        self.app.add_purchase_simple_rule("bakery", "bread", ">", 5)
+        self.app.add_purchase_simple_rule("bakery", "bread", "<", 50)
+        self.app.add_purchase_simple_rule("bakery", "pita", ">", 5)
+        self.app.add_purchase_simple_rule("bakery", "pita", "<", 100)
+        self.app.add_purchase_complex_rule("bakery", "bread", "<", 40, "cake", "<", 20, "and")
+        self.app.add_purchase_complex_rule("bakery", "bread", ">", 5, "pita", ">", 20, "or")
+        self.app.add_purchase_complex_rule("bakery", "bread", ">", 5, "pita", ">", 5, "cond")
+        self.app.add_basket_purchase_rule("bakery", 300)
+
+        # only r2 discount should be applied
+        r1 = self.app.add_simple_discount("bakery", "store", 30, p1_name="bread", gle1=">", amount1=8)
+        r2 = self.app.add_simple_discount("bakery", "product", 50, "bread", p1_name="pita", gle1=">", amount1=8)
+        r3 = self.app.add_simple_discount("bakery", "product", 50, "cake", p1_name="cake", gle1=">", amount1=8)
+        r4 = self.app.add_simple_discount("bakery", "category", 50, "1", p1_name="bread", gle1="<", amount1=50)
+
+        r5 = self.app.connect_discounts("bakery", r1.result, r2.result, "or")
+        r6 = self.app.connect_discounts("bakery", r3.result, r4.result, "max")
+
+        self.app.connect_discounts("bakery", r6.result, r5.result, "xor", rule_type="basket", min_price=500)
+        self.app.logout()
