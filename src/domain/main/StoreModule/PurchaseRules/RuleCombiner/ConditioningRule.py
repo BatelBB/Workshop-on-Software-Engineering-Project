@@ -14,9 +14,10 @@ class ConditioningRule(IRuleCombiner, Base):
     __table_args__ = {'extend_existing': True}
     rule_id = Column("rule_id", Integer, primary_key=True)
     store_name = Column("store_name", String, primary_key=True)
-    rule_id1 = Column("rule_id1", Integer, primary_key=True)
-    rule_id2 = Column("rule_id2", Integer, primary_key=True)
-    def __init__(self, r1: IRule=None, r2: IRule=None):
+    rule_id1 = Column("rule_id1", Integer)
+    rule_id2 = Column("rule_id2", Integer)
+
+    def __init__(self, r1: IRule = None, r2: IRule = None):
         super().__init__(r1, r2)
 
     def enforce_rule(self, basket: Basket) -> Response[bool]:
@@ -25,7 +26,7 @@ class ConditioningRule(IRuleCombiner, Base):
 
         if con1.success and not con2.success:
             return con2
-        return report("conditioning rule good -> Kfir is happy" ,True)
+        return report("conditioning rule good -> Kfir is happy", True)
 
     def __str__(self):
         return f'if {self.rule1} then must be also {self.rule2}'
@@ -48,10 +49,13 @@ class ConditioningRule(IRuleCombiner, Base):
         return rule
 
     @staticmethod
-    def load_all_cond_rules():
+    def load_all_cond_rules(store_name):
         out = {}
-        for r in DAL.load_all(ConditioningRule, ConditioningRule.create_instance_from_db_query):
-            out[r.rule_id] = r
+        records = DAL.load_all_by(ConditioningRule, lambda r: r.store_name == store_name, ConditioningRule.create_instance_from_db_query)
+        if not isinstance(records, list):
+            records = [records]
+        for record in records:
+            out[record.rule_id] = record
         return out
 
     @staticmethod

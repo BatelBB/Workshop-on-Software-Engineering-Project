@@ -16,6 +16,11 @@ class IRule:
     def __str__(self):
         pass
 
+    def set_db_info_as_discount_rule(self, store_name, rule_id):
+        self.rule_id = rule_id
+        self.store_name = f'{store_name}_discount'
+        return -1
+
     def set_db_info(self, store_name, rule_id):
         self.rule_id = rule_id
         self.store_name = store_name

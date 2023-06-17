@@ -3,47 +3,39 @@ from src.domain.main.StoreModule.Product import Product
 from src.domain.main.UserModule.Basket import Basket
 
 
-class IDiscount(ABC):
+class IDiscount:
 
     def __init__(self, id: int):
-        self.id = id
-        
-    @abstractmethod
+        self.discount_id = id
+
     def apply_discount(self, basket: Basket, products: set[Product]) -> Basket:
-        ...
+        pass
 
     def check_id(self, id: int) -> bool:
-        return self.id == id
+        return self.discount_id == id
 
     def find_discount(self, id: int):
-        if self.id == id:
+        if self.discount_id == id:
             return self
         return None
 
-    @abstractmethod
     def remove_discount(self, id) -> bool:
-        ...
+        pass
 
-    @abstractmethod
     def replace(self, id, discount) -> bool:
-        ...
+        pass
 
-    @abstractmethod
     def get_parents_id(self, id) -> int:
-        ...
+        pass
 
-    @abstractmethod
     def __str__(self, indent) -> str:
-        ...
+        pass
 
-    @abstractmethod
     def get_all_simple_discounts(self, l) -> dict:
-        ...
+        pass
 
-    @abstractmethod
     def get_all_connectors(self, l):
-        ...
+        pass
 
-    @abstractmethod
     def set_disconted_price_in_product(self, p: Product):
-        ...
+        pass

@@ -18,6 +18,16 @@ class IRuleCombiner(IRule):
     def number_of_ids(self):
         return 3
 
+    def set_db_info_as_discount_rule(self, store_name, rule_id):
+        self.rule_id = rule_id
+        self.store_name = store_name
+        self.rule_id1 = rule_id - 1
+        self.rule_id2 = rule_id - 2
+        if self.rule1 is not None:
+            self.rule1.set_db_info(store_name, rule_id - 1)
+            self.rule2.set_db_info(store_name, rule_id - 2)
+        return -3
+
     def set_db_info(self, store_name, rule_id):
         self.rule_id = rule_id
         self.store_name = store_name

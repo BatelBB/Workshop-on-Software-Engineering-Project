@@ -61,7 +61,7 @@ if __name__ == '__main__':
     # s0 = market.enter()
     # s0.load_configuration()
     s1 = market.enter()
-    # s1.register("u1", "p1")
+    s1.register("u1", "p1")
     s1.login("u1", "p1")
     # s2 = market.enter()
     # s2.register("u2", "p1")
@@ -76,8 +76,8 @@ if __name__ == '__main__':
     # s1.add_purchase_complex_rule("s1", "p1", ">", 885, "p1", "<", 888, "cond")
     # s1.add_purchase_complex_rule("s1", "p1", ">", 885, "p1", "<", 888, "cond")
 
-    res = s1.get_purchase_rules("s1")
-    s1.delete_purchase_rule(8, "s1")
+    # res = s1.get_purchase_rules("s1")
+    # s1.delete_purchase_rule(8, "s1")
     res = s1.get_purchase_rules("s1")
 
     print(res)

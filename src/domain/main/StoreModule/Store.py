@@ -70,6 +70,7 @@ class Store(Base):
         self.discounts: AddDiscounts = AddDiscounts(0)
         self.discount_counter = 0
         self.discount_lock = threading.RLock()
+        self.discount_rule_counter = 0
 
     @staticmethod
     def create_instance_from_db_query(r):
@@ -91,21 +92,21 @@ class Store(Base):
 
     def load_or_rules_db(self):
         #assuming self.purchase_rules loaded all irules
-        or_rules_dict = OrRule.load_all_or_rules()
+        or_rules_dict = OrRule.load_all_or_rules(self.name)
         for rule_id, rule in or_rules_dict.items():
             self.set_child_rules(rule)
         return or_rules_dict
 
     def load_and_rules_db(self):
         #assuming self.purchase_rules loaded all irules
-        and_rules_dict = AndRule.load_all_and_rules()
+        and_rules_dict = AndRule.load_all_and_rules(self.name)
         for rule_id, rule in and_rules_dict.items():
             self.set_child_rules(rule)
         return and_rules_dict
 
     def load_cond_rules_db(self):
         #assuming self.purchase_rules loaded all irules
-        cond_rules_dict = ConditioningRule.load_all_cond_rules()
+        cond_rules_dict = ConditioningRule.load_all_cond_rules(self.name)
         for rule_id, rule in cond_rules_dict.items():
             self.set_child_rules(rule)
         return cond_rules_dict
@@ -116,9 +117,10 @@ class Store(Base):
         complex_rule.rule1 = rule1
         complex_rule.rule2 = rule2
 
+
     def load_my_rules(self):
-        simple_rule_dict = SimpleRule.load_all_simple_rules()
-        basket_rules_dict = BasketRule.load_all_basket_rules()
+        simple_rule_dict = SimpleRule.load_all_simple_rules(self.name)
+        basket_rules_dict = BasketRule.load_all_basket_rules(self.name)
         self.purchase_rules = simple_rule_dict
         self.purchase_rules.update(basket_rules_dict)
 
@@ -128,6 +130,8 @@ class Store(Base):
         self.purchase_rules.update(or_rules)
         self.purchase_rules.update(and_rules)
         self.purchase_rules.update(cond_rules)
+
+        # self.extract_discount_rules()
 
         highest = 0
         r = None

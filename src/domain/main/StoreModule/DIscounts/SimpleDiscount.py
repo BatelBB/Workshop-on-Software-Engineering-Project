@@ -1,10 +1,22 @@
+from sqlalchemy import Column, Integer, String
+
+from DataLayer.DAL import Base
 from src.domain.main.StoreModule.DIscounts.IDIscount import IDiscount
 from src.domain.main.StoreModule.Product import Product
 from src.domain.main.StoreModule.PurchaseRules.IRule import IRule
 from src.domain.main.UserModule.Basket import Basket, Item
 
 
-class SimpleDiscount(IDiscount):
+class SimpleDiscount(IDiscount, Base):
+    __tablename__ = 'simple_discounts'
+    __table_args__ = {'extend_existing': True}
+    discount_id = Column("discount_id", Integer, primary_key=True)
+    store_name = Column("store_name", String, primary_key=True)
+    discount_type = Column("discount_type", String)
+    discount_for_name = Column("discount_for_name", String)
+    is_rule = Column("is_rule", String)
+    rule_id = Column("rule_id", Integer)
+
     # discount_type = store | category | product
     # discount_for_name: in case discount_type = product -> product_name |
     #                            discount_type = category -> category_name
@@ -15,6 +27,11 @@ class SimpleDiscount(IDiscount):
         self.discount_type = discount_type
         self.rule = rule
         self.discount_for_name = discount_for_name
+        self.store_name = None
+        if rule is not None:
+            self.is_rule = 'False'
+        else:
+            self.is_rule = 'True'
 
     def apply_for_product(self, item: Item, product: Product):
         if (self.discount_type == "category" and product.category == self.discount_for_name) \
@@ -79,3 +96,18 @@ class SimpleDiscount(IDiscount):
         if self.discount_type == "store" or self.discount_for_name == p.name or self.discount_for_name == p.category:
             return self.percent * p.price * 0.01
         return 0
+
+    def set_db_info(self, discount_id, store_name, rule=None):
+        self.store_name = store_name
+        self.discount_id = discount_id
+        if rule is not None:
+            return self.rule.set_db_info_as_discount_rule(store_name, discount_id - 1)
+        return -1
+
+    def add_to_db(self):
+        SimpleDiscount.add_record(self)
+
+    def delete_from_db(self):
+        if self.rule is not None:
+            self.rule.delete_from_db()
+        SimpleDiscount.delete_record(self.rule_id, self.store_name)
