@@ -7,6 +7,9 @@ from typing import Any
 from multipledispatch import dispatch
 from Service.IService.IService import IService
 from domain.main.StoreModule.PurchaseRules.BasketRule import BasketRule
+from domain.main.StoreModule.PurchaseRules.RuleCombiner.AndRule import AndRule
+from domain.main.StoreModule.PurchaseRules.RuleCombiner.ConditioningRule import ConditioningRule
+from domain.main.StoreModule.PurchaseRules.RuleCombiner.OrRule import OrRule
 from domain.main.StoreModule.PurchaseRules.SimpleRule import SimpleRule
 from src.domain.main.Utils.InitExternalServices import init_external_services_from_configuration
 from src.domain.main.StoreModule.PurchaseRules.IRule import IRule
@@ -53,7 +56,8 @@ class Market(IService):
         self.approval_lock = threading.RLock()
         self.approval_list: ConcurrentDictionary[
             str, ConcurrentDictionary[str, OwnersApproval]] = ConcurrentDictionary()
-        DAL.load_or_create_tables(tables=(User, Item, Store, Product, Appointment, SimpleRule, BasketRule))
+        DAL.load_or_create_tables(tables=(User, Item, Store, Product, Appointment, SimpleRule, BasketRule,
+                                          OrRule, AndRule, ConditioningRule))
         self.init_admin()
 
         self.stores = Store.load_all_stores()

@@ -77,7 +77,7 @@ if __name__ == '__main__':
     # s1.add_purchase_complex_rule("s1", "p1", ">", 885, "p1", "<", 888, "cond")
 
     res = s1.get_purchase_rules("s1")
-    s1.delete_purchase_rule(1, "s1")
+    s1.delete_purchase_rule(8, "s1")
     res = s1.get_purchase_rules("s1")
 
     print(res)
