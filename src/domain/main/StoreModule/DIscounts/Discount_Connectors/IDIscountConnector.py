@@ -96,9 +96,6 @@ class IDiscountConnector(IDiscount):
     def set_disconted_price_in_product(self, p: Product):
         return 0
 
-    def set_db_info(self, discount_id, store_name, rule=None):
-        self.store_name = store_name
-        self.discount_id = discount_id
 
     def delete_from_db(self):
         for discount in self.children:

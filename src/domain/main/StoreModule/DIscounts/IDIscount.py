@@ -44,3 +44,11 @@ class IDiscount:
 
     def delete_from_db(self):
         pass
+
+    def set_db_info(self, discount_id, store_name, rule=None):
+        self.store_name = store_name
+        self.discount_id = discount_id
+        if rule is not None:
+            self.rule_id = discount_id + 1
+            return 1 + self.rule.set_db_info(f"{store_name}_discount", discount_id + 1)
+        return 1

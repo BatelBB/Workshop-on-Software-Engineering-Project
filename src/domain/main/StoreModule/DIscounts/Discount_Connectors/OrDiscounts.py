@@ -63,7 +63,7 @@ class OrDiscounts(IDiscountConnector, Base):
         return discount
 
     @staticmethod
-    def load_all_add_discounts(store_name):
+    def load_all_or_discounts(store_name):
         out = {}
         records = DAL.load_all_by(OrDiscounts, lambda r: r.store_name == store_name,
                                   OrDiscounts.create_instance_from_db_query)

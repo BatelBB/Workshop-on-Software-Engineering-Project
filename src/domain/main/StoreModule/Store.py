@@ -53,7 +53,6 @@ class ProductQuantity:
 
 
 class Store(Base):
-
     __tablename__ = 'stores'
     __table_args__ = {'extend_existing': True}
     name = Column("name", String, primary_key=True)
@@ -85,7 +84,6 @@ class Store(Base):
             self.discounts.set_db_info(0, self.name)
             self.discounts.add_to_db()
 
-
     @staticmethod
     def create_instance_from_db_query(r):
         store_name, purchase_history_str = r.name, r.purchase_history_str
@@ -105,21 +103,21 @@ class Store(Base):
         return store
 
     def load_or_rules_db(self):
-        #assuming self.purchase_rules loaded all irules
+        # assuming self.purchase_rules loaded all irules
         or_rules_dict = OrRule.load_all_or_rules(self.name)
         for rule_id, rule in or_rules_dict.items():
             self.set_child_rules(rule)
         return or_rules_dict
 
     def load_and_rules_db(self):
-        #assuming self.purchase_rules loaded all irules
+        # assuming self.purchase_rules loaded all irules
         and_rules_dict = AndRule.load_all_and_rules(self.name)
         for rule_id, rule in and_rules_dict.items():
             self.set_child_rules(rule)
         return and_rules_dict
 
     def load_cond_rules_db(self):
-        #assuming self.purchase_rules loaded all irules
+        # assuming self.purchase_rules loaded all irules
         cond_rules_dict = ConditioningRule.load_all_cond_rules(self.name)
         for rule_id, rule in cond_rules_dict.items():
             self.set_child_rules(rule)
@@ -130,7 +128,6 @@ class Store(Base):
         rule2 = self.purchase_rules.pop(complex_rule.rule_id + 2)
         complex_rule.rule1 = rule1
         complex_rule.rule2 = rule2
-
 
     def load_my_rules(self):
         simple_rule_dict = SimpleRule.load_all_simple_rules(self.name)
@@ -158,7 +155,7 @@ class Store(Base):
             num_ids = r.number_of_ids()
         self.purchase_rule_ids = highest + 1 + num_ids
 
-    def connect_discount_tree(self, all_connectors: dict[int,IDiscountConnector], all_simple):
+    def connect_discount_tree(self, all_connectors: dict[int, IDiscountConnector], all_simple):
         for discount_id, discount in all_connectors.items():
             if discount.children_ids is not None and discount.children_ids != "":
                 children_id_list = discount.children_ids.split(",")
@@ -180,21 +177,17 @@ class Store(Base):
             if discount.is_rule == 'True':
                 discount.rule = discount_rules[discount.rule_id]
         for id, discount in xor.items():
-            if discount.is_rule == 'True':
-                discount.rule = discount_rules[discount.rule_id]
+            discount.rule = discount_rules[discount.rule_id]
 
         Store.delete_record(f'{self.name}_discounts')
-
-
-
 
     def load_my_discounts(self):
 
         simple_discounts = SimpleDiscount.load_all_simple_discounts(self.name)
         add_discounts = AddDiscounts.load_all_add_discounts(self.name)
-        max_discounts = MaxDiscounts.load_all_add_discounts(self.name)
-        or_discounts = OrDiscounts.load_all_add_discounts(self.name)
-        xor_discounts = {}
+        max_discounts = MaxDiscounts.load_all_max_discounts(self.name)
+        or_discounts = OrDiscounts.load_all_or_discounts(self.name)
+        xor_discounts = XorDiscounts.load_all_xor_discounts(self.name)
 
         self.connect_discount_to_rules(simple_discounts, xor_discounts)
 
@@ -203,20 +196,20 @@ class Store(Base):
             all_connectors.update(max_discounts)
         if or_discounts:
             all_connectors.update(or_discounts)
+        if xor_discounts:
+            all_connectors.update(xor_discounts)
         self.connect_discount_tree(all_connectors, simple_discounts)
 
-
-        #find discount 0:
+        # find discount 0:
         self.discounts = add_discounts[0]
         self.discounts.set_db_info(self.name, 0)
 
         self.discount_counter = 0
         for num, discount in chain(simple_discounts.items(), add_discounts.items(), max_discounts.items(),
-                                    or_discounts.items(), xor_discounts.items()):
+                                   or_discounts.items(), xor_discounts.items()):
             if num > self.discount_counter:
                 self.discount_counter = num
         self.discount_counter += 1
-
 
     @staticmethod
     def load_store(store_name):
@@ -558,7 +551,7 @@ class Store(Base):
         rule.delete_from_db()
 
     def add_simple_discount(self, percent: int, discount_type: str, rule: IRule = None, discount_for_name=None) -> \
-    Response[bool]:
+            Response[bool]:
         with self.discount_lock:
             discount = SimpleDiscount(self.discount_counter, percent, discount_type, rule, discount_for_name)
             count = discount.set_db_info(self.discount_counter, self.name, rule)
@@ -575,7 +568,6 @@ class Store(Base):
                 return report_error("connecet_discounts", "discount not found")
 
             # create new connector
-            self.discount_counter += 1
             new_id = self.discount_counter
             if connection_type == "add":
                 conn = AddDiscounts(new_id)
@@ -592,12 +584,13 @@ class Store(Base):
             id_for_backtrack = self.discounts.get_parents_id(id1)
             self.discounts.remove_discount(id1)
 
-            conn.add_discount_to_connector(d1, "not")
-            conn.add_discount_to_connector(d2, "not")
+            if connection_type != "xor":
+                conn.add_discount_to_connector(d1, "not")
+                conn.add_discount_to_connector(d2, "not")
 
             # replace 2nd discount with new connector in discount tree
             if self.discounts.replace(id2, conn):
-                conn.set_db_info(conn.discount_id, self.name)
+                self.discount_counter += conn.set_db_info(conn.discount_id, self.name)
                 conn.add_to_db()
                 return report("successfully connected discounts", True)
             else:
@@ -643,5 +636,3 @@ class Store(Base):
         for product, bid in self.products_with_bid_purchase_policy.items():
             bids[product] = bid.highest_bid
         return Response(bids)
-
-

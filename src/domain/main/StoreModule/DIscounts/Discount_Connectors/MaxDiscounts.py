@@ -52,7 +52,7 @@ class MaxDiscounts(IDiscountConnector, Base):
         return discount
 
     @staticmethod
-    def load_all_add_discounts(store_name):
+    def load_all_max_discounts(store_name):
         out = {}
         records = DAL.load_all_by(MaxDiscounts, lambda r: r.store_name == store_name,
                                   MaxDiscounts.create_instance_from_db_query)
