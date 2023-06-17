@@ -2,11 +2,10 @@ from functools import reduce
 
 from sqlalchemy import Column, ForeignKey, String, Integer, Float
 
-from src.domain.main.Utils import Base_db
-from src.domain.main.Utils.Base_db import session_DB
+from DataLayer.DAL import DAL, Base
 
 
-class Item(Base_db.Base):
+class Item(Base):
     __tablename__ = 'items'
     __table_args__ = {'extend_existing': True}
     product_name = Column(String, primary_key=True)
@@ -24,6 +23,11 @@ class Item(Base_db.Base):
         self.quantity = quantity
         self.price = price
         self.discount_price = price
+        self.rule_msg = ""
+
+    @staticmethod
+    def create_instance_from_db_query(r):
+        return Item(r.product_name, r.username, r.store_name, r.quantity, r.price, r.discount_price)
 
     def __str__(self):
         return f'Product: \'{self.product_name}\', Quantity: {self.quantity}, Price: {self.price}, Discount-Price: {self.discount_price}'
@@ -45,17 +49,11 @@ class Item(Base_db.Base):
 
     @staticmethod
     def load_item(product_name, username, store_name):
-        q = session_DB.query(Item).filter(Item.product_name == product_name, Item.username == username, Item.store_name == store_name).all()
-        exist = len(q) > 0
-        if exist:
-            row = q[0]
-            return Item(row.product_name, row.username, row.store_name, row.quantity, row.price, row.discount_price)
-        return None
+        return DAL.load(Item, lambda r: r.username == username and r.store_name == store_name and r.product_name == product_name, Item.create_instance_from_db_query)
 
     @staticmethod
     def number_of_records():
-        session_DB.flush()
-        return session_DB.query(Item).count()
+        return DAL.size(Item)
 
 
 class Basket:
@@ -82,25 +80,21 @@ class Basket:
 
             if new_quantity <= 0:
                 self.items.remove(item)
-                session_DB.delete(item)
-                new_quantity = 0
             else:
+                item.quantity = new_quantity
                 item_in_basket.quantity = new_quantity
-                session_DB.merge(item_in_basket)
 
         except ValueError:
-            session_DB.merge(item)
             self.items.append(item)
 
-        session_DB.commit()
-        return new_quantity
+        DAL.add(item)
+
+        return max(0, new_quantity)
 
     def remove_item(self, item: Item) -> bool:
         try:
             self.items.remove(item)
-            session_DB.query(Item).filter(Item.username == item.username, Item.store_name == item.store_name,
-                                          Item.product_name == item.product_name).delete()
-            session_DB.commit()
+            DAL.delete(Item, lambda r: r.username == item.username and r.store_name == item.store_name and r.product_name == r.product_name)
             return True
         except ValueError:
             return False
@@ -110,8 +104,7 @@ class Basket:
             item_index = self.items.index(item)
             item_in_basket = self.items[item_index]
             item_in_basket.quantity = item.quantity
-            session_DB.merge(item_in_basket)
-            session_DB.commit()
+            DAL.update(item)
             return True
         except ValueError:
             return False
@@ -135,3 +128,7 @@ class Basket:
             new_item.discount_price = item.discount_price
             new_basket.add_item(new_item)
         return new_basket
+
+    def restore_rule_msgs(self):
+        for i in self.items:
+            i.rule_msg = ""

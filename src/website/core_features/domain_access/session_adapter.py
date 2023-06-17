@@ -3,6 +3,7 @@ from typing import Optional, List, Dict, Any, Set
 from idlelib.multicall import r
 from typing import Optional, List, Dict, Any, Set, Mapping
 
+from domain.main.Utils.Response import Response
 from src.domain.main.Market.Permissions import Permission
 from src.domain.main.StoreModule.Store import Store
 from src.domain.main.Utils.Response import Response
@@ -43,7 +44,8 @@ class SessionAdapter:
                 rate=product["Rate"],
                 price=product["Price"],
                 store_name=name,
-                isBid=product["isBid"]
+                isBid=product["isBid"],
+                discounted_price=product["discounted_price"]
             )
             for product in data.values()
         ]
@@ -142,8 +144,8 @@ class SessionAdapter:
             Response("no such product")  # \← default if not found
         )
 
-    def update_cart_product_quantity(self, store_name, product_name, qty) -> Response[None]:
-        return self._session.update_cart_product_quantity(store_name, product_name, qty)
+    def update_cart_product_quantity(self, store_name, product_name, qty) -> Response[bool]:
+        return self._session.add_to_cart(store_name, product_name, qty)
 
     def edit_product_name(self, store_name: str, old_product_name: str, new_product_name: str):
         return self._session.change_product_name(store_name, old_product_name, new_product_name)
@@ -324,3 +326,6 @@ class SessionAdapter:
 
     def start_bid(self, store_name, product_name):
         return self._session.start_bid(store_name, product_name)
+
+    def is_admin(self):
+        return self._session.is_admin()

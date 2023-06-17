@@ -1,69 +1,67 @@
 {% extends "layout.html" %}
-{% block title %}Create store{% endblock %}
+{% block title %}View Cart{% endblock %}
 
 {% block page %}
 
-<h1 style="text-align:center; color:blue; font-size: 2em;">{{ name }}</h1>
+<h1 class="text-center text-primary display-4">{{ name }}</h1>
 
 {% if not cart.success %}
-<p style="color:red;">Error: {{ cart.description }}</p>
+<div class="alert alert-danger" role="alert">
+  Error: {{ cart.description }}
+</div>
 {% else %}
 
-<div style="display:flex; justify-content:space-around; flex-wrap:wrap; margin-bottom:1em;">
+<div class="container my-4">
 
-    <div class="container">
-      <div class="row">  <h1>Your cart</h1> </div>
+    <div class="mb-4">
+      <h1 class="text-center">Your cart</h1>
+    </div>
     {% if cart.result %}
-        <div class="row">
-    <h2>
-        Looks good?
-        <a href="{{ url_for('buying.checkout_cart') }}">
-            Proceed to checkout
-        </a>
-    </h2>
+        <div class="row justify-content-center mb-4">
+            <h2 class="text-center">
+                Total Cart Price: <span class="badge bg-secondary">{{ cart_price | round(2) }}₪</span>
+                <p class="lead">Looks good?</p>
+                <p class="text-danger">Notice: If one rule is broken in a store, clicking here will not purchase anything from that store in the current transaction.</p>
+                <a href="{{ url_for('buying.checkout_cart') }}" class="btn btn-primary">Proceed to checkout</a>
+            </h2>
         </div>
     {% endif %}
     {% for (store_name, basket) in cart.result.items() %}
-        <div class="row">
+        <div class="row justify-content-center">
+            <div class="col-12">
                 <h2>
-                    <img src="{{ dicebear_store(store_name) }}" style="height: 1em;" />
+                    <img src="{{ dicebear_store(store_name) }}" style="height: 2em;" />
                     {{ store_name }}
                 </h2>
-            <div>
-                    {% for (product_name, amount) in basket.amounts.items() %}
-                <div >
-                    <div >
-                        <div >
+                {% for (product_name, amount) in basket.amounts.items() %}
+                <div class="card mb-3">
+                    <div class="row g-0">
+                        <div class="col-md-4">
                             {% with product=basket.products[product_name] %}
-                            <h4>
-                            <img src="{{ dicebear_product(product_name) }}" style="height: 3em;"/>
-                            {{ product_name }}
-                            </h4>
-                            <p><span class="price">{{ product.discount_price * amount }}</span></p>
-                            price of {{ amount }} after discount.
-                            <a href="{{ url_for('buying.buy_product',
-                            store_name=store_name, product_name=product_name) }}">
-                                Change amount or remove
-                            </a>
+                            <img src="{{ dicebear_product(product_name) }}" class="img-fluid rounded-start" alt="{{ product_name }}">
+                        </div>
+                        <div class="col-md-8">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ product_name }}</h5>
+                                <p class="card-text">Price of {{ amount }} after discount: <span class="badge bg-secondary">{{ product.discount_price * amount | round(2) }}₪</span></p>
+                                {% if product.rule_msg %}
+                                    <p class="card-text text-danger">{{ product.rule_msg }}</p>
+                                {% endif %}
+                                <a href="{{ url_for('buying.buy_product', store_name=store_name, product_name=product_name) }}" class="btn btn-outline-primary">Change amount or remove</a>
                             {% endwith %}
-                            <div>
+                            </div>
                         </div>
                     </div>
                 </div>
-                    {% endfor %}
-                    total cart price:
-                    <p><span class="price">{{ cart_price }}</span></p>
+                {% endfor %}
             </div>
         </div>
     {% else %}
-        <p>
+        <div class="alert alert-info" role="alert">
             There's nothing in your cart right now. You should
-            <a href="{{ url_for('home.home') }}">
-                go and buy some stuff. Capitalism is fun
-            </a>.
-        </p>
+            <a href="{{ url_for('home.home') }}" class="btn btn-primary">go and buy some stuff. Capitalism is fun</a>
+        </div>
     {% endfor %}
-    </div>
 </div>
 
 {% endif %}

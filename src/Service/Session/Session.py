@@ -22,6 +22,7 @@ class Session:
         self.identifier = identifier
         self.service: IService = service
         self.is_open = True
+        self.load_configuration()
 
     def __str__(self):
         return f'Session: {self.identifier}'
@@ -149,6 +150,8 @@ class Session:
         return self.apply(self.service.add_permission, self.identifier, store, appointee, permission)
 
     def remove_permission(self, store: str, appointee: str, permission: Permission) -> Response[bool]:
+        if isinstance(permission, str):
+            permission = getattr(Permission, permission)
         return self.apply(self.service.remove_permission, self.identifier, store, appointee, permission)
 
     def permissions_of(self, store: str, subject: str) -> Response[set[Permission] | bool]:
@@ -179,7 +182,7 @@ class Session:
         return self.apply(self.service.change_product_category, self.identifier, store_name, old_product_name, category)
 
     def get_store_purchase_history(self, store_name: str) -> Response[str]:
-        return self.apply(self.service.get_store_purchase_history,self.identifier, store_name)
+        return self.apply(self.service.get_store_purchase_history, self.identifier, store_name)
 
     def purchase_with_non_immediate_policy(self, store_name: str, product_name: str,
                                            payment_method: str, payment_details: list[str], address: str,
@@ -229,9 +232,6 @@ class Session:
                           p1_name=None, gle1=None, amount1=None, p2_name=None, gle2=None, amount2=None):
         return self.apply(self.service.connect_discounts, self.identifier, store_name, id1, id2, connection_type,
                           rule_type, min_price, p1_name, gle1, amount1, p2_name, gle2, amount2)
-
-    def get_store_products_with_discounts(self, store_name: str) -> dict[Product:str]:
-        self.apply(self.service.get_store_products_with_discounts, self.identifier, store_name)
 
     def get_purchase_rules(self, store_name: str) -> Response[dict[int:IRule]]:
         return self.apply(self.service.get_purchase_rules, self.identifier, store_name)
@@ -289,15 +289,20 @@ class Session:
     def get_approval_lists_for_store(self, store_name) -> Response:
         return self.apply(self.service.get_approval_lists_for_store, self.identifier, store_name)
 
-
     def get_store_staff_wit_permissions(self, store_name: str):
         return self.apply(self.service.get_store_staff_wit_permissions, self.identifier, store_name)
 
     def load_configuration(self):
         dir_path = os.path.dirname(os.path.realpath(__file__))  # get the directory of the current script
-        config_path = os.path.join(dir_path, '..','..', '..', 'Configuration',
+        config_path = os.path.join(dir_path, '..', '..', '..', 'Configuration',
                                    'config.json')  # construct the path to config.json
         config_path = os.path.abspath(config_path)  # resolve the path
         with open(config_path, 'r') as f:
             config = json.load(f)
         return self.apply(self.service.load_configuration, config)
+
+    def is_admin(self):
+        return self.apply(self.service.is_admin, self.identifier)
+
+    def get_bid_products(self, store_name: str) -> Response[dict | bool]:
+        return self.apply(self.service.get_bid_products, self.identifier, store_name)

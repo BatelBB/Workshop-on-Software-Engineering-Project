@@ -4,9 +4,11 @@ from src.domain.main.Utils.Response import Response
 
 class OwnersApproval:
     to_approve: dict[str, bool]
+    starter: str
 
     def __init__(self, l: list, sender:str):
         self.to_approve = {}
+        self.starter = sender
         for person in l:
             if person == sender:
                 self.to_approve[sender] = True
@@ -24,7 +26,7 @@ class OwnersApproval:
     def approve(self, person: str) -> Response:
         self.to_approve[person] = True
         res = self.is_approved()
-        if res.result:
+        if not res.result:
             return res
         return report(f"{person} approved bid", True)
 
@@ -34,3 +36,14 @@ class OwnersApproval:
                 return report(f"is_approved {p} not approved yet", False)
 
         return report("approved", True)
+
+    def restore(self):
+        for p in self.to_approve:
+            self.to_approve[p] = False
+
+    def left_to_approve(self) -> list[str]:
+        l = []
+        for p in self.to_approve:
+            if not self.to_approve[p]:
+                l.append(p)
+        return l

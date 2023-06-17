@@ -43,3 +43,7 @@ class IDiscount(ABC):
     @abstractmethod
     def get_all_connectors(self, l):
         ...
+
+    @abstractmethod
+    def set_disconted_price_in_product(self, p: Product):
+        ...

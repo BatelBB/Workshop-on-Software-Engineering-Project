@@ -14,16 +14,10 @@ class Permission(Enum):
     ChangePurchasePolicy = 'Change purchase policy'
     AppointManager = 'Appoint another manager'
     AppointOwner = 'Appoint another owner'
-    CancelManagerAppointment = 'Cancel appointment of another manager'
-    CancelOwnerAppointment = 'Cancel appointment of another owner'
-    CloseStore = 'Close store'
-    ReopenStore = 'Reopen store'
-    OpenStore = 'Open store'
-    OpenAuction = 'Open Auction'
-    OpenLottery = 'Open Lottery'
+    # OpenAuction = 'Open Auction'
+    # OpenLottery = 'Open Lottery'
     StartBid = 'Start a bid'
     ApproveBid = 'Approve a bid'
-
 
 def get_permission_name(permission: Permission) -> str:
     return Permission(permission).name

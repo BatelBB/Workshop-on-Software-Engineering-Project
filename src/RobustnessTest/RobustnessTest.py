@@ -3,7 +3,6 @@ from threading import Thread
 
 from parameterized import parameterized
 
-from Service.IService.IService import IService
 from src.domain.main.Market.Market import Market
 from src.domain.test.UnitTests.RandomInputGenerator import get_random_product, get_random_user, get_random_string
 
@@ -253,23 +252,24 @@ class RobustnessTest(unittest.TestCase):
         session = self.service.enter()
         r = session.register(*user)
         result[index] = r
-        self.assertTrue(r.success)
-        username = user[0]
-        self.assertTrue(self.service.verify_user_consistent(username))
 
     @parameterized.expand(number_of_threads)
     def test_multiple_threads_register_same_user(self, number_of_threads):
         user = get_random_user()
+        username = user[0]
         threads = [None] * number_of_threads
         results = [None] * number_of_threads
-        for i in range(len(threads)):
+
+        for i in range(number_of_threads):
             threads[i] = Thread(target=self.start_new_session_and_register, args=(user, results, i))
             threads[i].start()
-        for i in range(len(threads)):
+        for i in range(number_of_threads):
             threads[i].join()
+
         succeeded_results = list(filter(lambda response: response.success, results))
         self.assertEqual(1, len(succeeded_results))
         self.assertEqual(1, self.service.get_number_of_registered_users())
+        self.assertTrue(self.service.verify_user_consistent(username))
 
     def start_new_session_and_login(self, user, result, index):
         session = self.service.enter()

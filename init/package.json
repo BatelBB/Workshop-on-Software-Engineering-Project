@@ -1,0 +1,16 @@
+{
+  "name": "init-for-workshop-project",
+  "version": "1.0.0",
+  "private": true,
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build:schema": "ts-json-schema-generator -p types.ts --type JsonRoot > ../States/schema.json"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "ts-json-schema-generator": "^1.2.0"
+  }
+}

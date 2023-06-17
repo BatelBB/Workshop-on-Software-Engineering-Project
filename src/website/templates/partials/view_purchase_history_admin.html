@@ -1,0 +1,39 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="container">
+    <h1 class="text-center my-4">Purchase History for All Stores</h1>
+
+    {% if purchase_history %}
+    <table class="table table-striped">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">Store</th>
+                <th scope="col">Purchase History</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for store, purchases in purchase_history.items() %}
+            <tr>
+                <td>{{ store }}</td>
+                <td>
+                    <ul>
+                        {% for purchase in purchases %}
+                            {% for product in purchase.split('Product')[1:] %}
+                                <li>Product{{ product }}</li>
+                            {% endfor %}
+                        {% endfor %}
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div class="alert alert-warning" role="alert">
+        <p>There are no purchases made - Your market SUCKS</p>
+    </div>
+    <a href="{{ url_for('home.home') }}" class="btn btn-primary">Go back to home</a>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 
+from domain.main.StoreModule.Product import Product
 from src.domain.main.StoreModule.DIscounts.IDIscount import IDiscount
 from src.domain.main.Utils.Logger import report
 from src.domain.main.Utils.Response import Response
@@ -74,3 +75,6 @@ class IDiscountConnector(IDiscount, ABC):
             d = dis.get_all_connectors(d)
         d[self.id] = self.__repr__()
         return d
+
+    def set_disconted_price_in_product(self, p: Product):
+        return 0

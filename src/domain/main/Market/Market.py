@@ -5,7 +5,6 @@ from functools import reduce
 from typing import Any
 
 from multipledispatch import dispatch
-from sqlalchemy import inspect
 from Service.IService.IService import IService
 from src.domain.main.Utils.InitExternalServices import init_external_services_from_configuration
 from src.domain.main.StoreModule.PurchaseRules.IRule import IRule
@@ -26,7 +25,7 @@ from src.domain.main.StoreModule.PurchaseRules import PurchaseRulesFactory
 from src.domain.main.StoreModule.Store import Store
 from src.domain.main.UserModule.Basket import Item
 from src.domain.main.UserModule.User import User
-from src.domain.main.Utils.Base_db import Base, engine, init_db_from_configuration
+from src.DataLayer.DAL import DAL
 from src.domain.main.Utils.ConcurrentDictionary import ConcurrentDictionary
 from src.domain.main.Utils.Logger import Logger, report_error, report_info
 from src.domain.main.Utils.Response import Response
@@ -52,34 +51,22 @@ class Market(IService):
         self.approval_lock = threading.RLock()
         self.approval_list: ConcurrentDictionary[
             str, ConcurrentDictionary[str, OwnersApproval]] = ConcurrentDictionary()
-        self.init_db()
+        DAL.load_or_create_tables(tables=(User, Item, Store, Product, Appointment))
         self.init_admin()
 
-    def init_db(self):
-        Base.metadata.reflect(engine)
-        classes_for_db = (User, Item, Store, Product, Appointment)
-        tables_to_create = []
-
-        for cls in classes_for_db:
-            if not self.is_table_exsits(cls.__tablename__):
-                tables_to_create.append(cls.__table__)
-
-        Base.metadata.create_all(engine, checkfirst=True, tables=tables_to_create)
+        self.stores = Store.load_all_stores()
+        self.appointments = Appointment.load_all_appointments()
 
     def load_configuration(self, config):
-        init_db_from_configuration(config['db'])
+        DAL.init(config['db'])
         payment_service, provision_service = init_external_services_from_configuration(config['external_services'])
         self.paymentService = payment_service
         self.provisionService = provision_service
 
-
-    def is_table_exsits(self, table_name: str):
-        inspector = inspect(engine)
-        return inspector.has_table(table_name)
-
     def init_admin(self):
         admin_credentials = ('Kfir', 'Kfir', True)
         self.register(0, *admin_credentials)
+        self.set_admin_permissions()
 
     def generate_session_identifier(self):
         min: int = 1
@@ -142,6 +129,8 @@ class Market(IService):
     def has_permission_at(self, store_name: str, actor: User, permission: Permission) -> bool:
         if actor is None:
             return False
+        if actor.is_admin and permission == Permission.RetrievePurchaseHistory:
+            return True
         appointment = self.get_appointment_of(actor.username, store_name)
         return appointment is not None and appointment.is_allowed(permission)
 
@@ -156,7 +145,7 @@ class Market(IService):
                 self.appointments.insert(store_name, [appointment]) if appointments is None else \
                     appointments.append(appointment)
                 self.notifications.send_from_store(store_name, appointment.appointee,
-                           f"The store {store_name} appointed you with permissions {appointment.permissions}")
+                                                   f"The store {store_name} appointed you with permissions {appointment.permissions}")
                 return True
             return False
 
@@ -248,7 +237,8 @@ class Market(IService):
     def get_all_registered_users(self) -> list[str]:
         return self.users.get_all_keys()
 
-    def verify_store_contains_product(self, calling_method_name: str, store_name: str, product_name: str, quantity: int) -> Response[Store | bool]:
+    def verify_store_contains_product(self, calling_method_name: str, store_name: str, product_name: str,
+                                      quantity: int) -> Response[Store | bool]:
         response = self.verify_registered_store(calling_method_name, store_name)
         if response.success:
             store = response.result
@@ -257,12 +247,15 @@ class Market(IService):
                 is_store_has_sufficient_quantity = store.amount_of(product_name) >= quantity
                 if is_store_has_sufficient_quantity:
                     return Response(store)
-                return report_error(self.verify_store_contains_product.__qualname__, f'Store \'{store_name}\' can provide only {store.amount_of(product_name)} units of Product \'{product_name}\'. Required: {quantity}.')
-            return report_error(calling_method_name, f'Store \'{store_name}\' does not contains Product \'{product_name}\'')
+                return report_error(self.verify_store_contains_product.__qualname__,
+                                    f'Store \'{store_name}\' can provide only {store.amount_of(product_name)} units of Product \'{product_name}\'. Required: {quantity}.')
+            return report_error(calling_method_name,
+                                f'Store \'{store_name}\' does not contains Product \'{product_name}\'')
         return report_error(calling_method_name, f'Store \'{store_name}\' does not exist')
 
     def report_no_permission(self, calling_method: str, actor: User, store: str, permission: Permission):
-        return report_error(calling_method, f'\'{actor}\' has no permission to {get_permission_description(permission)} at store \'{store}\'')
+        return report_error(calling_method,
+                            f'\'{actor}\' has no permission to {get_permission_description(permission)} at store \'{store}\'')
 
     def leave(self, session_identifier: int) -> Response[bool]:
         leaving_user = self.sessions.delete(session_identifier)
@@ -270,6 +263,8 @@ class Market(IService):
         return report_info(self.leave.__qualname__, f'{leaving_user} left session: {session_identifier}')
 
     def register(self, session_identifier: int, username: str, password: str, is_admin=False) -> Response[bool]:
+        if password == "":
+            return report_error(self.login.__qualname__, "Cannot register with empty password!")
         if self.find_user(username) is None:
             new_user = self.add_user(username, password, is_admin)
             if new_user is not None:
@@ -280,6 +275,8 @@ class Market(IService):
         return self.find_user(username) is not None
 
     def login(self, session_identifier: int, username: str, encrypted_password: str) -> Response[bool]:
+        if encrypted_password == "":
+            return report_error(self.login.__qualname__, "Cannot login with empty password!")
         next_user = self.find_user(username)
         if next_user is None:
             return report_error(self.login.__qualname__, f'Username: \'{username}\' is not registered')
@@ -307,8 +304,8 @@ class Market(IService):
                 store = self.add_store(store_name)
                 if store is not None:
                     self.add_appointment(store_name, Appointment(actor.username, store_name))
-                    products_of_removed_store = self.removed_store_products.get(store)
 
+                    products_of_removed_store = self.removed_store_products.get(store)
                     if products_of_removed_store is not None:
                         for product in products_of_removed_store:
                             store.add(product, self.removed_products_quantity.get(product))
@@ -333,7 +330,7 @@ class Market(IService):
                     self.removed_products_quantity.insert(product, store.amount_of(product.name))
 
                 self.notifications.send_from_store(store_name, actor.username,
-                                           f"You have closed store {store_name}.")
+                                                   f"You have closed store {store_name}.")
                 return report_info(self.remove_store.__qualname__, f'{actor} removed store {store_name}')
             else:
                 return report_error(self.remove_store.__qualname__,
@@ -390,7 +387,8 @@ class Market(IService):
                 if self.has_permission_at(store_name, actor, Permission.Add):
                     p = Product(product_name, store_name, quantity, category, price, keywords)
                     store.add(p, quantity)
-                    return report_info(self.add_product.__qualname__, f'\'{actor}\' add {quantity} units of {p} to store \'{store_name}\'')
+                    return report_info(self.add_product.__qualname__,
+                                       f'\'{actor}\' add {quantity} units of {p} to store \'{store_name}\'')
                 return self.report_no_permission(self.add_product.__qualname__, actor, store_name, Permission.Add)
             return report_error(self.add_product.__qualname__, f'Price cannot be less then zero!')
         return response
@@ -437,7 +435,7 @@ class Market(IService):
 
     def appoint(self, session_identifier: int, calling_method: str, store_name: str, appointee_name: str,
                 required_permission: Permission, permissions: set[Permission],
-                role: {'StoreManager', 'StoreOwner'}) -> Response[bool]:
+                role: {'StoreManager', 'StoreOwner'}, original_appointer=None) -> Response[bool]:
         response = self.verify_registered_user_and_store(calling_method, appointee_name, store_name)
         if response.success:
             appointee, store = response.result
@@ -445,14 +443,19 @@ class Market(IService):
             if not actor.is_member():
                 return report_error(calling_method, f'{appointee} is not allowed to {required_permission.value}.')
             if self.has_permission_at(store_name, actor, required_permission):
+                appointer = actor.username
+                if original_appointer is not None:
+                    appointer = original_appointer
                 if self.add_appointment(store_name,
-                                        Appointment(appointee_name, store_name, role, actor.username, permissions)):
-                    return report_info(calling_method, f'{actor} appointed \'{appointee.username}\' to a {role}.')
-                return report_error(calling_method, f'{appointee} is already appointed to a role at store \'{store_name}\'.')
+                                        Appointment(appointee_name, store_name, role, appointer, permissions)):
+                    return report_info(calling_method, f'{actor} appointed {appointee} to a {role}.')
+                return report_error(calling_method,
+                                    f'{appointee} is already appointed to a role at store \'{store_name}\'.')
             return self.report_no_permission(calling_method, actor, store_name, required_permission)
         return response  # no registered appointee/store
 
-    def get_product_by(self, session_identifier: int, calling_method: str, preidcate) -> Response[list[dict[str, dict]]]:
+    def get_product_by(self, session_identifier: int, calling_method: str, preidcate) -> Response[
+        list[dict[str, dict]]]:
         actor = self.get_active_user(session_identifier)
         stores = self.stores.get_all_values()
         stores = [store for store in stores if self.store_activity_status.get(store.name) == 'OPEN' or
@@ -477,8 +480,10 @@ class Market(IService):
         return self.get_product_by(session_identifier, self.get_products_by_keywords.__qualname__,
                                    lambda p: len((set(p.keywords) & set(keywords))) > 0)
 
-    def get_products_in_price_range(self, session_identifier: int, min: float, max: float) -> Response[list[dict[str, dict]]]:
-        return self.get_product_by(session_identifier, self.get_products_in_price_range.__qualname__, lambda p: min <= p.price <= max)
+    def get_products_in_price_range(self, session_identifier: int, min: float, max: float) -> Response[
+        list[dict[str, dict]]]:
+        return self.get_product_by(session_identifier, self.get_products_in_price_range.__qualname__,
+                                   lambda p: min <= p.price <= max)
 
     def appoint_manager(self, session_identifier: int, appointee_name: str, store_name: str) -> Response[bool]:
         return self.appoint(session_identifier, self.appoint_manager.__qualname__, store_name, appointee_name,
@@ -486,8 +491,15 @@ class Market(IService):
 
     # only call from self.approve_owner or self.appoint_owner
     def add_owner(self, session_identifier: int, appointee_name: str, store_name: str) -> Response:
+        approval = self.approval_list.get(store_name).get(appointee_name)
+        if approval is None:
+            appointer = None
+        else:
+            appointer = approval.starter
+
         res = self.appoint(session_identifier, self.add_owner.__qualname__, store_name, appointee_name,
-                           Permission.AppointOwner, get_default_owner_permissions(), role='StoreOwner')
+                           Permission.AppointOwner, get_default_owner_permissions(), role='StoreOwner',
+                           original_appointer=appointer)
         if res.success:
             store_res = self.verify_registered_store(self.add_owner.__qualname__, store_name)
             if not store_res.success:
@@ -499,9 +511,12 @@ class Market(IService):
             store_dict = self.approval_list.get(store_name)
             for name in store_dict.get_all_keys():
                 store_dict.get(name).add_owner(appointee_name)
+
+            store_dict.delete(appointee_name)
         return res
 
-    def approve_owner(self, session_identifier: int, appointee_name: str, store_name: str, is_approve: bool) -> Response[bool]:
+    def approve_owner(self, session_identifier: int, appointee_name: str, store_name: str, is_approve: bool) -> \
+            Response[bool]:
         with self.approval_lock:
             actor = self.get_active_user(session_identifier)
             perms = self.permissions_of(session_identifier, store_name, actor.username)
@@ -521,7 +536,7 @@ class Market(IService):
                 if not approval_res.result:
                     return report_info(self.approve_owner.__qualname__, f"{actor.username} approved")
 
-                store_dict.delete(appointee_name)
+                # store_dict.delete(appointee_name)
                 return self.add_owner(session_identifier, appointee_name, store_name)
             else:
                 store_dict.delete(appointee_name)
@@ -531,6 +546,8 @@ class Market(IService):
         actor = self.get_active_user(session_identifier)
         perms = self.permissions_of(session_identifier, store_name, actor.username)
 
+        if not perms.success:
+            return perms
         if Permission.AppointOwner not in perms.result:
             return report_error(self.appoint_owner.__qualname__,
                                 f"{actor.username} does not have permissions to appoint owner")
@@ -538,10 +555,16 @@ class Market(IService):
         store = self.verify_registered_store(self.appoint_owner.__qualname__, store_name)
         if not store.success:
             return store
+        owners = self.get_store_owners(session_identifier, store_name).result
+        if appointee_name in owners:
+            return report_error(self.appoint_owner.__qualname__, f"{appointee_name} is already owner of {store_name}")
 
         if store_name not in self.approval_list.list_keys():
             self.approval_list.insert(store_name, ConcurrentDictionary())
-        owners = self.get_store_owners(session_identifier, store_name).result
+
+        if appointee_name in self.approval_list.get(store_name).list_keys():
+            return self.approve_owner(session_identifier, appointee_name, store_name, True)
+
         approval = OwnersApproval(owners, actor.username)
 
         if approval.is_approved().result:
@@ -599,12 +622,29 @@ class Market(IService):
                 queue.append(successor)
         return successors
 
+    def update_owner_approvals(self, fired, store_name):
+        # update approval_list: remove approvals started by fired, remove_owner from all approvals for this store
+        store_dict = self.approval_list.get(store_name)
+        if store_dict is not None:
+            for key in store_dict.get_all_keys():
+                approval = store_dict.get(key)
+                if approval.starter == fired:
+                    store_dict.delete(key)
+                else:
+                    store_dict.get(key).remove_owner(fired)
+        # update bid approvals in store:
+        store = self.verify_registered_store("update_owner_approvals", store_name)
+        if not store.success:
+            return report_error("update_owner_approvals", f"{store_name} store not found")
+        store = store.result
+        store.remove_owner(fired)
+
     def remove_appointment(self, session_identifier: int, fired_appointee: str, store_name: str) -> Response[bool]:
-        # TODO: add remove_owner() call from approval lists for relevat store
         actor = self.get_active_user(session_identifier)
         if self.is_appointed_by(fired_appointee, actor.username, store_name):
             fired_appointee_successors = self.bfs(fired_appointee, store_name)
             fired_appointee_successors_msg = ', '.join(fired_appointee_successors)
+            [self.update_owner_approvals(fired, store_name) for fired in fired_appointee_successors]
             [self.remove_appointment_of(fired, store_name) for fired in fired_appointee_successors]
             return report_info(self.remove_appointment.__qualname__,
                                f'\'{actor}\' remove appointment of \'{fired_appointee_successors_msg}\' at store \'{store_name}\'.')
@@ -669,11 +709,14 @@ class Market(IService):
 
     def add_to_cart(self, session_identifier: int, store_name: str, product: str, quantity: int) -> Response[bool]:
         actor = self.get_active_user(session_identifier)
+        if self.store_activity_status.get(store_name) == 'CLOSED':
+            return report_error(self.add_to_cart.__qualname__,
+                                f"Store {store_name} is closed, open it to add products.")
         response = self.verify_store_contains_product(self.add_to_cart.__qualname__, store_name, product, quantity)
         if response.success:
             store = response.result
             price = store.get_product_price(product)
-            return actor.add_to_cart(store_name, product, price, quantity) if price > 0 \
+            return actor.add_to_cart(store_name, product, price, quantity) if price > 0 and quantity > 0 \
                 else report_error(self.add_to_cart.__qualname__,
                                   f'Store \'{store}\' does not contains product \'{product}\'')
         return response
@@ -687,7 +730,8 @@ class Market(IService):
     def update_cart_product_quantity(self, session_identifier: int, store_name: str, product_name: str,
                                      quantity: int) -> Response[bool]:
         actor = self.get_active_user(session_identifier)
-        response = self.verify_store_contains_product(self.update_cart_product_quantity.__qualname__, store_name, product_name, quantity)
+        response = self.verify_store_contains_product(self.update_cart_product_quantity.__qualname__, store_name,
+                                                      product_name, quantity)
         return actor.update_cart_product_quantity(store_name, product_name, quantity) if response.success else response
 
     def change_product_name(self, session_identifier: int, store_name: str, product_old_name: str,
@@ -700,20 +744,25 @@ class Market(IService):
                 if store.change_product_name(product_old_name, product_new_name):
                     return report_info(self.change_product_name.__qualname__,
                                        f'Product \'{product_old_name}\' changed to \'{product_new_name}\' at store \'{store_name}\' by {actor}')
-                return report_error(self.change_product_name.__qualname__, f'Store \'{store_name}\' does not contains product \'{product_old_name}\'')
-            return self.report_no_permission(self.change_product_name.__qualname__, actor, store_name, Permission.Update)
+                return report_error(self.change_product_name.__qualname__,
+                                    f'Store \'{store_name}\' does not contains product \'{product_old_name}\'')
+            return self.report_no_permission(self.change_product_name.__qualname__, actor, store_name,
+                                             Permission.Update)
         return response
 
-    def change_product_price(self, session_identifier: int, store_name: str, product_old_price: float, product_new_price: float) -> Response[bool]:
+    def change_product_price(self, session_identifier: int, store_name: str, product_old_price: float,
+                             product_new_price: float) -> Response[bool]:
         response = self.verify_registered_store(self.change_product_price.__qualname__, store_name)
         if response.success:
             store = response.result
             actor = self.get_active_user(session_identifier)
-            if product_new_price > 0 :
+            if product_new_price > 0:
                 if self.has_permission_at(store_name, actor, Permission.Update):
                     store.change_product_price(product_old_price, product_new_price)
-                    return report_info(self.change_product_price.__qualname__, f'Product of price {product_old_price} changed to \'{product_new_price}\' at store \'{store_name}\' by {actor}')
-                return self.report_no_permission(self.change_product_price.__qualname__, actor, store_name,Permission.Update)
+                    return report_info(self.change_product_price.__qualname__,
+                                       f'Product of price {product_old_price} changed to \'{product_new_price}\' at store \'{store_name}\' by {actor}')
+                return self.report_no_permission(self.change_product_price.__qualname__, actor, store_name,
+                                                 Permission.Update)
             return report_error(self.change_product_price.__qualname__, "Price cannot be zero or negative!")
         return response
 
@@ -725,13 +774,17 @@ class Market(IService):
             actor = self.get_active_user(session_identifier)
             if self.has_permission_at(store_name, actor, Permission.Update):
                 if store.change_product_category(product_name, category):
-                    return report_info(self.change_product_category.__qualname__, f'Product {product_name} category changed to \'{category}\' at store \'{store_name}\' by {actor}')
-                return report_error(self.change_product_name.__qualname__, f' Store \'{store_name}\' does not contains product \'{product_name}\'')
-            return self.report_no_permission(self.change_product_category.__qualname__, actor, store_name, Permission.Update)
+                    return report_info(self.change_product_category.__qualname__,
+                                       f'Product {product_name} category changed to \'{category}\' at store \'{store_name}\' by {actor}')
+                return report_error(self.change_product_name.__qualname__,
+                                    f' Store \'{store_name}\' does not contains product \'{product_name}\'')
+            return self.report_no_permission(self.change_product_category.__qualname__, actor, store_name,
+                                             Permission.Update)
         return response
 
     def show_cart(self, session_identifier: int) -> Response[dict | bool]:
         actor = self.get_active_user(session_identifier)
+        self.update_item_prices(actor)
         r = actor.show_cart()
         report_info(self.show_cart.__qualname__, r.description)
         return r
@@ -779,13 +832,14 @@ class Market(IService):
                 if info_res.success:
                     payment_res = self.paymentService.pay(price)
                     if not payment_res:
-                        report_error(self.pay.__qualname__, f'paying failed')
+                        return False, report_error(self.pay.__qualname__, f'paying failed')
                     else:
-                        return payment_res
+                        return True, report_info(self.pay.__qualname__, f'paying succeeded!')
                 else:
-                    report_error(self.pay.__qualname__, f'setting payment information failed {info_res}')
+                    return False, report_error(self.pay.__qualname__, f'setting payment information failed {info_res}')
             except Exception as e:
-                report_error(self.pay.__qualname__, f"failed to get payment service {e}")
+                return False, report_error(self.pay.__qualname__, f"failed to get payment service {e}")
+        return False, report_error(self.pay.__qualname__, "Price cannot be less than 0")
 
     def add_to_purchase_history(self, baskets: dict[str, Any]) -> None:
         for store_name, basket in baskets.items():
@@ -797,19 +851,17 @@ class Market(IService):
 
     def get_cart_price(self, baskets):
         cart_price = 0
-        successful_store_purchases = []
 
         for store_name, basket in baskets.items():
             response2 = self.verify_registered_store(self.get_cart_price.__qualname__, store_name)
             if response2.success:
                 store = response2.result
-                res = store.reserve_products(basket)
-                if res:
-                    successful_store_purchases.append(store_name)
+                res = store.check_rules(basket)
+                if res.success and res.result:
                     cart_price += store.calculate_basket_price(basket)
             else:
                 return response2.success
-        return cart_price, successful_store_purchases
+        return cart_price
 
     def purchase_shopping_cart(self, session_identifier: int, payment_method: str, payment_details: list[str],
                                address: str, postal_code: str, city: str, country: str) -> Response[bool]:
@@ -817,24 +869,31 @@ class Market(IService):
         holder = actor.username
         user_id = actor.get_user_id()
         response = actor.verify_cart_not_empty()
+        successful_store_purchases = []
         if response.success:
             baskets = actor.get_baskets()
+            for store_name, basket in baskets.items():
+                store = self.stores.get(store_name)
+                res = store.reserve_products(basket)
+                if res.success and res.result:
+                    successful_store_purchases.append(store_name)
             resp = self.get_cart_price(baskets)
-            payment_succeeded = self.pay(resp[0],  payment_details, holder, user_id)
-            if payment_succeeded:
+            payment_succeeded = self.pay(resp, payment_details, holder, user_id)
+            if payment_succeeded[0]:
                 # order delivery
-
                 self.provisionService.set_info(actor.username, 0, address, postal_code, city, country)
                 if not self.provisionService.getDelivery():
-                    self.paymentService.refund(resp[0])
+                    self.paymentService.refund(resp)
                     return report_error(self.purchase_shopping_cart.__qualname__, 'failed delivery')
-                self.add_to_purchase_history(baskets)
-                self.update_user_cart_after_purchase(actor, resp[1])
+                successful_baskets = {store_name: basket for store_name, basket in baskets.items() if
+                                      store_name in successful_store_purchases}
+                self.add_to_purchase_history(successful_baskets)
+                self.update_user_cart_after_purchase(actor, successful_store_purchases)
                 for store_name, basket in baskets.items():
                     self.find_store(store_name).update_db(basket)
                 return Response(True)
             else:
-                return report_error(self.purchase_shopping_cart.__qualname__, "payment_succeeded = false")
+                return report_error(self.purchase_shopping_cart.__qualname__, payment_succeeded[1].description)
         else:
             return response
 
@@ -962,7 +1021,6 @@ class Market(IService):
             return store.apply_purchase_policy(payment_service, product_name, delivery_service, how_much)
         return response
 
-
     def add_simple_discount(self, session_id: int, store_name: str, discount_type: str, discount_percent: int,
                             discount_for_name: str = None,
                             rule_type=None, min_price: float = None,
@@ -1016,15 +1074,6 @@ class Market(IService):
 
         return store.connect_discounts(id1, id2, connection_type, rule)
 
-    def get_store_products_with_discounts(self, session_id: int, store_name: str) -> dict[Product:str]:
-        store_res = self.verify_registered_store(self.get_store_products_with_discounts.__qualname__, store_name)
-        if not store_res.success:
-            return report_error(self.get_store_products_with_discounts.__qualname__, "invalid store")
-        store = store_res.result
-
-        dict = store.get_products_with_discounts()
-        return dict
-
     def get_purchase_rules(self, session_id: int, store_name: str) -> Response[dict[int:IRule]]:
         actor = self.get_active_user(session_id)
         store_res = self.verify_registered_store(self.get_purchase_rules.__qualname__, store_name)
@@ -1038,7 +1087,8 @@ class Market(IService):
         perms = perms.result
 
         if Permission.ChangePurchasePolicy not in perms:
-            return report_error(self.get_purchase_rules.__qualname__, f"{actor} has no permission to manage purchase rules")
+            return report_error(self.get_purchase_rules.__qualname__,
+                                f"{actor} has no permission to manage purchase rules")
 
         return Response(store.get_purchase_rules(), "purchase rules")
 
@@ -1055,7 +1105,8 @@ class Market(IService):
         perms = perms.result
 
         if Permission.ChangePurchasePolicy not in perms:
-            return report_error(self.delete_purchase_rule.__qualname__, f"{actor} has no permission to manage purchase rules")
+            return report_error(self.delete_purchase_rule.__qualname__,
+                                f"{actor} has no permission to manage purchase rules")
 
         return store.remove_purchase_rule(index)
 
@@ -1072,7 +1123,8 @@ class Market(IService):
         perms = perms.result
 
         if Permission.ChangePurchasePolicy not in perms:
-            return report_error(self.add_basket_purchase_rule.__qualname__, f"{actor} has no permission to manage purchase rules")
+            return report_error(self.add_basket_purchase_rule.__qualname__,
+                                f"{actor} has no permission to manage purchase rules")
 
         rule = self.rule_maker("basket", min_price=min_price)
         return store.add_purchase_rule(rule.result)
@@ -1165,7 +1217,6 @@ class Market(IService):
                 return sess_id
         return None
 
-
     def send_user_message(self, session_id: int, recipient: str, content: str):
         actor = self.get_active_user(session_id)
         if not actor.is_logged_in:
@@ -1174,7 +1225,7 @@ class Market(IService):
             return report_error(self.send_user_message.__qualname__, "no such user")
         self.notifications.send_from_user(actor.username, recipient, content)
         return report_info(self.send_user_message.__qualname__,
-                   f"send message succesful: {actor.username} -> {recipient}: {content}")
+                           f"send message succesful: {actor.username} -> {recipient}: {content}")
 
     def get_user_unread_observable(self, session_id: int):
         actor = self.get_active_user(session_id)
@@ -1195,7 +1246,6 @@ class Market(IService):
         msg = self.notifications.mark_read(actor.username, msg_id)
         return msg
 
-
     def get_store_staff_wit_permissions(self, session_id: int, store_name: str):
         staff_permissions = {}
         resp = self.get_store_staff(session_id, store_name)
@@ -1211,7 +1261,7 @@ class Market(IService):
     '''
 
     def get_number_of_registered_users(self) -> int:
-        return self.users.size() - 1 if self.users.size() == User.number_of_records() else -1   # ignore default admin user
+        return self.users.size() - 1 if self.users.size() == User.number_of_records() else -1  # ignore default admin user
 
     def get_number_of_stores(self) -> int:
         return self.stores.size() if self.stores.size() == Store.number_of_records() else -1
@@ -1230,8 +1280,9 @@ class Market(IService):
 
     def verify_user_consistent(self, username) -> bool:
         u1, u2 = self.get_user_from_ram(username), self.get_user_from_db(username)
-        return u1 is None and u2 is None or \
-            u1 is not None and u2 is not None and u1.username == u2.username and u1.encrypted_password == u2.encrypted_password
+        out = u1 is None and u2 is None or \
+              u1 is not None and u2 is not None and u1.username == u2.username and u1.encrypted_password == u2.encrypted_password
+        return out
 
     def get_store_from_ram(self, store_name) -> Store | None:
         return self.stores.get(store_name)
@@ -1242,7 +1293,8 @@ class Market(IService):
     def verify_store_consistent(self, store_name) -> bool:
         s1, s2 = self.get_store_from_ram(store_name), self.get_store_from_db(store_name)
         return s1 is None and s2 is None or \
-            s1 is not None and s2 is not None and s1.name == s2.name and set(s1.purchase_history) == set(s2.purchase_history)
+            s1 is not None and s2 is not None and s1.name == s2.name and set(s1.purchase_history) == set(
+                s2.purchase_history)
 
     def get_appointment_from_ram(self, appointee, store_name) -> Appointment | None:
         return self.get_appointment_of(appointee, store_name)
@@ -1251,8 +1303,9 @@ class Market(IService):
         return Appointment.load_appointment(appointee, store_name)
 
     def verify_appointment_integrity(self, appointee, store_name) -> bool:
-        a1, a2 = self.get_appointment_from_ram(appointee, store_name), self.get_appointment_from_db(appointee, store_name)
-        return a1 is None and a2 is None or\
+        a1, a2 = self.get_appointment_from_ram(appointee, store_name), self.get_appointment_from_db(appointee,
+                                                                                                    store_name)
+        return a1 is None and a2 is None or \
             a1.store_name == a2.store_name and a1.appointee == a2.appointee and a1.appointed_by == a2.appointed_by and a1.permissions == a2.permissions
 
     def get_product_from_ram(self, store_name, product_name) -> Product | None:
@@ -1268,7 +1321,8 @@ class Market(IService):
         p1, p2 = self.get_product_from_ram(store_name, product_name), self.get_product_from_db(store_name, product_name)
         return p1 is None and p2 is None or \
             p1 is not None and p2 is not None and p1.name == p2.name and p1.store_name == p2.store_name and \
-            p1.price == p2.price and p1.category == p2.category and p1.quantity == p2.quantity and set(p1.keywords) == set(p2.keywords)
+            p1.price == p2.price and p1.category == p2.category and p1.quantity == p2.quantity and set(
+                p1.keywords) == set(p2.keywords)
 
     def get_cart_item_from_ram(self, product_name, username, store_name) -> Item | None:
         user = self.verify_registered_user(self.get_cart_item_from_ram.__qualname__, username).result
@@ -1280,7 +1334,8 @@ class Market(IService):
         return Item.load_item(product_name, username, store_name)
 
     def verify_item_integrity(self, product_name, username, store_name) -> bool:
-        i1, i2 = self.get_cart_item_from_ram(product_name, username, store_name), self.get_cart_item_from_db(product_name, username, store_name)
+        i1, i2 = self.get_cart_item_from_ram(product_name, username, store_name), self.get_cart_item_from_db(
+            product_name, username, store_name)
         return i1 is None and i2 is None or \
             i1 is not None and i2 is not None and i1.username == i2.username and i1.store_name == i2.store_name and \
             i1.product_name == i2.product_name and i1.quantity == i2.quantity and i1.price == i2.price and \
@@ -1289,6 +1344,7 @@ class Market(IService):
     '''
         End of Validation methods
     '''
+
     def get_approval_lists_for_store(self, session_id: int, store_name) -> Response:
         actor = self.get_active_user(session_id)
         store_res = self.verify_registered_store(self.get_approval_lists_for_store.__qualname__, store_name)
@@ -1306,15 +1362,44 @@ class Market(IService):
                                 f"{actor.username} has no permission to approve things")
 
         ret_dict = {}
-        ret_dict["owners"] = self.approval_list.get(store_name)
+        if self.approval_list.get(store_name) is None:
+            ret_dict["owners"] = {}
+        else:
+            store_dict = self.approval_list.get(store_name)
+            ret_dict["owners"] = {}
+            for person in store_dict.get_all_keys():
+                ret_dict["owners"][person] = store_dict.get(person).left_to_approve()
+
         bids_dict = {}
         for p in store.products_with_bid_purchase_policy.keys():
-            bids_dict[p] = store.products_with_bid_purchase_policy[p].get_cur_bid()
+            bid = store.products_with_bid_purchase_policy.get(p)
+            bids_dict[p] = {}
+            bids_dict[p]["price"] = bid.get_cur_bid()
+            bids_dict[p]["to_approve"] = bid.approval.left_to_approve()
         ret_dict["bids"] = bids_dict
 
-        if ret_dict["owners"] is None:
-            ret_dict["owners"] = {}
-        if ret_dict["bids"] is None:
-            ret_dict["bids"] = {}
-
         return ret_dict
+
+    def is_admin(self, session_id: int):
+        return self.get_active_user(session_id).is_admin
+
+    def set_admin_permissions(self):
+        all_active_stores = self.stores.get_all_values()
+        for store in all_active_stores:
+            self.set_permissions_of("Kfir", store.name, Permission.RetrievePurchaseHistory, "ADD")
+
+    def get_bid_products(self, session_id: int, store_name: str) -> Response[dict | bool]:
+        response = self.verify_registered_store(self.get_store.__qualname__, store_name)
+        if response.success:
+            store = response.result
+            if self.store_activity_status.get(store.name) == 'OPEN' or self.store_activity_status.get(
+                    store.name) == 'REOPEN':
+                actor = self.get_active_user(session_id)
+                bids_response = store.get_bid_products()
+                r = report_info(self.get_store.__qualname__,
+                                f'Return store \'{store_name}\' bids to {actor}\n{bids_response.result.__str__()}')
+                bids_response.description = r.description
+                return bids_response
+            else:
+                return Response(None)
+        return response

@@ -74,3 +74,8 @@ class SimpleDiscount(IDiscount):
 
     def get_all_connectors(self, d):
         return d
+
+    def set_disconted_price_in_product(self, p: Product):
+        if self.discount_type == "store" or self.discount_for_name == p.name or self.discount_for_name == p.category:
+            return self.percent * p.price * 0.01
+        return 0

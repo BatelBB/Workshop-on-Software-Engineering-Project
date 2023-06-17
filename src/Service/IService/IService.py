@@ -261,10 +261,6 @@ class IService(metaclass=IAbsractConcurrentSingleton):
         ...
 
     @abstractmethod
-    def get_store_products_with_discounts(self, sessiont_id: int, store_name: str) -> dict[Product:str]:
-        ...
-
-    @abstractmethod
     def get_purchase_rules(self, session_id: int, store_name: str) -> Response[list[IRule]]:
         ...
 
@@ -325,4 +321,13 @@ class IService(metaclass=IAbsractConcurrentSingleton):
 
     @abstractmethod
     def load_configuration(self, config):
+        ...
+
+    @abstractmethod
+    def is_admin(self, session_id):
+        ...
+
+
+    @abstractmethod
+    def get_bid_products(self, session_id: int, store_name: str) -> Response[dict | bool]:
         ...

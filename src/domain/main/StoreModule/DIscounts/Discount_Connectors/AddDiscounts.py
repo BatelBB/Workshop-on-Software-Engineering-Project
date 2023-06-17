@@ -24,3 +24,7 @@ class AddDiscounts(IDiscountConnector):
 
     def __repr__(self):
         return f"Add connector: {super().__repr__()}"
+
+    def set_disconted_price_in_product(self, p: Product):
+        for discount in self.children:
+            p.discount_price -= discount.set_disconted_price_in_product(p)
