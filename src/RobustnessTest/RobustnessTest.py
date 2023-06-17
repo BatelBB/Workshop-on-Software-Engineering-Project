@@ -404,6 +404,57 @@ class RobustnessTest(unittest.TestCase):
     '''
         Purchase Concurrency Tests
     '''
+    def start_new_session_register_login_add_to_cart_and_purchase(self, data, result, index):
+        session = self.service.enter()
+        user = get_random_user()
+        username = user[0]
+        r = session.register(*user)
+        self.assertTrue(session.is_registered(username))
+        r = session.login(*user)
+        self.assertTrue(session.is_logged_in(username))
 
-    @parameterized.expand(number_of_threads)
-    def test_multiple_threads_purchase_same_product(self):
+        for store, product in data:
+            product_name, product_quantity = product[0], product[3]
+            r = session.add_to_cart(store, product_name, product_quantity)
+            self.assertTrue(self.service.verify_item_integrity(product_name, username, store))
+        r = session.purchase_shopping_cart("card", ["123","12/2023","123"], "address", "123", "city","country")
+        self.assertTrue(session.get_cart().result.is_empty())
+
+        result[index] = r
+
+    # @parameterized.expand(number_of_threads)
+    def test_concurrent_purchase_shopping_cart(self, number_of_threads=1):
+        number_of_products = 10
+        data = self.open_stores_with_products(number_of_products)
+        threads = [None] * number_of_threads
+        results = [None] * number_of_threads
+
+        for i in range(number_of_threads):
+            threads[i] = Thread(target=self.start_new_session_register_login_add_to_cart, args=(data, results, i))
+            threads[i].start()
+
+        for i in range(number_of_threads):
+            threads[i].join()
+
+        succeeded_results = list(filter(lambda response: response.success, results))
+        self.assertEqual(number_of_threads, len(succeeded_results))
+        self.assertEqual(number_of_threads, self.session.get_number_of_registered_users())
+
+
+    # @parameterized.expand(number_of_threads)
+    # def test_concurrent_pay(self, n_threads):
+    #     self.market.register('user', 'password')
+    #     self.market.login('user', 'password')
+    #     self.market.add_product_to_cart('user', 'store', 'product', 1, n_threads)
+    #     self.market.purchase_shopping_cart('user')
+    #
+    #     def task(market: Market, payment_details: list, holder: str, user_id: int):
+    #         market.pay(payment_details, holder, user_id)
+    #
+    #     threads = [threading.Thread(target=task, args=(self.market, ['card_number', 'cvv', 'mm/yyyy'], 'holder', 1)) for _ in range(n_threads)]
+    #     for thread in threads:
+    #         thread.start()
+    #     for thread in threads:
+    #         thread.join()
+    #
+    #     # Add appropriate assertion here based on your business logic.
