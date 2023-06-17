@@ -106,7 +106,7 @@ class UpdateDiscountPolicy(unittest.TestCase):
         with patch(self.app.provision_path, return_value=True) as delivery_mock, \
                 patch(self.app.payment_pay_path, return_value=True) as payment_mock:
             self.app.login(*self.store_founder)
-            r = self.app.add_simple_discount("bakery", "store", 50, rule_type="baskt", min_price=300)
+            r = self.app.add_simple_discount("bakery", "store", 50, rule_type="basket", min_price=300)
             self.assertTrue(r.success, "error: add simple discount action failed")
             self.app.logout()
             self.set_cart_and_buy()
@@ -118,7 +118,7 @@ class UpdateDiscountPolicy(unittest.TestCase):
         with patch(self.app.provision_path, return_value=True) as delivery_mock, \
                 patch(self.app.payment_pay_path, return_value=True) as payment_mock:
             self.app.login(*self.store_founder)
-            r = self.app.add_simple_discount("bakery", "store", 50, rule_type="baskt", min_price=400)
+            r = self.app.add_simple_discount("bakery", "store", 50, rule_type="basket", min_price=400)
             self.assertTrue(r.success, "error: add simple discount action failed")
             self.app.logout()
             self.set_cart_and_buy()
@@ -260,7 +260,7 @@ class UpdateDiscountPolicy(unittest.TestCase):
             self.app.login(*self.store_founder)
             r1 = self.app.add_simple_discount("bakery", "store", 50)
             self.assertTrue(r1.success, "error: add simple discount action failed")
-            r2 = self.app.add_simple_discount("bakery", "category", 50, "pita", "1")
+            r2 = self.app.add_simple_discount("bakery", "category", 50, "1")
             self.assertTrue(r2.success, "error: add simple discount action failed")
             r = self.app.connect_discounts("bakery", r1.result, r2.result, "max")
             self.assertTrue(r.success, "error: connect discount action failed")
@@ -299,7 +299,7 @@ class UpdateDiscountPolicy(unittest.TestCase):
             self.app.logout()
             self.set_cart_and_buy()
 
-            payment_mock.assert_called_once_with(350)
+            payment_mock.assert_called_once_with(250)
             delivery_mock.assert_called_once()
 
     def test_or_discounts(self):
