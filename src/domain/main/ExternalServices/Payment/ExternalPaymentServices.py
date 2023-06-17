@@ -64,20 +64,20 @@ class ExternalPaymentServiceReal(IExternalPaymentService):
                 try:
                     new_response = int(response.text)
                 except ValueError:
-                    report_error(self.payWIthCard.__qualname__, "response text is invalid")
+                    report_error(self.payWIthCard.__qualname__, f"{holder} - response text is invalid")
                     return False
                 if self.checkValidTransactionID(int(new_response)):
                     self.transaction_id = new_response
-                    report_info(self.payWIthCard.__qualname__, "post request for paying with card success!")
+                    report_info(self.payWIthCard.__qualname__, f"{holder} - post request for paying with card success!")
                     return True
                 else:
-                    report_error(self.payWIthCard.__qualname__, "transaction id is incorrect")
+                    report_error(self.payWIthCard.__qualname__, f"{holder} - transaction id is incorrect")
                     return False
             else:
-                report_error(self.payWIthCard.__qualname__, f"post request respond with error {response.status_code}")
+                report_error(self.payWIthCard.__qualname__, f"{holder} - post request respond with error {response.status_code}")
                 return False
         else:
-            report_error(self.payWIthCard.__qualname__, f"Handshake returned error")
+            report_error(self.payWIthCard.__qualname__, f"{holder} - Handshake returned error")
             return False
 
     def refundToCard(self) -> bool:

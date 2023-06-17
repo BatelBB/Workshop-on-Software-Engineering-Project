@@ -119,7 +119,7 @@ class Store(Base):
     def __str__(self):
         output: str = f'Store: {self.name}\nProducts:\n'
         for i, product in enumerate(self.products):
-            output += f'{i}).\t{product.name}. Available quantity: {self.products_quantities[product.name].quantity}.\n'
+            output += f'{i}).\t{product.name}. Available quantity: {product.quantity}.\n'
         return output
 
     def __eq__(self, other):

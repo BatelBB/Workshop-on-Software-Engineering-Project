@@ -57,6 +57,11 @@ class Market(IService):
         self.stores = Store.load_all_stores()
         self.appointments = Appointment.load_all_appointments()
 
+        self.cart_lock = threading.Lock()
+        self.store_lock = threading.Lock()
+        self.payment_lock = threading.Lock()
+
+
     def load_configuration(self, config):
         DAL.init(config['db'])
         payment_service, provision_service = init_external_services_from_configuration(config['external_services'])
@@ -868,34 +873,42 @@ class Market(IService):
         actor = self.get_active_user(session_identifier)
         holder = actor.username
         user_id = actor.get_user_id()
-        response = actor.verify_cart_not_empty()
-        successful_store_purchases = []
-        if response.success:
-            baskets = actor.get_baskets()
-            for store_name, basket in baskets.items():
-                store = self.stores.get(store_name)
-                res = store.reserve_products(basket)
-                if res.success and res.result:
-                    successful_store_purchases.append(store_name)
-            resp = self.get_cart_price(baskets)
-            payment_succeeded = self.pay(resp, payment_details, holder, user_id)
-            if payment_succeeded[0]:
-                # order delivery
-                self.provisionService.set_info(actor.username, 0, address, postal_code, city, country)
-                if not self.provisionService.getDelivery():
-                    self.paymentService.refund(resp)
-                    return report_error(self.purchase_shopping_cart.__qualname__, 'failed delivery')
-                successful_baskets = {store_name: basket for store_name, basket in baskets.items() if
-                                      store_name in successful_store_purchases}
-                self.add_to_purchase_history(successful_baskets)
-                self.update_user_cart_after_purchase(actor, successful_store_purchases)
+        with self.store_lock:
+            response = actor.verify_cart_not_empty()
+            successful_store_purchases = []
+            if response.success:
+                baskets = actor.get_baskets()
                 for store_name, basket in baskets.items():
-                    self.find_store(store_name).update_db(basket)
-                return Response(True)
+                    store = self.stores.get(store_name)
+                    res = store.reserve_products(basket)
+                    if res.success:
+                        print(f"THIS IS NOT FUN {session_identifier} {holder}")
+                        successful_store_purchases.append(store_name)
+                    else:
+                        return report_error(self.purchase_shopping_cart.__qualname__, "Couldn't reserve products")
+                resp = self.get_cart_price(baskets)
+                print(f" beginning - \n{self.get_cart(session_identifier).description}")
+                print(f" beginning - \n{self.get_store(session_identifier, store_name).description}")
+                payment_succeeded = self.pay(resp, payment_details, holder, user_id)
+                if payment_succeeded[0]:
+                    # order delivery
+                    self.provisionService.set_info(actor.username, 0, address, postal_code, city, country)
+                    if not self.provisionService.getDelivery():
+                        self.paymentService.refund(resp)
+                        return report_error(self.purchase_shopping_cart.__qualname__, 'failed delivery')
+                    successful_baskets = {store_name: basket for store_name, basket in baskets.items() if
+                                          store_name in successful_store_purchases}
+                    self.add_to_purchase_history(successful_baskets)
+                    self.update_user_cart_after_purchase(actor, successful_store_purchases)
+                    print(f" end - \n{self.get_cart(session_identifier).description}")
+                    print(f" end - \n{self.get_store(session_identifier, store_name).description}")
+                    for store_name, basket in baskets.items():
+                        self.find_store(store_name).update_db(basket)
+                    return Response(True)
+                else:
+                    return report_error(self.purchase_shopping_cart.__qualname__, payment_succeeded[1].description)
             else:
-                return report_error(self.purchase_shopping_cart.__qualname__, payment_succeeded[1].description)
-        else:
-            return response
+                return response
 
     def get_store_purchase_history(self, session_id: int, store_name: str) -> list[str] | Response[bool]:
         response = self.verify_registered_store(self.get_store_purchase_history.__qualname__, store_name)

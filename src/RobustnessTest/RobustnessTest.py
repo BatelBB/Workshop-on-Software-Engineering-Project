@@ -8,7 +8,6 @@ from src.domain.test.UnitTests.RandomInputGenerator import get_random_product, g
 
 
 class RobustnessTest(unittest.TestCase):
-
     number_of_threads = [10, 50, 100]
 
     def __init__(self, *args, **kwargs):
@@ -163,7 +162,8 @@ class RobustnessTest(unittest.TestCase):
         results = [None] * number_of_threads
 
         for i in range(len(threads)):
-            threads[i] = Thread(target=self.start_new_session_and_add_product_to_store, args=(appointees, store, results, i))
+            threads[i] = Thread(target=self.start_new_session_and_add_product_to_store,
+                                args=(appointees, store, results, i))
             threads[i].start()
         for i in range(len(threads)):
             threads[i].join()
@@ -188,7 +188,8 @@ class RobustnessTest(unittest.TestCase):
             self.assertTrue(self.service.verify_appointment_integrity(appointee_name, store))
         return appointees
 
-    def start_new_session_and_appoint_a_manager(self, appointed_store_owner, appointee_name, store_name: str, results, index) -> None:
+    def start_new_session_and_appoint_a_manager(self, appointed_store_owner, appointee_name, store_name: str, results,
+                                                index) -> None:
         session = self.service.enter()
         r = session.login(*appointed_store_owner)
         self.assertTrue(r.success)
@@ -199,14 +200,16 @@ class RobustnessTest(unittest.TestCase):
     @parameterized.expand(number_of_threads)
     def test_multiple_threads_appoint_same_manager(self, number_of_threads):
         owner, store = self.create_store_owner()
-        appointed_store_owner = self.appoints_owners_of(store, number_of_threads, self.service.get_active_session_id(owner[0]))
+        appointed_store_owner = self.appoints_owners_of(store, number_of_threads,
+                                                        self.service.get_active_session_id(owner[0]))
         appointee = get_random_user()
         appointee_name = appointee[0]
         self.session.register(*appointee)
         threads = [None] * number_of_threads
         results = [None] * number_of_threads
         for i in range(len(threads)):
-            threads[i] = Thread(target=self.start_new_session_and_appoint_a_manager, args=(appointed_store_owner[i], appointee_name, store, results, i))
+            threads[i] = Thread(target=self.start_new_session_and_appoint_a_manager,
+                                args=(appointed_store_owner[i], appointee_name, store, results, i))
             threads[i].start()
         for i in range(len(threads)):
             threads[i].join()
@@ -234,7 +237,8 @@ class RobustnessTest(unittest.TestCase):
         results = [None] * number_of_threads
 
         for i in range(len(threads)):
-            threads[i] = Thread(target=self.start_new_session_register_and_appoint_a_manager, args=(owner, store, results, i))
+            threads[i] = Thread(target=self.start_new_session_register_and_appoint_a_manager,
+                                args=(owner, store, results, i))
             threads[i].start()
         for i in range(len(threads)):
             threads[i].join()
@@ -338,7 +342,6 @@ class RobustnessTest(unittest.TestCase):
 
         result[index] = r
 
-
     @parameterized.expand(number_of_threads)
     def test_multiple_threads_add_to_cart(self, number_of_threads):
 
@@ -400,61 +403,63 @@ class RobustnessTest(unittest.TestCase):
         self.assertEqual(number_of_threads, self.session.get_number_of_registered_users())
         self.assertEqual(number_of_threads * number_of_products, self.service.get_number_of_items())
 
-
     '''
         Purchase Concurrency Tests
     '''
+
     def start_new_session_register_login_add_to_cart_and_purchase(self, data, result, index):
         session = self.service.enter()
         user = get_random_user()
         username = user[0]
-        r = session.register(*user)
+        session.register(*user)
         self.assertTrue(session.is_registered(username))
-        r = session.login(*user)
+        session.login(*user)
         self.assertTrue(session.is_logged_in(username))
 
         for store, product in data:
             product_name, product_quantity = product[0], product[3]
-            r = session.add_to_cart(store, product_name, product_quantity)
+            session.add_to_cart(store, product_name, product_quantity)
             self.assertTrue(self.service.verify_item_integrity(product_name, username, store))
-        r = session.purchase_shopping_cart("card", ["123","12/2023","123"], "address", "123", "city","country")
-        self.assertTrue(session.get_cart().result.is_empty())
+        r = session.purchase_shopping_cart("card", ["123", "123", "12/6588"], "address", "123", "city", "country")
 
         result[index] = r
 
     # @parameterized.expand(number_of_threads)
-    def test_concurrent_purchase_shopping_cart(self, number_of_threads=1):
-        number_of_products = 10
+    def test_concurrent_purchase_shopping_cart(self, number_of_threads=2):
+        number_of_products = 2
         data = self.open_stores_with_products(number_of_products)
         threads = [None] * number_of_threads
         results = [None] * number_of_threads
 
         for i in range(number_of_threads):
-            threads[i] = Thread(target=self.start_new_session_register_login_add_to_cart, args=(data, results, i))
+            threads[i] = Thread(target=self.start_new_session_register_login_add_to_cart_and_purchase, args=(data, results, i))
             threads[i].start()
 
         for i in range(number_of_threads):
             threads[i].join()
 
         succeeded_results = list(filter(lambda response: response.success, results))
-        self.assertEqual(number_of_threads, len(succeeded_results))
-        self.assertEqual(number_of_threads, self.session.get_number_of_registered_users())
+        self.assertEqual(1, len(succeeded_results))
+        for store, product in data:
+            product_name = product[0]
+            products = [product for product in self.session.get_all_products_of(store).result if
+                        product.name == product_name and product.quantity == 0]
+            self.assertTrue(len(products) == 0)
 
+    @parameterized.expand(number_of_threads)
+    def test_concurrent_pay(self, n_threads):
+        self.market.register('user', 'password')
+        self.market.login('user', 'password')
+        self.market.add_product_to_cart('user', 'store', 'product', 1, n_threads)
+        self.market.purchase_shopping_cart('user')
 
-    # @parameterized.expand(number_of_threads)
-    # def test_concurrent_pay(self, n_threads):
-    #     self.market.register('user', 'password')
-    #     self.market.login('user', 'password')
-    #     self.market.add_product_to_cart('user', 'store', 'product', 1, n_threads)
-    #     self.market.purchase_shopping_cart('user')
-    #
-    #     def task(market: Market, payment_details: list, holder: str, user_id: int):
-    #         market.pay(payment_details, holder, user_id)
-    #
-    #     threads = [threading.Thread(target=task, args=(self.market, ['card_number', 'cvv', 'mm/yyyy'], 'holder', 1)) for _ in range(n_threads)]
-    #     for thread in threads:
-    #         thread.start()
-    #     for thread in threads:
-    #         thread.join()
-    #
-    #     # Add appropriate assertion here based on your business logic.
+        def task(market: Market, payment_details: list, holder: str, user_id: int):
+            market.pay(payment_details, holder, user_id)
+
+        threads = [threading.Thread(target=task, args=(self.market, ['card_number', 'cvv', 'mm/yyyy'], 'holder', 1)) for _ in range(n_threads)]
+        for thread in threads:
+            thread.start()
+        for thread in threads:
+            thread.join()
+
+        # Add appropriate assertion here based on your business logic.
