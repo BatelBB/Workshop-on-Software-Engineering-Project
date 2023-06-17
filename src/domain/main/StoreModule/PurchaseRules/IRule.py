@@ -25,9 +25,19 @@ class IRule:
     def add_to_db(self):
         IRule.add_record(self)
 
+    def remove_from_db(self):
+        IRule.delete_record(self)
+
     @staticmethod
     def add_record(rule):
         session_DB.add(rule)
+        session_DB.commit()
+
+    @staticmethod
+    def delete_record(rule):
+        if rule not in session_DB:
+            session_DB.add(rule)
+        session_DB.delete(rule)
         session_DB.commit()
 
     def number_of_ids(self):

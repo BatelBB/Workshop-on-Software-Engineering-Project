@@ -31,3 +31,8 @@ class IRuleCombiner(IRule):
 
     def number_of_ids(self):
         return 3
+
+    def remove_from_db(self):
+        IRule.delete_record(self.rule1)
+        IRule.delete_record(self.rule2)
+        IRule.delete_record(self)

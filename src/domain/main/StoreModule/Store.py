@@ -126,11 +126,16 @@ class Store(Base_db.Base):
         self.purchase_rules.update(and_rules)
         self.purchase_rules.update(cond_rules)
 
-        count = 0
+        highest = 0
+        r = None
         for id, rule in self.purchase_rules.items():
-            count += rule.number_of_ids()
-
-        self.purchase_rule_ids = count + 1
+            if highest < id:
+                highest = id
+                r = rule
+        num_ids = 0
+        if r is not None:
+            num_ids = r.number_of_ids()
+        self.purchase_rule_ids = highest + 1 + num_ids
 
     def load_simple_rules(self) -> dict:
         q = session_DB.query(SimpleRule).filter(SimpleRule.store_name == self.name).all()
@@ -544,7 +549,8 @@ class Store(Base_db.Base):
         return rule_str_dict
 
     def remove_purchase_rule(self, rule_id: int):
-        self.purchase_rules.pop(rule_id)
+        rule = self.purchase_rules.pop(rule_id)
+        rule.remove_from_db()
 
     def add_simple_discount(self, percent: int, discount_type: str, rule: IRule = None, discount_for_name=None) -> \
     Response[bool]:
