@@ -551,13 +551,16 @@ class Store(Base):
         rule.delete_from_db()
 
     def add_simple_discount(self, percent: int, discount_type: str, rule: IRule = None, discount_for_name=None) -> \
-            Response[bool]:
+            Response:
         with self.discount_lock:
             discount = SimpleDiscount(self.discount_counter, percent, discount_type, rule, discount_for_name)
             count = discount.set_db_info(self.discount_counter, self.name, rule)
             discount.add_to_db()
             self.discount_counter += (count + 1)
-            return self.discounts.add_discount_to_connector(discount)
+            res = self.discounts.add_discount_to_connector(discount)
+            if not res.success:
+                return res
+            return Response(discount.discount_id, "discount added")
 
     def connect_discounts(self, id1, id2, connection_type, rule=None) -> Response:
         with self.discount_lock:
@@ -592,7 +595,7 @@ class Store(Base):
             if self.discounts.replace(id2, conn):
                 self.discount_counter += conn.set_db_info(conn.discount_id, self.name)
                 conn.add_to_db()
-                return report("successfully connected discounts", True)
+                return report("successfully connected discounts", conn.discount_id)
             else:
                 self.discounts.find_discount(id_for_backtrack).add_discount_to_connector(d1)
                 return report_error("connect_discounts", "unsuccessful connection of discounts")

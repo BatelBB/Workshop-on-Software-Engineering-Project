@@ -79,7 +79,7 @@ class UpdateDiscountPolicy(unittest.TestCase):
         with patch(self.app.provision_path, return_value=True) as delivery_mock, \
                 patch(self.app.payment_pay_path, return_value=True) as payment_mock:
             self.app.login(*self.store_founder)
-            r = self.app.add_simple_discount("bakery", "product", 50, "bread", rule_type="simple", p1_name="pita", gle1=">", amount1="5")
+            r = self.app.add_simple_discount("bakery", "product", 50, "bread", rule_type="simple", p1_name="pita", gle1=">", amount1=5)
             self.assertTrue(r.success, "error: add simple discount action failed")
             self.app.logout()
             self.set_cart_and_buy()
@@ -91,7 +91,7 @@ class UpdateDiscountPolicy(unittest.TestCase):
         with patch(self.app.provision_path, return_value=True) as delivery_mock, \
                 patch(self.app.payment_pay_path, return_value=True) as payment_mock:
             self.app.login(*self.store_founder)
-            r = self.app.add_simple_discount("bakery", "product", 50, "bread", rule_type="simple", p1_name="pita", gle1="=", amount1="20")
+            r = self.app.add_simple_discount("bakery", "product", 50, "bread", rule_type="simple", p1_name="pita", gle1="=", amount1=20)
             self.assertTrue(r.success, "error: add simple discount action failed")
             self.app.logout()
             self.set_cart_and_buy()
@@ -198,9 +198,11 @@ class UpdateDiscountPolicy(unittest.TestCase):
             self.app.login(*self.store_founder)
             r = self.app.add_simple_discount("bakery", "store", 50)
             self.assertTrue(r.success, "error: add simple discount action failed")
+            d1 = r.result
             r = self.app.add_simple_discount("bakery", "product", 50, "bread")
             self.assertTrue(r.success, "error: add simple discount action failed")
-            r = self.app.connect_discounts("bakery", 1, 2, "xor", rule_type="basket", min_price=300)
+            d2 = r.result
+            r = self.app.connect_discounts("bakery", d1, d2, "xor", rule_type="basket", min_price=300)
             self.assertTrue(r.success, "error: connect discount action failed")
             self.app.logout()
             self.set_cart_and_buy()
@@ -214,9 +216,11 @@ class UpdateDiscountPolicy(unittest.TestCase):
             self.app.login(*self.store_founder)
             r = self.app.add_simple_discount("bakery", "store", 50)
             self.assertTrue(r.success, "error: add simple discount action failed")
+            d1 = r.result
             r = self.app.add_simple_discount("bakery", "product", 50, "bread")
             self.assertTrue(r.success, "error: add simple discount action failed")
-            r = self.app.connect_discounts("bakery", 1, 2, "xor", rule_type="basket", min_price=500)
+            d2 = r.result
+            r = self.app.connect_discounts("bakery", d1, d2, "xor", rule_type="basket", min_price=500)
             self.assertTrue(r.success, "error: connect discount action failed")
             self.app.logout()
             self.set_cart_and_buy()
@@ -229,9 +233,11 @@ class UpdateDiscountPolicy(unittest.TestCase):
             self.app.login(*self.store_founder)
             r = self.app.add_simple_discount("bakery", "store", 50)
             self.assertTrue(r.success, "error: add simple discount action failed")
-            r = self.app.add_simple_discount("bakery", "category", 50, "pita", "1")
+            d1 = r.result
+            r = self.app.add_simple_discount("bakery", "category", 50, "pita")
             self.assertTrue(r.success, "error: add simple discount action failed")
-            r = self.app.connect_discounts("bakery", 1, 2, "max")
+            d2 = r.result
+            r = self.app.connect_discounts("bakery", d1, d2, "max")
             self.assertTrue(r.success, "error: connect discount action failed")
             self.app.logout()
             self.set_cart_and_buy()
@@ -245,9 +251,11 @@ class UpdateDiscountPolicy(unittest.TestCase):
             self.app.login(*self.store_founder)
             r = self.app.add_simple_discount("bakery", "store", 50)
             self.assertTrue(r.success, "error: add simple discount action failed")
+            d1 = r.result
             r = self.app.add_simple_discount("bakery", "product", 50, "cake")
             self.assertTrue(r.success, "error: add simple discount action failed")
-            r = self.app.connect_discounts("bakery", 1, 2, "max", rule_type="simple", p1_name="bread", gle1=">", amount1=8)
+            d2 = r.result
+            r = self.app.connect_discounts("bakery", d1, d2, "max", rule_type="simple", p1_name="bread", gle1=">", amount1=8)
             self.assertTrue(r.success, "error: connect discount action failed")
             self.app.logout()
             self.set_cart_and_buy()
@@ -261,9 +269,11 @@ class UpdateDiscountPolicy(unittest.TestCase):
             self.app.login(*self.store_founder)
             r = self.app.add_simple_discount("bakery", "store", 50)
             self.assertTrue(r.success, "error: add simple discount action failed")
+            d1 = r.result
             r = self.app.add_simple_discount("bakery", "product", 50, "bread")
             self.assertTrue(r.success, "error: add simple discount action failed")
-            r = self.app.connect_discounts("bakery", 1, 2, "max", rule_type="and", p1_name="bread", gle1=">", amount1=20, p2_name="pita", gle2=">", amount2=8)
+            d2 = r.result
+            r = self.app.connect_discounts("bakery", d1, d2, "max", rule_type="and", p1_name="bread", gle1=">", amount1=20, p2_name="pita", gle2=">", amount2=8)
             self.assertTrue(r.success, "error: connect discount action failed")
             self.app.logout()
             self.set_cart_and_buy()
@@ -277,9 +287,11 @@ class UpdateDiscountPolicy(unittest.TestCase):
             self.app.login(*self.store_founder)
             r = self.app.add_simple_discount("bakery", "store", 50)
             self.assertTrue(r.success, "error: add simple discount action failed")
+            d1 = r.result
             r = self.app.add_simple_discount("bakery", "product", 50, "cake")
             self.assertTrue(r.success, "error: add simple discount action failed")
-            r = self.app.connect_discounts("bakery", 1, 2, "or")
+            d2 = r.result
+            r = self.app.connect_discounts("bakery", d1, d2, "or")
             self.assertTrue(r.success, "error: connect discount action failed")
             self.app.logout()
             self.set_cart_and_buy()
@@ -324,9 +336,11 @@ class UpdateDiscountPolicy(unittest.TestCase):
             self.app.login(*self.store_founder)
             r = self.app.add_simple_discount("bakery", "store", 50)
             self.assertTrue(r.success, "error: add simple discount action failed")
+            d1 = r.result
             r = self.app.add_simple_discount("bakery", "product", 50, "cake")
             self.assertTrue(r.success, "error: add simple discount action failed")
-            r = self.app.connect_discounts("bakery", 1, 2, "or")
+            d2 = r.result
+            r = self.app.connect_discounts("bakery", d1, d2, "or")
             self.assertTrue(r.success, "error: connect discount action failed")
             self.app.logout()
             self.set_cart_and_buy()
