@@ -14,8 +14,8 @@ class OrRule(IRuleCombiner, Base):
     __table_args__ = {'extend_existing': True}
     rule_id = Column("rule_id", Integer, primary_key=True)
     store_name = Column("store_name", String, primary_key=True)
-    rule_id1 = Column("rule_id1", Integer, primary_key=True)
-    rule_id2 = Column("rule_id2", Integer, primary_key=True)
+    rule_id1 = Column("rule_id1", Integer)
+    rule_id2 = Column("rule_id2", Integer)
 
     def __init__(self, r1: IRule=None, r2: IRule=None):
         super().__init__(r1, r2)
@@ -50,11 +50,20 @@ class OrRule(IRuleCombiner, Base):
         return rule
 
     @staticmethod
-    def load_all_or_rules():
+    def load_all_or_rules(store_name):
         out = {}
-        for r in DAL.load_all(OrRule, OrRule.create_instance_from_db_query):
-            out[r.rule_id] = r
+        records = DAL.load_all_by(OrRule, lambda r: r.store_name == store_name, OrRule.create_instance_from_db_query)
+        if not isinstance(records, list):
+            records = [records]
+        for record in records:
+            out[record.rule_id] = record
         return out
+
+    @staticmethod
+    def load_rule_by_id(store_name, rule_id):
+        return DAL.load_all_by(OrRule, lambda r: r.store_name == store_name and r.rule_id == rule_id,
+                                 OrRule.create_instance_from_db_query)
+
 
     @staticmethod
     def clear_db():

@@ -6,6 +6,11 @@ from typing import Any
 
 from multipledispatch import dispatch
 from Service.IService.IService import IService
+from domain.main.StoreModule.DIscounts.Discount_Connectors.AddDiscounts import AddDiscounts
+from domain.main.StoreModule.DIscounts.Discount_Connectors.MaxDiscounts import MaxDiscounts
+from domain.main.StoreModule.DIscounts.Discount_Connectors.OrDiscounts import OrDiscounts
+from domain.main.StoreModule.DIscounts.Discount_Connectors.XorDiscounts import XorDiscounts
+from domain.main.StoreModule.DIscounts.SimpleDiscount import SimpleDiscount
 from domain.main.StoreModule.PurchaseRules.BasketRule import BasketRule
 from domain.main.StoreModule.PurchaseRules.RuleCombiner.AndRule import AndRule
 from domain.main.StoreModule.PurchaseRules.RuleCombiner.ConditioningRule import ConditioningRule
@@ -57,7 +62,8 @@ class Market(IService):
         self.approval_list: ConcurrentDictionary[
             str, ConcurrentDictionary[str, OwnersApproval]] = ConcurrentDictionary()
         DAL.load_or_create_tables(tables=(User, Item, Store, Product, Appointment, SimpleRule, BasketRule,
-                                          OrRule, AndRule, ConditioningRule))
+                                          OrRule, AndRule, ConditioningRule, SimpleDiscount, AddDiscounts,
+                                          MaxDiscounts, OrDiscounts, XorDiscounts))
         self.init_admin()
 
         self.stores = Store.load_all_stores()
@@ -391,6 +397,8 @@ class Market(IService):
             actor = self.get_active_user(session_identifier)
             if price > 0:
                 if self.has_permission_at(store_name, actor, Permission.Add):
+                    if any(p2 for p2 in store.products if p2.name == product_name):
+                        return report_error("add_product", f"Product {product_name} already exists in {store_name}")
                     p = Product(product_name, store_name, quantity, category, price, keywords)
                     store.add(p, quantity)
                     return report_info(self.add_product.__qualname__,
@@ -988,10 +996,10 @@ class Market(IService):
             return PurchaseRulesFactory.make_basket_rule(min_price)
         elif rule_type == "simple":
             return PurchaseRulesFactory.make_simple_rule(p1_name, gle1, amount1)
-        elif rule_type == "and" or rule_type == "or":
+        elif rule_type == "and" or rule_type == "or" or rule_type == "cond":
             return PurchaseRulesFactory.make_complex_rule(p1_name, gle1, amount1, p2_name, gle2, amount2, rule_type)
         else:
-            report_error(self.rule_maker.__qualname__, f"no such rule type: {rule_type}")
+            return report_error(self.rule_maker.__qualname__, f"no such rule type: {rule_type}")
 
     def add_purchase_simple_rule(self, session_id: int, store_name: str, product_name: str, gle: str,
                                  amount: int) -> Response:

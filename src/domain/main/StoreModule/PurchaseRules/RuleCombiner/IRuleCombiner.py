@@ -24,8 +24,8 @@ class IRuleCombiner(IRule):
         self.rule_id1 = rule_id + 1
         self.rule_id2 = rule_id + 2
         if self.rule1 is not None:
-            self.rule1.set_db_info(store_name, rule_id+1)
-            self.rule2.set_db_info(store_name, rule_id+2)
+            self.rule1.set_db_info(store_name, rule_id + 1)
+            self.rule2.set_db_info(store_name, rule_id + 2)
         return 3
 
     def add_to_db(self):
