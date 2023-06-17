@@ -59,15 +59,18 @@ class Market(IService):
         self.package_counter = 0
         self.appointments_lock = threading.RLock()
         self.approval_lock = threading.RLock()
+        self.approval_counter = 0
         self.approval_list: ConcurrentDictionary[
             str, ConcurrentDictionary[str, OwnersApproval]] = ConcurrentDictionary()
         DAL.load_or_create_tables(tables=(User, Item, Store, Product, Appointment, SimpleRule, BasketRule,
                                           OrRule, AndRule, ConditioningRule, SimpleDiscount, AddDiscounts,
-                                          MaxDiscounts, OrDiscounts, XorDiscounts))
+                                          MaxDiscounts, OrDiscounts, XorDiscounts, OwnersApproval))
         self.init_admin()
 
         self.stores = Store.load_all_stores()
         self.appointments = Appointment.load_all_appointments()
+        for store in self.stores.list_keys():
+            self.approval_list.insert(store, OwnersApproval.load_all_approvals_for_owners(store))
 
     def load_configuration(self, config):
         DAL.init(config['db'])
@@ -526,6 +529,8 @@ class Market(IService):
             for name in store_dict.get_all_keys():
                 store_dict.get(name).add_owner(appointee_name)
 
+            if approval is not None:
+                OwnersApproval.delete_record(approval.approval_id)
             store_dict.delete(appointee_name)
         return res
 
@@ -582,12 +587,15 @@ class Market(IService):
         if appointee_name in self.approval_list.get(store_name).list_keys():
             return self.approve_owner(session_identifier, appointee_name, store_name, True)
 
-        approval = OwnersApproval(owners, actor.username)
+        with self.approval_lock:
+            approval = OwnersApproval(self.approval_counter, owners, actor.username, store_name, appointee_name)
+            self.approval_counter += 1
 
         if approval.is_approved().result:
             return self.add_owner(session_identifier, appointee_name, store_name)
 
         self.approval_list.get(store_name).insert(appointee_name, approval)
+        OwnersApproval.add_record(approval)
         return report_info(self.appoint_owner.__qualname__,
                            f"approval process beggins for ownership for {appointee_name} of {store_name}")
 
