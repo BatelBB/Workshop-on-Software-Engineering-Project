@@ -422,6 +422,7 @@ class RobustnessTest(unittest.TestCase):
             self.assertTrue(self.service.verify_item_integrity(product_name, username, store))
         r = session.purchase_shopping_cart("card", ["123", "123", "12/6588"], "address", "123", "city", "country")
 
+
         result[index] = r
 
     @parameterized.expand(number_of_threads)
@@ -474,4 +475,3 @@ class RobustnessTest(unittest.TestCase):
             products = [product for product in self.session.get_all_products_of(store).result if
                         product.name == product_name and product.quantity == 0]
             self.assertTrue(len(products) == 0)
-
