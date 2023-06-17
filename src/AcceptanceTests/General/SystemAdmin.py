@@ -41,9 +41,9 @@ class SystemAdmin(unittest.TestCase):
         self.app.logout()
         r = self.app.login(*self.registered_user)
         self.assertFalse(r.success, "error: canceled membership user succeeded with login")
-        r = self.app.open_store("market")
+        r = self.app.open_store("WHATEVER") # Mendy store 'market' is opened since you open it from set_stores()
         self.assertFalse(r.success, "error: open store action succeeded")
-        r = self.app.get_store("market")
+        r = self.app.get_store("WHATEVER")
         self.assertFalse(r.success, "error: canceled membership user succeeded to open a store")
 
     def test_cancel_membership_of_store_founder(self):

@@ -47,7 +47,7 @@ class ConcurrentDictionary(Generic[Key, Value]):
                 return self.dictionary[key]
             return None
 
-    def get_all(self) -> dict[Key, Value]:
+    def get_dict(self) -> dict[Key, Value]:
         return self.dictionary
 
     def get_all_keys(self) -> list[Key]:

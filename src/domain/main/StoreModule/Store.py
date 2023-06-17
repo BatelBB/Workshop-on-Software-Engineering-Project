@@ -4,6 +4,11 @@ from multipledispatch import dispatch
 from sqlalchemy import Column, String
 
 from DataLayer.DAL import DAL, Base
+from domain.main.StoreModule.PurchaseRules.BasketRule import BasketRule
+from domain.main.StoreModule.PurchaseRules.RuleCombiner.AndRule import AndRule
+from domain.main.StoreModule.PurchaseRules.RuleCombiner.ConditioningRule import ConditioningRule
+from domain.main.StoreModule.PurchaseRules.RuleCombiner.OrRule import OrRule
+from domain.main.StoreModule.PurchaseRules.SimpleRule import SimpleRule
 from domain.main.Utils.ConcurrentDictionary import ConcurrentDictionary
 from src.domain.main.StoreModule.DIscounts.Discount_Connectors.AddDiscounts import AddDiscounts
 from src.domain.main.StoreModule.DIscounts.Discount_Connectors.MaxDiscounts import MaxDiscounts
@@ -84,6 +89,57 @@ class Store(Base):
 
         return store
 
+    def load_or_rules_db(self):
+        #assuming self.purchase_rules loaded all irules
+        or_rules_dict = OrRule.load_all_or_rules()
+        for rule_id, rule in or_rules_dict.items():
+            self.set_child_rules(rule)
+        return or_rules_dict
+
+    def load_and_rules_db(self):
+        #assuming self.purchase_rules loaded all irules
+        and_rules_dict = AndRule.load_all_and_rules()
+        for rule_id, rule in and_rules_dict.items():
+            self.set_child_rules(rule)
+        return and_rules_dict
+
+    def load_cond_rules_db(self):
+        #assuming self.purchase_rules loaded all irules
+        cond_rules_dict = ConditioningRule.load_all_cond_rules()
+        for rule_id, rule in cond_rules_dict.items():
+            self.set_child_rules(rule)
+        return cond_rules_dict
+
+    def set_child_rules(self, complex_rule):
+        rule1 = self.purchase_rules.pop(complex_rule.rule_id + 1)
+        rule2 = self.purchase_rules.pop(complex_rule.rule_id + 2)
+        complex_rule.rule1 = rule1
+        complex_rule.rule2 = rule2
+
+    def load_my_rules(self):
+        simple_rule_dict = SimpleRule.load_all_simple_rules()
+        basket_rules_dict = BasketRule.load_all_basket_rules()
+        self.purchase_rules = simple_rule_dict
+        self.purchase_rules.update(basket_rules_dict)
+
+        or_rules = self.load_or_rules_db()
+        and_rules = self.load_and_rules_db()
+        cond_rules = self.load_cond_rules_db()
+        self.purchase_rules.update(or_rules)
+        self.purchase_rules.update(and_rules)
+        self.purchase_rules.update(cond_rules)
+
+        highest = 0
+        r = None
+        for rule_id, rule in self.purchase_rules.items():
+            if highest < rule_id:
+                highest = rule_id
+                r = rule
+        num_ids = 0
+        if r is not None:
+            num_ids = r.number_of_ids()
+        self.purchase_rule_ids = highest + 1 + num_ids
+
     @staticmethod
     def load_store(store_name):
         return DAL.load(Store, lambda r: r.name == store_name, Store.create_instance_from_db_query)
@@ -93,6 +149,7 @@ class Store(Base):
         out = ConcurrentDictionary()
         for s in DAL.load_all(Store, Store.create_instance_from_db_query):
             out.insert(s.name, s)
+            s.load_my_rules()
         return out
 
     @staticmethod
@@ -409,14 +466,17 @@ class Store(Base):
     def add_purchase_rule(self, rule: IRule) -> Response:
         with self.purchase_rule_lock:
             self.purchase_rules[self.purchase_rule_ids] = rule
-            self.purchase_rule_ids += 1
+            count = rule.set_db_info(self.name, self.purchase_rule_ids)
+            rule.add_to_db()
+            self.purchase_rule_ids += count
             return report("add_purchase_rule -> success", True)
 
     def get_purchase_rules(self):
         return self.purchase_rules
 
     def remove_purchase_rule(self, rule_id: int):
-        self.purchase_rules.pop(rule_id)
+        rule = self.purchase_rules.pop(rule_id)
+        rule.delete_from_db()
 
     def add_simple_discount(self, percent: int, discount_type: str, rule: IRule = None, discount_for_name=None) -> \
     Response[bool]:
