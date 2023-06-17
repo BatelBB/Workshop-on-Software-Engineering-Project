@@ -1,0 +1,16 @@
+{
+    "$schema": "./schema.json",
+    "version": "0.2",
+    "init": [
+        { "tag": "register", "username": "u1", "password": "moshe" },
+        { "tag": "register", "username": "u2", "password": "marry had a little lambda" },
+        { "tag": "register", "username": "u3", "password": "blahblahblah" },
+        { "tag": "login", "username": "u1", "encrypted_password": "moshe" },
+        { "tag": "open_store", "store_name": "Hummus Said" },
+        { "tag": "appoint_owner", "store": "Hummus Said", "appointee": "u2" },
+        { "tag": "logout" },
+        { "tag": "login", "username": "u2", "encrypted_password": "marry had a little lambda" },
+        { "tag": "appoint_owner", "store": "Hummus Said", "appointee": "u3" },
+        { "tag": "logout" }
+    ]
+}
