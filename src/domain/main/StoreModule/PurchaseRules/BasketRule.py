@@ -12,7 +12,7 @@ class BasketRule(IRule, Base):
     __table_args__ = {'extend_existing': True}
     rule_id = Column("rule_id", Integer, primary_key=True)
     store_name = Column("store_name", String, primary_key=True)
-    min_price = Column("num", Float, primary_key=True)
+    min_price = Column("num", Float)
 
     def __init__(self, min_price: float):
         super().__init__()
@@ -45,11 +45,19 @@ class BasketRule(IRule, Base):
         return rule
 
     @staticmethod
-    def load_all_basket_rules():
+    def load_all_basket_rules(store_name):
         out = {}
-        for r in DAL.load_all(BasketRule, BasketRule.create_instance_from_db_query):
-            out[r.rule_id] = r
+        records = DAL.load_all_by(BasketRule, lambda r: r.store_name == store_name, BasketRule.create_instance_from_db_query)
+        if not isinstance(records, list):
+            records = [records]
+        for record in records:
+            out[record.rule_id] = record
         return out
+
+    @staticmethod
+    def load_rule_by_id(store_name, rule_id):
+        return DAL.load_all_by(BasketRule, lambda r: r.store_name == store_name and r.rule_id == rule_id,
+                                 BasketRule.create_instance_from_db_query)
 
     @staticmethod
     def clear_db():

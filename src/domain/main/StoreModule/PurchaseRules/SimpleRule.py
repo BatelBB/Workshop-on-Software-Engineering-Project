@@ -1,3 +1,5 @@
+import sys
+
 from sqlalchemy import Column, Integer, String
 
 from DataLayer.DAL import Base, DAL
@@ -12,11 +14,12 @@ class SimpleRule(IRule, Base):
     __table_args__ = {'extend_existing': True}
     rule_id = Column("rule_id", Integer, primary_key=True)
     store_name = Column("store_name", String, primary_key=True)
-    product_name = Column("product_name", String, primary_key=True)
-    gle = Column("gle", String, primary_key=True)
-    num = Column("num", Integer, primary_key=True)
+    product_name = Column("product_name", String)
+    gle = Column("gle", String)
+    num = Column("num", Integer)
 
     def __init__(self, product_name: str, gle: str, num: int):
+        super().__init__()
         self.product_name = product_name
         self.num = num
         if gle == ">" or gle == "<" or gle == "=":
@@ -36,7 +39,7 @@ class SimpleRule(IRule, Base):
                     item.rule_msg = self.__str__()
                     return report_error("enforce_rule", f"invalid basket: {self.__str__()}")
 
-        if self.gle == ">":         # incase the item is not in the cart
+        if self.gle == ">":  # incase the item is not in the cart
             return report_error("enforce_rule", f"invalid basket: {self.__str__()}")
 
         return Response(True, "good")
@@ -58,11 +61,20 @@ class SimpleRule(IRule, Base):
         return rule
 
     @staticmethod
-    def load_all_simple_rules():
+    def load_all_simple_rules(store_name):
         out = {}
-        for r in DAL.load_all(SimpleRule, SimpleRule.create_instance_from_db_query):
-            out[r.rule_id] = r
+        records = DAL.load_all_by(SimpleRule, lambda r: r.store_name == store_name,
+                                  SimpleRule.create_instance_from_db_query)
+        if not isinstance(records, list):
+            records = [records]
+        for record in records:
+            out[record.rule_id] = record
         return out
+
+    @staticmethod
+    def load_rule_by_id(store_name, rule_id):
+        return DAL.load_all_by(SimpleRule, lambda r: r.store_name == store_name and r.rule_id == rule_id,
+                               SimpleRule.create_instance_from_db_query)
 
     @staticmethod
     def clear_db():
