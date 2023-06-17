@@ -14,6 +14,8 @@ class IDiscountConnector(IDiscount):
         self.children_ids = ""
 
     def add_discount_to_connector(self, discount, not_update=None) -> Response:
+        if discount is None:
+            return 1
         self.children.append(discount)
         self.children_ids += f'{discount.discount_id},'
         if not_update is None:
@@ -33,6 +35,7 @@ class IDiscountConnector(IDiscount):
         for dis in self.children:
             if dis.discount_id == id:
                 self.children.remove(dis)
+                self.remove_child_from_child_ids(id)
                 return True
             if dis.remove_discount(id):
                 return True
@@ -42,11 +45,20 @@ class IDiscountConnector(IDiscount):
         for dis in self.children:
             if dis.discount_id == id:
                 self.children.remove(dis)
+                self.remove_child_from_child_ids(id)
                 self.add_discount_to_connector(discount)
                 return True
             if dis.replace(id, discount):
                 return True
         return False
+
+    def remove_child_from_child_ids(self, child_id):
+        numbers_list = self.children_ids.split(",")
+        numbers_list = [num.strip() for num in numbers_list]
+        if str(child_id) in numbers_list:
+            numbers_list.remove(str(child_id))
+        self.children_ids = ",".join(numbers_list)
+        DAL.update(self)
 
     def get_parents_id(self, id) -> int:
         for dis in self.children:

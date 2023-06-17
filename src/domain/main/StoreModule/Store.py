@@ -187,13 +187,15 @@ class Store(Base):
 
         simple_discounts = SimpleDiscount.load_all_simple_discounts(self.name)
         add_discounts = AddDiscounts.load_all_add_discounts(self.name)
-        max_discounts = {}
+        max_discounts = MaxDiscounts.load_all_add_discounts(self.name)
         or_discounts = {}
         xor_discounts = {}
 
         self.connect_discount_to_rules(simple_discounts, add_discounts,  max_discounts, or_discounts, xor_discounts)
 
         all_connectors = add_discounts
+        if max_discounts:
+            all_connectors.update(max_discounts)
         self.connect_discount_tree(all_connectors, simple_discounts)
 
 
@@ -581,6 +583,8 @@ class Store(Base):
 
             # replace 2nd discount with new connector in discount tree
             if self.discounts.replace(id2, conn):
+                conn.set_db_info(conn.discount_id, self.name)
+                conn.add_to_db()
                 return report("successfully connected discounts", True)
             else:
                 self.discounts.find_discount(id_for_backtrack).add_discount_to_connector(d1)
