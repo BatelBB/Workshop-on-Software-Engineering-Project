@@ -48,35 +48,36 @@ class SystemAdmin(unittest.TestCase):
 
     def test_cancel_membership_of_store_founder(self):
         r = self.app.cancel_membership_of(self.store_founder1[0])
-        self.assertTrue(r.success, "error: cancel membership action failed")
+        self.assertFalse(r.success, "error: cancel membership action succeeded")
         self.app.logout()
         r = self.app.login(*self.store_founder1)
-        self.assertFalse(r.success, "error: canceled membership user succeeded with login")
-        self.app.add_product("bakery", "bread", "1", 10, 15, ["basic", "x"])
-        self.assertFalse(r.success, "error: add product action succeeded")
-        products = self.app.get_products_by_name("bread").result
-        self.assertEqual(0, len(products), "error: product found added by a canceled membership founder")
+        self.assertTrue(r.success, "error: founder failed with login")
+        r = self.app.add_product("bakery", "lafa", "1", 10, 15, ["basic", "x"])
+        self.assertTrue(r.success, "error: add product action failed")
+        products = self.app.get_products_by_name("lafa").result
+        self.assertEqual(1, len(products), "error: product added by a founder not found")
 
     def test_cancel_membership_of_store_owner(self):
         r = self.app.cancel_membership_of(self.store_owner1[0])
-        self.assertTrue(r.success, "error: cancel membership action failed")
+        self.assertFalse(r.success, "error: cancel membership action succeeded")
         self.app.logout()
         r = self.app.login(*self.store_owner1)
-        self.assertFalse(r.success, "error: canceled membership user succeeded with login")
-        self.app.add_product("bakery", "bread", "1", 10, 15, ["basic", "x"])
-        self.assertFalse(r.success, "error: add product action succeeded")
-        products = self.app.get_products_by_name("bread").result
-        self.assertEqual(0, len(products), "error: product found added by a canceled membership founder")
+        self.assertTrue(r.success, "error: owner failed with login")
+        r = self.app.add_product("bakery", "lafa", "1", 10, 15, ["basic", "x"])
+        self.assertTrue(r.success, "error: add product action failed")
+        products = self.app.get_products_by_name("lafa").result
+        self.assertEqual(1, len(products), "error: product added by a owner not found")
 
     def test_cancel_membership_of_store_manager(self):
         r = self.app.cancel_membership_of(self.store_manager1[0])
-        self.assertTrue(r.success, "error: cancel membership action failed")
+        self.assertFalse(r.success, "error: cancel membership action succeeded")
+        self.app.logout()
         r = self.app.login(*self.store_manager1)
-        self.assertFalse(r.success, "error: canceled membership user succeeded with login")
-        self.app.add_product("bakery", "bread", "1", 10, 15, ["basic", "x"])
-        self.assertFalse(r.success, "error: add product action succeeded")
-        products = self.app.get_products_by_name("bread").result
-        self.assertEqual(0, len(products), "error: product found added by a canceled membership founder")
+        self.assertTrue(r.success, "error: manager failed with login")
+        r = self.app.add_product("bakery", "lafa", "1", 10, 15, ["basic", "x"])
+        self.assertTrue(r.success, "error: add product action failed")
+        products = self.app.get_products_by_name("lafa").result
+        self.assertEqual(1, len(products), "error: product added by a manager not found")
 
     def test_retrieve_purchase_history(self):
         with patch(self.app.provision_path, return_value=True), patch(self.app.payment_pay_path, return_value=True):

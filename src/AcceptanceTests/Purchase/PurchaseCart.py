@@ -140,7 +140,7 @@ class PurchaseCart(unittest.TestCase):
             self.app.logout()
 
             payment_mock.assert_called_once_with(560)
-            refund_mock.assert_called_once_with(560)
+            refund_mock.assert_not_called()
             delivery_mock.assert_not_called()
 
     def test_purchase_when_shipping_fails(self):
@@ -178,7 +178,7 @@ class PurchaseCart(unittest.TestCase):
             self.app.logout()
 
             payment_mock.assert_called_once_with(560)
-            refund_mock.assert_called_once_with(560)
+            refund_mock.assert_not_called()
             delivery_mock.assert_not_called()
 
     def test_purchase_with_bid(self):

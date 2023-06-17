@@ -29,6 +29,7 @@ class UpdateDiscountPolicy(unittest.TestCase):
         self.app.login(*self.store_founder1)
         r = self.app.add_simple_discount("bakery", "product", 50, "bread")
 
+    # todo
     # def test_add_simple_discount_product(self):
     #     self.app.login(*self.store_founder1)
     #     r = self.app.add_simple_discount("bakery", "product", 50, "bread")

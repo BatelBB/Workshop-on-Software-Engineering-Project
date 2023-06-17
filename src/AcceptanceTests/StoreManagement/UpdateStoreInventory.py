@@ -23,7 +23,7 @@ class UpdateStoreInventory(unittest.TestCase):
         cls.app.enter_market()
         cls.app.shutdown()
 
-    def test_owner_add_products_to_store_happy(self):
+    def test_founder_add_products_to_store_happy(self):
         self.app.login(*self.store_founder)
         self.app.open_store("bakery")
         r = self.app.add_product("bakery", "bread", "1", 10, 15, ["basic", "x"])
@@ -36,7 +36,7 @@ class UpdateStoreInventory(unittest.TestCase):
         self.assertEqual(1, len(products), "error: didn't get 1 stores that has the products while the market has 1")
         self.app.logout()
 
-    def test_owner_add_products_that_already_existed(self):
+    def test_founder_add_products_that_already_existed(self):
         self.set_stores()
         self.app.login(*self.store_founder)
         r = self.app.add_product("bakery", "bread", "5", 8, 2, ["yy", "zz"])
@@ -52,7 +52,7 @@ class UpdateStoreInventory(unittest.TestCase):
         self.assertEqual(5, bakery["bread"]["Rate"], "error: bread rate incorrect")
         self.app.logout()
 
-    def test_owner_add_product_with_non_positive_price(self):
+    def test_founder_add_product_with_non_positive_price(self):
         self.app.login(*self.store_founder)
         self.app.open_store("bakery")
         r = self.app.add_product("bakery", "bread", "1", -5, 2, ["yy", "zz"])
@@ -66,7 +66,7 @@ class UpdateStoreInventory(unittest.TestCase):
         self.assertEqual(0, len(products), "error: product with zero price added")
         self.app.logout()
 
-    def test_owner_add_product_with_negative_quantity(self):
+    def test_founder_add_product_with_negative_quantity(self):
         self.app.login(*self.store_founder)
         self.app.open_store("bakery")
         r = self.app.add_product("bakery", "bread", "1", 5, -8, ["yy", "zz"])
@@ -75,7 +75,7 @@ class UpdateStoreInventory(unittest.TestCase):
         self.assertEqual(0, len(products), "error: product with negative quantity added")
         self.app.logout()
 
-    def test_owner_remove_product(self):
+    def test_founder_remove_product(self):
         self.set_stores()
         self.app.login(*self.store_founder)
         r = self.app.remove_product("bakery", "bread")
@@ -84,14 +84,14 @@ class UpdateStoreInventory(unittest.TestCase):
         self.assertEqual(0, len(products), "error: product found after removed from store")
         self.app.logout()
 
-    def test_owner_remove_product_not_existed(self):
+    def test_founder_remove_product_not_existed(self):
         self.set_stores()
         self.app.login(*self.store_founder)
         r = self.app.remove_product("bakery", "xxx")
         self.assertFalse(r.success, "error: remove product action succeeded")
         self.app.logout()
 
-    def test_owner_update_product_quantity_happy(self):
+    def test_founder_update_product_quantity_happy(self):
         self.set_stores()
         self.app.login(*self.store_founder)
         r = self.app.update_product_quantity("bakery", "bread", 100)
@@ -105,7 +105,7 @@ class UpdateStoreInventory(unittest.TestCase):
         self.assertEqual(100, products["bread"]["Quantity"], "error: bread rate incorrect")
         self.app.logout()
 
-    def test_owner_update_product_quantity_illegal_quantity(self):
+    def test_founder_update_product_quantity_illegal_quantity(self):
         self.set_stores()
         self.app.login(*self.store_founder)
         r = self.app.update_product_quantity("bakery", "bread", -5)
@@ -119,7 +119,7 @@ class UpdateStoreInventory(unittest.TestCase):
         self.assertEqual(15, products["bread"]["Quantity"], "error: bread rate incorrect")
         self.app.logout()
 
-    def test_owner_change_product_name(self):
+    def test_founder_change_product_name(self):
         self.set_stores()
         self.app.login(*self.store_founder)
         r = self.app.change_product_name("bakery", "bread", "new_bread")
@@ -136,7 +136,7 @@ class UpdateStoreInventory(unittest.TestCase):
         self.assertEqual("1", bakery["new_bread"]["Category"], "error: new_bread category incorrect")
         self.app.logout()
 
-    def test_owner_change_product_price(self):
+    def test_founder_change_product_price(self):
         self.set_stores()
         self.app.login(*self.store_founder)
         r = self.app.change_product_price("bakery", 10, 20)
@@ -151,7 +151,7 @@ class UpdateStoreInventory(unittest.TestCase):
         self.assertEqual(5, bakery["bread"]["Rate"], "error: bread rate incorrect")
         self.app.logout()
 
-    def test_owner_change_product_price_to_non_positive_price(self):
+    def test_founder_change_product_price_to_non_positive_price(self):
         self.set_stores()
         self.app.login(*self.store_founder)
         r = self.app.change_product_price("bakery", 10, -5)
