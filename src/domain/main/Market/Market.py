@@ -1345,6 +1345,7 @@ class Market(IService):
     def verify_item_integrity(self, product_name, username, store_name) -> bool:
         i1, i2 = self.get_cart_item_from_ram(product_name, username, store_name), self.get_cart_item_from_db(
             product_name, username, store_name)
+        #print(f"i1: {i1}\ni2: #{i2}")
         return i1 is None and i2 is None or \
             i1 is not None and i2 is not None and i1.username == i2.username and i1.store_name == i2.store_name and \
             i1.product_name == i2.product_name and i1.quantity == i2.quantity and i1.price == i2.price and \
