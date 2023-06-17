@@ -202,7 +202,7 @@ class Store(Base):
 
         # find discount 0:
         self.discounts = add_discounts[0]
-        self.discounts.set_db_info(self.name, 0)
+        self.discounts.set_db_info(0, self.name)
 
         self.discount_counter = 0
         for num, discount in chain(simple_discounts.items(), add_discounts.items(), max_discounts.items(),
