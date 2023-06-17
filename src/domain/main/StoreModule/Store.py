@@ -4,6 +4,7 @@ from multipledispatch import dispatch
 from sqlalchemy import Column, String
 
 from DataLayer.DAL import DAL, Base
+from domain.main.StoreModule.PurchaseRules.SimpleRule import SimpleRule
 from domain.main.Utils.ConcurrentDictionary import ConcurrentDictionary
 from src.domain.main.StoreModule.DIscounts.Discount_Connectors.AddDiscounts import AddDiscounts
 from src.domain.main.StoreModule.DIscounts.Discount_Connectors.MaxDiscounts import MaxDiscounts
@@ -84,6 +85,21 @@ class Store(Base):
 
         return store
 
+    def load_my_rules(self):
+        simple_rule_dict = SimpleRule.load_all_simple_rules()
+        self.purchase_rules = simple_rule_dict
+
+        highest = 0
+        r = None
+        for rule_id, rule in self.purchase_rules.items():
+            if highest < rule_id:
+                highest = rule_id
+                r = rule
+        num_ids = 0
+        if r is not None:
+            num_ids = r.number_of_ids()
+        self.purchase_rule_ids = highest + 1 + num_ids
+
     @staticmethod
     def load_store(store_name):
         return DAL.load(Store, lambda r: r.name == store_name, Store.create_instance_from_db_query)
@@ -93,6 +109,7 @@ class Store(Base):
         out = ConcurrentDictionary()
         for s in DAL.load_all(Store, Store.create_instance_from_db_query):
             out.insert(s.name, s)
+            s.load_my_rules()
         return out
 
     @staticmethod
@@ -409,14 +426,17 @@ class Store(Base):
     def add_purchase_rule(self, rule: IRule) -> Response:
         with self.purchase_rule_lock:
             self.purchase_rules[self.purchase_rule_ids] = rule
-            self.purchase_rule_ids += 1
+            count = rule.set_db_info(self.name, self.purchase_rule_ids)
+            rule.add_to_db()
+            self.purchase_rule_ids += count
             return report("add_purchase_rule -> success", True)
 
     def get_purchase_rules(self):
         return self.purchase_rules
 
     def remove_purchase_rule(self, rule_id: int):
-        self.purchase_rules.pop(rule_id)
+        rule = self.purchase_rules.pop(rule_id)
+        rule.delete_from_db()
 
     def add_simple_discount(self, percent: int, discount_type: str, rule: IRule = None, discount_for_name=None) -> \
     Response[bool]:
