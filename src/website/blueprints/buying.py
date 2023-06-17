@@ -86,7 +86,7 @@ def checkout_cart():
 class BuyWithCardForm(FlaskForm):
     number = StringField(label='credit card number', validators=[regexp(r'[\d]+', message='digits only plz')])
     exp_month = IntegerField(label='expiration month', validators=[NumberRange(min=1, max=12)])
-    exp_year = IntegerField(label='expiration year', validators=[NumberRange(min=2023, max=2100)])
+    exp_year = IntegerField(label='expiration year', validators=[NumberRange(min=1023, max=2100)])
     ccv = StringField(label='CCV', validators=[regexp(r'\d\d\d', message='3 digits please')])
     street = StringField(label='street', validators=[DataRequired()])
     apt_number = IntegerField(label='apartment number', validators=[NumberRange(min=1)])
@@ -115,7 +115,7 @@ class BidProduct(FlaskForm):
     bid = FloatField(label='your bid')
     number = StringField(label='credit card number', validators=[regexp(r'[\d]+', message='digits only plz')])
     exp_month = IntegerField(label='expiration month', validators=[NumberRange(min=1, max=12)])
-    exp_year = IntegerField(label='expiration year', validators=[NumberRange(min=2023, max=2100)])
+    exp_year = IntegerField(label='expiration year', validators=[NumberRange(min=1023, max=2100)])
     ccv = StringField(label='CCV', validators=[regexp(r'\d\d\d', message='3 digits please')])
     street = StringField(label='street', validators=[DataRequired()])
     apt_number = IntegerField(label='apartment number', validators=[NumberRange(min=1)])

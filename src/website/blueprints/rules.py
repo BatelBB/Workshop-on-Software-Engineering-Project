@@ -31,7 +31,7 @@ def delete_rule(store_name, index):
     return redirect(url_for('rules.rules_view', store_name=store_name))
 
 class AddSimpleRuleForm(FlaskForm):
-    product_name = StringField(validators=[Length(min=3, max=100)])
+    product_name = StringField(validators=[Length(min=1, max=100)])
     gle = StringField(validators=[DataRequired()])
     amount = IntegerField(validators=[NumberRange(min=0)])
     submit = SubmitField()
@@ -53,10 +53,10 @@ def add_simple_rule(store_name: str):
     return render_template("products/add_simple_rule.html", form=form)
 
 class AddComplexRuleForm(FlaskForm):
-    product1_name = StringField(validators=[Length(min=3, max=100)])
+    product1_name = StringField(validators=[Length(min=1, max=100)])
     gle1 = StringField(validators=[DataRequired()])
     amount1 = IntegerField(validators=[NumberRange(min=0)])
-    product2_name = StringField(validators=[Length(min=3, max=100)])
+    product2_name = StringField(validators=[Length(min=1, max=100)])
     gle2 = StringField(validators=[DataRequired()])
     amount2 = IntegerField(validators=[NumberRange(min=0)])
     rule_type = SelectField('Rule Type', choices=[('and', 'AND'), ('or', 'OR')])
