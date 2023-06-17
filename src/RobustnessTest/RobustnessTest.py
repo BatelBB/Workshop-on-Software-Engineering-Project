@@ -424,15 +424,16 @@ class RobustnessTest(unittest.TestCase):
 
         result[index] = r
 
-    # @parameterized.expand(number_of_threads)
-    def test_concurrent_purchase_shopping_cart(self, number_of_threads=2):
-        number_of_products = 2
+    @parameterized.expand(number_of_threads)
+    def test_purchase_shopping_cart_with_same_cart(self, number_of_threads):
+        number_of_products = 10
         data = self.open_stores_with_products(number_of_products)
         threads = [None] * number_of_threads
         results = [None] * number_of_threads
 
         for i in range(number_of_threads):
-            threads[i] = Thread(target=self.start_new_session_register_login_add_to_cart_and_purchase, args=(data, results, i))
+            threads[i] = Thread(target=self.start_new_session_register_login_add_to_cart_and_purchase,
+                                args=(data, results, i))
             threads[i].start()
 
         for i in range(number_of_threads):
@@ -447,19 +448,30 @@ class RobustnessTest(unittest.TestCase):
             self.assertTrue(len(products) == 0)
 
     @parameterized.expand(number_of_threads)
-    def test_concurrent_pay(self, n_threads):
-        self.market.register('user', 'password')
-        self.market.login('user', 'password')
-        self.market.add_product_to_cart('user', 'store', 'product', 1, n_threads)
-        self.market.purchase_shopping_cart('user')
+    def test_purchase_shopping_cart_with_different_carts(self, number_of_threads):
+        number_of_products = 10 * number_of_threads
+        data = self.open_stores_with_products(number_of_products)
+        threads = [None] * number_of_threads
+        results = [None] * number_of_threads
 
-        def task(market: Market, payment_details: list, holder: str, user_id: int):
-            market.pay(payment_details, holder, user_id)
+        # Divide the data into chunks for each thread
+        data_chunks = [data[i::number_of_threads] for i in range(number_of_threads)]
 
-        threads = [threading.Thread(target=task, args=(self.market, ['card_number', 'cvv', 'mm/yyyy'], 'holder', 1)) for _ in range(n_threads)]
-        for thread in threads:
-            thread.start()
-        for thread in threads:
-            thread.join()
+        for i in range(number_of_threads):
+            # Each thread gets its own set of products
+            threads[i] = Thread(target=self.start_new_session_register_login_add_to_cart_and_purchase,
+                                args=(data_chunks[i], results, i))
+            threads[i].start()
 
-        # Add appropriate assertion here based on your business logic.
+        for i in range(number_of_threads):
+            threads[i].join()
+
+        succeeded_results = list(filter(lambda response: response.success, results))
+        self.assertEqual(number_of_threads, len(succeeded_results))
+
+        for store, product in data:
+            product_name = product[0]
+            products = [product for product in self.session.get_all_products_of(store).result if
+                        product.name == product_name and product.quantity == 0]
+            self.assertTrue(len(products) == 0)
+
