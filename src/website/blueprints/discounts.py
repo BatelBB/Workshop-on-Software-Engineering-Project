@@ -41,7 +41,7 @@ class AddDiscount(FlaskForm):
                                 choices=[('store', 'STORE'), ('product', 'PRODUCT'), ('category', 'CATEGORY')])
     percent = IntegerField(validators=[Optional(), NumberRange(min=0, max=100)])
     discount_for_name = StringField(validators=[Optional(), Length(min=1, max=100)])
-    rule_type = SelectField('Rule Type', choices=[("None", "NONE"), ('and', 'AND'), ('or', 'OR'), ('basket', 'BASKET')],
+    rule_type = SelectField('Rule Type', choices=[("None", "NONE"), ('and', 'AND'), ('or', 'OR'), ('basket', 'BASKET'), ('cond', 'COND')],
                             default=None)
     min_price = IntegerField(validators=[Optional(), NumberRange(min=0)])
     product1_name = StringField(validators=[Optional(), Length(min=1, max=100)])
