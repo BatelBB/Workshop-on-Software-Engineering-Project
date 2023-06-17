@@ -1,18 +1,12 @@
-import threading
-
-from sqlalchemy import Column, String, ForeignKey
-from sqlalchemy.orm import relationship
-
 from sqlalchemy import Column, String, ForeignKey
 
+from DataLayer.DAL import DAL, Base
 from domain.main.Utils.ConcurrentDictionary import ConcurrentDictionary
-from src.domain.main.Utils import Base_db
-from src.domain.main.Utils.Base_db import session_DB
 from src.domain.main.Market.Permissions import Permission, get_default_owner_permissions, get_permission_description, \
     serialize_permissions, deserialize_permissions
 
 
-class Appointment(Base_db.Base):
+class Appointment(Base):
 
     __tablename__ = 'appointments'
     __table_args__ = {'extend_existing': True}
@@ -34,60 +28,39 @@ class Appointment(Base_db.Base):
         self.permissions_str = serialize_permissions(self.permissions)
 
     @staticmethod
+    def create_instance_from_db_query(r):
+        return Appointment(r.appointee, r.store_name, r.role, r.appointed_by, deserialize_permissions(r.permissions_str))
+
+    @staticmethod
     def load_appointments_of(store_name):
-        appointments = []
-        q = session_DB.query(Appointment).filter(Appointment.store_name == store_name).all()
-        exist = len(q) > 0
-        if exist:
-            for r in q:
-                appointments.append(Appointment(r.appointee, r.store_name, r.role, r.appointed_by, deserialize_permissions(r.permissions_str)))
-            return appointments
-        return None
+        return DAL.load_all_by(Appointment, lambda r: r.store_name == store_name, Appointment.create_instance_from_db_query)
 
     @staticmethod
     def load_all_appointments():
-        q = session_DB.query(Appointment).all()
-        exist = len(q) > 0
-        if exist:
-            app_dict = ConcurrentDictionary()
-            for row in q:
-                app = Appointment.load_appointments_of(row.store_name)
-                app_dict.insert(row.store_name, app)
-            return app_dict
-        return ConcurrentDictionary()
+        out = ConcurrentDictionary()
+        for r in DAL.load_all(Appointment, Appointment.create_instance_from_db_query):
+            out.insert(r.store_name, Appointment.load_appointments_of(r.store_name))
+        return out
 
     @staticmethod
     def clear_db():
-        session_DB.query(Appointment).delete()
-        session_DB.commit()
+        DAL.clear(Appointment)
 
     @staticmethod
     def delete_record(fired_user, store_name):
-        q = session_DB.query(Appointment).filter(Appointment.appointee == fired_user, Appointment.store_name == store_name).all()
-        is_exists = len(q) > 0
-        if is_exists:
-            for r in q:
-                session_DB.delete(r)
-            session_DB.commit()
+        DAL.delete(Appointment, lambda r: r.appointee == fired_user and r.store_name == store_name)
 
     @staticmethod
     def add_record(appointment):
-        session_DB.merge(appointment)
-        session_DB.commit()
+        DAL.add(appointment)
 
     @staticmethod
     def load_appointment(appointee, store_name):
-        q = session_DB.query(Appointment).filter(Appointment.appointee == appointee, Appointment.store_name == store_name).all()
-        exist = len(q) > 0
-        if exist:
-            row = q[0]
-            return Appointment(row.appointee, row.store_name, row.role, row.appointed_by, deserialize_permissions(row.permissions_str))
-        return None
+        return DAL.load(Appointment, lambda r: r.appointee == appointee and r.store_name == store_name, Appointment.create_instance_from_db_query)
 
     @staticmethod
     def number_of_records():
-        session_DB.flush()
-        return session_DB.query(Appointment).count()
+        return DAL.size(Appointment)
 
     def __str__(self):
         permissions: str = ', '.join(map(lambda p: str(get_permission_description(p)), self.permissions))
@@ -95,6 +68,7 @@ class Appointment(Base_db.Base):
 
     def __repr__(self):
         return self.__str__()
+
     def __eq__(self, other):
         return self.appointee == other.appointee
 
@@ -112,13 +86,10 @@ class Appointment(Base_db.Base):
 
     def add(self, permission):
         self.permissions.add(permission)
-        r = session_DB.query(Appointment).filter(Appointment.appointee == self.appointee, Appointment.store_name == self.store_name).first()
-        r.permissions_str = serialize_permissions(self.permissions)
-        session_DB.commit()
+        self.permissions_str = serialize_permissions(self.permissions)
+        DAL.update(self)
 
     def remove(self, permission):
         self.permissions.remove(permission)
-        r = session_DB.query(Appointment).filter(Appointment.appointee == self.appointee, Appointment.store_name == self.store_name).first()
-        r.permissions_str = serialize_permissions(self.permissions)
-        session_DB.commit()
-
+        self.permissions_str = serialize_permissions(self.permissions)
+        DAL.update(self)

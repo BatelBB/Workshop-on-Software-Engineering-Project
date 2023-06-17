@@ -1,9 +1,6 @@
+import hashlib
 import threading
 from abc import ABC
-
-import bcrypt
-
-from src.domain.main.Utils.Base_db import session_DB
 from src.domain.main.StoreModule.Store import Store
 from src.domain.main.UserModule.Role.IRole import IRole
 from src.domain.main.Utils.Logger import report_error, report_info
@@ -24,7 +21,8 @@ class Visitor(IRole, ABC):
         if self.context.is_canceled:
             report_error(self.login.__qualname__, f'Canceled member \'{self.context.username}\' attempted to login')
             return False
-        is_password_matched = bcrypt.checkpw(bytes(input_password, 'utf8'), self.context.encrypted_password)
+        # is_password_matched = bcrypt.checkpw(bytes(input_password, 'utf8'), self.context.encrypted_password)
+        is_password_matched = hashlib.sha256(input_password.encode('utf8')).hexdigest() == self.context.encrypted_password
         if is_password_matched:
             from src.domain.main.UserModule.Role.Member import Member
             self.context.role = Member(self.context)

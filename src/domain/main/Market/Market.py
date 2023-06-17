@@ -5,7 +5,6 @@ from functools import reduce
 from typing import Any
 
 from multipledispatch import dispatch
-from sqlalchemy import inspect
 from Service.IService.IService import IService
 from src.domain.main.Utils.InitExternalServices import init_external_services_from_configuration
 from src.domain.main.StoreModule.PurchaseRules.IRule import IRule
@@ -26,7 +25,7 @@ from src.domain.main.StoreModule.PurchaseRules import PurchaseRulesFactory
 from src.domain.main.StoreModule.Store import Store
 from src.domain.main.UserModule.Basket import Item
 from src.domain.main.UserModule.User import User
-from src.domain.main.Utils.Base_db import Base, engine, init_db_from_configuration
+from src.DataLayer.DAL import DAL
 from src.domain.main.Utils.ConcurrentDictionary import ConcurrentDictionary
 from src.domain.main.Utils.Logger import Logger, report_error, report_info
 from src.domain.main.Utils.Response import Response
@@ -50,34 +49,18 @@ class Market(IService):
         self.package_counter = 0
         self.appointments_lock = threading.RLock()
         self.approval_lock = threading.RLock()
-        self.approval_list: ConcurrentDictionary[
-            str, ConcurrentDictionary[str, OwnersApproval]] = ConcurrentDictionary()
-        self.init_db()
+        self.approval_list: ConcurrentDictionary[str, ConcurrentDictionary[str, OwnersApproval]] = ConcurrentDictionary()
+        DAL.load_or_create_tables(tables=(User, Item, Store, Product, Appointment))
         self.init_admin()
 
         self.stores = Store.load_all_stores()
         self.appointments = Appointment.load_all_appointments()
 
-    def init_db(self):
-        Base.metadata.reflect(engine)
-        classes_for_db = (User, Item, Store, Product, Appointment)
-        tables_to_create = []
-
-        for cls in classes_for_db:
-            if not self.is_table_exsits(cls.__tablename__):
-                tables_to_create.append(cls.__table__)
-
-        Base.metadata.create_all(engine, checkfirst=True, tables=tables_to_create)
-
     def load_configuration(self, config):
-        init_db_from_configuration(config['db'])
+        DAL.init(config['db'])
         payment_service, provision_service = init_external_services_from_configuration(config['external_services'])
         self.paymentService = payment_service
         self.provisionService = provision_service
-
-    def is_table_exsits(self, table_name: str):
-        inspector = inspect(engine)
-        return inspector.has_table(table_name)
 
     def init_admin(self):
         admin_credentials = ('Kfir', 'Kfir', True)
@@ -314,10 +297,8 @@ class Market(IService):
                 store = self.add_store(store_name)
                 if store is not None:
                     self.add_appointment(store_name, Appointment(actor.username, store_name))
-                    self.add_appointment(store_name, Appointment("Kfir", store_name, 'admin',
-                                                                 permissions={Permission.RetrievePurchaseHistory}))
-                    products_of_removed_store = self.removed_store_products.get(store)
 
+                    products_of_removed_store = self.removed_store_products.get(store)
                     if products_of_removed_store is not None:
                         for product in products_of_removed_store:
                             store.add(product, self.removed_products_quantity.get(product))
@@ -458,16 +439,13 @@ class Market(IService):
                 appointer = actor.username
                 if original_appointer is not None:
                     appointer = original_appointer
-                if self.add_appointment(store_name,
-                                        Appointment(appointee_name, store_name, role, appointer, permissions)):
-                    return report_info(calling_method, f'{actor} appointed \'{appointee.username}\' to a {role}.')
-                return report_error(calling_method,
-                                    f'{appointee} is already appointed to a role at store \'{store_name}\'.')
+                if self.add_appointment(store_name, Appointment(appointee_name, store_name, role, appointer, permissions)):
+                    return report_info(calling_method, f'{actor} appointed {appointee} to a {role}.')
+                return report_error(calling_method, f'{appointee} is already appointed to a role at store \'{store_name}\'.')
             return self.report_no_permission(calling_method, actor, store_name, required_permission)
         return response  # no registered appointee/store
 
-    def get_product_by(self, session_identifier: int, calling_method: str, preidcate) -> Response[
-        list[dict[str, dict]]]:
+    def get_product_by(self, session_identifier: int, calling_method: str, preidcate) -> Response[list[dict[str, dict]]]:
         actor = self.get_active_user(session_identifier)
         stores = self.stores.get_all_values()
         stores = [store for store in stores if self.store_activity_status.get(store.name) == 'OPEN' or
@@ -1287,8 +1265,9 @@ class Market(IService):
 
     def verify_user_consistent(self, username) -> bool:
         u1, u2 = self.get_user_from_ram(username), self.get_user_from_db(username)
-        return u1 is None and u2 is None or \
+        out = u1 is None and u2 is None or \
             u1 is not None and u2 is not None and u1.username == u2.username and u1.encrypted_password == u2.encrypted_password
+        return out
 
     def get_store_from_ram(self, store_name) -> Store | None:
         return self.stores.get(store_name)

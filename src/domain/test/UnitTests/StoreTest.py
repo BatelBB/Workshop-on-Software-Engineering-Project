@@ -239,8 +239,7 @@ class StoreTestCase(unittest.TestCase):
         owner, store = self.test_store_owner_appoints_manager_success()
         r = self.session.get_store_staff(store)
         stuff = r.result
-        # len(stuff)-1 because kfir is also stuff now as sysadmin
-        self.assertEqual(len(stuff)-1, len(self.users))  # expect all users to possess a role at store
+        self.assertEqual(len(stuff), len(self.users))  # expect all users to possess a role at store
 
     def test_cancel_membership_success(self):
         session = self.service.enter()
