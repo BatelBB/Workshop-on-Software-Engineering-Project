@@ -2,7 +2,7 @@ import random
 import string
 
 
-def get_random_string(length=10) -> str:
+def get_random_string(length=41) -> str:
     return ''.join(random.choices(string.ascii_lowercase, k=length))
 
 
