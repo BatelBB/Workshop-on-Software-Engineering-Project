@@ -9,8 +9,8 @@ bp = Blueprint("auth", __name__)
 
 
 class RegisterForm(FlaskForm):
-    username = StringField(validators=[validation.Length(min=2, max=20)])
-    password = PasswordField(validators=[validation.Length(min=2)])
+    username = StringField(validators=[validation.Length(min=1, max=20)])
+    password = PasswordField(validators=[validation.Length(min=1)])
     repeat_password = PasswordField(label="repeat password", validators=[validation.EqualTo("password")])
     submit = SubmitField()
 
@@ -31,8 +31,8 @@ def register():
 
 
 class LoginForm(FlaskForm):
-    username = StringField(validators=[validation.Length(min=2, max=20)])
-    password = PasswordField(validators=[validation.Length(min=2)])
+    username = StringField(validators=[validation.Length(min=1, max=20)])
+    password = PasswordField(validators=[validation.Length(min=1)])
     submit = SubmitField()
 
 

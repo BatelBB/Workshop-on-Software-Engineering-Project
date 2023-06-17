@@ -13,7 +13,7 @@ bp = Blueprint("products", __name__)
 
 
 class AddProductForm(FlaskForm):
-    product_name = StringField(validators=[validation.Length(min=3, max=100)])
+    product_name = StringField(validators=[validation.Length(min=1, max=100)])
     category = StringField(validators=[validation.DataRequired()])
     price = FloatField(validators=[validation.NumberRange(min=0.01)])
     quantity = IntegerField(validators=[validation.NumberRange(min=0)])

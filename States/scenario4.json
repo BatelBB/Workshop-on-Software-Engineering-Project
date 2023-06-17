@@ -1,0 +1,18 @@
+{
+    "$schema": "./schema.json",
+    "version": "0.1",
+    "init": [
+        { "tag": "register_admin", "username": "U1", "password": "123456", "is_admin": true },
+        { "tag": "register", "username": "U2", "password": "123456" },
+        { "tag": "register", "username": "U3", "password": "123456" },
+        { "tag": "register", "username": "U4", "password": "123456" },
+        { "tag": "register", "username": "U5", "password": "123456" },
+        { "tag": "login", "username": "U2", "encrypted_password": "123456"},
+        { "tag": "open_store", "store_name": "S" },
+        { "tag": "add_product", "store_name": "S", "product_name": "Apple",
+            "price": 20, "category": "Fruit",
+            "keywords": ["Sweet", "Sour", "Pie ingredients", "Cake ingredients"],
+            "quantity": 10 },
+        { "tag": "logout" }
+    ]
+}
