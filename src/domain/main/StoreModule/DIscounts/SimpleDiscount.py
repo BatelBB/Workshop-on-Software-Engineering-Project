@@ -85,6 +85,9 @@ class SimpleDiscount(IDiscount, Base):
             s = "store"
         else:
             s = self.discount_for_name
+        rule_str = ""
+        if self.rule is not None:
+            rule_str = self.rule.__str__()
         return f"simple discount: {self.percent}% for {s}"
 
     def get_all_simple_discounts(self, d) -> dict:
@@ -96,6 +99,8 @@ class SimpleDiscount(IDiscount, Base):
 
     def set_disconted_price_in_product(self, p: Product):
         if self.discount_type == "store" or self.discount_for_name == p.name or self.discount_for_name == p.category:
+            if self.rule is not None:
+                p.discount_str = self.rule.__str__()
             return self.percent * p.price * 0.01
         return 0
 

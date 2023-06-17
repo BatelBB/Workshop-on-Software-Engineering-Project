@@ -5,13 +5,18 @@
      data-rate="{{ product.rate }}"
      data-store_name="{{ product.store_name }}"
      data-discounted_price="{{ product.discounted_price }}"
+     data-discount_str="{{ product.discount_str }}"
 >
     <h3>
         <img src="{{ dicebear_product(product.name) }}" style="height: 3em;"/>
         <a href="{{ url_for('products.product_page', store_name=product.store_name, product_name=product.name) }}" style="background-color: #019CBA; color: white; padding: 4px 10px; margin: 5px 0; border: none; border-radius: 4px; cursor: pointer;">{{ product.name }}</a>
     </h3>
     <p>
-        <span class="price" style="text-decoration: line-through;">{{ product.price }}</span>
-        {{ product.discounted_price }}
+        {% if product.discounted_price < product.price %}
+            <span class="price" style="text-decoration: line-through;">{{ product.price }}</span>
+            {{ product.discounted_price }} {{ product.discount_str }}
+        {% else %}
+            <span class="price">{{ product.price }}</span>
+        {% endif %}
     </p>
 </div>

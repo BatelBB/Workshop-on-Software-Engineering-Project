@@ -30,6 +30,7 @@ class Product(Base):
         self.keywords_str = '#'.join(self.keywords)
         self.keywords.append(name)
         self.discount_price = price
+        self.discount_str = ""
 
     @staticmethod
     def create_instance_from_db_query(r):
@@ -68,7 +69,7 @@ class Product(Base):
 
     def __dic__(self):
         return {"Name": self.name, "Price": self.price, "Category": self.category, "Rate": self.rate,
-                "Keywords": self.keywords_str, "discounted_price": self.discount_price}
+                "Keywords": self.keywords_str, "discounted_price": self.discount_price, "discount_str": self.discount_str}
 
     def is_unrated(self):
         return self.rate is None

@@ -13,6 +13,7 @@ class ProductDto:
     store_name: str
     isBid: bool
     discounted_price: float
+    discount_str: str
 
 
 @dataclass
