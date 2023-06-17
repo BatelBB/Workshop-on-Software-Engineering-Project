@@ -29,7 +29,6 @@ class SimpleDiscount(IDiscount, Base):
         self.discount_type = discount_type
         self.rule = rule
         self.discount_for_name = discount_for_name
-        self.store_name = None
         if rule is None:
             self.is_rule = 'False'
             self.rule_id = 0

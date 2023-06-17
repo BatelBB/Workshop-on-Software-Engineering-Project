@@ -13,11 +13,11 @@ class IDiscountConnector(IDiscount):
         self.children: list[IDiscount] = []
         self.children_ids = ""
 
-
-    def add_discount_to_connector(self, discount) -> Response:
+    def add_discount_to_connector(self, discount, not_update=None) -> Response:
         self.children.append(discount)
         self.children_ids += f'{discount.discount_id},'
-        DAL.update(self)
+        if not_update is None:
+            DAL.update(self)
         return report("added discount", True)
 
     def find_discount(self, id: int):
@@ -83,3 +83,11 @@ class IDiscountConnector(IDiscount):
 
     def set_disconted_price_in_product(self, p: Product):
         return 0
+
+    def set_db_info(self, discount_id, store_name, rule=None):
+        self.store_name = store_name
+        self.discount_id = discount_id
+
+    def delete_from_db(self):
+        for discount in self.children:
+            discount.delete_from_db()

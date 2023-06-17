@@ -7,6 +7,7 @@ class IDiscount:
 
     def __init__(self, id: int):
         self.discount_id = id
+        self.store_name = None
 
     def apply_discount(self, basket: Basket, products: set[Product]) -> Basket:
         pass

@@ -576,8 +576,8 @@ class Store(Base):
             id_for_backtrack = self.discounts.get_parents_id(id1)
             self.discounts.remove_discount(id1)
 
-            conn.add_discount_to_connector(d1)
-            conn.add_discount_to_connector(d2)
+            conn.add_discount_to_connector(d1, "not")
+            conn.add_discount_to_connector(d2, "not")
 
             # replace 2nd discount with new connector in discount tree
             if self.discounts.replace(id2, conn):

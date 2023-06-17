@@ -38,17 +38,11 @@ class AddDiscounts(IDiscountConnector, Base):
         for discount in self.children:
             p.discount_price -= discount.set_disconted_price_in_product(p)
 
-
-    def set_db_info(self, discount_id, store_name, rule=None):
-        self.store_name = store_name
-        self.discount_id = discount_id
-
     def add_to_db(self):
         AddDiscounts.add_record(self)
 
     def delete_from_db(self):
-        for discount in self.children:
-            discount.delete_from_db()
+        super().delete_from_db()
         AddDiscounts.delete_record(self.discount_id, self.store_name)
 
     @staticmethod
