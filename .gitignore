@@ -31,6 +31,14 @@ src/domain/test/UnitTests/workshop.db
 src/domain/test/UnitTests/WorkshopLog.txt
 src/AcceptanceTests/workshop.db
 src/AcceptanceTests/WorkshopLog.txt
+src/AcceptanceTests/General/workshop.db
+src/AcceptanceTests/General/WorkshopLog.txt
+src/AcceptanceTests/Purchase/workshop.db
+src/AcceptanceTests/Purchase/WorkshopLog.txt
+src/AcceptanceTests/StoreManagement/workshop.db
+src/AcceptanceTests/StoreManagement/WorkshopLog.txt
+src/AcceptanceTests/UserSearchServices/workshop.db
+src/AcceptanceTests/UserSearchServices/WorkshopLog.txt
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
