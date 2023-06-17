@@ -27,11 +27,12 @@ class _UnreadController:
         self.set(username, self.get(username) + amount)
 
     def amounts_observable_for(self, username: str) -> Observable[int]:
+        from_now_on_count = self._subject.pipe(
+            ops.filter(lambda x: x[0] == username),
+            ops.map(lambda x: x[1])
+        )
         return of(self.get(username)).pipe(
-            ops.concat(self._subject.pipe(
-                ops.filter(lambda x: x[0] == username),
-                ops.map(lambda x: x[1])
-            ))
+            ops.concat(from_now_on_count)
         )
 
 
