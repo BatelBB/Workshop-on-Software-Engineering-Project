@@ -1,4 +1,5 @@
 import threading
+from itertools import chain
 
 from multipledispatch import dispatch
 from sqlalchemy import Column, String
@@ -77,7 +78,8 @@ class Store(Base):
     def init_discounts(self):
         root = AddDiscounts.load_add_discount_by_id(self.name, 0)
         if root:
-            self.discounts = root
+            self.discounts = root[0]
+            self.discounts.set_db_info(self.name, root[0].discount_id)
         else:
             self.discounts: AddDiscounts = AddDiscounts(0)
             self.discounts.set_db_info(0, self.name)
@@ -168,13 +170,16 @@ class Store(Base):
                         else:
                             discount.children.append(all_simple[child_id])
 
-    def connect_discount_to_rules(self, d1, d2, d3, d4, d5):
+    def connect_discount_to_rules(self, simple, xor):
         # d1.update(d2).update(d3).update(d4).update(d5)
         demi_store = Store(f'{self.name}_discount')
         demi_store.load_my_rules()
         discount_rules = demi_store.purchase_rules
 
-        for id, discount in d1.items():
+        for id, discount in simple.items():
+            if discount.is_rule == 'True':
+                discount.rule = discount_rules[discount.rule_id]
+        for id, discount in xor.items():
             if discount.is_rule == 'True':
                 discount.rule = discount_rules[discount.rule_id]
 
@@ -188,21 +193,30 @@ class Store(Base):
         simple_discounts = SimpleDiscount.load_all_simple_discounts(self.name)
         add_discounts = AddDiscounts.load_all_add_discounts(self.name)
         max_discounts = MaxDiscounts.load_all_add_discounts(self.name)
-        or_discounts = {}
+        or_discounts = OrDiscounts.load_all_add_discounts(self.name)
         xor_discounts = {}
 
-        self.connect_discount_to_rules(simple_discounts, add_discounts,  max_discounts, or_discounts, xor_discounts)
+        self.connect_discount_to_rules(simple_discounts, xor_discounts)
 
         all_connectors = add_discounts
         if max_discounts:
             all_connectors.update(max_discounts)
+        if or_discounts:
+            all_connectors.update(or_discounts)
         self.connect_discount_tree(all_connectors, simple_discounts)
 
 
         #find discount 0:
         self.discounts = add_discounts[0]
+        self.discounts.set_db_info(self.name, 0)
 
-        print("3")
+        self.discount_counter = 0
+        for num, discount in chain(simple_discounts.items(), add_discounts.items(), max_discounts.items(),
+                                    or_discounts.items(), xor_discounts.items()):
+            if num > self.discount_counter:
+                self.discount_counter = num
+        self.discount_counter += 1
+
 
     @staticmethod
     def load_store(store_name):
@@ -549,7 +563,7 @@ class Store(Base):
             discount = SimpleDiscount(self.discount_counter, percent, discount_type, rule, discount_for_name)
             count = discount.set_db_info(self.discount_counter, self.name, rule)
             discount.add_to_db()
-            self.discount_counter += count + 1
+            self.discount_counter += (count + 1)
             return self.discounts.add_discount_to_connector(discount)
 
     def connect_discounts(self, id1, id2, connection_type, rule=None) -> Response:
