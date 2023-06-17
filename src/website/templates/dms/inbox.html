@@ -3,37 +3,39 @@
 
 {% block page %}
 
-<h1>Your inbox</h1>
-<h2>{{ unread }} unread messages out of {{ unread + read }} messages overall.</h2>
+<div class="container mt-4">
+    <h1 class="text-center">Your Inbox</h1>
+    <h2 class="text-center mb-4">{{ unread }} unread messages out of {{ unread + read }} messages overall.</h2>
 
-{% for msg in inbox %}
+    {% for msg in inbox %}
 
-<div class="{{ 'msg-read' if msg.seen else 'msg-unread' }} msg container">
-    <div class="row sender">
-        {% if msg.is_from_store %}
-            <a href="{{url_for('buying.view_store', name=msg.sender)}}">
-                <img src="{{ dicebear_store(msg.sender) }}" style="height: 1em;"/>
-                <span>{{ msg.sender }}</span>
-            </a>
-        {% else %}
-            <img src="{{ dicebear_user(msg.sender) }}" style="height: 1em;"/>
-            <span>{{ msg.sender }}</span>
-        {% endif %}
+    <div class="{{ 'alert alert-secondary' if msg.seen else 'alert alert-primary' }}">
+        <div class="d-flex justify-content-between align-items-center">
+            {% if msg.is_from_store %}
+                <a href="{{url_for('buying.view_store', name=msg.sender)}}" class="d-flex align-items-center">
+                    <img src="{{ dicebear_store(msg.sender) }}" style="height: 1em; margin-right:0.5em;"/>
+                    <span>{{ msg.sender }}</span>
+                </a>
+            {% else %}
+                <div class="d-flex align-items-center">
+                    <img src="{{ dicebear_user(msg.sender) }}" style="height: 1em; margin-right:0.5em;"/>
+                    <span>{{ msg.sender }}</span>
+                </div>
+            {% endif %}
+            {% if not msg.seen %}
+                <div>
+                    <a href="{{ url_for('dms.mark_read', msg_id=msg.msg_id) }}" class="btn btn-sm btn-success">Mark as read</a>
+                </div>
+            {% endif %}
+        </div>
+        <p class="mb-0 mt-2">{{ msg.content }}</p>
     </div>
-    <div class="row msg-content">
-            {{ msg.content }}
-    </div>
-    {% if not msg.seen %}
-    <div class="row mark-read">
-        <a href="{{ url_for('dms.mark_read', msg_id=msg.msg_id) }}">Mark as read</a>
-    </div>
-    {%endif%}
+
+    {% else %}
+        <div class="alert alert-info" role="alert">
+            <p>You currently have no messages.</p>
+        </div>
+    {% endfor %}
 </div>
-
-{% else %}
-
-<p>You currently have no messages.</p>
-
-{% endfor %}
 
 {% endblock %}

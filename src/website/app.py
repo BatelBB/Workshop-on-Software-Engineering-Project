@@ -66,11 +66,10 @@ def internal_error(error):
     return render_template('500.html'), 500
 
 
-# socketio = init_realtime(app)
+socketio = init_realtime(app)
 
 
-
-def start_app():
+def start_app(is_on_network = True):
     print('start_app')
-    # socketio.run(app, port=80)
-    app.run(port=80)
+    run_on_netowrk = dict( host='0.0.0.0', allow_unsafe_werkzeug=True) if is_on_network else {}
+    socketio.run(app, port=80, **run_on_netowrk)

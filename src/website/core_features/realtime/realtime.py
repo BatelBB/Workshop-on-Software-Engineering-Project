@@ -28,7 +28,7 @@ def init_realtime(app: Flask):
         _connected.add(username)
 
         def on_unread_changed(amount: int):
-            ws.send({"event_type": "unread_amount_changed", "amount": amount})
+            ws.send({"event_type": "unread_amount_changed", "amount": amount}, to=username)
 
         res_obs = domain.unread_amount_observable
         if res_obs.success:
