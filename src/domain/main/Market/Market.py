@@ -397,6 +397,8 @@ class Market(IService):
             actor = self.get_active_user(session_identifier)
             if price > 0:
                 if self.has_permission_at(store_name, actor, Permission.Add):
+                    if any(p2 for p2 in store.products if p2.name == product_name):
+                        return report_error("add_product", f"Product {product_name} already exists in {store_name}")
                     p = Product(product_name, store_name, quantity, category, price, keywords)
                     store.add(p, quantity)
                     return report_info(self.add_product.__qualname__,
