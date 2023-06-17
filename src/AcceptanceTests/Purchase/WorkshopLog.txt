@@ -1,0 +1,157 @@
+17/06/2023 10:10:29 INFO:	 Market.register: 'Admin 'Kfir'' is registered!
+17/06/2023 10:10:29 INFO:	 Session: 4432905788792842882 has been initialized
+17/06/2023 10:10:29 INFO:	 Market.login: Admin 'Kfir' is logged in
+17/06/2023 10:10:29 INFO:	 Member.logout: Admin 'Kfir' is logged out
+17/06/2023 10:10:29 INFO:	 Market.register: 'Visitor 'usr11'' is registered!
+17/06/2023 10:10:29 INFO:	 Market.register: 'Visitor 'usr4'' is registered!
+17/06/2023 10:10:29 INFO:	 Market.register: 'Visitor 'usr2'' is registered!
+17/06/2023 10:10:29 INFO:	 Market.register: 'Visitor 'usr3'' is registered!
+17/06/2023 10:10:29 INFO:	 Market.login: Member 'usr11' is logged in
+17/06/2023 10:10:29 INFO:	 Market.open_store: Member 'usr11' opened store 'bakery'.
+17/06/2023 10:10:29 INFO:	 Market.add_product: 'Member 'usr11'' add 15 units of Product 'bread', Category: '1', Price: 10.0, Rate: 5 to store 'bakery'
+17/06/2023 10:10:29 INFO:	 Market.add_product: 'Member 'usr11'' add 20 units of Product 'pita', Category: '1', Price: 5.0, Rate: 5 to store 'bakery'
+17/06/2023 10:10:29 INFO:	 Member.logout: Member 'usr11' is logged out
+17/06/2023 10:10:29 INFO:	 Market.login: Member 'usr4' is logged in
+17/06/2023 10:10:29 INFO:	 Market.open_store: Member 'usr4' opened store 'market'.
+17/06/2023 10:10:29 INFO:	 Market.add_product: 'Member 'usr4'' add 40 units of Product 'tuna', Category: '1', Price: 20.0, Rate: 5 to store 'market'
+17/06/2023 10:10:29 INFO:	 Market.add_product: 'Member 'usr4'' add 20 units of Product 'pita', Category: '1', Price: 8.0, Rate: 5 to store 'market'
+17/06/2023 10:10:29 INFO:	 Member.logout: Member 'usr4' is logged out
+17/06/2023 10:10:29 INFO:	 Market.login: Member 'usr2' is logged in
+17/06/2023 10:10:29 INFO:	 Visitor.add_to_cart: 5 units of Product 'bread' from store 'bakery' is added to Member 'usr2' cart
+17/06/2023 10:10:29 INFO:	 Visitor.add_to_cart: 10 units of Product 'pita' from store 'bakery' is added to Member 'usr2' cart
+17/06/2023 10:10:29 INFO:	 Visitor.add_to_cart: 15 units of Product 'tuna' from store 'market' is added to Member 'usr2' cart
+17/06/2023 10:10:29 INFO:	 Visitor.add_to_cart: 20 units of Product 'pita' from store 'market' is added to Member 'usr2' cart
+17/06/2023 10:10:29 INFO:	 Member.logout: Member 'usr2' is logged out
+17/06/2023 10:10:29 INFO:	 Market.login: Member 'usr3' is logged in
+17/06/2023 10:10:29 INFO:	 Visitor.add_to_cart: 10 units of Product 'pita' from store 'market' is added to Member 'usr3' cart
+17/06/2023 10:10:29 INFO:	 Visitor.verify_cart_not_empty: Member 'usr3' cart's is NOT empty!
+17/06/2023 10:10:29 INFO:	 all rules are kept: Kfir is happy!
+17/06/2023 10:10:29 INFO:	 all rules are kept: Kfir is happy!
+17/06/2023 10:10:29 INFO:	 Market.pay: paying succeeded!
+17/06/2023 10:10:29 INFO:	 set_info
+17/06/2023 10:10:29 INFO:	 Member.logout: Member 'usr3' is logged out
+17/06/2023 10:10:29 INFO:	 Market.login: Member 'usr2' is logged in
+17/06/2023 10:10:29 INFO:	 Market.show_cart: Cart of Member 'usr2':
+Store 'bakery'
+Product: 'bread', Quantity: 5, Price: 10.0, Discount-Price: 10.0
+Product: 'pita', Quantity: 10, Price: 5.0, Discount-Price: 5.0
+Store 'market'
+Product: 'tuna', Quantity: 15, Price: 20.0, Discount-Price: 20.0
+Product: 'pita', Quantity: 20, Price: 8.0, Discount-Price: 8.0
+
+17/06/2023 10:10:29 INFO:	 Visitor.verify_cart_not_empty: Member 'usr2' cart's is NOT empty!
+17/06/2023 10:10:29 INFO:	 all rules are kept: Kfir is happy!
+17/06/2023 10:10:29 INFO:	 all rules are kept: Kfir is happy!
+17/06/2023 10:10:29 INFO:	 all rules are kept: Kfir is happy!
+17/06/2023 10:10:29 INFO:	 all rules are kept: Kfir is happy!
+17/06/2023 10:10:29 INFO:	 Market.pay: paying succeeded!
+17/06/2023 10:10:29 INFO:	 set_info
+17/06/2023 10:10:29 INFO:	 Member.logout: Member 'usr2' is logged out
+17/06/2023 10:10:29 INFO:	 Market.leave: Visitor 'usr2' left session: 4432905788792842882
+17/06/2023 10:10:29 INFO:	 Market.register: 'Admin 'Kfir'' is registered!
+17/06/2023 10:10:29 INFO:	 Session: 8917560840182227763 has been initialized
+17/06/2023 10:10:29 INFO:	 Market.login: Admin 'Kfir' is logged in
+17/06/2023 10:10:29 WARNING:	 Market is closed!
+17/06/2023 10:10:29 WARNING:	 Logger thread exits!
+17/06/2023 10:10:45 ERROR:	 Market.register: Username: 'Kfir' is occupied
+17/06/2023 10:10:45 INFO:	 Session: 5395213018030604478 has been initialized
+17/06/2023 10:10:45 INFO:	 Market.login: Admin 'Kfir' is logged in
+17/06/2023 10:10:45 INFO:	 Member.logout: Admin 'Kfir' is logged out
+17/06/2023 10:10:45 INFO:	 Market.register: 'Visitor 'usr11'' is registered!
+17/06/2023 10:10:45 INFO:	 Market.register: 'Visitor 'usr4'' is registered!
+17/06/2023 10:10:45 INFO:	 Market.register: 'Visitor 'usr2'' is registered!
+17/06/2023 10:10:45 INFO:	 Market.register: 'Visitor 'usr3'' is registered!
+17/06/2023 10:10:45 ERROR:	 Visitor.logout: Visitor 'Visitor' attempted to logout.
+17/06/2023 10:10:45 INFO:	 Market.leave: Visitor 'Visitor' left session: 5395213018030604478
+17/06/2023 10:10:45 INFO:	 Market.register: 'Admin 'Kfir'' is registered!
+17/06/2023 10:10:45 INFO:	 Session: 5073633918880530974 has been initialized
+17/06/2023 10:10:45 INFO:	 Market.login: Admin 'Kfir' is logged in
+17/06/2023 10:10:45 WARNING:	 Market is closed!
+17/06/2023 10:10:45 WARNING:	 Logger thread exits!
+17/06/2023 10:11:18 ERROR:	 Market.register: Username: 'Kfir' is occupied
+17/06/2023 10:11:18 INFO:	 Session: 8576154256991052340 has been initialized
+17/06/2023 10:11:18 INFO:	 Market.login: Admin 'Kfir' is logged in
+17/06/2023 10:11:18 INFO:	 Member.logout: Admin 'Kfir' is logged out
+17/06/2023 10:11:18 INFO:	 Market.register: 'Visitor 'usr11'' is registered!
+17/06/2023 10:11:18 INFO:	 Market.register: 'Visitor 'usr4'' is registered!
+17/06/2023 10:11:18 INFO:	 Market.register: 'Visitor 'usr2'' is registered!
+17/06/2023 10:11:18 INFO:	 Market.register: 'Visitor 'usr3'' is registered!
+17/06/2023 10:11:18 INFO:	 Market.login: Member 'usr11' is logged in
+17/06/2023 10:11:18 INFO:	 Market.open_store: Member 'usr11' opened store 'bakery'.
+17/06/2023 10:11:18 INFO:	 Market.add_product: 'Member 'usr11'' add 15 units of Product 'bread', Category: '1', Price: 10.0, Rate: 5 to store 'bakery'
+17/06/2023 10:11:18 INFO:	 Market.add_product: 'Member 'usr11'' add 20 units of Product 'pita', Category: '1', Price: 5.0, Rate: 5 to store 'bakery'
+17/06/2023 10:11:18 INFO:	 Member.logout: Member 'usr11' is logged out
+17/06/2023 10:11:18 INFO:	 Market.login: Member 'usr4' is logged in
+17/06/2023 10:11:18 INFO:	 Market.open_store: Member 'usr4' opened store 'market'.
+17/06/2023 10:11:18 INFO:	 Market.add_product: 'Member 'usr4'' add 40 units of Product 'tuna', Category: '1', Price: 20.0, Rate: 5 to store 'market'
+17/06/2023 10:11:18 INFO:	 Market.add_product: 'Member 'usr4'' add 20 units of Product 'pita', Category: '1', Price: 8.0, Rate: 5 to store 'market'
+17/06/2023 10:11:18 INFO:	 Member.logout: Member 'usr4' is logged out
+17/06/2023 10:11:18 INFO:	 Market.login: Member 'usr2' is logged in
+17/06/2023 10:11:18 INFO:	 Visitor.add_to_cart: 5 units of Product 'bread' from store 'bakery' is added to Member 'usr2' cart
+17/06/2023 10:11:18 INFO:	 Visitor.add_to_cart: 10 units of Product 'pita' from store 'bakery' is added to Member 'usr2' cart
+17/06/2023 10:11:18 INFO:	 Visitor.add_to_cart: 15 units of Product 'tuna' from store 'market' is added to Member 'usr2' cart
+17/06/2023 10:11:18 INFO:	 Visitor.add_to_cart: 20 units of Product 'pita' from store 'market' is added to Member 'usr2' cart
+17/06/2023 10:11:18 INFO:	 Member.logout: Member 'usr2' is logged out
+17/06/2023 10:11:18 ERROR:	 Visitor.logout: Visitor 'Visitor' attempted to logout.
+17/06/2023 10:11:18 INFO:	 Market.leave: Visitor 'Visitor' left session: 8576154256991052340
+17/06/2023 10:11:18 INFO:	 Market.register: 'Admin 'Kfir'' is registered!
+17/06/2023 10:11:18 INFO:	 Session: 2031927326437076946 has been initialized
+17/06/2023 10:11:18 INFO:	 Market.login: Admin 'Kfir' is logged in
+17/06/2023 10:11:18 WARNING:	 Market is closed!
+17/06/2023 10:11:18 WARNING:	 Logger thread exits!
+17/06/2023 10:11:46 ERROR:	 Market.register: Username: 'Kfir' is occupied
+17/06/2023 10:11:46 INFO:	 Session: 7927425850232503280 has been initialized
+17/06/2023 10:11:46 INFO:	 Market.login: Admin 'Kfir' is logged in
+17/06/2023 10:11:46 INFO:	 Member.logout: Admin 'Kfir' is logged out
+17/06/2023 10:11:46 INFO:	 Market.register: 'Visitor 'usr11'' is registered!
+17/06/2023 10:11:46 INFO:	 Market.register: 'Visitor 'usr4'' is registered!
+17/06/2023 10:11:46 INFO:	 Market.register: 'Visitor 'usr2'' is registered!
+17/06/2023 10:11:46 INFO:	 Market.register: 'Visitor 'usr3'' is registered!
+17/06/2023 10:11:46 INFO:	 Market.login: Member 'usr11' is logged in
+17/06/2023 10:11:46 INFO:	 Market.open_store: Member 'usr11' opened store 'bakery'.
+17/06/2023 10:11:46 INFO:	 Market.add_product: 'Member 'usr11'' add 15 units of Product 'bread', Category: '1', Price: 10.0, Rate: 5 to store 'bakery'
+17/06/2023 10:11:46 INFO:	 Market.add_product: 'Member 'usr11'' add 20 units of Product 'pita', Category: '1', Price: 5.0, Rate: 5 to store 'bakery'
+17/06/2023 10:11:46 INFO:	 Member.logout: Member 'usr11' is logged out
+17/06/2023 10:11:46 INFO:	 Market.login: Member 'usr4' is logged in
+17/06/2023 10:11:46 INFO:	 Market.open_store: Member 'usr4' opened store 'market'.
+17/06/2023 10:11:46 INFO:	 Market.add_product: 'Member 'usr4'' add 40 units of Product 'tuna', Category: '1', Price: 20.0, Rate: 5 to store 'market'
+17/06/2023 10:11:46 INFO:	 Market.add_product: 'Member 'usr4'' add 20 units of Product 'pita', Category: '1', Price: 8.0, Rate: 5 to store 'market'
+17/06/2023 10:11:46 INFO:	 Member.logout: Member 'usr4' is logged out
+17/06/2023 10:11:46 INFO:	 Market.login: Member 'usr2' is logged in
+17/06/2023 10:11:46 INFO:	 Visitor.add_to_cart: 5 units of Product 'bread' from store 'bakery' is added to Member 'usr2' cart
+17/06/2023 10:11:46 INFO:	 Visitor.add_to_cart: 10 units of Product 'pita' from store 'bakery' is added to Member 'usr2' cart
+17/06/2023 10:11:46 INFO:	 Visitor.add_to_cart: 15 units of Product 'tuna' from store 'market' is added to Member 'usr2' cart
+17/06/2023 10:11:46 INFO:	 Visitor.add_to_cart: 20 units of Product 'pita' from store 'market' is added to Member 'usr2' cart
+17/06/2023 10:11:46 INFO:	 Member.logout: Member 'usr2' is logged out
+17/06/2023 10:11:46 INFO:	 Market.login: Member 'usr2' is logged in
+17/06/2023 10:11:46 INFO:	 Market.show_cart: Cart of Member 'usr2':
+Store 'bakery'
+Product: 'bread', Quantity: 5, Price: 10.0, Discount-Price: 10.0
+Product: 'pita', Quantity: 10, Price: 5.0, Discount-Price: 5.0
+Store 'market'
+Product: 'tuna', Quantity: 15, Price: 20.0, Discount-Price: 20.0
+Product: 'pita', Quantity: 20, Price: 8.0, Discount-Price: 8.0
+
+17/06/2023 10:11:46 INFO:	 Visitor.verify_cart_not_empty: Member 'usr2' cart's is NOT empty!
+17/06/2023 10:11:46 INFO:	 all rules are kept: Kfir is happy!
+17/06/2023 10:11:46 INFO:	 all rules are kept: Kfir is happy!
+17/06/2023 10:11:46 INFO:	 all rules are kept: Kfir is happy!
+17/06/2023 10:11:46 INFO:	 all rules are kept: Kfir is happy!
+17/06/2023 10:11:46 ERROR:	 Market.pay: paying failed
+17/06/2023 10:11:46 ERROR:	 Market.purchase_shopping_cart: Market.pay: paying failed
+17/06/2023 10:11:46 INFO:	 Market.show_cart: Cart of Member 'usr2':
+Store 'bakery'
+Product: 'bread', Quantity: 5, Price: 10.0, Discount-Price: 10.0
+Product: 'pita', Quantity: 10, Price: 5.0, Discount-Price: 5.0
+Store 'market'
+Product: 'tuna', Quantity: 15, Price: 20.0, Discount-Price: 20.0
+Product: 'pita', Quantity: 20, Price: 8.0, Discount-Price: 8.0
+
+17/06/2023 10:11:46 INFO:	 Member.logout: Member 'usr2' is logged out
+17/06/2023 10:11:46 ERROR:	 Visitor.logout: Visitor 'Visitor' attempted to logout.
+17/06/2023 10:11:46 INFO:	 Market.leave: Visitor 'Visitor' left session: 7927425850232503280
+17/06/2023 10:11:46 INFO:	 Market.register: 'Admin 'Kfir'' is registered!
+17/06/2023 10:11:46 INFO:	 Session: 4350842749131494062 has been initialized
+17/06/2023 10:11:46 INFO:	 Market.login: Admin 'Kfir' is logged in
+17/06/2023 10:11:46 WARNING:	 Market is closed!
+17/06/2023 10:11:46 WARNING:	 Logger thread exits!
