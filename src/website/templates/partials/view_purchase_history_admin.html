@@ -18,9 +18,11 @@
                 <td>{{ store }}</td>
                 <td>
                     <ul>
-                    {% for purchase in purchases %}
-                        <li>{{ purchase }}</li>
-                    {% endfor %}
+                        {% for purchase in purchases %}
+                            {% for product in purchase.split('Product')[1:] %}
+                                <li>Product{{ product }}</li>
+                            {% endfor %}
+                        {% endfor %}
                     </ul>
                 </td>
             </tr>

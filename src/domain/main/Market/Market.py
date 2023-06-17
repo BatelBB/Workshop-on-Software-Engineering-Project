@@ -128,6 +128,8 @@ class Market(IService):
     def has_permission_at(self, store_name: str, actor: User, permission: Permission) -> bool:
         if actor is None:
             return False
+        if actor.is_admin and permission == Permission.RetrievePurchaseHistory:
+            return True
         appointment = self.get_appointment_of(actor.username, store_name)
         return appointment is not None and appointment.is_allowed(permission)
 
