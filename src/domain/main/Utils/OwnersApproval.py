@@ -70,6 +70,8 @@ class OwnersApproval(Base):
     def restore(self):
         for p in self.to_approve:
             self.to_approve[p] = False
+        self.to_approve_str.replace(":1", ":0")
+        DAL.update(self)
 
     def left_to_approve(self) -> list[str]:
         l = []
@@ -101,6 +103,7 @@ class OwnersApproval(Base):
         for a in DAL.load_all_by(OwnersApproval, lambda r: r.store_name == store_name, OwnersApproval.create_instance_from_db_query):
             out.insert(a.person_to_approve, a)
         return out
+
 
     @staticmethod
     def add_record(approval):

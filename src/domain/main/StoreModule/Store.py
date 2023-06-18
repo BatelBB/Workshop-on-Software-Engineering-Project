@@ -211,6 +211,9 @@ class Store(Base):
                 self.discount_counter = num
         self.discount_counter += 1
 
+    def load_my_bids(self):
+        self.products_with_bid_purchase_policy = BidPolicy.load_all_bids(self.name)
+
     @staticmethod
     def load_store(store_name):
         return DAL.load(Store, lambda r: r.name == store_name, Store.create_instance_from_db_query)
@@ -222,6 +225,7 @@ class Store(Base):
             out.insert(s.name, s)
             s.load_my_rules()
             s.load_my_discounts()
+            s.load_my_bids()
         return out
 
     @staticmethod
@@ -494,18 +498,18 @@ class Store(Base):
         self.products_with_bid_purchase_policy[product_name] = p_policy
         return report("add_product_to_bid_purchase_policy", True)
 
-    def apply_purchase_policy(self, payment_service: IPaymentService, product_name: str,
-                              delivery_service: IProvisionService, how_much: float) -> Response[bool]:
+    def apply_purchase_policy(self, payment_details, holder, user_id, address, postal_code, city, country, how_much,
+                              product_name: str) -> Response[bool]:
         if product_name not in self.products_with_special_purchase_policy.keys() and product_name not in self.products_with_bid_purchase_policy.keys():
             return report_error("apply_purchase_policy", "product only has immediate purchase policy")
 
-        policy: IPurchasePolicy
-        if product_name in self.products_with_special_purchase_policy.keys():
-            policy = self.products_with_special_purchase_policy[product_name]
-        elif product_name in self.products_with_bid_purchase_policy.keys():
-            policy = self.products_with_bid_purchase_policy[product_name]
+        policy: BidPolicy
+        # if product_name in self.products_with_special_purchase_policy.keys():
+        #     policy = self.products_with_special_purchase_policy[product_name]
+        # elif product_name in self.products_with_bid_purchase_policy.keys():
+        policy = self.products_with_bid_purchase_policy[product_name]
 
-        return policy.apply_policy(payment_service, delivery_service, how_much)
+        return policy.apply_policy(payment_details, holder, user_id, address, postal_code, city, country, how_much)
 
     def new_day(self):
         list_to_remove = []
@@ -524,15 +528,15 @@ class Store(Base):
         if product_name not in self.products_with_bid_purchase_policy.keys():
             return report_error("approve_bid", f"{product_name} not in bidding policy")
 
-        res = self.products_with_bid_purchase_policy[product_name].approve(person, is_approve)
-        if res.success:
-            if res.result:
-                bid: BidPolicy = self.products_with_bid_purchase_policy.pop(product_name)
-                item = Item(product_name, bid.delivery_service.user_name, self.name, 1, bid.highest_bid,
-                            bid.highest_bid)
-                basket = Basket()
-                basket.add_item(item)
-                self.add_to_purchase_history(basket)
+        return self.products_with_bid_purchase_policy[product_name].approve(person, is_approve)
+        if res.success and isinstance(res.result, dict):
+            bid_dict = res.result
+            bid: BidPolicy = self.products_with_bid_purchase_policy.pop(product_name)
+            item = Item(bid_dict["product_name"], bid["holder"], bid["store_name"], 1, bid["highest_bid"],
+                        bid["highest_bid"])
+            basket = Basket()
+            basket.add_item(item)
+            self.add_to_purchase_history(basket)
         return res
 
     def add_purchase_rule(self, rule: IRule) -> Response:
@@ -626,13 +630,16 @@ class Store(Base):
 
     def remove_owner(self, name: str):
         keys_to_pop = []
+        bid_Sccesses = []
         for key in self.products_with_bid_purchase_policy.keys():
             policy = self.products_with_bid_purchase_policy[key]
-            policy.remove_from_approval_dict_in_bid_policy(name)
+            res = policy.remove_from_approval_dict_in_bid_policy(name)
             if policy.is_active == 0:
                 keys_to_pop.append(key)
+                bid_Sccesses.append(res.result)
         for key in keys_to_pop:
-            self.products_with_bid_purchase_policy.pop(key)
+            self.products_with_bid_purchase_policy.pop(key).__dic__()
+        return bid_Sccesses
 
     def get_bid_products(self) -> Response[dict]:
         bids = {}

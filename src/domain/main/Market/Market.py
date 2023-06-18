@@ -33,7 +33,7 @@ from src.domain.main.StoreModule.PurchasePolicy.BidPolicy import BidPolicy
 from src.domain.main.StoreModule.PurchasePolicy.LotteryPolicy import LotteryPolicy
 from src.domain.main.StoreModule.PurchaseRules import PurchaseRulesFactory
 from src.domain.main.StoreModule.Store import Store
-from src.domain.main.UserModule.Basket import Item
+from src.domain.main.UserModule.Basket import Item, Basket
 from src.domain.main.UserModule.User import User
 from src.DataLayer.DAL import DAL
 from src.domain.main.Utils.ConcurrentDictionary import ConcurrentDictionary
@@ -64,7 +64,7 @@ class Market(IService):
             str, ConcurrentDictionary[str, OwnersApproval]] = ConcurrentDictionary()
         DAL.load_or_create_tables(tables=(User, Item, Store, Product, Appointment, SimpleRule, BasketRule,
                                           OrRule, AndRule, ConditioningRule, SimpleDiscount, AddDiscounts,
-                                          MaxDiscounts, OrDiscounts, XorDiscounts, OwnersApproval))
+                                          MaxDiscounts, OrDiscounts, XorDiscounts, OwnersApproval, BidPolicy))
         self.init_admin()
 
         self.stores = Store.load_all_stores()
@@ -660,7 +660,7 @@ class Market(IService):
         if not store.success:
             return report_error("update_owner_approvals", f"{store_name} store not found")
         store = store.result
-        store.remove_owner(fired)
+        self.check_bids_when_firing(store, fired)
 
     def remove_appointment(self, session_identifier: int, fired_appointee: str, store_name: str) -> Response[bool]:
         actor = self.get_active_user(session_identifier)
@@ -946,7 +946,7 @@ class Market(IService):
             provision_service = self.provisionService
             payment_service.set_information(payment_details, holder, user_id)
             provision_service.set_info(actor.username, 0, address, postal_code, city, country, store_name)
-            return store.apply_purchase_policy(payment_service, product_name, provision_service, how_much)
+            return store.apply_purchase_policy(payment_details, holder, user_id, address, postal_code, city, country, how_much, product_name)
 
     def start_auction(self, session_id: int, store_name: str, product_name: str, initial_price: float, duration: int) -> \
             Response[Store | bool]:
@@ -981,11 +981,33 @@ class Market(IService):
                 if not owners_list_res.success:
                     return owners_list_res
 
-                approval = OwnersApproval(owners_list_res.result, actor.username)
-                policy = BidPolicy(approval)
+                with self.approval_lock:
+                    approval = OwnersApproval(self.approval_counter, owners_list_res.result, actor.username, store_name)
+                policy = BidPolicy(approval, store_name, product_name)
                 return store.add_product_to_bid_purchase_policy(product_name, policy)
             return self.report_no_permission(self.start_bid.__qualname__, actor, store_name, Permission.StartBid)
         return response
+
+    def check_bids_when_firing(self, store, name):
+        for bid_success in store.remove_owner(name):
+            self.pay_for_bid(bid_success, store)
+
+    def pay_for_bid(self, bid_success, store):
+        payment_succeeded = self.pay(bid_success["highest_bid"], bid_success["payment_details"], bid_success["holder"],
+                                     bid_success["user_id"])
+        if payment_succeeded[0]:
+            self.provisionService.set_info(bid_success["holder"], 0, bid_success["address"], bid_success["postal_code"],
+                                           bid_success["city"], bid_success["country"])
+            # if not self.provisionService.getDelivery():
+            #     self.paymentService.refund(bid_success["highest_bid"])
+            #     return report_error(self.approve_bid.__qualname__, 'failed delivery')
+            item = Item(bid_success["product_name"], bid_success["holder"], bid_success["store_name"], 1,
+                        bid_success["highest_bid"],
+                        bid_success["highest_bid"])
+            basket = Basket()
+            basket.add_item(item)
+            store.add_to_purchase_history(basket)
+
 
     def approve_bid(self, session_id: int, store_name: str, product_name: str, is_approve: bool) -> Response:
         response = self.verify_registered_store(self.approve_bid.__qualname__, store_name)
@@ -993,7 +1015,10 @@ class Market(IService):
             store = response.result
             actor = self.get_active_user(session_id)
             if self.has_permission_at(store_name, actor, Permission.ApproveBid):
-                return store.approve_bid(actor.username, product_name, is_approve)
+                bid = store.approve_bid(actor.username, product_name, is_approve)
+                if not bid.success or not isinstance(bid.result, dict):
+                    return bid
+                self.pay_for_bid(bid.result, store)
             return self.report_no_permission(self.approve_bid.__qualname__, actor, store_name, Permission.StartBid)
         return response
 
