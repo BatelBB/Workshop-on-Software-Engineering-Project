@@ -40,16 +40,16 @@ class Proxy(Bridge):
     def send_message(self, recipient, content) -> Response[bool]:
         return self.real.send_message(recipient, content)
 
-    def get_inbox(self) -> Response[dict | bool]:
+    def get_inbox(self) -> Response[list | bool]:
         r = self.real.get_inbox()
         if not r.success:
             return Response(False)
-        dic = {}
+        messages = []
         notifications = r.result
         for n in notifications:
-            dic[n.msg_id] = {"Sender": n.sender, "Recipient": n.recipient, "Seen": n.seen, "Sender_type": n.sender_type,
-                             "Content": n.content, "Timestamp": n.timestamp}
-        return Response(dic)
+            messages.append({"Id": n.msg_id, "Sender": n.sender, "Recipient": n.recipient, "Seen": n.seen,
+                             "Sender_type": n.sender_type.value, "Content": n.content, "Timestamp": n.timestamp})
+        return Response(messages)
 
     def mark_read(self, msg_id: int) -> Response[bool]:
         return self.real.mark_read(msg_id)
@@ -270,7 +270,8 @@ class Proxy(Bridge):
         dic = {}
         for rule in r.result.values():
             if isinstance(rule, SimpleRule):
-                dic[rule.rule_id] = {"Type": "simple", "Product": rule.product_name, "Gle": rule.gle, "Amount": rule.num}
+                dic[rule.rule_id] = {"Type": "simple", "Product": rule.product_name, "Gle": rule.gle,
+                                     "Amount": rule.num}
             elif isinstance(rule, BasketRule):
                 dic[rule.rule_id] = {"Type": "basket", "Min price": rule.min_price}
             elif isinstance(rule, OrRule):

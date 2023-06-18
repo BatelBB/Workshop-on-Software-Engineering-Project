@@ -420,7 +420,7 @@ class AppointManager(unittest.TestCase):
                                                                                      "manager")
 
     def test_interact_with_customer(self):
-        pass
+        ...
 
     def test_add_a_store_rule(self):
         self.set_appointments()
