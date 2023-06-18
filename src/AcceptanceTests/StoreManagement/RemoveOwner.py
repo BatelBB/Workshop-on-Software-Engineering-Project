@@ -246,13 +246,41 @@ class RemoveOwner(unittest.TestCase):
         ...
 
     def test_fail_to_add_rule(self):
-        ...
+        self.set_store_and_appointments()
+        self.app.login(*self.store_owner1)
+        r1 = self.app.add_purchase_simple_rule("bakery", "bread", ">", 10)
+        self.assertFalse(r1.success, "error: add simple rule action succeeded")
+        r2 = self.app.add_basket_purchase_rule("bakery", 300)
+        self.assertFalse(r2.success, "error: add basket rule action succeeded")
+        r3 = self.app.add_purchase_complex_rule("bakery", "bread", ">", 10, "pita", ">", 10, "or")
+        self.assertFalse(r3.success, "error: add complex rule action succeeded")
+        r = self.app.get_purchase_rules("bakery")
+        self.assertFalse(r.success, "error: get purchase rule action succeeded")
+        self.assertIsNone(r.result, "error: removed owner can see the purchase rules")
 
     def test_fail_to_change_discount_policy(self):
-        ...
+        with patch(self.app.provision_path, return_value=True) as delivery_mock, \
+                patch(self.app.payment_pay_path, return_value=True) as payment_mock:
+            self.set_store_and_appointments()
+            self.app.login(*self.store_owner1)
+            r1 = self.app.add_simple_discount("bakery", "product", 50, "bread")
+            self.assertFalse(r1.success, "error: add simple discount action succeeded")
+            r2 = self.app.add_simple_discount("bakery", "store", 30)
+            self.assertFalse(r2.success, "error: add simple discount action succeeded")
+            r3 = self.app.connect_discounts("bakery", 1, 2, "max", "simple",
+                                            p1_name="bread", gle1=">", amount1=3)
+            self.assertFalse(r3.success, "error: connect discount action succeeded")
+            r = self.app.get_discounts("bakery")
+            self.assertFalse(r.success, "error: get discounts action succeeded")
+            self.assertEqual(None, r.result)
+            self.app.logout()
+            self.app.add_to_cart("bakery", "bread", 10)
+            r = self.app.purchase_shopping_cart("card", ["432143214321", "123", "05/2028"],
+                                                "ben-gurion", "1234", "beer sheva", "israel")
+            self.assertTrue(r.success, "error: payment failed")
 
-    def test_fail_to_change_purchase_policy(self):
-        ...
+            payment_mock.assert_called_once_with(100)
+            delivery_mock.assert_called_once()
 
     def test_fail_to_start_bid(self):
         self.set_store_and_appointments()

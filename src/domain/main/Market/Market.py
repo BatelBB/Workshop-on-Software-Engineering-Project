@@ -1103,7 +1103,7 @@ class Market(IService):
             return report_error(self.get_purchase_rules.__qualname__, "failed to retrieve permissions")
         perms = perms.result
 
-        if Permission.ChangePurchasePolicy not in perms:
+        if Permission.AddRule not in perms:
             return report_error(self.get_purchase_rules.__qualname__,
                                 f"{actor} has no permission to manage purchase rules")
 
@@ -1139,7 +1139,7 @@ class Market(IService):
             return report_error(self.add_basket_purchase_rule.__qualname__, "failed to retrieve permissions")
         perms = perms.result
 
-        if Permission.ChangePurchasePolicy not in perms:
+        if Permission.AddRule not in perms:
             return report_error(self.add_basket_purchase_rule.__qualname__,
                                 f"{actor} has no permission to manage purchase rules")
 

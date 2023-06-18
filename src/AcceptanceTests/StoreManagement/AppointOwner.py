@@ -405,19 +405,19 @@ class AppointOwner(unittest.TestCase):
         self.app.login(*self.store_owner1)
         r1 = self.app.add_simple_discount("bakery", "product", 50, "bread")
         self.assertTrue(r1.success, "error: add simple discount action failed")
-        r2 = self.app.add_simple_discount("bakery", "product", 30, "pita")
+        r2 = self.app.add_simple_discount("bakery", "store", 30)
         self.assertTrue(r2.success, "error: add simple discount action failed")
         r3 = self.app.connect_discounts("bakery", r1.result, r2.result, "max", "simple",
                                         p1_name="bread", gle1=">", amount1=3)
         self.assertTrue(r3.success, "error: connect discount action failed")
         r = self.app.get_discounts("bakery")
+        self.assertTrue(r.success, "error: get discounts action failed")
         simples = r.result[0]
         connectors = r.result[1]
-        self.assertTrue(r.success, "error: get discounts action failed")
         self.assertIn(r1.result, simples, "error: first discount not found")
         self.assertIn(r2.result, simples, "error: second discount not found")
         self.assertIn("simple discount: 50% for bread", simples[r1.result], "error: first discount doesn't match")
-        self.assertIn("simple discount: 30% for pita", simples[r2.result], "error: second discount doesn't match")
+        self.assertIn("simple discount: 30% for store", simples[r2.result], "error: second discount doesn't match")
         self.assertIn(r3.result, connectors, "error: connector discount not found")
         self.assertIn(f"Max connector: id: {r1.result}     id: {r2.result}", connectors[r3.result],
                       "error: connector discount doesn't match")
@@ -449,7 +449,6 @@ class AppointOwner(unittest.TestCase):
             r = self.app.get_store_approval_lists_and_bids("bakery")
             self.assertTrue(r.success, "error: get approval list for store bids action failed")
             bids = r.result["Bids"]
-            print(bids)
             self.assertIn("bread", bids, "error: bread not found in bids")
             self.assertEqual(0, bids["bread"]["price"], "error: bid initial price is not 0")
             self.assertIn(self.store_founder1[0], bids["bread"]["to_approve"],
