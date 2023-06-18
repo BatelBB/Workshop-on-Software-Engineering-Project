@@ -231,6 +231,20 @@ class Store(Base):
     @staticmethod
     def clear_db():
         Product.clear_db()
+        DAL.clear(SimpleDiscount)
+        DAL.clear(AddDiscounts)
+        DAL.clear(OrDiscounts)
+        DAL.clear(MaxDiscounts)
+        DAL.clear(XorDiscounts)
+
+        DAL.clear(SimpleRule)
+        DAL.clear(BasketRule)
+        DAL.clear(AndRule)
+        DAL.clear(OrRule)
+        DAL.clear(ConditioningRule)
+
+        DAL.clear(BidPolicy)
+
         DAL.clear(Store)
 
     @staticmethod

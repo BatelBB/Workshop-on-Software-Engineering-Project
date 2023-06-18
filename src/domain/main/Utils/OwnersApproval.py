@@ -112,3 +112,7 @@ class OwnersApproval(Base):
     @staticmethod
     def delete_record(approval_id):
         DAL.delete(OwnersApproval, lambda r: r.approval_id == approval_id)
+
+    @staticmethod
+    def clear_db():
+        DAL.clear(OwnersApproval)

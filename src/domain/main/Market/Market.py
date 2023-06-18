@@ -854,6 +854,7 @@ class Market(IService):
         User.clear_db()
         Store.clear_db()
         Appointment.clear_db()
+        OwnersApproval.clear_db()
         self.__init__()
 
     def pay(self, price: int, payment_details: list[str], holder: str, user_id: int):
