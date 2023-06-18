@@ -59,6 +59,7 @@ class BidPolicy(Base):
             self.postal_code = postal_code
             self.city = city
             self.country = country
+            DAL.update(self)
             return report("apply_policy->bid highest bidder has been switched", True)
 
         return report_error("apply_policy", "offer too low")
@@ -120,7 +121,7 @@ class BidPolicy(Base):
 
     @staticmethod
     def delete_record(store_name, product_name):
-        DAL.delete(OwnersApproval, lambda r: r.store_name == store_name and r.product_name == product_name)
+        DAL.delete(BidPolicy, lambda r: r.store_name == store_name and r.product_name == product_name)
 
     def __dic__(self):
         return {"highest_bid":self.highest_bid, "payment_details":self.payment_details, "holder":self.holder,

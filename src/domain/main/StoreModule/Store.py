@@ -496,6 +496,7 @@ class Store(Base):
             return report_error("add_product_to_bid_purchase_policy", "product can have only 1 special purchase policy")
 
         self.products_with_bid_purchase_policy[product_name] = p_policy
+        BidPolicy.add_record(p_policy)
         return report("add_product_to_bid_purchase_policy", True)
 
     def apply_purchase_policy(self, payment_details, holder, user_id, address, postal_code, city, country, how_much,
@@ -528,15 +529,10 @@ class Store(Base):
         if product_name not in self.products_with_bid_purchase_policy.keys():
             return report_error("approve_bid", f"{product_name} not in bidding policy")
 
-        return self.products_with_bid_purchase_policy[product_name].approve(person, is_approve)
+        res = self.products_with_bid_purchase_policy[product_name].approve(person, is_approve)
         if res.success and isinstance(res.result, dict):
-            bid_dict = res.result
-            bid: BidPolicy = self.products_with_bid_purchase_policy.pop(product_name)
-            item = Item(bid_dict["product_name"], bid["holder"], bid["store_name"], 1, bid["highest_bid"],
-                        bid["highest_bid"])
-            basket = Basket()
-            basket.add_item(item)
-            self.add_to_purchase_history(basket)
+            self.products_with_bid_purchase_policy.pop(product_name)
+            BidPolicy.delete_record(self.name, product_name)
         return res
 
     def add_purchase_rule(self, rule: IRule) -> Response:
@@ -638,7 +634,8 @@ class Store(Base):
                 keys_to_pop.append(key)
                 bid_Sccesses.append(res.result)
         for key in keys_to_pop:
-            self.products_with_bid_purchase_policy.pop(key).__dic__()
+            bid = self.products_with_bid_purchase_policy.pop(key).__dic__()
+            BidPolicy.delete_record(self.name, bid.product_name)
         return bid_Sccesses
 
     def get_bid_products(self) -> Response[dict]:
