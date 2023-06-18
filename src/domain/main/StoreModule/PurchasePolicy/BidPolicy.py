@@ -27,13 +27,14 @@ class BidPolicy(Base):
     city = Column("city", String, default='')
     country = Column("country", String, default='')
 
-    def __init__(self, approval: OwnersApproval, store_name, product_name):
+    def __init__(self, approval: OwnersApproval, store_name, product_name, is_from_db=None):
         self.store_name = store_name
         self.product_name = product_name
         self.approval = approval
         self.approval_id = approval.approval_id
         self.highest_bid = 0
-        self.approval.restore()
+        if is_from_db is not None:
+            self.approval.restore()
 
         self.payment_details = []
 
