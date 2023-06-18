@@ -30,7 +30,7 @@ class PurchaseCart(unittest.TestCase):
         cls.app.enter_market()
         cls.app.shutdown()
 
-    # purchase algorythm try to purchase what he can from each store
+    # purchase algorythm try to make a purchase from each store only if all the products of the store are valid to buy
     # after a purchase the cart should be empty unless a product quantity doesn't match the store rule
     # if a store rule doesn't match then all store product wouldn't be bought and will remain in cart
     # first to pay first to take policy when the stock is limited
@@ -104,7 +104,7 @@ class PurchaseCart(unittest.TestCase):
             self.assertDictEqual({}, cart, "error: cart not empty after a purchase")
             self.app.logout()
 
-            payment_mock.assert_called_with(400)
+            payment_mock.assert_called_with(100)
             delivery_mock.assert_called()
 
     def test_purchase_with_invalid_card(self):
@@ -259,21 +259,23 @@ class PurchaseCart(unittest.TestCase):
                 patch(self.app.payment_pay_path, return_value=True) as payment_mock:
             self.set_stores()
             self.set_cart()
+            self.app.login(*self.registered_buyer1)
+            cart_before = self.app.show_cart().result
+            self.app.logout()
             self.app.login(*self.store_founder1)
-            self.app.add_purchase_complex_rule("bakery", "bread", "<", 10, "pita", ">", 50, "and")
+            self.app.add_purchase_complex_rule("bakery", "bread", "<", 15, "pita", ">", 50, "and")
             self.app.logout()
             self.app.login(*self.registered_buyer1)
             r = self.app.purchase_shopping_cart("card", ["1234567812345678", "123", "05/2028"],
                                                 "ben-gurion", "1234", "beer sheva", "israel")
-            self.assertTrue(r.success, "error: cart payment failed")
-            cart = self.app.show_cart().result
-            self.assertNotIn("market", cart, "error: market store in cart after purchased successfully from market")
-            self.assertIn("bread", cart["bakery"], "error: bread not in cart")
-            self.assertIn("pita", cart["bakery"], "error: pita not in cart")
+            self.assertFalse(r.success, "error: cart payment succeeded")
+            cart_after = self.app.show_cart().result
+            self.assertEqual(cart_before, cart_after,
+                             "error: market store in cart after purchased successfully from market")
             self.app.logout()
 
-            payment_mock.assert_called_once_with(460)
-            delivery_mock.assert_called_once()
+            payment_mock.assert_not_called()
+            delivery_mock.assert_not_called()
 
     def test_purchase_after_simple_rule_added_rule_affect_cart(self):
         with patch(self.app.provision_path, return_value=True) as delivery_mock, \
