@@ -67,7 +67,7 @@ class BidPolicy(Base):
     def remove_from_approval_dict_in_bid_policy(self, person: str):
         self.approval.remove_owner(person)
         if self.approval.is_approved().result:
-            self.execute()
+            return self.execute()
 
     def add_to_approval_dict_in_bid_policy(self, person: str):
         self.approval.add_owner(person)
@@ -114,6 +114,10 @@ class BidPolicy(Base):
                                  BidPolicy.create_instance_from_db_query):
             out[b.product_name] = b
         return out
+
+    def add_to_db(self):
+        OwnersApproval.add_record(self.approval)
+        BidPolicy.add_record(self)
 
     @staticmethod
     def add_record(bid):

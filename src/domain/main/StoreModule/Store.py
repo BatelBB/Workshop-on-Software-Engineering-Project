@@ -496,7 +496,7 @@ class Store(Base):
             return report_error("add_product_to_bid_purchase_policy", "product can have only 1 special purchase policy")
 
         self.products_with_bid_purchase_policy[product_name] = p_policy
-        BidPolicy.add_record(p_policy)
+        p_policy.add_to_db()
         return report("add_product_to_bid_purchase_policy", True)
 
     def apply_purchase_policy(self, payment_details, holder, user_id, address, postal_code, city, country, how_much,
@@ -634,8 +634,8 @@ class Store(Base):
                 keys_to_pop.append(key)
                 bid_Sccesses.append(res.result)
         for key in keys_to_pop:
-            bid = self.products_with_bid_purchase_policy.pop(key).__dic__()
-            BidPolicy.delete_record(self.name, bid.product_name)
+            bid = self.products_with_bid_purchase_policy.pop(key)
+            bid.delete_from_db()
         return bid_Sccesses
 
     def get_bid_products(self) -> Response[dict]:
