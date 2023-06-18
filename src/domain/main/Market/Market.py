@@ -33,7 +33,7 @@ from src.domain.main.StoreModule.PurchasePolicy.BidPolicy import BidPolicy
 from src.domain.main.StoreModule.PurchasePolicy.LotteryPolicy import LotteryPolicy
 from src.domain.main.StoreModule.PurchaseRules import PurchaseRulesFactory
 from src.domain.main.StoreModule.Store import Store
-from src.domain.main.UserModule.Basket import Item
+from src.domain.main.UserModule.Basket import Item, Basket
 from src.domain.main.UserModule.User import User
 from src.DataLayer.DAL import DAL
 from src.domain.main.Utils.ConcurrentDictionary import ConcurrentDictionary
@@ -59,15 +59,18 @@ class Market(IService):
         self.package_counter = 0
         self.appointments_lock = threading.RLock()
         self.approval_lock = threading.RLock()
+        self.approval_counter = 0
         self.approval_list: ConcurrentDictionary[
             str, ConcurrentDictionary[str, OwnersApproval]] = ConcurrentDictionary()
         DAL.load_or_create_tables(tables=(User, Item, Store, Product, Appointment, SimpleRule, BasketRule,
                                           OrRule, AndRule, ConditioningRule, SimpleDiscount, AddDiscounts,
-                                          MaxDiscounts, OrDiscounts, XorDiscounts))
+                                          MaxDiscounts, OrDiscounts, XorDiscounts, OwnersApproval, BidPolicy))
         self.init_admin()
 
         self.stores = Store.load_all_stores()
         self.appointments = Appointment.load_all_appointments()
+        for store in self.stores.list_keys():
+            self.approval_list.insert(store, OwnersApproval.load_all_approvals_for_owners(store))
 
     def load_configuration(self, config):
         DAL.init(config['db'])
@@ -526,6 +529,8 @@ class Market(IService):
             for name in store_dict.get_all_keys():
                 store_dict.get(name).add_owner(appointee_name)
 
+            if approval is not None:
+                OwnersApproval.delete_record(approval.approval_id)
             store_dict.delete(appointee_name)
         return res
 
@@ -582,12 +587,15 @@ class Market(IService):
         if appointee_name in self.approval_list.get(store_name).list_keys():
             return self.approve_owner(session_identifier, appointee_name, store_name, True)
 
-        approval = OwnersApproval(owners, actor.username)
+        with self.approval_lock:
+            approval = OwnersApproval(self.approval_counter, owners, actor.username, store_name, appointee_name)
+            self.approval_counter += 1
 
         if approval.is_approved().result:
             return self.add_owner(session_identifier, appointee_name, store_name)
 
         self.approval_list.get(store_name).insert(appointee_name, approval)
+        OwnersApproval.add_record(approval)
         return report_info(self.appoint_owner.__qualname__,
                            f"approval process beggins for ownership for {appointee_name} of {store_name}")
 
@@ -605,8 +613,16 @@ class Market(IService):
 
     def remove_permission(self, session_identifier: int, store: str, appointee: str, permission: Permission) -> \
             Response[bool]:
-        return self.set_permission(session_identifier, self.remove_permission.__qualname__, store, appointee,
+        res = self.set_permission(session_identifier, self.remove_permission.__qualname__, store, appointee,
                                    permission, 'REMOVE')
+        s = self.verify_registered_store("remove_permissions", store)
+        if not s.success:
+            return res
+        s = s.result
+        if permission == Permission.AppointOwner:
+            self.check_bids_when_firing(s, appointee)
+
+        return res
 
     def permissions_of(self, session_identifier: int, store: str, subject: str) -> Response[set[Permission] | bool]:
         appointment = self.get_appointment_of(subject, store)
@@ -652,7 +668,7 @@ class Market(IService):
         if not store.success:
             return report_error("update_owner_approvals", f"{store_name} store not found")
         store = store.result
-        store.remove_owner(fired)
+        self.check_bids_when_firing(store, fired)
 
     def remove_appointment(self, session_identifier: int, fired_appointee: str, store_name: str) -> Response[bool]:
         actor = self.get_active_user(session_identifier)
@@ -938,7 +954,7 @@ class Market(IService):
             provision_service = self.provisionService
             payment_service.set_information(payment_details, holder, user_id)
             provision_service.set_info(actor.username, 0, address, postal_code, city, country, store_name)
-            return store.apply_purchase_policy(payment_service, product_name, provision_service, how_much)
+            return store.apply_purchase_policy(payment_details, holder, user_id, address, postal_code, city, country, how_much, product_name)
 
     def start_auction(self, session_id: int, store_name: str, product_name: str, initial_price: float, duration: int) -> \
             Response[Store | bool]:
@@ -967,17 +983,43 @@ class Market(IService):
         response = self.verify_registered_store(self.start_bid.__qualname__, store_name)
         if response.success:
             store = response.result
+            if not store.contains(product_name):
+                return report_error(self.start_bid.__qualname__, f"{store_name} doesnt comtain {product_name}")
             actor = self.get_active_user(session_id)
             if self.has_permission_at(store_name, actor, Permission.StartBid):
                 owners_list_res = self.get_store_owners(session_id, store_name)
                 if not owners_list_res.success:
                     return owners_list_res
 
-                approval = OwnersApproval(owners_list_res.result, actor.username)
-                policy = BidPolicy(approval)
+                with self.approval_lock:
+                    approval = OwnersApproval(self.approval_counter, owners_list_res.result, actor.username, store_name)
+                policy = BidPolicy(approval, store_name, product_name)
                 return store.add_product_to_bid_purchase_policy(product_name, policy)
             return self.report_no_permission(self.start_bid.__qualname__, actor, store_name, Permission.StartBid)
         return response
+
+    def check_bids_when_firing(self, store, name):
+        for bid_success in store.remove_owner(name):
+            self.pay_for_bid(bid_success, store)
+
+    def pay_for_bid(self, bid_success, store) -> Response:
+        payment_succeeded = self.pay(bid_success["highest_bid"], bid_success["payment_details"], bid_success["holder"],
+                                     bid_success["user_id"])
+        if payment_succeeded[0]:
+            self.provisionService.set_info(bid_success["holder"], 0, bid_success["address"], bid_success["postal_code"],
+                                           bid_success["city"], bid_success["country"])
+            if not self.provisionService.getDelivery():
+                self.paymentService.refund(bid_success["highest_bid"])
+                return report_error(self.pay_for_bid.__qualname__, 'failed delivery')
+            item = Item(bid_success["product_name"], bid_success["holder"], bid_success["store_name"], 1,
+                        bid_success["highest_bid"],
+                        bid_success["highest_bid"])
+            basket = Basket()
+            basket.add_item(item)
+            store.add_to_purchase_history(basket)
+            return report_info(self.pay_for_bid.__qualname__, 'successful payment for bid')
+        return report_error(self.pay_for_bid.__qualname__, 'failed payment')
+
 
     def approve_bid(self, session_id: int, store_name: str, product_name: str, is_approve: bool) -> Response:
         response = self.verify_registered_store(self.approve_bid.__qualname__, store_name)
@@ -985,7 +1027,10 @@ class Market(IService):
             store = response.result
             actor = self.get_active_user(session_id)
             if self.has_permission_at(store_name, actor, Permission.ApproveBid):
-                return store.approve_bid(actor.username, product_name, is_approve)
+                bid = store.approve_bid(actor.username, product_name, is_approve)
+                if not bid.success or not isinstance(bid.result, dict):
+                    return bid
+                return self.pay_for_bid(bid.result, store)
             return self.report_no_permission(self.approve_bid.__qualname__, actor, store_name, Permission.StartBid)
         return response
 

@@ -28,7 +28,7 @@ class bid_tests(unittest.TestCase):
         s1.open_store("s1")
         s1.add_product("s1", "p1", "c1", 10, 5)
         # s1.start_auction("s1", "p1", 5, 2)
-        policy = BidPolicy(OwnersApproval(market.get_store_owners(s1.identifier, "s1").result, "u1"))
+        policy = BidPolicy(OwnersApproval(0, market.get_store_owners(s1.identifier, "s1").result, "u1", "s1"), "s1", "p1")
         store = market.stores.get("s1")
         s1.start_bid("s1", "p1")
         policy = store.products_with_bid_purchase_policy["p1"]
@@ -39,7 +39,7 @@ class bid_tests(unittest.TestCase):
 
         s2.purchase_with_non_immediate_policy("s1", "p1", "card", ["1123", "123", "13"], "beersheva", "7422", 6,
                                               "beersheva", "israel")
-        self.assertTrue(policy.delivery_service.user_name == "u2", "incorrect delivery service")
+        self.assertTrue(policy.holder == "u2", "incorrect delivery service")
 
 
     def test_bid_approved(self):
@@ -50,7 +50,7 @@ class bid_tests(unittest.TestCase):
         s1.open_store("s1")
         s1.add_product("s1", "p1", "c1", 10, 5)
         # s1.start_auction("s1", "p1", 5, 2)
-        policy = BidPolicy(OwnersApproval(market.get_store_owners(s1.identifier, "s1").result, "u1"))
+        policy = BidPolicy(OwnersApproval(0, market.get_store_owners(s1.identifier, "s1").result, "u1", "s1"), "s1", "p1")
         store = market.stores.get("s1")
         s1.start_bid("s1", "p1")
         policy: BidPolicy = store.products_with_bid_purchase_policy["p1"]
@@ -61,7 +61,7 @@ class bid_tests(unittest.TestCase):
 
         s2.purchase_with_non_immediate_policy("s1", "p1", "card", ["1123", "123", "13"], "beersheva", "7422", 6,
                                               "beersheva", "israel")
-        self.assertTrue(policy.delivery_service.user_name == "u2", "incorrect delivery service")
+        self.assertTrue(policy.holder == "u2", "incorrect delivery service")
         s1.approve_bid("s1", "p1", True)
         self.assertTrue(policy.approval.is_approved(), "bid should be approved")
 
@@ -73,7 +73,7 @@ class bid_tests(unittest.TestCase):
         s1.open_store("s1")
         s1.add_product("s1", "p1", "c1", 10, 5)
         # s1.start_auction("s1", "p1", 5, 2)
-        policy = BidPolicy(OwnersApproval(market.get_store_owners(s1.identifier, "s1").result, "u1"))
+        policy = BidPolicy(OwnersApproval(0, market.get_store_owners(s1.identifier, "s1").result, "u1", "s1"), "s1", "p1")
         store = market.stores.get("s1")
         s1.start_bid("s1", "p1")
         policy: BidPolicy = store.products_with_bid_purchase_policy["p1"]
@@ -89,7 +89,7 @@ class bid_tests(unittest.TestCase):
                                               "beersheva", "israel")
         s3.purchase_with_non_immediate_policy("s1", "p1", "card", ["1123", "123", "13"], "beersheva", "7422", 12,
                                               "beersheva", "israel")
-        self.assertTrue(policy.delivery_service.user_name == "u3", "incorrect delivery service")
+        self.assertTrue(policy.holder == "u3", "incorrect delivery service")
 
 
     def test_bid_2_owners_1_approves_swich_user_now_2_approves(self):
@@ -100,7 +100,7 @@ class bid_tests(unittest.TestCase):
         s1.open_store("s1")
         s1.add_product("s1", "p1", "c1", 10, 5)
         # s1.start_auction("s1", "p1", 5, 2)
-        policy = BidPolicy(OwnersApproval(market.get_store_owners(s1.identifier, "s1").result, "u1"))
+        # policy = BidPolicy(OwnersApproval(0, market.get_store_owners(s1.identifier, "s1").result, "u1", "s1"), "s1", )
         store = market.stores.get("s1")
         s1.start_bid("s1", "p1")
         policy: BidPolicy = store.products_with_bid_purchase_policy["p1"]
@@ -119,12 +119,12 @@ class bid_tests(unittest.TestCase):
 
         s2.purchase_with_non_immediate_policy("s1", "p1", "card", ["1123", "123", "13"], "beersheva", "7422", 6,
                                               "beersheva", "israel")
-        self.assertTrue(policy.delivery_service.user_name == "u2", "incorrect delivery service")
+        self.assertTrue(policy.holder == "u2", "incorrect delivery service")
         s1.approve_bid("s1", "p1", True)
 
         s3.purchase_with_non_immediate_policy("s1", "p1", "card", ["1123", "123", "13"], "beersheva", "7422", 12,
                                               "beersheva", "israel")
-        self.assertTrue(policy.delivery_service.user_name == "u3", "incorrect delivery service")
+        self.assertTrue(policy.holder == "u3", "incorrect delivery service")
 
         s1.approve_bid("s1", "p1", True)
         s4.approve_bid("s1", "p1", True)
@@ -139,7 +139,7 @@ class bid_tests(unittest.TestCase):
         s1.open_store("s1")
         s1.add_product("s1", "p1", "c1", 10, 5)
         # s1.start_auction("s1", "p1", 5, 2)
-        policy = BidPolicy(OwnersApproval(market.get_store_owners(s1.identifier, "s1").result, "u1"))
+        # policy = BidPolicy(OwnersApproval(market.get_store_owners(s1.identifier, "s1").result, "u1"))
         store = market.stores.get("s1")
         s1.start_bid("s1", "p1")
         policy: BidPolicy = store.products_with_bid_purchase_policy["p1"]
