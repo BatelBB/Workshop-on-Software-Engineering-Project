@@ -12,7 +12,6 @@ from src.domain.main.Utils.Response import Response
 
 
 class BidPolicy(Base):
-
     __tablename__ = 'bids'
     __table_args__ = {'extend_existing': True}
 
@@ -93,12 +92,13 @@ class BidPolicy(Base):
 
     @staticmethod
     def create_instance_from_db_query(r):
-        store_name, product_name, approval_id, highest_bid, payment_details_str, holder, user_id ,address , postal_code , city , country = \
-            r.store_name, r.product_name, r.approval_id, r.highest_bid, r.payment_details_str, r.holder, r.user_id ,r.address , r.postal_code , r.city , r.country
+        store_name, product_name, approval_id, highest_bid, payment_details_str, holder, user_id, address, postal_code, city, country = \
+            r.store_name, r.product_name, r.approval_id, r.highest_bid, r.payment_details_str, r.holder, r.user_id, r.address, r.postal_code, r.city, r.country
 
-        approval = DAL.load(OwnersApproval, lambda r: r.approval_id == approval_id, OwnersApproval.create_instance_from_db_query)
+        approval = DAL.load(OwnersApproval, lambda r: r.approval_id == approval_id,
+                            OwnersApproval.create_instance_from_db_query)
         bid = BidPolicy(approval, store_name, product_name)
-        bid.highest_bid, bid.payment_details_str, bid.holder, bid.user_id ,bid.address , bid.postal_code , bid.city , bid.country = \
+        bid.highest_bid, bid.payment_details_str, bid.holder, bid.user_id, bid.address, bid.postal_code, bid.city, bid.country = \
             highest_bid, payment_details_str, holder, user_id, address, postal_code, city, country
         bid.payment_details = payment_details_str.split(",")
         return bid
@@ -128,8 +128,7 @@ class BidPolicy(Base):
         DAL.delete(BidPolicy, lambda r: r.store_name == store_name and r.product_name == product_name)
 
     def __dic__(self):
-        return {"highest_bid":self.highest_bid, "payment_details":self.payment_details, "holder":self.holder,
-                "user_id":self.user_id, "address":self.user_id, "postal_code":self.postal_code,
-                "city":self.city, "country":self.country, "product_name":self.product_name, "store_name":self.store_name}
-
-
+        return {"highest_bid": self.highest_bid, "payment_details": self.payment_details, "holder": self.holder,
+                "user_id": self.user_id, "address": self.address, "postal_code": self.postal_code,
+                "city": self.city, "country": self.country, "product_name": self.product_name,
+                "store_name": self.store_name}

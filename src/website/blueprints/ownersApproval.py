@@ -14,8 +14,12 @@ def view_approval_lists(store_name: str):
 
     username = domain.username
     approval_lists = domain.get_approval_lists_for_store(store_name)
-    owners_to_approve = approval_lists["owners"]
-    bids_to_approve = approval_lists["bids"]
+    if approval_lists is not None:
+        owners_to_approve = approval_lists["owners"]
+        bids_to_approve = approval_lists["bids"]
+    else:
+        owners_to_approve = {}
+        bids_to_approve = {}
 
     return render_template("stores/view_approval_lists.html", owners_to_approve=owners_to_approve,
                            bids_to_approve=bids_to_approve, store_name=store_name, actor_username=username)
@@ -49,7 +53,7 @@ def approve_bid(store_name: str, product_name: str):
         return redirect(url_for('ownersApproval.view_approval_lists', store_name=store_name))
     else:
         flash(res.description)
-
+        return redirect(url_for('ownersApproval.view_approval_lists', store_name=store_name))
 @bp.route('/decline_owner/<store_name>/<owner_name>', methods=('POST', 'GET'))
 def decline_owner(store_name: str, owner_name: str):
     domain = get_domain_adapter()

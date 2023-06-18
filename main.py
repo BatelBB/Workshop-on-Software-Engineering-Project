@@ -70,14 +70,14 @@ if __name__ == '__main__':
     s3.register("u3", "p1")
     s3.login("u3", "p1")
 
-    # s3.purchase_with_non_immediate_policy("s1", "p1", "card", ["1233", "123", "05/2025"], "address", "postal", 20, "city", "country")
 
-    # s1.approve_bid("s1", "p1", True)
 
-    # s1.open_store("s1")
+    s1.open_store("s1")
     #
-    # s1.add_product("s1", "p1", "c1", 100, 50)
-    # s1.start_bid("s1", "p1")
+    s1.add_product("s1", "p1", "c1", 100, 50)
+    s1.start_bid("s1", "p1")
+    s3.purchase_with_non_immediate_policy("s1", "p1", "card", ["1233", "123", "05/2025"], "ben-gurion", "1234", 20, "beer sheva", "israel")
+    s1.approve_bid("s1", "p1", True)
     # s1.appoint_owner("u2", "s1")
     # s1.appoint_owner("u3", "s1")
     # s2.appoint_owner("u3", "s1")
