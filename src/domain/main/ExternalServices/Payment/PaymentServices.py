@@ -40,7 +40,7 @@ class PaymentService(IPaymentService):
         self.user_id = -1
 
     def check_pattern(self, num: str):
-        pattern = r"\d{2}\/\d{2}"
+        pattern = r"\d{2}\/\d{4}"
         match = re.match(pattern, num)
         if match:
             return True

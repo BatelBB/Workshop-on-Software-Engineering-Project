@@ -11,6 +11,12 @@ from Service.Session.Session import Session
 from website.core_features.domain_access.session_adapter_dto import ProductDto, BasketDto
 
 
+def expiration_date(exp_month, exp_year):
+    if isinstance(exp_month, int) and exp_month < 10:
+        exp_month = f'0{exp_month}'
+    return f'{exp_month}/{exp_year}'
+
+
 class SessionAdapter:
     def __init__(self, domain_session: Session):
         self._session = domain_session
@@ -258,12 +264,13 @@ class SessionAdapter:
         return self._session.get_cart_price(cart.result.baskets)
 
     def purchase_by_card(self, number, exp_month, exp_year, ccv, street, apt_number, city, country):
-        return self._session.purchase_shopping_cart('card', [str(number), ccv, f'{exp_month}/{exp_year}'],
+
+        return self._session.purchase_shopping_cart('card', [str(number), ccv, expiration_date(exp_month, exp_year)],
                                                     street, apt_number, city, country)
 
     def bid_on_product(self, store_name, product_name, how_much, number, exp_month, exp_year, ccv, street, apt_number,
                        city, country):
-        payment_details = [str(number), f'{exp_month}/{exp_year}', ccv]
+        payment_details = [str(number),  expiration_date(exp_month, exp_year), ccv]
         return self._session.purchase_with_non_immediate_policy(store_name, product_name, "card", payment_details,
                                                          street, apt_number, how_much, city, country)
 
